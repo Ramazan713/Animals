@@ -2,6 +2,7 @@ package com.masterplus.animals.core.shared_features.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.entity.AnimalEntity
 import com.masterplus.animals.core.shared_features.database.entity.AnimalImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
@@ -22,4 +23,5 @@ import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 )
 abstract class AppDatabase: RoomDatabase() {
 
+    abstract val categoryDao: CategoryDao
 }

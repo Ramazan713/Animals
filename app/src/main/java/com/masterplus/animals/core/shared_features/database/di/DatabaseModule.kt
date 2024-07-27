@@ -8,11 +8,15 @@ import org.koin.dsl.module
 val databaseModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
-            context = androidApplication(),
+            context = get(),
             klass = AppDatabase::class.java,
-            name = "appDb.db"
+            name = "appDB.db"
         )
-            .createFromAsset("appDb.db")
+            .createFromAsset("appDB.db")
             .build()
+    }
+
+    single {
+        get<AppDatabase>().categoryDao
     }
 }
