@@ -1,6 +1,7 @@
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
 import com.masterplus.animals.features.animal.domain.repo.AnimalCategoryRepo
 import com.masterplus.animals.features.animal.presentation.AnimalAction
 import com.masterplus.animals.features.animal.presentation.AnimalState
@@ -31,10 +32,10 @@ class AnimalViewModel(
             _state.update { it.copy(
                 isLoading = true
             ) }
-            val habitats = categoryRepo.getHabitatCategories(CATEGORY_LIMIT)
-            val orders = categoryRepo.getOrders(CATEGORY_LIMIT)
-            val classes = categoryRepo.getClasses(CATEGORY_LIMIT)
-            val families = categoryRepo.getFamilies(CATEGORY_LIMIT)
+            val habitats = categoryRepo.getHabitatCategories(CATEGORY_LIMIT).map { it.toImageWithTitleModel() }
+            val orders = categoryRepo.getOrders(CATEGORY_LIMIT).map { it.toImageWithTitleModel() }
+            val classes = categoryRepo.getClasses(CATEGORY_LIMIT).map { it.toImageWithTitleModel() }
+            val families = categoryRepo.getFamilies(CATEGORY_LIMIT).map { it.toImageWithTitleModel() }
 
             _state.update { it.copy(
                 isLoading = false,
