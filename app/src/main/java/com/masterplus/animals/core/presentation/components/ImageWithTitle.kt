@@ -33,11 +33,36 @@ import androidx.compose.ui.zIndex
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.masterplus.animals.R
+import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.ColorUtils
+
 
 @Composable
 fun ImageWithTitle(
-    imageUrl: String,
+    model: ImageWithTitleModel,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    size: DpSize = DpSize(150.dp, 180.dp),
+    shape: Shape = RoundedCornerShape(8.dp),
+    contentScale: ContentScale = ContentScale.Crop,
+){
+    ImageWithTitle(
+        imageData = model.imageUrl,
+        title = model.title,
+        modifier = modifier,
+        subTitle = model.subTitle,
+        onClick = onClick,
+        contentDescription = model.contentDescription,
+        size = size,
+        shape = shape,
+        contentScale = contentScale,
+    )
+}
+
+
+@Composable
+fun ImageWithTitle(
+    imageData: Any,
     title: String,
     modifier: Modifier = Modifier,
     subTitle: String? = null,
@@ -72,7 +97,7 @@ fun ImageWithTitle(
             modifier = Modifier
                 .matchParentSize(),
             model = ImageRequest.Builder(context)
-                .data(imageUrl)
+                .data(imageData)
                 .build(),
             contentScale = contentScale,
             contentDescription = contentDescription,
@@ -170,11 +195,11 @@ fun ImageWithTitlePreview() {
         ImageWithTitle(
             title = "Kartallar",
             subTitle = "sadsadasdasdasd",
-            imageUrl = ""
+            imageData = ""
         )
         ImageWithTitle(
             title = "Kartallar",
-            imageUrl = ""
+            imageData = ""
         )
     }
 

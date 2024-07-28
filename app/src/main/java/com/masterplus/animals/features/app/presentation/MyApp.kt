@@ -20,6 +20,10 @@ import com.masterplus.animals.features.animal.presentation.navigation.AnimalRout
 import com.masterplus.animals.features.animal.presentation.navigation.animal
 import com.masterplus.animals.features.app.presentation.extensions.navigateToBar
 import com.masterplus.animals.features.app.presentation.model.kBottomBarRoutes
+import com.masterplus.animals.features.category_list.presentation.navigation.categoryList
+import com.masterplus.animals.features.category_list.presentation.navigation.categoryListWithDetail
+import com.masterplus.animals.features.category_list.presentation.navigation.navigateToCategoryList
+import com.masterplus.animals.features.category_list.presentation.navigation.navigateToCategoryListWithDetail
 import com.masterplus.animals.features.settings.presentation.navigation.settings
 
 @Composable
@@ -74,9 +78,40 @@ fun MyApp(
             navController = navHostController,
             startDestination = AnimalRoute
         ){
-            animal()
+            animal(
+                onNavigateToCategoryList = { categoryType ->
+                    navHostController.navigateToCategoryList(categoryType)
+                },
+                onNavigateToCategoryListWithDetail = { categoryType, itemId ->
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                },
+            )
 
             settings()
+
+            categoryList(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                },
+                onNavigateToBioList = { categoryType, itemId ->
+
+                },
+                onNavigateToCategoryListWithDetail = { categoryType, itemId ->
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                },
+            )
+
+            categoryListWithDetail(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                },
+                onNavigateToBioList = { categoryType, itemId ->
+
+                },
+                onNavigateToCategoryListWithDetail = { categoryType, itemId ->
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                },
+            )
         }
     }
 }

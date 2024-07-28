@@ -68,7 +68,7 @@ fun ImageCategoryRow(
                 key = { it.id ?: it.title }
             ){ item ->
                 ImageWithTitle(
-                    imageUrl = item.imageUrl,
+                    imageData = item.imageUrl,
                     title = item.title,
                     subTitle = item.subTitle,
                     contentDescription = item.contentDescription,

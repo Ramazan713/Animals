@@ -20,17 +20,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryRow
+import com.masterplus.animals.features.animal.presentation.navigation.ItemId
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AnimalPageRoot(
-    viewModel: AnimalViewModel = koinViewModel()
+    viewModel: AnimalViewModel = koinViewModel(),
+    onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
+    onNavigateToCategoryList: (CategoryType) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     AnimalPage(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
+        onNavigateToCategoryList = onNavigateToCategoryList
     )
 }
 
@@ -39,7 +45,9 @@ fun AnimalPageRoot(
 @Composable
 fun AnimalPage(
     state: AnimalState,
-    onAction: (AnimalAction) -> Unit
+    onAction: (AnimalAction) -> Unit,
+    onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
+    onNavigateToCategoryList: (CategoryType) -> Unit
 ) {
     val contentPaddings = PaddingValues(horizontal = 12.dp)
     Scaffold(
@@ -82,10 +90,10 @@ fun AnimalPage(
                             items = state.classes.imageWithTitleModels,
                             showMore = state.classes.showMore,
                             onClickMore = {
-
+                                onNavigateToCategoryList(CategoryType.Class)
                             },
                             onClickItem = { item ->
-
+                                onNavigateToCategoryListWithDetail(CategoryType.Class, item.id ?: 0)
                             }
                         )
                     }
@@ -97,10 +105,10 @@ fun AnimalPage(
                             items = state.orders.imageWithTitleModels,
                             showMore = state.orders.showMore,
                             onClickMore = {
-
+                                onNavigateToCategoryList(CategoryType.Order)
                             },
                             onClickItem = { item ->
-
+                                onNavigateToCategoryListWithDetail(CategoryType.Order, item.id ?: 0)
                             }
                         )
                     }
@@ -112,7 +120,7 @@ fun AnimalPage(
                             items = state.families.imageWithTitleModels,
                             showMore = state.families.showMore,
                             onClickMore = {
-
+                                onNavigateToCategoryList(CategoryType.Family)
                             },
                             onClickItem = { item ->
 
@@ -132,6 +140,8 @@ fun AnimalPagePreview() {
         state = AnimalState(
             isLoading = true
         ),
-        onAction = {}
+        onAction = {},
+        onNavigateToCategoryListWithDetail = { x, y ->},
+        onNavigateToCategoryList = {}
     )
 }

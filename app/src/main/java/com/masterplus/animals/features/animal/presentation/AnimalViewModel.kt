@@ -2,7 +2,7 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
-import com.masterplus.animals.features.animal.domain.repo.AnimalCategoryRepo
+import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.features.animal.presentation.AnimalAction
 import com.masterplus.animals.features.animal.presentation.AnimalState
 import com.masterplus.animals.features.animal.presentation.models.CategoryRowModel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AnimalViewModel(
-    private val categoryRepo: AnimalCategoryRepo
+    private val categoryRepo: CategoryRepo
 ): ViewModel() {
 
     private val _state = MutableStateFlow(AnimalState())
