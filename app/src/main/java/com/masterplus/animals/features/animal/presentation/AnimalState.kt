@@ -1,11 +1,11 @@
 package com.masterplus.animals.features.animal.presentation
 
-import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
+import com.masterplus.animals.features.animal.presentation.models.CategoryRowModel
 
 data class AnimalState(
     val isLoading: Boolean = false,
-    val habitats: List<ImageWithTitleModel> = emptyList(),
-    val classes: List<ImageWithTitleModel> = emptyList(),
-    val orders: List<ImageWithTitleModel> = emptyList(),
-    val families: List<ImageWithTitleModel> = emptyList()
+    val habitats: CategoryRowModel = CategoryRowModel(),
+    val classes: CategoryRowModel = CategoryRowModel(),
+    val orders: CategoryRowModel = CategoryRowModel(),
+    val families: CategoryRowModel = CategoryRowModel(),
 )

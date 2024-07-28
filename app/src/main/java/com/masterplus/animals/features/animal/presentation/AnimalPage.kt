@@ -3,13 +3,19 @@ package com.masterplus.animals.features.animal.presentation
 
 import AnimalViewModel
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,75 +35,90 @@ fun AnimalPageRoot(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimalPage(
     state: AnimalState,
     onAction: (AnimalAction) -> Unit
 ) {
-
-    Scaffold { paddings ->
-        Column(
+    val contentPaddings = PaddingValues(horizontal = 12.dp)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { 
+                    Text(text = "Hayvanlar Alemi")
+                }
+            )
+        }
+    ) { paddings ->
+        Box(
             modifier = Modifier
-                .padding(paddings),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(paddings)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            Text(text = "Animal Page")
+            if(state.isLoading){
+                CircularProgressIndicator()
+            }else{
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    item {
+                        ImageCategoryRow(
+                            contentPaddings = contentPaddings,
+                            title = "Yaşam Alanları",
+                            items = state.habitats.imageWithTitleModels,
+                            showMore = state.habitats.showMore,
+                            onClickItem = { item ->
 
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                item {
-                    ImageCategoryRow(
-                        title = "Yaşam Alanları",
-                        items = state.habitats,
-                        onClickItem = { item ->
+                            }
+                        )
+                    }
 
-                        }
-                    )
-                }
+                    item {
+                        ImageCategoryRow(
+                            contentPaddings = contentPaddings,
+                            title = "Sınıflar",
+                            items = state.classes.imageWithTitleModels,
+                            showMore = state.classes.showMore,
+                            onClickMore = {
 
-                item {
-                    ImageCategoryRow(
-                        title = "Sınıflar",
-                        items = state.classes,
-                        showMore = true,
-                        onClickMore = {
+                            },
+                            onClickItem = { item ->
 
-                        },
-                        onClickItem = { item ->
+                            }
+                        )
+                    }
 
-                        }
-                    )
-                }
+                    item {
+                        ImageCategoryRow(
+                            contentPaddings = contentPaddings,
+                            title = "Takımlar",
+                            items = state.orders.imageWithTitleModels,
+                            showMore = state.orders.showMore,
+                            onClickMore = {
 
-                item {
-                    ImageCategoryRow(
-                        title = "Takımlar",
-                        items = state.orders,
-                        showMore = true,
-                        onClickMore = {
+                            },
+                            onClickItem = { item ->
 
-                        },
-                        onClickItem = { item ->
+                            }
+                        )
+                    }
 
-                        }
-                    )
-                }
+                    item {
+                        ImageCategoryRow(
+                            contentPaddings = contentPaddings,
+                            title = "Familyalar",
+                            items = state.families.imageWithTitleModels,
+                            showMore = state.families.showMore,
+                            onClickMore = {
 
-                item {
-                    ImageCategoryRow(
-                        title = "Familyalar",
-                        items = state.families,
-                        showMore = true,
-                        onClickMore = {
+                            },
+                            onClickItem = { item ->
 
-                        },
-                        onClickItem = { item ->
-
-                        }
-                    )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -108,7 +129,9 @@ fun AnimalPage(
 @Composable
 fun AnimalPagePreview() {
     AnimalPage(
-        state = AnimalState(),
+        state = AnimalState(
+            isLoading = true
+        ),
         onAction = {}
     )
 }

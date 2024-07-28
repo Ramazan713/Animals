@@ -3,6 +3,7 @@ package com.masterplus.animals.core.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,13 +28,18 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 fun ImageCategoryRow(
     title: String,
     items: List<ImageWithTitleModel>,
+    modifier: Modifier = Modifier,
     showMore: Boolean = false,
     onClickMore: (() -> Unit)? = null,
-    onClickItem: (ImageWithTitleModel) -> Unit
+    onClickItem: (ImageWithTitleModel) -> Unit,
+    contentPaddings: PaddingValues = PaddingValues()
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Row(
             modifier = Modifier
+                .padding(contentPaddings)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -54,7 +60,8 @@ fun ImageCategoryRow(
             }
         }
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = contentPaddings
         ) {
             items(
                 items = items,

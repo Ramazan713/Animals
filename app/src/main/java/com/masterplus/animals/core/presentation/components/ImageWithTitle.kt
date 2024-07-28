@@ -98,6 +98,7 @@ private fun GetTitleSection(
     title: String,
     subTitle: String?
 ){
+    val hasSubtitle = subTitle != null && subTitle.trim() != ""
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,17 +114,17 @@ private fun GetTitleSection(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
         ) {
-            Spacer(modifier = Modifier.weight(if(subTitle != null) 2f else 1f))
+            Spacer(modifier = Modifier.weight(if(hasSubtitle) 2f else 1f))
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.inverseOnSurface
                 )
             )
-            if(subTitle != null){
+            if(hasSubtitle){
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = subTitle,
+                    text = subTitle ?: "",
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.inverseOnSurface
                     )
