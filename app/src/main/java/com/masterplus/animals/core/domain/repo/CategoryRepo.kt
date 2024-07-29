@@ -1,6 +1,7 @@
 package com.masterplus.animals.core.domain.repo
 
 import androidx.paging.PagingData
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
@@ -8,6 +9,9 @@ import com.masterplus.animals.core.domain.models.OrderModel
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepo {
+
+    suspend fun getCategoryName(categoryType: CategoryType, itemId: Int): String?
+
     suspend fun getClasses(limit: Int): List<ClassModel>
 
     suspend fun getFamilies(limit: Int): List<FamilyModel>

@@ -14,12 +14,14 @@ data object AnimalRoute
 
 fun NavGraphBuilder.animal(
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
-    onNavigateToCategoryList: (CategoryType) -> Unit
+    onNavigateToCategoryList: (CategoryType) -> Unit,
+    onNavigateToBioList: (CategoryType, Int?) -> Unit,
 ){
     composable<AnimalRoute> {
         AnimalPageRoot(
             onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
-            onNavigateToCategoryList = onNavigateToCategoryList
+            onNavigateToCategoryList = onNavigateToCategoryList,
+            onNavigateToBioList = onNavigateToBioList
         )
     }
 }

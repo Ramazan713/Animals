@@ -93,26 +93,12 @@ fun ImageWithTitle(
             subTitle = subTitle
         )
 
-        SubcomposeAsyncImage(
+        DefaultImage(
+            imageData = imageData,
             modifier = Modifier
                 .matchParentSize(),
-            model = ImageRequest.Builder(context)
-                .data(imageData)
-                .build(),
             contentScale = contentScale,
             contentDescription = contentDescription,
-            loading = {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            },
-            error = {
-                GetErrorHolder(
-                    contentScale = contentScale
-                )
-            },
         )
     }
 }
@@ -159,34 +145,6 @@ private fun GetTitleSection(
         }
     }
 }
-
-@Composable
-private fun GetErrorHolder(
-    contentScale: ContentScale
-){
-    Box(
-        contentAlignment = Alignment.TopEnd
-    ) {
-        Image(
-            modifier = Modifier,
-            contentScale = contentScale,
-            painter = painterResource(id = R.drawable.all_animals),
-            contentDescription = null
-        )
-        Icon(
-            modifier = Modifier
-                .padding(12.dp)
-                .zIndex(1f),
-            painter = painterResource(
-                id = R.drawable.baseline_error_24,
-            ),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.error
-        )
-    }
-}
-
-
 
 @Preview(showBackground = true)
 @Composable

@@ -4,6 +4,7 @@ data class Animal(
     val id: Int?,
     val introduction: String,
     val name: String,
+    val scientificName: String,
     val physicalCharacteristics: String,
     val naturalHabitat: String,
     val ecosystem: String,
@@ -46,5 +47,6 @@ data class Animal(
     val economicSimple: String,
     val adaptation: String,
     val evolution: String,
-    val recognitionAndInteraction: Int?
+    val recognitionAndInteraction: Int?,
+    val imageUrls: List<String>
 )

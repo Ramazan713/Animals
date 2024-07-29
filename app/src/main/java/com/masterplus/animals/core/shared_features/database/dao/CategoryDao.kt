@@ -11,16 +11,33 @@ import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 
 @Dao
 interface CategoryDao {
+    @Query("""
+        select * from classes where id = :classId
+    """)
+    suspend fun getClassWithId(classId: Int): ClassEntity?
+
+    @Query("""
+        select * from orders where id = :orderId
+    """)
+    suspend fun getOrderWithId(orderId: Int): OrderEntity?
+
+    @Query("""
+        select * from families where id = :familyId
+    """)
+    suspend fun getFamilyWithId(familyId: Int): FamilyEntity?
+
+    @Query("""
+        select * from habitatcategories where id = :habitatCategoryId
+    """)
+    suspend fun getHabitatCategoryWithId(habitatCategoryId: Int): HabitatCategoryEntity?
+
+
 
     @Query("""
         select * from classes order by id asc limit :limit
     """)
     suspend fun getClasses(limit: Int): List<ClassEntity>
 
-    @Query("""
-        select * from classes where id = :classId
-    """)
-    suspend fun getClassWithId(classId: Int): ClassEntity?
 
     @Query("""
         select * from classes order by id asc
@@ -57,11 +74,6 @@ interface CategoryDao {
         select * from orders order by id asc limit :limit
     """)
     suspend fun getOrders(limit: Int): List<OrderEntity>
-
-    @Query("""
-        select * from orders where id = :orderId
-    """)
-    suspend fun getOrderWithId(orderId: Int): OrderEntity?
 
     @Query("""
         select * from orders where class_id = :classId order by id asc

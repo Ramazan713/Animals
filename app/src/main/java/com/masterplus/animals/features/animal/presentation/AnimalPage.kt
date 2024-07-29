@@ -29,14 +29,16 @@ import org.koin.androidx.compose.koinViewModel
 fun AnimalPageRoot(
     viewModel: AnimalViewModel = koinViewModel(),
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
-    onNavigateToCategoryList: (CategoryType) -> Unit
+    onNavigateToCategoryList: (CategoryType) -> Unit,
+    onNavigateToBioList: (CategoryType, Int?) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     AnimalPage(
         state = state,
         onAction = viewModel::onAction,
         onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
-        onNavigateToCategoryList = onNavigateToCategoryList
+        onNavigateToCategoryList = onNavigateToCategoryList,
+        onNavigateToBioList = onNavigateToBioList
     )
 }
 
@@ -47,7 +49,8 @@ fun AnimalPage(
     state: AnimalState,
     onAction: (AnimalAction) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
-    onNavigateToCategoryList: (CategoryType) -> Unit
+    onNavigateToCategoryList: (CategoryType) -> Unit,
+    onNavigateToBioList: (CategoryType, Int?) -> Unit,
 ) {
     val contentPaddings = PaddingValues(horizontal = 12.dp)
     Scaffold(
@@ -78,7 +81,7 @@ fun AnimalPage(
                             items = state.habitats.imageWithTitleModels,
                             showMore = state.habitats.showMore,
                             onClickItem = { item ->
-
+                                onNavigateToBioList(CategoryType.Habitat, item.id)
                             }
                         )
                     }
@@ -123,7 +126,7 @@ fun AnimalPage(
                                 onNavigateToCategoryList(CategoryType.Family)
                             },
                             onClickItem = { item ->
-
+                                onNavigateToBioList(CategoryType.Family, item.id)
                             }
                         )
                     }
@@ -142,6 +145,7 @@ fun AnimalPagePreview() {
         ),
         onAction = {},
         onNavigateToCategoryListWithDetail = { x, y ->},
-        onNavigateToCategoryList = {}
+        onNavigateToCategoryList = {},
+        onNavigateToBioList = {x,y -> }
     )
 }

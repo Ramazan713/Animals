@@ -1,5 +1,6 @@
 package com.masterplus.animals.core.presentation.utils
 
+import com.masterplus.animals.core.domain.models.AnimalData
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 
 object SampleDatas {
@@ -15,5 +16,13 @@ object SampleDatas {
         subTitle = "Sub Title",
         id = 2,
         imageUrl = imageUrl
+    )
+
+    val animalData = AnimalData(
+        id = 1,
+        name = "Bal Arısi",
+        scientificName = "Apis mellifera",
+        introduction = "Arılar, dünya genelinde tarımın ve doğal ekosistemlerin sürdürülebilirliği için hayati öneme sahip polinatörlerdir. Bal üretimi ile tanınsalar da, bitkilerin tozlaşmasını sağlayarak birçok meyve ve sebzenin oluşmasında kritik rol oynarlar. Arılar, karmaşık sosyal yapıları ve etkileyici iş bölümleriyle de dikkat çekerler. Özellikle bal arıları, ürettikleri bal ve balmumu ile insanlık için ekonomik değere sahiptir.",
+        imageUrls = listOf(imageUrl)
     )
 }

@@ -8,6 +8,7 @@ import com.masterplus.animals.core.data.mapper.toClass
 import com.masterplus.animals.core.data.mapper.toFamily
 import com.masterplus.animals.core.data.mapper.toHabitatCategory
 import com.masterplus.animals.core.data.mapper.toOrder
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
@@ -20,6 +21,14 @@ import kotlinx.coroutines.flow.map
 class CategoryRepoImpl constructor(
     private val categoryDao: CategoryDao
 ): CategoryRepo {
+    override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int): String? {
+        return when(categoryType){
+            CategoryType.Habitat -> categoryDao.getHabitatCategoryWithId(itemId)?.habitat_category_tr
+            CategoryType.Class -> categoryDao.getClassWithId(itemId)?.scientific_name
+            CategoryType.Order -> categoryDao.getOrderWithId(itemId)?.scientific_name
+            CategoryType.Family -> categoryDao.getFamilyWithId(itemId)?.scientific_name
+        }
+    }
 
     override suspend fun getClasses(limit: Int): List<ClassModel> {
         return categoryDao.getClasses(limit)

@@ -20,6 +20,8 @@ import com.masterplus.animals.features.animal.presentation.navigation.AnimalRout
 import com.masterplus.animals.features.animal.presentation.navigation.animal
 import com.masterplus.animals.features.app.presentation.extensions.navigateToBar
 import com.masterplus.animals.features.app.presentation.model.kBottomBarRoutes
+import com.masterplus.animals.features.bio_list.presentation.navigation.bioList
+import com.masterplus.animals.features.bio_list.presentation.navigation.navigateToBioList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryListWithDetail
 import com.masterplus.animals.features.category_list.presentation.navigation.navigateToCategoryList
@@ -85,6 +87,9 @@ fun MyApp(
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
+                onNavigateToBioList = { categoryType, itemId ->
+                    navHostController.navigateToBioList(categoryType.catId, itemId)
+                },
             )
 
             settings()
@@ -94,7 +99,7 @@ fun MyApp(
                     navHostController.navigateUp()
                 },
                 onNavigateToBioList = { categoryType, itemId ->
-
+                    navHostController.navigateToBioList(categoryType.catId, itemId)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
@@ -106,11 +111,20 @@ fun MyApp(
                     navHostController.navigateUp()
                 },
                 onNavigateToBioList = { categoryType, itemId ->
-
+                    navHostController.navigateToBioList(categoryType.catId, itemId)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
+            )
+
+            bioList(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                },
+                onNavigateToBioDetail = { itemId ->
+
+                }
             )
         }
     }
