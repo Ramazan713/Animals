@@ -1,7 +1,10 @@
 package com.masterplus.animals.core.presentation.utils
 
+import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.domain.models.AnimalData
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
+import com.masterplus.animals.features.bio_detail.presentation.models.TitleContentModel
+import com.masterplus.animals.features.bio_detail.presentation.models.TitleSectionModel
 
 object SampleDatas {
     const val imageUrl = "https://storage.googleapis.com/animals-ce701.appspot.com/public/images/class/mammalia.jpg?Expires=1724517659&GoogleAccessId=firebase-adminsdk-hprer%40animals-ce701.iam.gserviceaccount.com&Signature=N27yfyDPC7RZzh0Cirowi0Ki%2FisODA%2Bnp9i2dAjR5OEDZV8Cuji0CwMOqhZoQYE9QnD8LOcNI2vR6uJ9ChzUhFrOJ9BmKzroiwzqhRsU1OgFYQwCpE5yi9WFPwpw3Pmlaz%2B1dIr6I3%2BQAfM91y6kMPpFFPwKFwT4H7uS%2FYWEu91x0VLvWH%2FMPXGiYmIcNEQnhigPRT%2BPsjxJyAwoajEOSGgHrXai43%2FtiXoZYYVMbLOOR03BKNcMC4dGC56S6zA05JnjplmZ%2Bn2veofgUGocGOeQ0kL9BngIDjlbv6wS7gxZlHbp4gJEG3UF3HdGi3thfImt3W%2FUthn0dJlpPPcz1g%3D%3D"
@@ -24,5 +27,72 @@ object SampleDatas {
         scientificName = "Apis mellifera",
         introduction = "Arılar, dünya genelinde tarımın ve doğal ekosistemlerin sürdürülebilirliği için hayati öneme sahip polinatörlerdir. Bal üretimi ile tanınsalar da, bitkilerin tozlaşmasını sağlayarak birçok meyve ve sebzenin oluşmasında kritik rol oynarlar. Arılar, karmaşık sosyal yapıları ve etkileyici iş bölümleriyle de dikkat çekerler. Özellikle bal arıları, ürettikleri bal ve balmumu ile insanlık için ekonomik değere sahiptir.",
         imageUrls = listOf(imageUrl)
+    )
+
+
+
+    val animal = Animal(
+        id=2,
+        introduction="Arılar, dünya genelinde tarımın ve doğal ekosistemlerin sürdürülebilirliği için hayati öneme sahip polinatörlerdir. Bal üretimi ile tanınsalar da, bitkilerin tozlaşmasını sağlayarak birçok meyve ve sebzenin oluşmasında kritik rol oynarlar. Arılar, karmaşık sosyal yapıları ve etkileyici iş bölümleriyle de dikkat çekerler. Özellikle bal arıları, ürettikleri bal ve balmumu ile insanlık için ekonomik değere sahiptir.",
+        name="Bal Arısı",
+        scientificName="Apis mellifera",
+        physicalCharacteristics="Bal arıları, sarı ve siyah çizgili vücutları ve kıllı yapıları ile tanınırlar. Kanatları saydamdır ve vücutlarının arka kısmında bir iğne bulunur. İşçi arılar, kraliçeye göre daha küçük olup, yaklaşık 12-15 mm uzunluğundadır. Kraliçe arı ise yaklaşık 20 mm uzunluğunda olabilir.",
+        naturalHabitat="Arılar, ormanlar, bahçeler, tarım alanları ve hatta şehirlerdeki parklarda ve bahçelerde yaşarlar. Çiçekli bitkilerin bol olduğu bölgelerde yoğun olarak bulunurlar.",
+        ecosystem="Arılar, polinatör olarak ekosistemlerin sağlığı için kritik bir rol oynar. Çiçekli bitkilerin tozlaşmasını sağlayarak bitkilerin üremesine yardımcı olurlar, bu da gıda zincirinin temelini oluşturur.",
+        feedingHabits="Arılar, nektar ve polen ile beslenirler. Nektar, enerji sağlamak için şeker içerirken, polen protein ve diğer besin maddeleri sağlar. İşçi arılar, bu kaynakları toplamak için çiçeklere uçar ve böylece tozlaşma sürecine katkıda bulunurlar.",
+        socialStructure="Bal arıları, oldukça organize kolonilerde yaşar. Bir kolonide bir kraliçe, binlerce işçi arı ve birkaç yüz erkek arı (drone) bulunur. Kraliçe arı, yumurtlama göreviyle koloninin devamlılığını sağlar, işçi arılar ise yiyecek toplama, yavru bakımı ve kovanın temizliği gibi görevleri üstlenir.",
+        reproductiveBehaviors="Kraliçe arı, koloninin tek yumurtlayan bireyidir ve hayatı boyunca milyonlarca yumurta bırakabilir. Erkek arılar kraliçe ile çiftleşir, ardından genellikle ölürler. Kraliçe arı, döllenmiş yumurtalardan işçi arılar ve yeni kraliçeler, döllenmemiş yumurtalardan ise erkek arılar üretir.",
+        developmentStages="Yumurtadan çıkan larvalar, işçi arılar tarafından beslenir ve bakılır. Larvalar birkaç kez deri değiştirir ve sonunda pupaya dönüşür. Birkaç gün içinde yetişkin bir arı olarak kovandan çıkarlar ve çalışmaya başlarlar.",
+        soundsProduced="Arılar, kovan içinde vızıltı şeklinde sesler çıkararak iletişim kurarlar. Ayrıca, kraliçe arının özel bir sesi olan 'piping' sesi, kovan içindeki diğer arılar için önemli sinyaller taşır.",
+        communicationMethods="Arılar, dans dili adı verilen karmaşık hareketlerle iletişim kurarlar. Özellikle işçi arılar, diğer arılara nektar kaynaklarının yerini tarif etmek için 'wagtail dansı' yaparlar. Bu dans, nektar kaynağının uzaklığı ve yönü hakkında bilgi verir.",
+        threats="Arılar, pestisitler, habitat kaybı, hastalıklar ve parazitler nedeniyle tehdit altındadır. Özellikle varroa akarı ve koloni çöküş bozukluğu, arı popülasyonları üzerinde büyük bir etkiye sahiptir.",
+        conservationEfforts="Arıların korunması için çeşitli çabalar yürütülmektedir. Organik tarım yöntemlerinin teşvik edilmesi, pestisit kullanımının azaltılması ve arı habitatlarının korunması, bu çabalar arasında yer almaktadır.",
+        culturalSignificance="Arılar, binlerce yıldır insanlar için önemli bir yer tutmuştur. Antik Mısır'dan Yunan mitolojisine kadar, arılar pek çok kültürde simgesel bir öneme sahiptir. Bal, hem gıda hem de ilaç olarak kullanılmıştır.",
+        economicImportance="Bal arıları, tarımsal üretim için kritik bir rol oynar. Tozlaşma, birçok meyve ve sebzenin verimliliğini artırır. Ayrıca, bal ve balmumu üretimi, arıcılık sektörünün ekonomik değerini oluşturur. Bilimsel araştırmalar, arıların davranışları ve ekolojisi hakkında önemli bilgiler sağlamaktadır.",
+        environmentalAdaptations="Arılar, karmaşık görme yetenekleri ve hassas antenleri sayesinde çiçekleri kolayca bulabilirler. Ayrıca, kovanlarını korumak ve sıcaklık düzenlemesi yapmak için etkili yöntemler geliştirmişlerdir.",
+        evolutionaryProcesses="Arılar, sosyal davranışları ve iş bölümü ile evrimsel bir başarı örneğidir. Milyonlarca yıl süren evrimsel süreçte, karmaşık sosyal yapıları ve polinasyon becerileri sayesinde hayatta kalmayı başarmışlardır.",
+        interestingBehaviors="Arılar, dans dili ile iletişim kurarak diğer arılara nektar ve polen kaynaklarını tarif ederler. Ayrıca, kovan savunması sırasında topluca saldırıya geçer ve düşmanlarına karşı kendilerini savunurlar.",
+        unknownFeatures="Arıların kanatları saniyede 200 defa çırpabilir. Ayrıca, arılar ısırdıklarında bir feromon salgılarlar, bu feromon diğer arıları uyararak saldırıya geçmelerine neden olur.",
+        funFacts="Bir arı, hayatı boyunca yaklaşık bir çay kaşığı bal üretebilir. Ayrıca, arılar geri geri uçabilen nadir böceklerdendir ve dans ederek mesafe ve yön bilgisini aktarabilirler.",
+        habitatCategoryId=1,
+        phylumId=2,
+        classId=2,
+        orderId=2,
+        familyId=2,
+        genusId=2,
+        speciesId=2,
+        size="12-20 mm",
+        weight="0.1 gram",
+        color="Sarı ve siyah çizgili",
+        habitat="Ormanlar, bahçeler, tarım alanları",
+        ecosystemCategory="Çiçekli bitkilerin bulunduğu alanlar",
+        feeding="Nektar ve polen",
+        socialStructureSimple="Sosyal, koloniler halinde yaşar",
+        reproductiveSimple="Kraliçe arı yumurtlar, erkek arılar çiftleşir",
+        developmentSimple="Larvalar beslenir ve pupaya dönüşür",
+        sounds="Vızıltı, piping",
+        communication="Dans dili, vızıltı",
+        threatsSimple="Pestisitler, habitat kaybı, hastalıklar",
+        conservationStatus="Tehdit altında",
+        culturalSimple="Mitoloji ve folklorda önemli yer tutar",
+        economicSimple="Tozlaşma ve bal üretimi",
+        adaptation="Karmaşık görme ve anten kullanımı",
+        evolution="Sosyal yapı ve iş bölümü",
+        recognitionAndInteraction=8,
+        imageUrls= listOf()
+    )
+
+    val titleSectionModel = TitleSectionModel(
+        sectionTitle = "Yaşam Alanı",
+        titleContents = listOf(
+            TitleContentModel(
+                title = "Doğal Habitat",
+                content = animal.naturalHabitat
+            ),
+            TitleContentModel(
+                title = "Ekosistem",
+                content = animal.ecosystem
+            )
+        )
     )
 }

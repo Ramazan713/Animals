@@ -20,6 +20,8 @@ import com.masterplus.animals.features.animal.presentation.navigation.AnimalRout
 import com.masterplus.animals.features.animal.presentation.navigation.animal
 import com.masterplus.animals.features.app.presentation.extensions.navigateToBar
 import com.masterplus.animals.features.app.presentation.model.kBottomBarRoutes
+import com.masterplus.animals.features.bio_detail.presentation.navigation.bioDetail
+import com.masterplus.animals.features.bio_detail.presentation.navigation.navigateToBioDetail
 import com.masterplus.animals.features.bio_list.presentation.navigation.bioList
 import com.masterplus.animals.features.bio_list.presentation.navigation.navigateToBioList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryList
@@ -123,7 +125,13 @@ fun MyApp(
                     navHostController.navigateUp()
                 },
                 onNavigateToBioDetail = { itemId ->
+                    navHostController.navigateToBioDetail(itemId)
+                }
+            )
 
+            bioDetail(
+                onNavigateBack = {
+                    navHostController.navigateUp()
                 }
             )
         }
