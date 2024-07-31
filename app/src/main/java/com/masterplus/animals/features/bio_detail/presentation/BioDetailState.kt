@@ -1,6 +1,7 @@
 package com.masterplus.animals.features.bio_detail.presentation
 
 import com.masterplus.animals.core.domain.models.Animal
+import com.masterplus.animals.core.domain.models.AnimalDetail
 import com.masterplus.animals.features.bio_detail.domain.enums.BioInfoPageEnum
 import com.masterplus.animals.features.bio_detail.presentation.mapper.toFeatureSection2
 import com.masterplus.animals.features.bio_detail.presentation.mapper.toFeatureSection3
@@ -12,9 +13,12 @@ import com.masterplus.animals.features.bio_detail.presentation.models.TitleSecti
 data class BioDetailState(
     val isLoading: Boolean = false,
     val selectedPage: BioInfoPageEnum = BioInfoPageEnum.Info,
-    val animal: Animal? = null,
+    val animalDetail: AnimalDetail? = null,
     val titleSectionModels: List<TitleSectionModel> = emptyList(),
     val scientificNomenclatureSection: List<TitleContentModel> = emptyList(),
     val featureSection2: List<TitleContentModel> = emptyList(),
-    val featureSection3: List<TitleContentModel> = emptyList()
-)
+    val featureSection3: List<TitleContentModel> = emptyList(),
+    val dialogEvent: BioDetailDialogEvent? = null
+){
+    val animal get() = animalDetail?.animal
+}

@@ -5,4 +5,6 @@ import com.masterplus.animals.features.bio_detail.domain.enums.BioInfoPageEnum
 sealed interface BioDetailAction {
 
     data class ChangePage(val page: BioInfoPageEnum): BioDetailAction
+
+    data class ShowDialog(val dialogEvent: BioDetailDialogEvent?): BioDetailAction
 }

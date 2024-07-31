@@ -1,11 +1,13 @@
 package com.masterplus.animals.features.bio_detail.presentation
 
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,14 +30,16 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.presentation.components.DefaultImage
+import com.masterplus.animals.core.presentation.dialogs.ShowImageDia
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.features.bio_detail.domain.enums.BioInfoPageEnum
 import com.masterplus.animals.features.bio_detail.presentation.components.TitleContentInfo
@@ -70,8 +75,6 @@ fun BioDetailPageRoot(
     )
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BioDetailPage(
     state: BioDetailState,
@@ -120,6 +123,7 @@ fun BioDetailPage(
                         ,
                 ) {
                     TopBarImage(
+                        state = state,
                         modifier = Modifier
                             .fillMaxWidth()
                             .layout { measurable, constraints ->
@@ -131,7 +135,13 @@ fun BioDetailPage(
                                     placeable.place(x = -0.dp.roundToPx(), y = 0)
                                 }
                             },
-                        onNavigateBack = onNavigateBack
+                        onNavigateBack = onNavigateBack,
+                        onShowImageClick = {
+                            onAction(BioDetailAction.ShowDialog(BioDetailDialogEvent.ShowImages(
+                                imageUrls = state.animal?.imageUrls ?: emptyList(),
+                                index = it
+                            )))
+                        }
                     )
                     SegmentedButtonInPage(
                         state = state,
@@ -147,7 +157,12 @@ fun BioDetailPage(
                                 InfoPageContent(
                                     modifier = Modifier.padding(vertical = 4.dp),
                                     state = state,
-                                    animal = animal
+                                    animal = animal,
+                                    onShowImageClick = { imageUrl ->
+                                        onAction(BioDetailAction.ShowDialog(BioDetailDialogEvent.ShowImages(
+                                            imageUrls = listOf(imageUrl),
+                                        )))
+                                    }
                                 )
                             }
                             BioInfoPageEnum.Features.ordinal ->  {
@@ -161,21 +176,43 @@ fun BioDetailPage(
             }
         }
     }
+
+    val closeDialog = remember { {
+        onAction(BioDetailAction.ShowDialog(dialogEvent = null))
+    } }
+
+    state.dialogEvent?.let { dialogEvent->
+        when(dialogEvent){
+            is BioDetailDialogEvent.ShowImages -> {
+                ShowImageDia(
+                    imageDataList = dialogEvent.imageUrls,
+                    onDismiss = closeDialog,
+                    currentPageIndex = dialogEvent.index
+                )
+            }
+        }
+    }
 }
 
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopBarImage(
+    state: BioDetailState,
     onNavigateBack: () -> Unit,
+    onShowImageClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val imageUrls = state.animal?.imageUrls ?: emptyList()
+    val carouselState = rememberCarouselState {
+        imageUrls.size
+    }
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
-            .background(Color.Blue.copy(alpha = 0.3f))
-            .height(250.dp)
+            .height(300.dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
@@ -192,15 +229,35 @@ private fun TopBarImage(
             )
         }
 
-        DefaultImage(
-            imageData = SampleDatas.imageUrl,
-            modifier = Modifier.matchParentSize()
-        )
+        if(imageUrls.isEmpty()){
+            DefaultImage(
+                imageData = "",
+            )
+        }else{
+            HorizontalMultiBrowseCarousel(
+                state = carouselState,
+                preferredItemWidth = 350.dp,
+                minSmallItemWidth = 200.dp,
+                maxSmallItemWidth = 600.dp,
+                itemSpacing = 4.dp,
+                contentPadding = PaddingValues(horizontal = 0.dp)
+            ) { index ->
+                DefaultImage(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            onShowImageClick(index)
+                        }
+                    ,
+                    imageData = imageUrls[index],
+                )
+            }
+        }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SegmentedButtonInPage(
     state: BioDetailState,
@@ -229,6 +286,7 @@ private fun SegmentedButtonInPage(
 private fun InfoPageContent(
     state: BioDetailState,
     animal: Animal,
+    onShowImageClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -256,7 +314,8 @@ private fun InfoPageContent(
             TitleSectionRow(
                 modifier = Modifier
                     .padding(bottom = 12.dp),
-                titleSectionModel = titleSectionModel
+                titleSectionModel = titleSectionModel,
+                onImageClick = onShowImageClick
             )
         }
     }
@@ -322,14 +381,28 @@ private fun FeaturePageContent(
 fun BioDetailPagePreview() {
     BioDetailPage(
         state = BioDetailState(
-            animal = SampleDatas.animal,
+            animalDetail = SampleDatas.animalDetail,
             selectedPage = BioInfoPageEnum.Info,
             titleSectionModels = SampleDatas.animal.toTitleSections(),
-            scientificNomenclatureSection = SampleDatas.animal.toScientificNomenclatureSection(),
-            featureSection2 = SampleDatas.animal.toFeatureSection2(),
+            scientificNomenclatureSection = SampleDatas.animalDetail.toScientificNomenclatureSection(),
+            featureSection2 = SampleDatas.animalDetail.toFeatureSection2(),
             featureSection3 = SampleDatas.animal.toFeatureSection3()
         ),
         onAction = {},
         onNavigateBack = {}
     )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

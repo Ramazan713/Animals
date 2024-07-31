@@ -1,11 +1,12 @@
 package com.masterplus.animals.features.bio_detail.presentation.mapper
 
 import com.masterplus.animals.core.domain.models.Animal
+import com.masterplus.animals.core.domain.models.AnimalDetail
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleSectionModel
 
 
-fun Animal.toTitleSections(): List<TitleSectionModel>{
+fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSectionModel>{
     val titleSections = mutableListOf<TitleSectionModel>()
 
     titleSections.add(
@@ -16,7 +17,8 @@ fun Animal.toTitleSections(): List<TitleSectionModel>{
                     title = "Fiziksel Özellikler",
                     content = physicalCharacteristics
                 )
-            )
+            ),
+            imageUrl = imageUrls.getOrNull(0)
         )
     )
 
@@ -65,7 +67,8 @@ fun Animal.toTitleSections(): List<TitleSectionModel>{
                     title = "Bilinmeyen veya Az Bilinen Özellikler",
                     content = unknownFeatures
                 )
-            )
+            ),
+            imageUrl = imageUrls.getOrNull(1)
         )
     )
 
@@ -110,7 +113,8 @@ fun Animal.toTitleSections(): List<TitleSectionModel>{
                     title = "İletişim Şekilleri",
                     content = communicationMethods
                 )
-            )
+            ),
+            imageUrl = imageUrls.getOrNull(2)
         )
     )
 
@@ -168,82 +172,82 @@ fun Animal.toTitleSections(): List<TitleSectionModel>{
 
 
 
-fun Animal.toScientificNomenclatureSection(): List<TitleContentModel>{
+fun AnimalDetail.toScientificNomenclatureSection(): List<TitleContentModel>{
     val titleContents = mutableListOf<TitleContentModel>()
 
     titleContents.add(
         TitleContentModel(
             title = "Şube",
-            content = "Arthropoda"
+            content = phylum.scientificName
         )
     )
 
     titleContents.add(
         TitleContentModel(
             title = "Sınıf",
-            content = "Arthropoda"
+            content = classModel.scientificName
         )
     )
 
     titleContents.add(
         TitleContentModel(
             title = "Takım",
-            content = "Arthropoda"
+            content = order.scientificName
         )
     )
 
     titleContents.add(
         TitleContentModel(
             title = "Familya",
-            content = "Arthropoda"
+            content = family.scientificName
         )
     )
 
     titleContents.add(
         TitleContentModel(
             title = "Cins",
-            content = "Arthropoda"
+            content = genus.scientificName
         )
     )
 
     titleContents.add(
         TitleContentModel(
             title = "Tür",
-            content = "Arthropoda"
+            content = species.scientificName
         )
     )
 
     return titleContents
 }
 
-fun Animal.toFeatureSection2(): List<TitleContentModel>{
+fun AnimalDetail.toFeatureSection2(): List<TitleContentModel>{
     val titleContents = mutableListOf<TitleContentModel>()
 
     titleContents.add(
         TitleContentModel(
             title = "Yaşam Alanı",
-            content = "Karasalx"
+            content = habitatCategory.habitatCategory
         )
     )
 
     titleContents.add(
         TitleContentModel(
             title = "Boyut",
-            content = size
+            content = animal.size
         )
     )
 
     titleContents.add(
         TitleContentModel(
             title = "Ağırlık",
-            content = weight
+            content = animal.weight
         )
     )
 
     titleContents.add(
         TitleContentModel(
             title = "Renk",
-            content = color
+            content = animal.color
         )
     )
     return titleContents

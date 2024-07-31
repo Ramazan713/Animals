@@ -33,23 +33,24 @@ class BioDetailViewModel(
     init {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val animal = animalRepo.getAnimalById(args.id)
+            val animalDetail = animalRepo.getAnimalDetailById(args.id)
             _state.update { it.copy(
-                animal = animal,
+                animalDetail = animalDetail,
                 isLoading = false
             ) }
         }
 
         _state
-            .map { it.animal }
+            .map { it.animalDetail }
             .filterNotNull()
             .distinctUntilChanged()
-            .onEach { animal ->
+            .onEach { animalDetail ->
+                val titleSectionImages = animalDetail.images.takeLastWhile { it.imageOrder > 2 }.map { it.imageUrl }
                 _state.update { it.copy(
-                    titleSectionModels = animal.toTitleSections(),
-                    scientificNomenclatureSection = animal.toScientificNomenclatureSection(),
-                    featureSection2 = animal.toFeatureSection2(),
-                    featureSection3 = animal.toFeatureSection3()
+                    titleSectionModels = animalDetail.animal.toTitleSections(imageUrls = titleSectionImages),
+                    scientificNomenclatureSection = animalDetail.toScientificNomenclatureSection(),
+                    featureSection2 = animalDetail.toFeatureSection2(),
+                    featureSection3 = animalDetail.animal.toFeatureSection3()
                 ) }
             }
             .launchIn(viewModelScope)
@@ -60,6 +61,12 @@ class BioDetailViewModel(
             is BioDetailAction.ChangePage -> {
                 _state.update { it.copy(
                     selectedPage = action.page
+                ) }
+            }
+
+            is BioDetailAction.ShowDialog -> {
+                _state.update { it.copy(
+                    dialogEvent = action.dialogEvent
                 ) }
             }
         }

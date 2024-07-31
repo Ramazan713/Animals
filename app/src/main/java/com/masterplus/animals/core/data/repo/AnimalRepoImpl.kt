@@ -6,9 +6,11 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toAnimal
 import com.masterplus.animals.core.data.mapper.toAnimalData
+import com.masterplus.animals.core.data.mapper.toAnimalDetail
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.domain.models.AnimalData
+import com.masterplus.animals.core.domain.models.AnimalDetail
 import com.masterplus.animals.core.domain.repo.AnimalRepo
 import com.masterplus.animals.core.shared_features.database.dao.AnimalDao
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +22,10 @@ class AnimalRepoImpl constructor(
 
     override suspend fun getAnimalById(animalId: Int): Animal? {
        return animalDao.getAnimalById(animalId)?.toAnimal()
+    }
+
+    override suspend fun getAnimalDetailById(animalId: Int): AnimalDetail? {
+        return animalDao.getAnimalDetailById(animalId)?.toAnimalDetail()
     }
 
     override fun getPagingAnimalsList(

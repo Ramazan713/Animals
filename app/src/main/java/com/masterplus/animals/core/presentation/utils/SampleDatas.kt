@@ -2,6 +2,15 @@ package com.masterplus.animals.core.presentation.utils
 
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.domain.models.AnimalData
+import com.masterplus.animals.core.domain.models.AnimalDetail
+import com.masterplus.animals.core.domain.models.AnimalImageModel
+import com.masterplus.animals.core.domain.models.ClassModel
+import com.masterplus.animals.core.domain.models.FamilyModel
+import com.masterplus.animals.core.domain.models.GenusModel
+import com.masterplus.animals.core.domain.models.HabitatCategoryModel
+import com.masterplus.animals.core.domain.models.OrderModel
+import com.masterplus.animals.core.domain.models.PhylumModel
+import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleSectionModel
@@ -19,6 +28,67 @@ object SampleDatas {
         subTitle = "Sub Title",
         id = 2,
         imageUrl = imageUrl
+    )
+
+    val phylum = PhylumModel(
+        id = 2,
+        scientificName = "Arthropoda",
+        phylum = "Arthropoda"
+    )
+    val classModel = ClassModel(
+        id = 2,
+        scientificName = "Insecta",
+        className = "",
+        phylumId = 2,
+        imageUrl = "",
+        imagePath = ""
+    )
+    val order = OrderModel(
+        id = 2,
+        scientificName = "Hymenoptera",
+        order = "",
+        classId = 2,
+        imageUrl = "",
+        imagePath = ""
+    )
+
+    val family = FamilyModel(
+        id = 2,
+        scientificName = "Apidae",
+        family = "",
+        orderId = 2,
+        imageUrl = "",
+        imagePath = ""
+    )
+
+    val genus = GenusModel(
+        id = 2,
+        scientificName = "Apis",
+        genus = "",
+        familyId = 2,
+    )
+
+    val species = SpeciesModel(
+        id = 2,
+        scientificName = "Apis mellifera",
+        species = "Bal Arısı",
+        genusId = 2
+    )
+
+    val habitatCategory = HabitatCategoryModel(
+        id = 1,
+        habitatCategory = "Karasal"
+    )
+
+    val animalImage = AnimalImageModel(
+        id = 1,
+        imagePath = "",
+        imageUrl = "",
+        animalId = 2,
+        imageOrder = 1,
+        name = null,
+        updatedAt = "",
+        createdAt = ""
     )
 
     val animalData = AnimalData(
@@ -79,7 +149,19 @@ object SampleDatas {
         adaptation="Karmaşık görme ve anten kullanımı",
         evolution="Sosyal yapı ve iş bölümü",
         recognitionAndInteraction=8,
-        imageUrls= listOf()
+        imageUrls= listOf(animalImage, animalImage, animalImage).map { it.imageUrl }
+    )
+
+    val animalDetail = AnimalDetail(
+        animal = animal,
+        phylum = phylum,
+        classModel = classModel,
+        order = order,
+        family = family,
+        genus = genus,
+        species = species,
+        habitatCategory = habitatCategory,
+        images = listOf(animalImage, animalImage, animalImage)
     )
 
     val titleSectionModel = TitleSectionModel(
@@ -93,6 +175,7 @@ object SampleDatas {
                 title = "Ekosistem",
                 content = animal.ecosystem
             )
-        )
+        ),
+        imageUrl = imageUrl
     )
 }

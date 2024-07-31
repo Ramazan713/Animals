@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDataWithImagesEntity
+import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDetailEmbeddedEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalWithImagesEntity
 
 @Dao
@@ -15,6 +16,12 @@ interface AnimalDao {
         select * from animals where id = :id
     """)
     suspend fun getAnimalById(id: Int): AnimalWithImagesEntity?
+
+    @Transaction
+    @Query("""
+        select * from animals where id = :id
+    """)
+    suspend fun getAnimalDetailById(id: Int): AnimalDetailEmbeddedEntity?
 
     @Transaction
     @Query("""
