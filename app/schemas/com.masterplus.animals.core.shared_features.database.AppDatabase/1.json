@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "22e7d6c25b28ca3252865b63d9464cf9",
+    "identityHash": "3bfb8bacacf5a5e2d2111e5be3510774",
     "entities": [
       {
         "tableName": "Animals",
@@ -1053,12 +1053,129 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "Lists",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `isRemovable` INTEGER NOT NULL DEFAULT 1, `isArchive` INTEGER NOT NULL DEFAULT 0, `pos` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRemovable",
+            "columnName": "isRemovable",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "isArchive",
+            "columnName": "isArchive",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "pos",
+            "columnName": "pos",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ListAnimals",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`listId` INTEGER NOT NULL, `animalId` INTEGER NOT NULL, `pos` INTEGER NOT NULL, PRIMARY KEY(`listId`, `animalId`), FOREIGN KEY(`animalId`) REFERENCES `Animals`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`listId`) REFERENCES `Lists`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "listId",
+            "columnName": "listId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "animalId",
+            "columnName": "animalId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pos",
+            "columnName": "pos",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "listId",
+            "animalId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_ListAnimals_animalId",
+            "unique": false,
+            "columnNames": [
+              "animalId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ListAnimals_animalId` ON `${TABLE_NAME}` (`animalId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Animals",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "animalId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Lists",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "listId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
-    "views": [],
+    "views": [
+      {
+        "viewName": "listViews",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS select L.id, L.name, L.isRemovable, L.isArchive, L.pos listPos,\n     count(LA.animalId) itemCounts, ifnull(max(LA.pos),0) contentMaxPos \n     from Lists L left join  ListAnimals LA on  L.id = LA.listId\n     group by L.id"
+      }
+    ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '22e7d6c25b28ca3252865b63d9464cf9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3bfb8bacacf5a5e2d2111e5be3510774')"
     ]
   }
 }

@@ -15,11 +15,13 @@ val databaseModule = module {
             .build()
     }
 
-    single {
-        get<AppDatabase>().categoryDao
-    }
+    single { get<AppDatabase>().categoryDao }
 
-    single {
-        get<AppDatabase>().animalDao
-    }
+    single { get<AppDatabase>().animalDao }
+
+    single { get<AppDatabase>().listDao }
+
+    single { get<AppDatabase>().listViewDao }
+
+    single { get<AppDatabase>().listAnimalsDao }
 }
