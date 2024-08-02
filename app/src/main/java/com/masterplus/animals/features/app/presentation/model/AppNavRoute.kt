@@ -1,12 +1,15 @@
 package com.masterplus.animals.features.app.presentation.model
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.masterplus.animals.features.animal.presentation.navigation.AnimalRoute
+import com.masterplus.animals.features.list.presentation.show_list.navigation.ShowListRoute
 import com.masterplus.animals.features.settings.presentation.navigation.SettingsRoute
 
 sealed class AppNavRoute(
@@ -30,6 +33,13 @@ sealed class AppNavRoute(
         title = "Settings"
     )
 
+    data object Lists: AppNavRoute(
+        route = ShowListRoute,
+        selectedIconVector = Icons.AutoMirrored.Filled.ViewList,
+        unSelectedIconVector = Icons.AutoMirrored.Outlined.ViewList,
+        title = "Lists"
+    )
+
 
     fun getCurrentIconVector(selected: Boolean): ImageVector{
         return if(selected) selectedIconVector else unSelectedIconVector
@@ -38,5 +48,5 @@ sealed class AppNavRoute(
 }
 
 val kBottomBarRoutes = listOf(
-    AppNavRoute.Animal, AppNavRoute.Settings
+   AppNavRoute.Animal,  AppNavRoute.Lists
 )

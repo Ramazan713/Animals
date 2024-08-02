@@ -8,6 +8,7 @@ import com.masterplus.animals.features.animal.presentation.di.animalPresentation
 import com.masterplus.animals.features.bio_detail.presentation.di.bioDetailPresentationModule
 import com.masterplus.animals.features.bio_list.presentation.di.bioListPresentationModule
 import com.masterplus.animals.features.category_list.presentation.di.categoryListPresentationModule
+import com.masterplus.animals.features.list.presentation.di.showListPresentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -21,7 +22,7 @@ class AnimalsApp: Application() {
                 databaseModule, animalPresentationModule, coreDataModule,
                 categoryListPresentationModule, bioListPresentationModule,
                 bioDetailPresentationModule,
-                listDataModule
+                listDataModule, showListPresentationModule
             )
         }
     }

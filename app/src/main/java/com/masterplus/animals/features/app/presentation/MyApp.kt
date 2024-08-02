@@ -1,8 +1,10 @@
 package com.masterplus.animals.features.app.presentation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -11,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,8 +31,14 @@ import com.masterplus.animals.features.category_list.presentation.navigation.cat
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryListWithDetail
 import com.masterplus.animals.features.category_list.presentation.navigation.navigateToCategoryList
 import com.masterplus.animals.features.category_list.presentation.navigation.navigateToCategoryListWithDetail
+import com.masterplus.animals.features.list.presentation.archive_list.navigation.archiveList
+import com.masterplus.animals.features.list.presentation.archive_list.navigation.navigateToArchiveList
+import com.masterplus.animals.features.list.presentation.show_list.navigation.showList
 import com.masterplus.animals.features.settings.presentation.navigation.settings
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun MyApp(
     navHostController: NavHostController = rememberNavController()
@@ -95,6 +104,22 @@ fun MyApp(
             )
 
             settings()
+
+            showList(
+                onNavigateToDetailList = {},
+                onNavigateToArchive = {
+                    navHostController.navigateToArchiveList()
+                }
+            )
+
+            archiveList(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                },
+                onNavigateToDetailList = {
+
+                }
+            )
 
             categoryList(
                 onNavigateBack = {
