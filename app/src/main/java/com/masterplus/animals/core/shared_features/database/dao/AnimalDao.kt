@@ -60,4 +60,11 @@ interface AnimalDao {
     """)
     fun getPagingAnimalsByOrderId(orderId: Int): PagingSource<Int, AnimalDataDetailEmbedded>
 
+    @Transaction
+    @Query("""
+        select A.* from animals A, ListAnimals LA 
+        where A.id = LA.animalId and LA.listId = :listId order by A.id
+    """)
+    fun getPagingAnimalsByListId(listId: Int): PagingSource<Int, AnimalDataDetailEmbedded>
+
 }

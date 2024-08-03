@@ -27,33 +27,30 @@ class SelectListMenuViewModel @Inject constructor(
 
     private var loadDataJob: Job? = null
 
-    fun onEvent(event: SelectListMenuAction){
-        when(event){
+    fun onEvent(action: SelectListMenuAction){
+        when(action){
             is SelectListMenuAction.LoadData -> {
-                loadData(event)
+                loadData(action)
             }
             is SelectListMenuAction.AddToFavorite -> {
                 viewModelScope.launch {
-                    addFavoriteWord(event.animalId)
+                    addFavoriteAnimal(action.animalId)
                 }
             }
             is SelectListMenuAction.ShowDialog -> {
-                _state.update { it.copy(dialogEvent = event.dialogEvent)}
+                _state.update { it.copy(dialogEvent = action.dialogEvent)}
             }
             is SelectListMenuAction.AddOrAskFavorite -> {
-                viewModelScope.launch {
-                    addFavoriteWord(event.animalId)
-                }
                 viewModelScope.launch {
                     listInFavoriteUseCase(_state.value.listIdControl,true).let { showDia->
                         if(showDia){
                             _state.update { state->
                                 state.copy(
-                                    dialogEvent = SelectListMenuDialogEvent.AskFavoriteDelete(event.animalId)
+                                    dialogEvent = SelectListMenuDialogEvent.AskFavoriteDelete(action.animalId)
                                 )
                             }
                         }else{
-                            addFavoriteWord(event.animalId)
+                            addFavoriteAnimal(action.animalId)
                         }
                     }
                 }
@@ -61,7 +58,7 @@ class SelectListMenuViewModel @Inject constructor(
         }
     }
 
-    private suspend fun addFavoriteWord(wordId: Int){
+    private suspend fun addFavoriteAnimal(wordId: Int){
         listAnimalsRepo.addOrRemoveFavoriteAnimal(wordId)
     }
 

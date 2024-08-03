@@ -52,6 +52,9 @@ class AnimalRepoImpl constructor(
                     CategoryType.Family -> {
                         animalDao.getPagingAnimalsByFamilyId(itemId)
                     }
+                    CategoryType.List -> {
+                        animalDao.getPagingAnimalsByListId(itemId)
+                    }
                 }
             }
         ).flow.map { items ->

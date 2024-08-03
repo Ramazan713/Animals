@@ -9,4 +9,5 @@ sealed interface BioListDialogEvent {
         val posIndex: Int
     ): BioListDialogEvent
 
+    data class AskFavoriteDelete(val animalId: Int): BioListDialogEvent
 }

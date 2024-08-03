@@ -15,11 +15,13 @@ import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
+import com.masterplus.animals.core.shared_features.database.dao.ListDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class CategoryRepoImpl constructor(
-    private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao,
+    private val listDao: ListDao
 ): CategoryRepo {
     override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int): String? {
         return when(categoryType){
@@ -27,6 +29,7 @@ class CategoryRepoImpl constructor(
             CategoryType.Class -> categoryDao.getClassWithId(itemId)?.scientific_name
             CategoryType.Order -> categoryDao.getOrderWithId(itemId)?.scientific_name
             CategoryType.Family -> categoryDao.getFamilyWithId(itemId)?.scientific_name
+            CategoryType.List -> listDao.getListById(itemId)?.name
         }
     }
 

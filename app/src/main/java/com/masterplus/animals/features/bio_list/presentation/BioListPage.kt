@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -31,6 +33,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.AnimalData
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
+import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
@@ -96,12 +99,21 @@ fun BioListPage(
                 ) {
                     CircularProgressIndicator()
                 }
+            }else{
+                if(pagingItems.itemCount == 0){
+                    Text(
+                        stringResource(R.string.not_fount_any_result),
+                        modifier = Modifier.align(Alignment.Center),
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
             LazyColumn(
                 modifier = Modifier
                     .matchParentSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)
             ) {
                 items(
                     count = pagingItems.itemCount,
@@ -117,10 +129,10 @@ fun BioListPage(
                                 onNavigateToBioDetail(item.id ?: 0)
                             },
                             onFavoriteClick = {
-                                onAction(BioListAction.FavoriteItem(item))
+                                onAction(BioListAction.AddToFavorite(item.id ?: 0))
                             },
                             onUnFavoriteClick = {
-                                onAction(BioListAction.FavoriteItem(item))
+                                onAction(BioListAction.AddOrAskFavorite(item.id ?: 0))
                             },
                             onMenuButtonClick = {
                                 onAction(BioListAction.ShowDialog(BioListDialogEvent.ShowItemBottomMenu(item,index)))
@@ -154,8 +166,17 @@ fun BioListPage(
                     title = stringResource(id = R.string.n_for_number_word,dialogEvent.posIndex + 1, dialogEvent.item.name),
                     animalId = dialogEvent.item.id ?: 0,
                     onClose = close,
-                    onClickItem = {
-
+                    listIdControl = state.listIdControl,
+                    onClickItem = { }
+                )
+            }
+            is BioListDialogEvent.AskFavoriteDelete -> {
+                ShowQuestionDialog(
+                    title = stringResource(R.string.question_remove_list_from_favorite),
+                    content = stringResource(R.string.affect_current_list),
+                    onClosed = close,
+                    onApproved = {
+                        onAction(BioListAction.AddToFavorite(dialogEvent.animalId))
                     }
                 )
             }
@@ -173,7 +194,7 @@ fun BioListPagePreview() {
         onNavigateToBioDetail = {},
         pagingItems = getPreviewLazyPagingData(
             items = listOf(SampleDatas.generateAnimalData(id = 1), SampleDatas.generateAnimalData(id = 2), SampleDatas.generateAnimalData(id = 3)),
-            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading)
+            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading),
         )
     )
 }

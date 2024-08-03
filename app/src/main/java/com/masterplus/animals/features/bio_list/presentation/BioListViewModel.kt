@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.AnimalRepo
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.list.domain.repo.ListAnimalsRepo
+import com.masterplus.animals.core.shared_features.list.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import com.masterplus.animals.features.bio_list.presentation.navigation.BioListRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +20,7 @@ class BioListViewModel(
     private val animalRepo: AnimalRepo,
     private val categoryRepo: CategoryRepo,
     private val listAnimalsRepo: ListAnimalsRepo,
+    private val listInFavoriteUseCase: ListInFavoriteControlForDeletionUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val args = savedStateHandle.toRoute<BioListRoute>()
@@ -37,6 +40,9 @@ class BioListViewModel(
                 title = title
             ) }
         }
+        _state.update { it.copy(
+            listIdControl = if(args.categoryType == CategoryType.List) args.realItemId else null
+        ) }
     }
 
     fun onAction(action: BioListAction){
@@ -46,13 +52,31 @@ class BioListViewModel(
                     dialogEvent = action.dialogEvent
                 ) }
             }
-
-            is BioListAction.FavoriteItem -> {
+            is BioListAction.AddOrAskFavorite -> {
                 viewModelScope.launch {
-                    listAnimalsRepo.addOrRemoveFavoriteAnimal(action.animalData.id?:0)
+                    listInFavoriteUseCase(_state.value.listIdControl,true).let { showDia->
+                        if(showDia){
+                            _state.update { state->
+                                state.copy(
+                                    dialogEvent = BioListDialogEvent.AskFavoriteDelete(action.animalId)
+                                )
+                            }
+                        }else{
+                            addFavoriteAnimal(action.animalId)
+                        }
+                    }
+                }
+            }
+            is BioListAction.AddToFavorite -> {
+                viewModelScope.launch {
+                    addFavoriteAnimal(action.animalId)
                 }
             }
         }
+    }
+
+    private suspend fun addFavoriteAnimal(wordId: Int){
+        listAnimalsRepo.addOrRemoveFavoriteAnimal(wordId)
     }
 
 

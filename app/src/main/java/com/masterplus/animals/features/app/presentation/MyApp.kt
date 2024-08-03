@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.features.animal.presentation.navigation.AnimalRoute
 import com.masterplus.animals.features.animal.presentation.navigation.animal
 import com.masterplus.animals.features.app.presentation.extensions.navigateToBar
@@ -106,7 +107,9 @@ fun MyApp(
             settings()
 
             showList(
-                onNavigateToDetailList = {},
+                onNavigateToDetailList = {listId ->
+                    navHostController.navigateToBioList(CategoryType.List.catId, listId)
+                },
                 onNavigateToArchive = {
                     navHostController.navigateToArchiveList()
                 }
@@ -116,8 +119,8 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToDetailList = {
-
+                onNavigateToDetailList = { listId ->
+                    navHostController.navigateToBioList(CategoryType.List.catId, listId)
                 }
             )
 

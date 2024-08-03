@@ -19,7 +19,12 @@ enum class CategoryType(
     Family(
         catId = 4,
         title = "Familyalar"
-    );
+    ),
+    List(
+        catId = 5,
+        title = "Listeler"
+    )
+    ;
 
     companion object {
         fun fromCatId(catId: Int): CategoryType{
