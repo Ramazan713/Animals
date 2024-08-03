@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.lib.zoomable)
 
     implementation(libs.bundles.paging)
     implementation(libs.bundles.datastore)
