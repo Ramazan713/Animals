@@ -15,4 +15,6 @@ interface ListRepo {
     suspend fun unArchiveList(listId: Int)
 
     suspend fun deleteListById(listId: Int)
+
+    suspend fun isFavoriteList(listId: Int): Boolean
 }

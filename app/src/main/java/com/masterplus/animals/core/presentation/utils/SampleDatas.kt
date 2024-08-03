@@ -13,14 +13,14 @@ import com.masterplus.animals.core.domain.models.PhylumModel
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.shared_features.list.domain.models.ListView
+import com.masterplus.animals.core.shared_features.list.domain.models.SelectableListView
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleSectionModel
 
 object SampleDatas {
     const val imageUrl = "https://storage.googleapis.com/animals-ce701.appspot.com/public/images/class/mammalia.jpg?Expires=1724517659&GoogleAccessId=firebase-adminsdk-hprer%40animals-ce701.iam.gserviceaccount.com&Signature=N27yfyDPC7RZzh0Cirowi0Ki%2FisODA%2Bnp9i2dAjR5OEDZV8Cuji0CwMOqhZoQYE9QnD8LOcNI2vR6uJ9ChzUhFrOJ9BmKzroiwzqhRsU1OgFYQwCpE5yi9WFPwpw3Pmlaz%2B1dIr6I3%2BQAfM91y6kMPpFFPwKFwT4H7uS%2FYWEu91x0VLvWH%2FMPXGiYmIcNEQnhigPRT%2BPsjxJyAwoajEOSGgHrXai43%2FtiXoZYYVMbLOOR03BKNcMC4dGC56S6zA05JnjplmZ%2Bn2veofgUGocGOeQ0kL9BngIDjlbv6wS7gxZlHbp4gJEG3UF3HdGi3thfImt3W%2FUthn0dJlpPPcz1g%3D%3D"
 
-    val listViewFavorite = ListView(id = 1, name = "List name", isRemovable = false, listPos = 1, isArchive = false, itemCounts = 5, contentMaxPos = 3,)
-    val listView = listViewFavorite.copy(id = 2, isRemovable = true)
+
 
     val imageWithTitleModel1 = ImageWithTitleModel(
         title = "Kartal",
@@ -100,7 +100,9 @@ object SampleDatas {
         name = "Bal Arısi",
         scientificName = "Apis mellifera",
         introduction = "Arılar, dünya genelinde tarımın ve doğal ekosistemlerin sürdürülebilirliği için hayati öneme sahip polinatörlerdir. Bal üretimi ile tanınsalar da, bitkilerin tozlaşmasını sağlayarak birçok meyve ve sebzenin oluşmasında kritik rol oynarlar. Arılar, karmaşık sosyal yapıları ve etkileyici iş bölümleriyle de dikkat çekerler. Özellikle bal arıları, ürettikleri bal ve balmumu ile insanlık için ekonomik değere sahiptir.",
-        imageUrls = listOf(imageUrl)
+        imageUrls = listOf(imageUrl),
+        isFavorited = false,
+        isListSelected = false
     )
 
 
@@ -182,4 +184,54 @@ object SampleDatas {
         ),
         imageUrl = imageUrl
     )
+
+
+    fun generateAnimalData(
+        id: Int = 1,
+        name: String = "Bal Arısi",
+        scientificName: String = "Apis mellifera",
+        introduction: String = "Arılar, dünya genelinde tarımın ve doğal ekosistemlerin sürdürülebilirliği için hayati öneme sahip polinatörlerdir. Bal üretimi ile tanınsalar da, bitkilerin tozlaşmasını sağlayarak birçok meyve ve sebzenin oluşmasında kritik rol oynarlar. Arılar, karmaşık sosyal yapıları ve etkileyici iş bölümleriyle de dikkat çekerler. Özellikle bal arıları, ürettikleri bal ve balmumu ile insanlık için ekonomik değere sahiptir.",
+        imageUrls: List<String> = listOf(imageUrl),
+        isFavorited: Boolean = false,
+        isListSelected: Boolean = false
+    ): AnimalData{
+        return AnimalData(
+            id = id,
+            name = name,
+            scientificName = scientificName,
+            introduction = introduction,
+            imageUrls = imageUrls,
+            isFavorited = isFavorited,
+            isListSelected = isListSelected
+        )
+    }
+
+    fun generateListView(
+        id: Int = 1,
+        name: String = "list item $id",
+        isRemovable: Boolean = false,
+        isArchive: Boolean = false,
+        listPos: Int = 1,
+        contentMaxPos: Int = 1,
+        itemCounts: Int = 2
+    ): ListView{
+        return ListView(id, name, isRemovable, isArchive, listPos, contentMaxPos, itemCounts)
+    }
+
+    fun generateSelectableListView(
+        listView: ListView = generateListView(),
+        isSelected: Boolean = false
+    ): SelectableListView{
+        return SelectableListView(listView, isSelected)
+    }
+
+
+    val selectableListViewArr = listOf(
+        generateSelectableListView(generateListView(id = 1)),
+        generateSelectableListView(generateListView(id = 2)),
+        generateSelectableListView(generateListView(id = 3))
+    )
+
+    val listViewFavorite = generateListView(id = 1, isRemovable = false)
+    val listView = generateListView(id = 2, isRemovable = true)
 }

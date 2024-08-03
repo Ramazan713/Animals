@@ -7,12 +7,20 @@ import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.list.domain.models.ListView
 import com.masterplus.animals.core.shared_features.list.domain.repo.ListAnimalsRepo
 import com.masterplus.trdictionary.core.data.local.services.ListViewDao
+import kotlinx.coroutines.flow.Flow
 
 class ListAnimalsRepoImpl(
     private val listAnimalsDao: ListAnimalsDao,
     private val listDao: ListDao,
     private val listViewDao: ListViewDao
 ): ListAnimalsRepo {
+    override fun getHasAnimalInListFlow(animalId: Int, isListFavorite: Boolean): Flow<Boolean> {
+        if(isListFavorite){
+            return listAnimalsDao.hasAnimalInFavoriteListFlow(animalId)
+        }
+        return listAnimalsDao.hasAnimalInRemovableListFlow(animalId)
+    }
+
     override suspend fun addOrRemoveListAnimal(listView: ListView, animalId: Int) {
         val listAnimalEntity = listAnimalsDao.getListAnimalsEntity(animalId, listView.id ?: 0)
         if(listAnimalEntity != null){

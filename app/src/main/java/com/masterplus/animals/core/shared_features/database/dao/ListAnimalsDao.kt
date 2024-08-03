@@ -35,4 +35,19 @@ interface ListAnimalsDao {
     @Delete
     suspend fun deleteListAnimal(listAnimals: ListAnimalsEntity)
 
+
+
+    @Transaction
+    @Query("""
+        select exists(select * from listAnimals LA, lists L
+        where LA.listId = L.id and L.isRemovable = 0 and LA.animalId = :animalId)
+    """)
+    fun hasAnimalInFavoriteListFlow(animalId: Int): Flow<Boolean>
+
+    @Transaction
+    @Query("""
+        select exists(select * from listAnimals LA, lists L
+        where LA.listId = L.id and L.isRemovable = 1 and LA.animalId = :animalId)
+    """)
+    fun hasAnimalInRemovableListFlow(animalId: Int): Flow<Boolean>
 }

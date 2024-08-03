@@ -65,6 +65,10 @@ class ListRepoImpl(
         listDao.deleteListById(listId)
     }
 
+    override suspend fun isFavoriteList(listId: Int): Boolean {
+        return listDao.isFavoriteList(listId)
+    }
+
     private suspend fun getMaxPos(): Int{
         return listDao.getMaxPos() + 1
     }

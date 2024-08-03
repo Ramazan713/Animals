@@ -16,6 +16,11 @@ interface ListDao {
     @Query("""select ifnull(max(pos),0) from lists""")
     suspend fun getMaxPos(): Int
 
+    @Query("""
+        select ifnull((select  not isRemovable from lists where id = :listId), 0)
+    """)
+    suspend fun isFavoriteList(listId: Int): Boolean
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertList(listEntity: ListEntity): Long
 

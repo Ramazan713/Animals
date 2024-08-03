@@ -4,6 +4,8 @@ import android.app.Application
 import com.masterplus.animals.core.shared_features.database.di.databaseModule
 import com.masterplus.animals.core.data.di.coreDataModule
 import com.masterplus.animals.core.shared_features.list.data.di.listDataModule
+import com.masterplus.animals.core.shared_features.list.domain.di.listDomainModule
+import com.masterplus.animals.core.shared_features.list.presentation.di.sharedListPresentationModule
 import com.masterplus.animals.features.animal.presentation.di.animalPresentationModule
 import com.masterplus.animals.features.bio_detail.presentation.di.bioDetailPresentationModule
 import com.masterplus.animals.features.bio_list.presentation.di.bioListPresentationModule
@@ -22,7 +24,7 @@ class AnimalsApp: Application() {
                 databaseModule, animalPresentationModule, coreDataModule,
                 categoryListPresentationModule, bioListPresentationModule,
                 bioDetailPresentationModule,
-                listDataModule, showListPresentationModule
+                listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule
             )
         }
     }

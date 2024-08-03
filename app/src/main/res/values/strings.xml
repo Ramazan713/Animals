@@ -37,4 +37,12 @@
     <string name="n_menu_item">%1$s menu item</string>
     <string name="successfully_unarchive">Başarıyla arşivden kaldırıldı</string>
     <string name="question_unarchive">Arşivden çıkarmak istediğinize emin misiniz?</string>
+    <string name="add_favorite">Favoriye ekle</string>
+    <string name="delete_favorite">Favoriden çıkar</string>
+    <string name="add_to_list">Listeye ekle</string>
+    <string name="delete_to_list">Listeden çıkar</string>
+    <string name="question_remove_item_from_list">Listeden çıkarmak istediğinize emin misiniz?</string>
+    <string name="affect_current_list">Bulunduğunuz listeyi etkileyecektir</string>
+    <string name="question_remove_list_from_favorite">Favorilerden çıkarmak istediğinize emin misiniz?</string>
+    <string name="n_for_number_word">%1$s - \'%2$s\' için</string>
 </resources>
