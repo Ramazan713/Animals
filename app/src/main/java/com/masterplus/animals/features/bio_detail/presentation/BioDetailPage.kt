@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
@@ -33,10 +32,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,12 +41,12 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.presentation.components.DefaultImage
+import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.dialogs.ShowImageDia
+import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.features.bio_detail.domain.enums.BioInfoPageEnum
 import com.masterplus.animals.features.bio_detail.presentation.components.TitleContentInfo
@@ -58,8 +55,6 @@ import com.masterplus.animals.features.bio_detail.presentation.mapper.toFeatureS
 import com.masterplus.animals.features.bio_detail.presentation.mapper.toFeatureSection3
 import com.masterplus.animals.features.bio_detail.presentation.mapper.toScientificNomenclatureSection
 import com.masterplus.animals.features.bio_detail.presentation.mapper.toTitleSections
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -82,98 +77,89 @@ fun BioDetailPage(
     onNavigateBack: () -> Unit,
 ) {
     val horizontalPagePadding = 8.dp
-    val lifecycleOwner = LocalLifecycleOwner.current
 
     val pagerState = rememberPagerState(
         initialPage = state.selectedPage.ordinal
     ) {
         BioInfoPageEnum.entries.size
     }
-    LaunchedEffect(state.selectedPage, lifecycleOwner.lifecycle) {
-        snapshotFlow { state.selectedPage }
-            .distinctUntilChanged()
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest { pageEnum ->
-                pagerState.animateScrollToPage(pageEnum.ordinal)
-            }
-    }
 
+    EventHandler(event = state.selectedPage) { pageEnum ->
+        pagerState.animateScrollToPage(pageEnum.ordinal)
+    }
 
     Scaffold { paddings ->
         val animal = state.animal
-        Box(
+
+        SharedLoadingPageContent(
             modifier = Modifier
                 .padding(paddings)
                 .fillMaxSize(),
-            contentAlignment = Alignment.Center
+            isLoading = state.isLoading,
+            isEmptyResult = animal == null,
         ) {
-            if(state.isLoading){
-                CircularProgressIndicator()
-            }
-            else if(animal == null){
-                Text(text = "Herhangi bir veri bulunamadı")
-            }else{
-                Column(
+            if(animal == null) return@SharedLoadingPageContent
+            Column(
+                modifier = Modifier
+                    .padding(paddings)
+                    .padding(horizontal = horizontalPagePadding)
+                    .padding(bottom = 16.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                ,
+            ) {
+                TopBarImage(
+                    state = state,
                     modifier = Modifier
-                        .padding(paddings)
-                        .padding(horizontal = horizontalPagePadding)
-                        .padding(bottom = 16.dp)
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        ,
-                ) {
-                    TopBarImage(
-                        state = state,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .layout { measurable, constraints ->
-                                val noPaddingConstraints = constraints.copy(
-                                    maxWidth = constraints.maxWidth + (horizontalPagePadding * 2).roundToPx()
-                                )
-                                val placeable = measurable.measure(noPaddingConstraints)
-                                layout(placeable.width, placeable.height) {
-                                    placeable.place(x = -0.dp.roundToPx(), y = 0)
-                                }
-                            },
-                        onNavigateBack = onNavigateBack,
-                        onShowImageClick = {
-                            onAction(BioDetailAction.ShowDialog(BioDetailDialogEvent.ShowImages(
-                                imageUrls = state.animal?.imageUrls ?: emptyList(),
-                                index = it
-                            )))
-                        }
-                    )
-                    SegmentedButtonInPage(
-                        state = state,
-                        onAction = onAction
-                    )
+                        .fillMaxWidth()
+                        .layout { measurable, constraints ->
+                            val noPaddingConstraints = constraints.copy(
+                                maxWidth = constraints.maxWidth + (horizontalPagePadding * 2).roundToPx()
+                            )
+                            val placeable = measurable.measure(noPaddingConstraints)
+                            layout(placeable.width, placeable.height) {
+                                placeable.place(x = -0.dp.roundToPx(), y = 0)
+                            }
+                        },
+                    onNavigateBack = onNavigateBack,
+                    onShowImageClick = {
+                        onAction(BioDetailAction.ShowDialog(BioDetailDialogEvent.ShowImages(
+                            imageUrls = state.animal?.imageUrls ?: emptyList(),
+                            index = it
+                        )))
+                    }
+                )
+                SegmentedButtonInPage(
+                    state = state,
+                    onAction = onAction
+                )
 
-                    HorizontalPager(
-                        state = pagerState,
-                        userScrollEnabled = false
-                    ) { pageIndex ->
-                        when(pageIndex){
-                            BioInfoPageEnum.Info.ordinal ->  {
-                                InfoPageContent(
-                                    modifier = Modifier.padding(vertical = 4.dp),
-                                    state = state,
-                                    animal = animal,
-                                    onShowImageClick = { imageUrl ->
-                                        onAction(BioDetailAction.ShowDialog(BioDetailDialogEvent.ShowImages(
-                                            imageUrls = listOf(imageUrl),
-                                        )))
-                                    }
-                                )
-                            }
-                            BioInfoPageEnum.Features.ordinal ->  {
-                                FeaturePageContent(
-                                    state = state
-                                )
-                            }
+                HorizontalPager(
+                    state = pagerState,
+                    userScrollEnabled = false
+                ) { pageIndex ->
+                    when(pageIndex){
+                        BioInfoPageEnum.Info.ordinal ->  {
+                            InfoPageContent(
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                state = state,
+                                animal = animal,
+                                onShowImageClick = { imageUrl ->
+                                    onAction(BioDetailAction.ShowDialog(BioDetailDialogEvent.ShowImages(
+                                        imageUrls = listOf(imageUrl),
+                                    )))
+                                }
+                            )
+                        }
+                        BioInfoPageEnum.Features.ordinal ->  {
+                            FeaturePageContent(
+                                state = state
+                            )
                         }
                     }
                 }
             }
+
         }
     }
 
@@ -236,9 +222,9 @@ private fun TopBarImage(
         }else{
             HorizontalMultiBrowseCarousel(
                 state = carouselState,
-                preferredItemWidth = 350.dp,
+                preferredItemWidth = 250.dp,
                 minSmallItemWidth = 200.dp,
-                maxSmallItemWidth = 600.dp,
+                maxSmallItemWidth = 450.dp,
                 itemSpacing = 4.dp,
                 contentPadding = PaddingValues(horizontal = 0.dp)
             ) { index ->
@@ -378,7 +364,7 @@ private fun FeaturePageContent(
 
 @Preview(showBackground = true)
 @Composable
-fun BioDetailPagePreview() {
+private fun BioDetailPagePreview() {
     BioDetailPage(
         state = BioDetailState(
             animalDetail = SampleDatas.animalDetail,

@@ -37,41 +37,51 @@ class ShowListViewModel @Inject constructor(
             }
             is ShowListAction.AddNewList -> {
                 viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     listRepo.insertList(action.listName)
                     _state.update { it.copy(
-                        message = UiText.Resource(R.string.successfully_added)
+                        message = UiText.Resource(R.string.successfully_added),
+                        isLoading = false
                     )}
                 }
             }
             is ShowListAction.Archive -> {
                 viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     listRepo.archiveList(action.listView.id ?: 0)
                     _state.update { it.copy(
-                        message = UiText.Resource(R.string.successfully_archived)
+                        message = UiText.Resource(R.string.successfully_archived),
+                        isLoading = false
                     )}
                 }
             }
             is ShowListAction.Copy -> {
                 viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     listRepo.copyList(action.listView.toListModel())
                     _state.update { it.copy(
-                        message = UiText.Resource(R.string.successfully_copied)
+                        message = UiText.Resource(R.string.successfully_copied),
+                        isLoading = false
                     )}
                 }
             }
             is ShowListAction.Delete -> {
                 viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     listRepo.deleteListById(action.listView.id ?: 0)
                     _state.update { it.copy(
-                        message = UiText.Resource(R.string.successfully_deleted)
+                        message = UiText.Resource(R.string.successfully_deleted),
+                        isLoading = false
                     )}
                 }
             }
             is ShowListAction.Rename -> {
                 viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     listRepo.updateListName(action.listView.id ?: 0,action.newName)
                     _state.update { it.copy(
-                        message = UiText.Resource(R.string.success)
+                        message = UiText.Resource(R.string.success),
+                        isLoading = false
                     )}
                 }
             }
@@ -83,10 +93,16 @@ class ShowListViewModel @Inject constructor(
 
 
     private fun loadData(){
+        _state.update { it.copy(
+            isLoading = true
+        ) }
         listViewRepo
             .getListViews(false)
             .onEach { items ->
-                _state.update { it.copy(items = items)}
+                _state.update { it.copy(
+                    items = items,
+                    isLoading = false
+                )}
             }
             .launchIn(viewModelScope)
     }

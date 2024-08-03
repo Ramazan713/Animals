@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryRow
+import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.features.animal.presentation.navigation.ItemId
 import org.koin.androidx.compose.koinViewModel
 
@@ -62,74 +63,70 @@ fun AnimalPage(
             )
         }
     ) { paddings ->
-        Box(
+        SharedLoadingPageContent(
             modifier = Modifier
                 .padding(paddings)
                 .fillMaxSize(),
-            contentAlignment = Alignment.Center
+            isLoading = state.isLoading,
         ) {
-            if(state.isLoading){
-                CircularProgressIndicator()
-            }else{
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                ) {
-                    item {
-                        ImageCategoryRow(
-                            contentPaddings = contentPaddings,
-                            title = "Yaşam Alanları",
-                            items = state.habitats.imageWithTitleModels,
-                            showMore = state.habitats.showMore,
-                            onClickItem = { item ->
-                                onNavigateToBioList(CategoryType.Habitat, item.id)
-                            }
-                        )
-                    }
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                item {
+                    ImageCategoryRow(
+                        contentPaddings = contentPaddings,
+                        title = "Yaşam Alanları",
+                        items = state.habitats.imageWithTitleModels,
+                        showMore = state.habitats.showMore,
+                        onClickItem = { item ->
+                            onNavigateToBioList(CategoryType.Habitat, item.id)
+                        }
+                    )
+                }
 
-                    item {
-                        ImageCategoryRow(
-                            contentPaddings = contentPaddings,
-                            title = "Sınıflar",
-                            items = state.classes.imageWithTitleModels,
-                            showMore = state.classes.showMore,
-                            onClickMore = {
-                                onNavigateToCategoryList(CategoryType.Class)
-                            },
-                            onClickItem = { item ->
-                                onNavigateToCategoryListWithDetail(CategoryType.Class, item.id ?: 0)
-                            }
-                        )
-                    }
+                item {
+                    ImageCategoryRow(
+                        contentPaddings = contentPaddings,
+                        title = "Sınıflar",
+                        items = state.classes.imageWithTitleModels,
+                        showMore = state.classes.showMore,
+                        onClickMore = {
+                            onNavigateToCategoryList(CategoryType.Class)
+                        },
+                        onClickItem = { item ->
+                            onNavigateToCategoryListWithDetail(CategoryType.Class, item.id ?: 0)
+                        }
+                    )
+                }
 
-                    item {
-                        ImageCategoryRow(
-                            contentPaddings = contentPaddings,
-                            title = "Takımlar",
-                            items = state.orders.imageWithTitleModels,
-                            showMore = state.orders.showMore,
-                            onClickMore = {
-                                onNavigateToCategoryList(CategoryType.Order)
-                            },
-                            onClickItem = { item ->
-                                onNavigateToCategoryListWithDetail(CategoryType.Order, item.id ?: 0)
-                            }
-                        )
-                    }
+                item {
+                    ImageCategoryRow(
+                        contentPaddings = contentPaddings,
+                        title = "Takımlar",
+                        items = state.orders.imageWithTitleModels,
+                        showMore = state.orders.showMore,
+                        onClickMore = {
+                            onNavigateToCategoryList(CategoryType.Order)
+                        },
+                        onClickItem = { item ->
+                            onNavigateToCategoryListWithDetail(CategoryType.Order, item.id ?: 0)
+                        }
+                    )
+                }
 
-                    item {
-                        ImageCategoryRow(
-                            contentPaddings = contentPaddings,
-                            title = "Familyalar",
-                            items = state.families.imageWithTitleModels,
-                            showMore = state.families.showMore,
-                            onClickMore = {
-                                onNavigateToCategoryList(CategoryType.Family)
-                            },
-                            onClickItem = { item ->
-                                onNavigateToBioList(CategoryType.Family, item.id)
-                            }
-                        )
-                    }
+                item {
+                    ImageCategoryRow(
+                        contentPaddings = contentPaddings,
+                        title = "Familyalar",
+                        items = state.families.imageWithTitleModels,
+                        showMore = state.families.showMore,
+                        onClickMore = {
+                            onNavigateToCategoryList(CategoryType.Family)
+                        },
+                        onClickItem = { item ->
+                            onNavigateToBioList(CategoryType.Family, item.id)
+                        }
+                    )
                 }
             }
         }

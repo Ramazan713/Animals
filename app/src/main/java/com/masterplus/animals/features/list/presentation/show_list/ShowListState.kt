@@ -6,6 +6,7 @@ import com.masterplus.animals.features.list.presentation.show_list.ShowListDialo
 
 
 data class ShowListState(
+    val isLoading: Boolean = false,
     val items: List<ListView> = emptyList(),
     val message: UiText? = null,
     val showDialog: Boolean = false,

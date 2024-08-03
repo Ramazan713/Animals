@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
+import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.dialogs.ShowGetTextDialog
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
 import com.masterplus.animals.core.presentation.selections.ShowSelectBottomMenuItems
@@ -92,23 +93,18 @@ fun ArchiveListPage(
             )
         },
     ){paddings->
-        Box(
+
+
+        SharedLoadingPageContent(
             modifier = Modifier
                 .padding(paddings)
                 .fillMaxSize()
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-        ) {
-            if(state.items.isEmpty()){
-                Text(
-                    stringResource(R.string.archive_empty_text),
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center)
-                )
-            }
-
+            isLoading = state.isLoading,
+            isEmptyResult = state.items.isEmpty(),
+            overlayLoading = true,
+            emptyMessage = stringResource(R.string.archive_empty_text)
+        ){
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 columns = GridCells.Adaptive(300.dp),

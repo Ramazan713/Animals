@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,9 +33,12 @@ import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.components.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
+import com.masterplus.animals.core.presentation.components.SharedCircularProgress
+import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
+import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,72 +74,62 @@ fun CategoryListPage(
             )
         }
     ) { paddings->
-        Box(
+
+        SharedLoadingPageContent(
             modifier = Modifier
                 .padding(paddings)
                 .fillMaxSize()
-                .nestedScroll(topBarScrollBehaviour.nestedScrollConnection)
-            ,
-            contentAlignment = Alignment.Center
+                .nestedScroll(topBarScrollBehaviour.nestedScrollConnection),
+            isLoading = pagingItems.loadState.refresh is LoadState.Loading,
         ) {
+            LazyColumn(
+                modifier = Modifier
+                    .matchParentSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp)
+            ) {
 
-            if(pagingItems.loadState.refresh is LoadState.Loading){
-                CircularProgressIndicator()
-            }else{
-                LazyColumn(
-                    modifier = Modifier
-                        .matchParentSize(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-
-                    item {
-                        AnimatedVisibility(
-                            enter = fadeIn() + expandIn(),
-                            visible = imageUrl != null
-                        ) {
-                            ImageWithTitle(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 24.dp),
-                                title = "Hayvanlar Listesi",
-                                imageData = imageUrl ?: "",
-                                onClick = onAllItemClick
-                            )
-                        }
-                    }
-
-                    item {
-                        Text(
-                            text = state.collectionName,
-                            style = MaterialTheme.typography.titleLarge
+                item {
+                    AnimatedVisibility(
+                        enter = fadeIn() + expandIn(),
+                        visible = imageUrl != null
+                    ) {
+                        ImageWithTitle(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 24.dp),
+                            title = "Hayvanlar Listesi",
+                            imageData = imageUrl ?: "",
+                            onClick = onAllItemClick
                         )
                     }
+                }
 
-                    items(
-                        count = pagingItems.itemCount,
-                        key = { pagingItems[it]?.id ?: it }
-                    ){ index ->
-                        val item = pagingItems[index]
-                        if(item != null){
-                            ImageWithTitle(
-                                modifier = Modifier.fillMaxWidth(),
-                                model = item,
-                                onClick = {
-                                    onItemClick(item)
-                                }
-                            )
-                        }
-                    }
-                    if(pagingItems.loadState.append is LoadState.Loading){
-                        item {
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
+                item {
+                    Text(
+                        text = state.collectionName,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+
+                items(
+                    count = pagingItems.itemCount,
+                    key = { pagingItems[it]?.id ?: it }
+                ){ index ->
+                    val item = pagingItems[index]
+                    if(item != null){
+                        ImageWithTitle(
+                            modifier = Modifier.fillMaxWidth(),
+                            model = item,
+                            onClick = {
+                                onItemClick(item)
                             }
-                        }
+                        )
+                    }
+                }
+                if(pagingItems.loadState.append is LoadState.Loading){
+                    item {
+                        SharedCircularProgress(modifier = Modifier.fillMaxWidth())
                     }
                 }
             }
@@ -182,14 +172,15 @@ private fun GetTopBar(
 
 @Preview(showBackground = true)
 @Composable
-fun CategoryListPagePreview1() {
+private fun CategoryListPagePreview1() {
     CategoryListPage(
         state = CategoryState(),
         onAction = {},
         pagingItems = getPreviewLazyPagingData(
             items = listOf(
                 SampleDatas.imageWithTitleModel1
-            )
+            ),
+            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading)
         ),
         onNavigateBack = {
 

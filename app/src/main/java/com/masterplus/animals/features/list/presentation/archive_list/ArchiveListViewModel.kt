@@ -37,26 +37,32 @@ class ArchiveListViewModel @Inject constructor(
             }
             is ArchiveListAction.UnArchive -> {
                 viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     listRepo.unArchiveList(action.listView.id ?: 0)
                     _state.update { it.copy(
-                        message = UiText.Resource(R.string.successfully_unarchive)
+                        message = UiText.Resource(R.string.successfully_unarchive),
+                        isLoading = false
                     )}
                 }
             }
 
             is ArchiveListAction.Delete -> {
                 viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     listRepo.deleteListById(action.listView.id ?: 0)
                     _state.update { it.copy(
-                        message = UiText.Resource(R.string.successfully_deleted)
+                        message = UiText.Resource(R.string.successfully_deleted),
+                        isLoading = false
                     )}
                 }
             }
             is ArchiveListAction.Rename -> {
                 viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     listRepo.updateListName(action.listView.id ?: 0,action.newName)
                     _state.update { it.copy(
-                        message = UiText.Resource(R.string.success)
+                        message = UiText.Resource(R.string.success),
+                        isLoading = false
                     )}
                 }
             }
@@ -68,10 +74,16 @@ class ArchiveListViewModel @Inject constructor(
 
 
     private fun loadData(){
+        _state.update { it.copy(
+            isLoading = true
+        ) }
         listViewRepo
             .getListViews(true)
             .onEach { items ->
-                _state.update { it.copy(items = items)}
+                _state.update { it.copy(
+                    items = items,
+                    isLoading = false
+                )}
             }
             .launchIn(viewModelScope)
     }

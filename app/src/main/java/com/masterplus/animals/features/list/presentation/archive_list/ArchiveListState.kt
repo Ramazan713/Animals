@@ -4,6 +4,7 @@ import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.list.domain.models.ListView
 
 data class ArchiveListState(
+    val isLoading: Boolean = false,
     val items: List<ListView> = emptyList(),
     val message: UiText? = null,
     val dialogEvent: ArchiveListDialogEvent? = null,

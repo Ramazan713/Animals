@@ -2,7 +2,6 @@ package com.masterplus.animals.features.bio_list.presentation
 
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,10 +20,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -33,6 +29,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.AnimalData
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
+import com.masterplus.animals.core.presentation.components.SharedCircularProgress
+import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
@@ -81,34 +79,14 @@ fun BioListPage(
             )
         }
     ) { paddings ->
-        Box(
+        SharedLoadingPageContent(
             modifier = Modifier
                 .padding(paddings)
-
                 .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ){
-            if(pagingItems.loadState.refresh is LoadState.Loading){
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .zIndex(2f)
-                        .clickable(enabled = false, onClick = {})
-                    ,
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }else{
-                if(pagingItems.itemCount == 0){
-                    Text(
-                        stringResource(R.string.not_fount_any_result),
-                        modifier = Modifier.align(Alignment.Center),
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
+            isLoading = pagingItems.loadState.refresh is LoadState.Loading,
+            isEmptyResult = pagingItems.itemCount == 0,
+            overlayLoading = true
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .matchParentSize(),
@@ -142,12 +120,7 @@ fun BioListPage(
                 }
                 if(pagingItems.loadState.append is LoadState.Loading){
                     item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
+                        SharedCircularProgress(modifier = Modifier.fillMaxWidth())
                     }
                 }
             }
@@ -194,7 +167,7 @@ fun BioListPagePreview() {
         onNavigateToBioDetail = {},
         pagingItems = getPreviewLazyPagingData(
             items = listOf(SampleDatas.generateAnimalData(id = 1), SampleDatas.generateAnimalData(id = 2), SampleDatas.generateAnimalData(id = 3)),
-            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading),
+            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading, append = LoadState.Loading),
         )
     )
 }
