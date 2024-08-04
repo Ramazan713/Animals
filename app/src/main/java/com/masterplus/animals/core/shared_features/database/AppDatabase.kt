@@ -6,6 +6,7 @@ import com.masterplus.animals.core.shared_features.database.dao.AnimalDao
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.ListAnimalsDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
+import com.masterplus.animals.core.shared_features.database.dao.SavePointDao
 import com.masterplus.animals.core.shared_features.database.entity.AnimalEntity
 import com.masterplus.animals.core.shared_features.database.entity.AnimalImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
@@ -16,6 +17,7 @@ import com.masterplus.animals.core.shared_features.database.entity.ListAnimalsEn
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
+import com.masterplus.animals.core.shared_features.database.entity.SavePointEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.view.ListViewEntity
 import com.masterplus.trdictionary.core.data.local.services.ListViewDao
@@ -25,7 +27,8 @@ import com.masterplus.trdictionary.core.data.local.services.ListViewDao
     entities = [
         AnimalEntity::class, AnimalImageEntity::class, ClassEntity::class, FamilyEntity::class,
         GenusEntity::class, HabitatCategoryEntity::class, OrderEntity::class, PhylumEntity::class,
-        SpeciesEntity::class, ListEntity::class, ListAnimalsEntity::class
+        SpeciesEntity::class, ListEntity::class, ListAnimalsEntity::class,
+        SavePointEntity::class
     ],
     views = [
         ListViewEntity::class
@@ -42,5 +45,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract val listViewDao: ListViewDao
 
     abstract val listAnimalsDao: ListAnimalsDao
+
+    abstract val savePointDao: SavePointDao
 
 }

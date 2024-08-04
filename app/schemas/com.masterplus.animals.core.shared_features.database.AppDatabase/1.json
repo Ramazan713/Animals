@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3bfb8bacacf5a5e2d2111e5be3510774",
+    "identityHash": "5e48c7392d8e06ec05f5f0b09e22c2a2",
     "entities": [
       {
         "tableName": "Animals",
@@ -1165,6 +1165,86 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "SavePoints",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `titleEn` TEXT NOT NULL, `titleTr` TEXT NOT NULL, `contentTypeId` INTEGER NOT NULL, `destinationTypeId` INTEGER NOT NULL, `destinationId` INTEGER, `saveKey` TEXT, `itemPosIndex` INTEGER NOT NULL, `modifiedTime` TEXT NOT NULL, `imagePath` TEXT, `imageUrl` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleTr",
+            "columnName": "titleTr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentTypeId",
+            "columnName": "contentTypeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "destinationTypeId",
+            "columnName": "destinationTypeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "destinationId",
+            "columnName": "destinationId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "saveKey",
+            "columnName": "saveKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemPosIndex",
+            "columnName": "itemPosIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modifiedTime",
+            "columnName": "modifiedTime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imagePath",
+            "columnName": "imagePath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [
@@ -1175,7 +1255,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3bfb8bacacf5a5e2d2111e5be3510774')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5e48c7392d8e06ec05f5f0b09e22c2a2')"
     ]
   }
 }

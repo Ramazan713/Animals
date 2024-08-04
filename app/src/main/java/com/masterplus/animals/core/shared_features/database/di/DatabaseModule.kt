@@ -24,4 +24,7 @@ val databaseModule = module {
     single { get<AppDatabase>().listViewDao }
 
     single { get<AppDatabase>().listAnimalsDao }
+
+    single { get<AppDatabase>().savePointDao }
+
 }
