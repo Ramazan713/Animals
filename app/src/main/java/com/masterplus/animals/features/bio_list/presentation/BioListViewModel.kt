@@ -10,6 +10,8 @@ import com.masterplus.animals.core.domain.repo.AnimalRepo
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.list.domain.repo.ListAnimalsRepo
 import com.masterplus.animals.core.shared_features.list.domain.use_cases.ListInFavoriteControlForDeletionUseCase
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.features.bio_list.presentation.navigation.BioListRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,9 +23,10 @@ class BioListViewModel(
     private val categoryRepo: CategoryRepo,
     private val listAnimalsRepo: ListAnimalsRepo,
     private val listInFavoriteUseCase: ListInFavoriteControlForDeletionUseCase,
+    private val savePointRepo: SavePointRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private val args = savedStateHandle.toRoute<BioListRoute>()
+    val args = savedStateHandle.toRoute<BioListRoute>()
     
     private val _state = MutableStateFlow(BioListState())
     val state = _state.asStateFlow()
@@ -70,6 +73,19 @@ class BioListViewModel(
             is BioListAction.AddToFavorite -> {
                 viewModelScope.launch {
                     addFavoriteAnimal(action.animalId)
+                }
+            }
+
+            is BioListAction.SavePosition -> {
+                viewModelScope.launch {
+                    savePointRepo.insertContentSavePoint(
+                        title = "Sample",
+                        destination = SavePointDestination.fromCategoryType(
+                            categoryType = args.categoryType,
+                            destinationId = args.realItemId
+                        ),
+                        itemPosIndex = action.posIndex
+                    )
                 }
             }
         }

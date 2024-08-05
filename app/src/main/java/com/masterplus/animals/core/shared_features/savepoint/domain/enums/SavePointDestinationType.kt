@@ -1,14 +1,19 @@
 package com.masterplus.animals.core.shared_features.savepoint.domain.enums
 
+import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.utils.UiText
+
 
 sealed class SavePointDestination(
     val destinationTypeId: Int,
     val destinationId: Int?,
-    val saveKey: String? = null
+    val saveKey: String? = null,
+    val title: UiText
 ){
     data object All: SavePointDestination(
         destinationTypeId = 1,
         destinationId = null,
+        title = UiText.Text("Tümü")
     ) {
         fun from(destinationId: Int?, saveKey: String?): All {
             return All
@@ -18,6 +23,7 @@ sealed class SavePointDestination(
     data class ListType(val listId: Int): SavePointDestination(
         destinationTypeId = DESTINATION_TYPE_ID,
         destinationId = listId,
+        title = UiText.Text("Liste")
     ) {
         companion object {
             const val DESTINATION_TYPE_ID = 2
@@ -30,6 +36,7 @@ sealed class SavePointDestination(
     data class Habitat(val habitatId: Int): SavePointDestination(
         destinationTypeId = DESTINATION_TYPE_ID,
         destinationId = habitatId,
+        title = UiText.Text("Habitat")
     ) {
         companion object {
             const val DESTINATION_TYPE_ID = 3
@@ -42,6 +49,7 @@ sealed class SavePointDestination(
     data class ClassType(val classId: Int): SavePointDestination(
         destinationTypeId = DESTINATION_TYPE_ID,
         destinationId = classId,
+        title = UiText.Text("Sınıf")
     ) {
         companion object {
             const val DESTINATION_TYPE_ID = 4
@@ -54,6 +62,7 @@ sealed class SavePointDestination(
     data class Order(val orderId: Int): SavePointDestination(
         destinationTypeId = DESTINATION_TYPE_ID,
         destinationId = orderId,
+        title = UiText.Text("Takım")
     ) {
         companion object {
             const val DESTINATION_TYPE_ID = 5
@@ -66,6 +75,7 @@ sealed class SavePointDestination(
     data class Family(val familyId: Int): SavePointDestination(
         destinationTypeId = DESTINATION_TYPE_ID,
         destinationId = familyId,
+        title = UiText.Text("Familya")
     ) {
         companion object {
             const val DESTINATION_TYPE_ID = 6
@@ -76,6 +86,14 @@ sealed class SavePointDestination(
     }
 
     companion object {
+        val All_DESTINATION_TYPE_IDS = listOf(
+            All.destinationTypeId,
+            ListType.DESTINATION_TYPE_ID,
+            Habitat.DESTINATION_TYPE_ID,
+            ClassType.DESTINATION_TYPE_ID,
+            Order.DESTINATION_TYPE_ID,
+            Family.DESTINATION_TYPE_ID
+        )
         fun from(
             destinationTypeId: Int,
             destinationId: Int?,
@@ -90,6 +108,27 @@ sealed class SavePointDestination(
                 Family.DESTINATION_TYPE_ID -> Family.from(destinationId, saveKey)
                 else -> null
             }
+        }
+
+        fun fromCategoryType(
+            categoryType: CategoryType,
+            destinationId: Int?,
+        ): SavePointDestination {
+            val destinationTypeId = when {
+                destinationId != null -> All.destinationTypeId
+                else -> when(categoryType){
+                    CategoryType.Habitat -> Habitat.DESTINATION_TYPE_ID
+                    CategoryType.Class -> ClassType.DESTINATION_TYPE_ID
+                    CategoryType.Order -> Order.DESTINATION_TYPE_ID
+                    CategoryType.Family -> Family.DESTINATION_TYPE_ID
+                    CategoryType.List -> ListType.DESTINATION_TYPE_ID
+                    else -> All.destinationTypeId
+                }
+            }
+            return from(
+                destinationTypeId = destinationTypeId,
+                destinationId = destinationId
+            ) ?: All
         }
     }
 

@@ -4,6 +4,7 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.LocalDateTime
 
 interface SavePointRepo {
 
@@ -20,13 +21,15 @@ interface SavePointRepo {
     suspend fun insertContentSavePoint(
         title: String,
         destination: SavePointDestination,
-        itemPosIndex: Int
+        itemPosIndex: Int,
+        dateTime: LocalDateTime? = null
     )
 
     suspend fun insertCategorySavePoint(
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
+        dateTime: LocalDateTime? = null
     )
 
     suspend fun updateSavePointPos(id: Int, posIndex: Int)

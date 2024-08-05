@@ -7,4 +7,6 @@ sealed interface BioListAction {
     data class AddToFavorite(val animalId: Int): BioListAction
 
     data class AddOrAskFavorite(val animalId: Int): BioListAction
+
+    data class SavePosition(val posIndex: Int): BioListAction
 }

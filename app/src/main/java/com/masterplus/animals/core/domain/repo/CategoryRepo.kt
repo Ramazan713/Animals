@@ -6,11 +6,12 @@ import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
+import com.masterplus.animals.core.domain.utils.UiText
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepo {
 
-    suspend fun getCategoryName(categoryType: CategoryType, itemId: Int): String?
+    suspend fun getCategoryName(categoryType: CategoryType, itemId: Int): UiText?
 
     suspend fun getClasses(limit: Int): List<ClassModel>
 

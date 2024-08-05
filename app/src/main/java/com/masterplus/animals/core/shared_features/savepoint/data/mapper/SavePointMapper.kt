@@ -19,7 +19,7 @@ fun SavePointEntity.toSavePoint(): SavePoint?{
         ) ?: return null,
         itemPosIndex = itemPosIndex,
         modifiedTime = LocalDateTime.parse(modifiedTime),
-        imageUrl = imageUrl,
+        imageData = imageUrl,
         imagePath = imagePath
     );
 }
@@ -35,7 +35,7 @@ fun SavePoint.toSavePointEntity(): SavePointEntity{
         saveKey = destination.saveKey,
         itemPosIndex = itemPosIndex,
         modifiedTime = modifiedTime.toString(),
-        imageUrl = imageUrl,
+        imageUrl = imageData?.toString(),
         imagePath = imagePath
     );
 }

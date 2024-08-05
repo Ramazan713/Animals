@@ -3,16 +3,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
 import com.masterplus.animals.core.domain.repo.CategoryRepo
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.features.animal.presentation.AnimalAction
 import com.masterplus.animals.features.animal.presentation.AnimalState
 import com.masterplus.animals.features.animal.presentation.models.CategoryRowModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AnimalViewModel(
-    private val categoryRepo: CategoryRepo
+    private val categoryRepo: CategoryRepo,
+    private val savePointRepo: SavePointRepo
 ): ViewModel() {
 
     private val _state = MutableStateFlow(AnimalState())
@@ -20,6 +26,7 @@ class AnimalViewModel(
 
     init {
         loadCategories()
+        loadSavePoints()
     }
 
     fun onAction(action: AnimalAction){
@@ -58,6 +65,22 @@ class AnimalViewModel(
                 families = families
             ) }
         }
+    }
+
+    private fun loadSavePoints(){
+        val filter = SavePointDestination.All_DESTINATION_TYPE_IDS.filter { typeId -> typeId != SavePointDestination.ListType.DESTINATION_TYPE_ID }
+
+        savePointRepo
+            .getAllSavePointsByContentType(
+                contentType = SavePointContentType.Content,
+                filteredDestinationTypeIds = filter
+            )
+            .onEach { savePoints ->
+                _state.update { it.copy(
+                    savePoints = savePoints
+                ) }
+            }
+            .launchIn(viewModelScope)
     }
 
     companion object {

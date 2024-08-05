@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +37,13 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.list.presentation.select_list_with_menu.ShowBottomMenuWithSelectList
+import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.models.EditSavePointLoadParam
+import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
+import com.masterplus.animals.features.bio_list.domain.enums.BioListItemMenu
 import com.masterplus.animals.features.bio_list.presentation.components.BioCard
+import com.masterplus.animals.features.bio_list.presentation.navigation.BioListRoute
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -51,6 +58,7 @@ fun BioListPageRoot(
     BioListPage(
         state = state,
         onAction = viewModel::onAction,
+        args = viewModel.args,
         onNavigateBack = onNavigateBack,
         onNavigateToBioDetail = onNavigateToBioDetail,
         pagingItems = pagingItems
@@ -58,11 +66,14 @@ fun BioListPageRoot(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun BioListPage(
     pagingItems: LazyPagingItems<AnimalData>,
     state: BioListState,
+    args: BioListRoute,
     onAction: (BioListAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToBioDetail: (Int) -> Unit
@@ -71,7 +82,7 @@ fun BioListPage(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = state.title)
+                    Text(text = state.title.asString())
                 },
                 navigationIcon = {
                     NavigationBackIcon(onNavigateBack = onNavigateBack)
@@ -135,12 +146,18 @@ fun BioListPage(
         when(dialogEvent){
             is BioListDialogEvent.ShowItemBottomMenu -> {
                 ShowBottomMenuWithSelectList(
-                    items = listOf(),
+                    items = BioListItemMenu.entries,
                     title = stringResource(id = R.string.n_for_number_word,dialogEvent.posIndex + 1, dialogEvent.item.name),
                     animalId = dialogEvent.item.id ?: 0,
                     onClose = close,
                     listIdControl = state.listIdControl,
-                    onClickItem = { }
+                    onClickItem = { menuItem ->
+                        when(menuItem){
+                            BioListItemMenu.Savepoint -> {
+                                onAction(BioListAction.ShowDialog(BioListDialogEvent.ShowEditSavePoint(dialogEvent.item,dialogEvent.posIndex)))
+                            }
+                        }
+                    }
                 )
             }
             is BioListDialogEvent.AskFavoriteDelete -> {
@@ -150,6 +167,20 @@ fun BioListPage(
                     onClosed = close,
                     onApproved = {
                         onAction(BioListAction.AddToFavorite(dialogEvent.animalId))
+                    }
+                )
+            }
+
+            is BioListDialogEvent.ShowEditSavePoint -> {
+                EditSavePointDialog(
+                    loadParam = EditSavePointLoadParam(
+                        destinationTypeId = args.categoryType.toSavePointDestinationTypeId(),
+                        destinationId = args.realItemId
+                    ),
+                    posIndex = dialogEvent.posIndex,
+                    onClosed = close,
+                    onNavigateLoad = {
+
                     }
                 )
             }
@@ -164,6 +195,10 @@ fun BioListPagePreview() {
         state = BioListState(),
         onAction = {},
         onNavigateBack = {},
+        args = BioListRoute(
+            categoryId = 1,
+            itemId = 1
+        ),
         onNavigateToBioDetail = {},
         pagingItems = getPreviewLazyPagingData(
             items = listOf(SampleDatas.generateAnimalData(id = 1), SampleDatas.generateAnimalData(id = 2), SampleDatas.generateAnimalData(id = 3)),

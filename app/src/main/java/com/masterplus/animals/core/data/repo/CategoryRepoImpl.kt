@@ -14,6 +14,7 @@ import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.repo.CategoryRepo
+import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
 import kotlinx.coroutines.flow.Flow
@@ -23,14 +24,15 @@ class CategoryRepoImpl constructor(
     private val categoryDao: CategoryDao,
     private val listDao: ListDao
 ): CategoryRepo {
-    override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int): String? {
-        return when(categoryType){
+    override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int): UiText? {
+        val title = when(categoryType){
             CategoryType.Habitat -> categoryDao.getHabitatCategoryWithId(itemId)?.habitat_category_tr
             CategoryType.Class -> categoryDao.getClassWithId(itemId)?.scientific_name
             CategoryType.Order -> categoryDao.getOrderWithId(itemId)?.scientific_name
             CategoryType.Family -> categoryDao.getFamilyWithId(itemId)?.scientific_name
             CategoryType.List -> listDao.getListById(itemId)?.name
         }
+        return if(title != null) UiText.Text(title) else null
     }
 
     override suspend fun getClasses(limit: Int): List<ClassModel> {

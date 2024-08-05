@@ -46,4 +46,12 @@
     <string name="question_remove_list_from_favorite">Favorilerden çıkarmak istediğinize emin misiniz?</string>
     <string name="n_for_number_word">%1$s - \'%2$s\' için</string>
     <string name="not_fount_any_result">Herhangi bir sonuç bulunamadı</string>
+    <string name="edit_title">Başlık düzenle</string>
+    <string name="n_savepoint">%1$s kayıt noktası</string>
+    <string name="successfully_updated">Başarıyla güncellendi</string>
+    <string name="save_points_c">Kayıt Noktaları</string>
+    <string name="add_new_savepoint">Yeni kayıt noktası oluştur</string>
+    <string name="empty_savepoint">Herhangi bir kayıt noktası bulunamadı</string>
+    <string name="override">Üzerine yaz</string>
+    <string name="load">Yükle</string>
 </resources>

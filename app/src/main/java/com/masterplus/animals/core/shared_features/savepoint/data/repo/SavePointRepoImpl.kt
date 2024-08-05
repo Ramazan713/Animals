@@ -11,6 +11,7 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.use_cases.Sa
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -42,7 +43,7 @@ class SavePointRepoImpl(
 
     override fun getCategorySavePointsByDestination(
         destinationTypeId: Int,
-        destinationId: Int?
+        destinationId: Int?,
     ): Flow<List<SavePoint>> {
         return getSavePointsByDestination(
             contentType = SavePointContentType.Category,
@@ -54,26 +55,30 @@ class SavePointRepoImpl(
     override suspend fun insertContentSavePoint(
         title: String,
         destination: SavePointDestination,
-        itemPosIndex: Int
+        itemPosIndex: Int,
+        dateTime: LocalDateTime?
     ) {
         insertSavePoint(
             title = title,
             destination = destination,
             itemPosIndex = itemPosIndex,
             contentType = SavePointContentType.Content,
+            dateTime = dateTime
         )
     }
 
     override suspend fun insertCategorySavePoint(
         title: String,
         destination: SavePointDestination,
-        itemPosIndex: Int
+        itemPosIndex: Int,
+        dateTime: LocalDateTime?
     ) {
         insertSavePoint(
             title = title,
             destination = destination,
             itemPosIndex = itemPosIndex,
             contentType = SavePointContentType.Category,
+            dateTime = dateTime
         )
     }
 
@@ -108,7 +113,8 @@ class SavePointRepoImpl(
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
-        contentType: SavePointContentType
+        contentType: SavePointContentType,
+        dateTime: LocalDateTime?
     ){
         val imageInfo = categoryImageInfoUseCase(destination)
         val savePoint = SavePoint(
@@ -116,9 +122,9 @@ class SavePointRepoImpl(
             contentType = contentType,
             itemPosIndex = itemPosIndex,
             destination = destination,
-            modifiedTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+            modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
             imagePath = imageInfo.imagePath,
-            imageUrl = imageInfo.imageUrl,
+            imageData = imageInfo.imageUrl,
         )
         savePointDao.insertSavePoint(savePoint.toSavePointEntity())
     }

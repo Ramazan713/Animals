@@ -2,20 +2,24 @@ package com.masterplus.animals.features.animal.presentation
 
 
 import AnimalViewModel
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,6 +27,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryRow
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
 import com.masterplus.animals.features.animal.presentation.navigation.ItemId
 import org.koin.androidx.compose.koinViewModel
 
@@ -72,6 +78,42 @@ fun AnimalPage(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
+                if(state.savePoints.isNotEmpty()){
+                    item {
+                        ImageCategoryRow(
+                            modifier = Modifier
+                                .height(intrinsicSize = IntrinsicSize.Max),
+                            contentPaddings = contentPaddings,
+                            title = "Kaldıgın yerden devam et",
+                            showMore = true,
+                        ){ showMoreBtn ->
+                            Row (
+                                modifier = Modifier
+                                    .height(intrinsicSize = IntrinsicSize.Max)
+                                    .horizontalScroll(rememberScrollState())
+                                    .padding(contentPaddings)
+                                ,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ){
+                                state.savePoints.forEach { savePoint ->
+                                    SavePointItem(
+                                        modifier = Modifier
+                                            .widthIn(min = 170.dp, max = 200.dp)
+                                            .fillMaxHeight(),
+                                        showAsRow = false,
+                                        savePoint = savePoint,
+                                        onClick = {
+
+                                        }
+                                    )
+                                }
+                                showMoreBtn()
+                            }
+                        }
+                    }
+                }
+
+
                 item {
                     ImageCategoryRow(
                         contentPaddings = contentPaddings,
@@ -138,7 +180,8 @@ fun AnimalPage(
 fun AnimalPagePreview() {
     AnimalPage(
         state = AnimalState(
-            isLoading = true
+            isLoading = false,
+            savePoints = listOf(SampleDatas.generateSavePoint(), SampleDatas.generateSavePoint(id = 2).copy(title = "Title"))
         ),
         onAction = {},
         onNavigateToCategoryListWithDetail = { x, y ->},

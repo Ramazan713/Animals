@@ -11,6 +11,6 @@ data class SavePoint(
     val destination: SavePointDestination,
     val itemPosIndex: Int,
     val modifiedTime: LocalDateTime,
-    val imageUrl: String?,
+    val imageData: Any?,
     val imagePath: String?
 )

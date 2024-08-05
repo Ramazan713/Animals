@@ -14,8 +14,16 @@ import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.shared_features.list.domain.models.ListView
 import com.masterplus.animals.core.shared_features.list.domain.models.SelectableListView
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleSectionModel
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import java.util.Calendar
 
 object SampleDatas {
     const val imageUrl = "https://storage.googleapis.com/animals-ce701.appspot.com/public/images/class/mammalia.jpg?Expires=1724517659&GoogleAccessId=firebase-adminsdk-hprer%40animals-ce701.iam.gserviceaccount.com&Signature=N27yfyDPC7RZzh0Cirowi0Ki%2FisODA%2Bnp9i2dAjR5OEDZV8Cuji0CwMOqhZoQYE9QnD8LOcNI2vR6uJ9ChzUhFrOJ9BmKzroiwzqhRsU1OgFYQwCpE5yi9WFPwpw3Pmlaz%2B1dIr6I3%2BQAfM91y6kMPpFFPwKFwT4H7uS%2FYWEu91x0VLvWH%2FMPXGiYmIcNEQnhigPRT%2BPsjxJyAwoajEOSGgHrXai43%2FtiXoZYYVMbLOOR03BKNcMC4dGC56S6zA05JnjplmZ%2Bn2veofgUGocGOeQ0kL9BngIDjlbv6wS7gxZlHbp4gJEG3UF3HdGi3thfImt3W%2FUthn0dJlpPPcz1g%3D%3D"
@@ -185,6 +193,16 @@ object SampleDatas {
         imageUrl = imageUrl
     )
 
+    fun generateSavePoint(
+        id: Int = 1,
+        title: String = "Title $id",
+        itemPosIndex: Int = 5,
+        savePointDestination: SavePointDestination = SavePointDestination.ListType(1),
+        modifiedDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+    ): SavePoint {
+        return SavePoint(id, title, SavePointContentType.Content,savePointDestination, itemPosIndex, modifiedDate,
+            imageUrl,null)
+    }
 
     fun generateAnimalData(
         id: Int = 1,

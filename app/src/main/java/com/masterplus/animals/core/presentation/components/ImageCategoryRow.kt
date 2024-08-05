@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +26,9 @@ import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 
 
+
+
+
 @Composable
 fun ImageCategoryRow(
     title: String,
@@ -33,6 +38,49 @@ fun ImageCategoryRow(
     onClickMore: (() -> Unit)? = null,
     onClickItem: (ImageWithTitleModel) -> Unit,
     contentPaddings: PaddingValues = PaddingValues()
+) {
+    ImageCategoryRow(
+        title = title,
+        modifier = modifier,
+        showMore = showMore,
+        onClickMore = onClickMore,
+        contentPaddings = contentPaddings
+    ){ showMoreBtn ->
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = contentPaddings
+        ) {
+            items(
+                items = items,
+                key = { it.id ?: it.title }
+            ){ item ->
+                ImageWithTitle(
+                    imageData = item.imageUrl,
+                    title = item.title,
+                    subTitle = item.subTitle,
+                    contentDescription = item.contentDescription,
+                    onClick = {
+                        onClickItem(item)
+                    }
+                )
+            }
+
+            item {
+                showMoreBtn()
+            }
+        }
+
+    }
+}
+
+@Composable
+fun ImageCategoryRow(
+    title: String,
+    modifier: Modifier = Modifier,
+    showMore: Boolean = false,
+    onClickMore: (() -> Unit)? = null,
+    contentPaddings: PaddingValues = PaddingValues(),
+    content: @Composable ( showMoreBtn: @Composable () -> Unit ) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -59,51 +107,33 @@ fun ImageCategoryRow(
                 }
             }
         }
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = contentPaddings
-        ) {
-            items(
-                items = items,
-                key = { it.id ?: it.title }
-            ){ item ->
-                ImageWithTitle(
-                    imageData = item.imageUrl,
-                    title = item.title,
-                    subTitle = item.subTitle,
-                    contentDescription = item.contentDescription,
-                    onClick = {
-                        onClickItem(item)
-                    }
-                )
-            }
 
+        content {
             if(showMore){
-                item{
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .height(180.dp)
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                ) {
+                    TextButton(
+                        onClick = { onClickMore?.invoke() }
                     ) {
-                        TextButton(
-                            onClick = { onClickMore?.invoke() }
-                        ) {
-                            Text(text = "Tümünü Göster")
-                        }
+                        Text(text = "Tümünü Göster")
                     }
                 }
             }
         }
+
     }
 }
 
 
 @Preview(showBackground = true)
 @Composable
-fun ImageCategoryRowPreview() {
+private fun ImageCategoryRowPreview() {
     ImageCategoryRow(
         title = "Sınıflar",
-        items = listOf(SampleDatas.imageWithTitleModel1, SampleDatas.imageWithTitleModel2, SampleDatas.imageWithTitleModel1),
+        items = listOf(SampleDatas.imageWithTitleModel1, SampleDatas.imageWithTitleModel2),
         onClickItem = {},
         onClickMore = {}
     )

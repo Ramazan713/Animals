@@ -18,24 +18,25 @@ interface SavePointDao {
 
     @Query("""
         select * from savepoints where destinationTypeId = :destinationTypeId and
-        contentTypeId = :contentTypeId
+        contentTypeId = :contentTypeId order by modifiedTime desc
     """)
     fun getFlowSavePointsDestinations(destinationTypeId: Int, contentTypeId: Int): Flow<List<SavePointEntity>>
 
     @Query("""
         select * from savepoints where destinationTypeId = :destinationTypeId and
-        destinationId = :destinationId and contentTypeId = :contentTypeId
+        destinationId = :destinationId and contentTypeId = :contentTypeId order by modifiedTime desc
     """)
     fun getFlowSavePointsDestinationByDestId(destinationTypeId: Int, destinationId: Int, contentTypeId: Int): Flow<List<SavePointEntity>>
 
 
     @Query("""
-        select * from savepoints where contentTypeId = :contentTypeId
+        select * from savepoints where contentTypeId = :contentTypeId order by modifiedTime desc
     """)
     fun getAllFlowSavePointsByContentType(contentTypeId: Int): Flow<List<SavePointEntity>>
 
     @Query("""
         select * from savepoints where contentTypeId = :contentTypeId and destinationTypeId in (:destinationTypeIds)
+        order by modifiedTime desc
     """)
     fun getAllFlowSavePointsByFilteredDestinations(contentTypeId: Int, destinationTypeIds: List<Int>): Flow<List<SavePointEntity>>
 
