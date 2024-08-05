@@ -35,6 +35,8 @@ import com.masterplus.animals.features.category_list.presentation.navigation.nav
 import com.masterplus.animals.features.list.presentation.archive_list.navigation.archiveList
 import com.masterplus.animals.features.list.presentation.archive_list.navigation.navigateToArchiveList
 import com.masterplus.animals.features.list.presentation.show_list.navigation.showList
+import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.navigateToShowSavePoints
+import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.showSavePoints
 import com.masterplus.animals.features.settings.presentation.navigation.settings
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
@@ -99,9 +101,12 @@ fun MyApp(
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
-                onNavigateToBioList = { categoryType, itemId ->
-                    navHostController.navigateToBioList(categoryType.catId, itemId)
+                onNavigateToBioList = { categoryType, itemId, pos ->
+                    navHostController.navigateToBioList(categoryType.catId, itemId, pos)
                 },
+                onNavigateToShowSavePoints = {
+                    navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null)
+                }
             )
 
             settings()
@@ -161,6 +166,15 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 }
+            )
+
+            showSavePoints(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                },
+                onNavigateToBioList = { categoryType, itemId, pos ->
+                    navHostController.navigateToBioList(categoryType.catId, itemId, pos)
+                },
             )
         }
     }

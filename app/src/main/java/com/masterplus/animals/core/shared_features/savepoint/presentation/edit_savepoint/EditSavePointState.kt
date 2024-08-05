@@ -7,8 +7,11 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.models.SaveP
 data class EditSavePointState(
     val loadParam: EditSavePointLoadParam? = null,
     val savePoints: List<SavePoint> = emptyList(),
-    val selectedSavePoint: SavePoint? = null,
+    private val selectedSavePoint: SavePoint? = null,
     val dialogEvent: EditSavePointDialogEvent? = null,
     val message: UiText? = null,
     val showImage: Boolean = true
-)
+){
+    val currentSelectedSavePoint: SavePoint? get() =
+        savePoints.find { it.id == selectedSavePoint?.id }
+}

@@ -35,7 +35,8 @@ class EditSavePointViewModel @Inject constructor(
                 viewModelScope.launch {
                     savePointRepo.deleteSavePoint(action.savePoint.id ?: 0)
                     _state.update { state->
-                        val updatedSelectedSavePoint = if(action.savePoint == state.selectedSavePoint) null else state.selectedSavePoint
+                        val updatedSelectedSavePoint = if(action.savePoint == state.currentSelectedSavePoint) null else
+                            state.currentSelectedSavePoint
                         state.copy(
                             message = UiText.Resource(R.string.successfully_deleted),
                             selectedSavePoint = updatedSelectedSavePoint
@@ -68,7 +69,7 @@ class EditSavePointViewModel @Inject constructor(
             }
             is EditSavePointAction.OverrideSavePoint -> {
                 viewModelScope.launch {
-                    _state.value.selectedSavePoint?.let { savePoint ->
+                    _state.value.currentSelectedSavePoint?.let { savePoint ->
                         savePointRepo.updateSavePointPos(savePoint.id ?: 0, action.pos)
                         _state.update{ it.copy(message = UiText.Resource(R.string.successfully_updated)) }
                     }

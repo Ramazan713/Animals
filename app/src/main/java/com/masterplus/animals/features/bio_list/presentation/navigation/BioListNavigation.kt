@@ -10,15 +10,16 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BioListRoute(
     val categoryId: Int,
-    val itemId: Int
+    val itemId: Int,
+    val initPosIndex: Int
 ){
     val categoryType get() = CategoryType.fromCatId(categoryId)
     val realItemId get() = if(itemId == 0) null else itemId
 }
 
 
-fun NavController.navigateToBioList(categoryId: Int, itemId: Int?){
-    navigate(BioListRoute(categoryId, itemId ?: 0))
+fun NavController.navigateToBioList(categoryId: Int, itemId: Int?, initPosIndex: Int = 0){
+    navigate(BioListRoute(categoryId, itemId ?: 0, initPosIndex))
 }
 
 

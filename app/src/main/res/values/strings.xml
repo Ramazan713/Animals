@@ -54,4 +54,6 @@
     <string name="empty_savepoint">Herhangi bir kayıt noktası bulunamadı</string>
     <string name="override">Üzerine yaz</string>
     <string name="load">Yükle</string>
+    <string name="dropdown_menu_text">Aşağıya açılan menu</string>
+    <string name="load_and_go">Yükle ve Git</string>
 </resources>

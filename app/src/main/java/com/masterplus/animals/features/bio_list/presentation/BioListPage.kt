@@ -3,13 +3,13 @@ package com.masterplus.animals.features.bio_list.presentation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,7 +17,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -38,12 +38,12 @@ import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.list.presentation.select_list_with_menu.ShowBottomMenuWithSelectList
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
-import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.EditSavePointLoadParam
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
 import com.masterplus.animals.features.bio_list.domain.enums.BioListItemMenu
 import com.masterplus.animals.features.bio_list.presentation.components.BioCard
 import com.masterplus.animals.features.bio_list.presentation.navigation.BioListRoute
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -78,6 +78,11 @@ fun BioListPage(
     onNavigateBack: () -> Unit,
     onNavigateToBioDetail: (Int) -> Unit
 ) {
+    val lazyListState = rememberLazyListState(
+        initialFirstVisibleItemIndex = args.initPosIndex
+    )
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -99,6 +104,7 @@ fun BioListPage(
             overlayLoading = true
         ) {
             LazyColumn(
+                state = lazyListState,
                 modifier = Modifier
                     .matchParentSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -174,13 +180,15 @@ fun BioListPage(
             is BioListDialogEvent.ShowEditSavePoint -> {
                 EditSavePointDialog(
                     loadParam = EditSavePointLoadParam(
-                        destinationTypeId = args.categoryType.toSavePointDestinationTypeId(),
+                        destinationTypeId = args.categoryType.toSavePointDestinationTypeId(args.realItemId),
                         destinationId = args.realItemId
                     ),
                     posIndex = dialogEvent.posIndex,
                     onClosed = close,
                     onNavigateLoad = {
-
+                        scope.launch {
+                            lazyListState.animateScrollToItem(it.itemPosIndex)
+                        }
                     }
                 )
             }
@@ -197,7 +205,8 @@ fun BioListPagePreview() {
         onNavigateBack = {},
         args = BioListRoute(
             categoryId = 1,
-            itemId = 1
+            itemId = 1,
+            initPosIndex = 0
         ),
         onNavigateToBioDetail = {},
         pagingItems = getPreviewLazyPagingData(

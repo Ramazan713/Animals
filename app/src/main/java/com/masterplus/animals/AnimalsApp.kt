@@ -8,12 +8,13 @@ import com.masterplus.animals.core.shared_features.list.domain.di.listDomainModu
 import com.masterplus.animals.core.shared_features.list.presentation.di.sharedListPresentationModule
 import com.masterplus.animals.core.shared_features.savepoint.data.di.savePointDataModule
 import com.masterplus.animals.core.shared_features.savepoint.domain.di.savePointDomainModule
-import com.masterplus.animals.core.shared_features.savepoint.presentation.di.savePointPresentationModule
+import com.masterplus.animals.core.shared_features.savepoint.presentation.di.sharedSavePointPresentationModule
 import com.masterplus.animals.features.animal.presentation.di.animalPresentationModule
 import com.masterplus.animals.features.bio_detail.presentation.di.bioDetailPresentationModule
 import com.masterplus.animals.features.bio_list.presentation.di.bioListPresentationModule
 import com.masterplus.animals.features.category_list.presentation.di.categoryListPresentationModule
 import com.masterplus.animals.features.list.presentation.di.showListPresentationModule
+import com.masterplus.animals.features.savepoints.presentation.di.savePointsPresentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -28,7 +29,7 @@ class AnimalsApp: Application() {
                 categoryListPresentationModule, bioListPresentationModule,
                 bioDetailPresentationModule,
                 listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule,
-                savePointDataModule, savePointDomainModule, savePointPresentationModule
+                savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule
             )
         }
     }

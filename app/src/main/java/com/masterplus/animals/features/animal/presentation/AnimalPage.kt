@@ -28,6 +28,7 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryRow
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
 import com.masterplus.animals.features.animal.presentation.navigation.ItemId
 import org.koin.androidx.compose.koinViewModel
@@ -37,7 +38,8 @@ fun AnimalPageRoot(
     viewModel: AnimalViewModel = koinViewModel(),
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
-    onNavigateToBioList: (CategoryType, Int?) -> Unit,
+    onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
+    onNavigateToShowSavePoints: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     AnimalPage(
@@ -45,7 +47,8 @@ fun AnimalPageRoot(
         onAction = viewModel::onAction,
         onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
         onNavigateToCategoryList = onNavigateToCategoryList,
-        onNavigateToBioList = onNavigateToBioList
+        onNavigateToBioList = onNavigateToBioList,
+        onNavigateToShowSavePoints = onNavigateToShowSavePoints
     )
 }
 
@@ -57,7 +60,8 @@ fun AnimalPage(
     onAction: (AnimalAction) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
-    onNavigateToBioList: (CategoryType, Int?) -> Unit,
+    onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
+    onNavigateToShowSavePoints: () -> Unit,
 ) {
     val contentPaddings = PaddingValues(horizontal = 12.dp)
     Scaffold(
@@ -80,36 +84,12 @@ fun AnimalPage(
             ) {
                 if(state.savePoints.isNotEmpty()){
                     item {
-                        ImageCategoryRow(
-                            modifier = Modifier
-                                .height(intrinsicSize = IntrinsicSize.Max),
+                        SavePointSection(
+                            state = state,
                             contentPaddings = contentPaddings,
-                            title = "Kaldıgın yerden devam et",
-                            showMore = true,
-                        ){ showMoreBtn ->
-                            Row (
-                                modifier = Modifier
-                                    .height(intrinsicSize = IntrinsicSize.Max)
-                                    .horizontalScroll(rememberScrollState())
-                                    .padding(contentPaddings)
-                                ,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ){
-                                state.savePoints.forEach { savePoint ->
-                                    SavePointItem(
-                                        modifier = Modifier
-                                            .widthIn(min = 170.dp, max = 200.dp)
-                                            .fillMaxHeight(),
-                                        showAsRow = false,
-                                        savePoint = savePoint,
-                                        onClick = {
-
-                                        }
-                                    )
-                                }
-                                showMoreBtn()
-                            }
-                        }
+                            onNavigateToBioList = onNavigateToBioList,
+                            onNavigateToShowSavePoints = onNavigateToShowSavePoints
+                        )
                     }
                 }
 
@@ -121,7 +101,7 @@ fun AnimalPage(
                         items = state.habitats.imageWithTitleModels,
                         showMore = state.habitats.showMore,
                         onClickItem = { item ->
-                            onNavigateToBioList(CategoryType.Habitat, item.id)
+                            onNavigateToBioList(CategoryType.Habitat, item.id, 0)
                         }
                     )
                 }
@@ -166,11 +146,57 @@ fun AnimalPage(
                             onNavigateToCategoryList(CategoryType.Family)
                         },
                         onClickItem = { item ->
-                            onNavigateToBioList(CategoryType.Family, item.id)
+                            onNavigateToBioList(CategoryType.Family, item.id, 0)
                         }
                     )
                 }
             }
+        }
+    }
+}
+
+
+@Composable
+private fun SavePointSection(
+    state: AnimalState,
+    contentPaddings: PaddingValues,
+    onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
+    onNavigateToShowSavePoints: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ImageCategoryRow(
+        modifier = modifier
+            .height(intrinsicSize = IntrinsicSize.Max),
+        contentPaddings = contentPaddings,
+        title = "Kaldıgın yerden devam et",
+        onClickMore = onNavigateToShowSavePoints,
+        showMore = true,
+    ){ showMoreBtn ->
+        Row (
+            modifier = Modifier
+                .height(intrinsicSize = IntrinsicSize.Max)
+                .horizontalScroll(rememberScrollState())
+                .padding(contentPaddings)
+            ,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ){
+            state.savePoints.forEach { savePoint ->
+                SavePointItem(
+                    modifier = Modifier
+                        .widthIn(min = 170.dp, max = 200.dp)
+                        .fillMaxHeight(),
+                    showAsRow = false,
+                    savePoint = savePoint,
+                    onClick = {
+                        onNavigateToBioList(
+                            savePoint.destination.toCategoryType() ?: CategoryType.Order,
+                            savePoint.destination.destinationId,
+                            savePoint.itemPosIndex
+                        )
+                    }
+                )
+            }
+            showMoreBtn()
         }
     }
 }
@@ -186,6 +212,7 @@ fun AnimalPagePreview() {
         onAction = {},
         onNavigateToCategoryListWithDetail = { x, y ->},
         onNavigateToCategoryList = {},
-        onNavigateToBioList = {x,y -> }
+        onNavigateToBioList = {x,y, z -> },
+        onNavigateToShowSavePoints = {}
     )
 }

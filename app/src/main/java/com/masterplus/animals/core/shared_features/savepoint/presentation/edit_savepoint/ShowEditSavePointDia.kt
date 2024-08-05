@@ -139,7 +139,7 @@ fun EditSavePointDialog(
                         SavePointItem(
                             modifier = Modifier.fillMaxWidth(),
                             savePoint = item,
-                            isSelected = item == state.selectedSavePoint,
+                            isSelected = item == state.currentSelectedSavePoint,
                             showImage = state.showImage,
                             onClick = {
                                 onAction(EditSavePointAction.Select(item))
@@ -171,19 +171,19 @@ fun EditSavePointDialog(
                 Button(
                     onClick = { onAction(EditSavePointAction.OverrideSavePoint(posIndex)) },
                     modifier = Modifier.weight(1f),
-                    enabled = state.selectedSavePoint != null,
+                    enabled = state.currentSelectedSavePoint != null,
                 ) {
                     Text(text = stringResource(R.string.override),)
                 }
                 Button(
                     onClick = {
-                        state.selectedSavePoint?.let { savePoint ->
+                        state.currentSelectedSavePoint?.let { savePoint ->
                             onNavigateLoad(savePoint)
                             onClosed()
                         }
                     },
                     modifier = Modifier.weight(1f),
-                    enabled = state.selectedSavePoint != null,
+                    enabled = state.currentSelectedSavePoint != null,
                 ) {
                     Text(text = stringResource(R.string.load))
                 }
@@ -194,7 +194,6 @@ fun EditSavePointDialog(
             ShowDialog(
                 event = dialogEvent,
                 onAction = onAction,
-                state = state,
                 posIndex = posIndex
             )
         }
@@ -206,7 +205,6 @@ fun EditSavePointDialog(
 @ExperimentalComposeUiApi
 @Composable
 private fun ShowDialog(
-    state: EditSavePointState,
     posIndex: Int,
     event: EditSavePointDialogEvent,
     onAction: (EditSavePointAction)->Unit,

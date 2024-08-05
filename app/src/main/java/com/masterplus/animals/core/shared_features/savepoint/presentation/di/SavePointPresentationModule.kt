@@ -4,6 +4,6 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_s
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
-val savePointPresentationModule = module {
+val sharedSavePointPresentationModule = module {
     viewModelOf(::EditSavePointViewModel)
 }
