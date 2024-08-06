@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.core.domain.models.AnimalData
 import com.masterplus.animals.core.presentation.components.DefaultImage
+import com.masterplus.animals.core.presentation.components.OrderText
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShapeUtils
 
@@ -198,6 +198,7 @@ private fun GetImage(
                 .matchParentSize(),
             contentScale = contentScale,
             contentDescription = contentDescription,
+            showErrorIcon = false
         )
 
         Row(
@@ -208,15 +209,8 @@ private fun GetImage(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            Text(
-                modifier = Modifier
-                    .alpha(if(orderNum == null) 0f else 1f)
-                    .padding(vertical = 2.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-                    .padding(horizontal = 4.dp),
-                text = "$orderNum",
-                style = MaterialTheme.typography.titleSmall
+            OrderText(
+                order = orderNum
             )
 
             if(isFavorited){

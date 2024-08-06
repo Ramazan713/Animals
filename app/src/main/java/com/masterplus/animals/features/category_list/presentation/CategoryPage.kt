@@ -121,6 +121,7 @@ fun CategoryListPage(
                         ImageWithTitle(
                             modifier = Modifier.fillMaxWidth(),
                             model = item,
+                            order = index + 1,
                             onClick = {
                                 onItemClick(item)
                             }
@@ -180,7 +181,7 @@ private fun CategoryListPagePreview1() {
             items = listOf(
                 SampleDatas.imageWithTitleModel1
             ),
-            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading)
+//            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading)
         ),
         onNavigateBack = {
 

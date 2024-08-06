@@ -220,8 +220,9 @@ private fun SavePointSection(
     onNavigateToShowSavePoints: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val savePointsSize = 5
-    val savePointsLimited = state.savePoints.subList(0,savePointsSize)
+    val maxSavePointsSize = 5
+    val savePointsSize = state.savePoints.size
+    val savePointsLimited = state.savePoints.subList(0, minOf(maxSavePointsSize,savePointsSize))
 
     ImageCategoryRow(
         modifier = modifier
@@ -229,7 +230,7 @@ private fun SavePointSection(
         contentPaddings = contentPaddings,
         title = "Kaldıgın yerden devam et",
         onClickMore = onNavigateToShowSavePoints,
-        showMore = state.savePoints.size > savePointsSize,
+        showMore = savePointsSize > maxSavePointsSize,
     ){ showMoreBtn ->
         Row (
             modifier = Modifier

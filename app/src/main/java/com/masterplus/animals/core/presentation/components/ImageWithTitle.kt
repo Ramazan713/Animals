@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,14 +22,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
-import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.ColorUtils
 
@@ -45,6 +38,7 @@ fun ImageWithTitle(
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
     contentScale: ContentScale = ContentScale.Crop,
+    order: Int? = null
 ){
     ImageWithTitle(
         imageData = model.imageUrl,
@@ -56,6 +50,7 @@ fun ImageWithTitle(
         size = size,
         shape = shape,
         contentScale = contentScale,
+        order = order
     )
 }
 
@@ -71,6 +66,7 @@ fun ImageWithTitle(
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
     contentScale: ContentScale = ContentScale.Crop,
+    order: Int? = null
 ) {
     val context = LocalContext.current
 
@@ -87,6 +83,14 @@ fun ImageWithTitle(
         ,
         contentAlignment = Alignment.BottomCenter
     ) {
+
+        OrderText(
+            order = order,
+            modifier = Modifier
+                .padding(8.dp)
+                .zIndex(2f)
+                .align(Alignment.TopStart)
+        )
 
         GetTitleSection(
             title = title,
