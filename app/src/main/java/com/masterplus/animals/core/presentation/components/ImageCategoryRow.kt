@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.SampleDatas
@@ -37,6 +39,7 @@ fun ImageCategoryRow(
     showMore: Boolean = false,
     onClickMore: (() -> Unit)? = null,
     onClickItem: (ImageWithTitleModel) -> Unit,
+    imageSize: DpSize = DpSize(150.dp, 180.dp),
     contentPaddings: PaddingValues = PaddingValues()
 ) {
     ImageCategoryRow(
@@ -57,6 +60,7 @@ fun ImageCategoryRow(
                 ImageWithTitle(
                     imageData = item.imageUrl,
                     title = item.title,
+                    size = imageSize,
                     subTitle = item.subTitle,
                     contentDescription = item.contentDescription,
                     onClick = {
@@ -66,7 +70,12 @@ fun ImageCategoryRow(
             }
 
             item {
-                showMoreBtn()
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.height(imageSize.height)
+                ) {
+                    showMoreBtn()
+                }
             }
         }
 
@@ -112,8 +121,7 @@ fun ImageCategoryRow(
             if(showMore){
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxHeight()
+                    modifier = Modifier.fillMaxHeight()
                 ) {
                     TextButton(
                         onClick = { onClickMore?.invoke() }
@@ -131,10 +139,15 @@ fun ImageCategoryRow(
 @Preview(showBackground = true)
 @Composable
 private fun ImageCategoryRowPreview() {
-    ImageCategoryRow(
-        title = "Sınıflar",
-        items = listOf(SampleDatas.imageWithTitleModel1, SampleDatas.imageWithTitleModel2),
-        onClickItem = {},
-        onClickMore = {}
-    )
+    LazyColumn {
+        item {
+            ImageCategoryRow(
+                title = "Sınıflar",
+                items = listOf(SampleDatas.imageWithTitleModel1, SampleDatas.imageWithTitleModel2),
+                onClickItem = {},
+                onClickMore = {},
+                showMore = true
+            )
+        }
+    }
 }

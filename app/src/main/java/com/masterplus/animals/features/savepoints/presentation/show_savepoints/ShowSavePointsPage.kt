@@ -41,6 +41,7 @@ import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointItemMenu
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
+import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItemDefaults
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -142,7 +143,9 @@ fun ShowSavePointsPage(
                             modifier = Modifier.fillMaxWidth(),
                             savePoint = item,
                             isSelected = item == state.currentSelectedSavePoint,
-                            showImage = state.showImage,
+                            itemDefaults = SavePointItemDefaults(
+                                showImage = state.showImage,
+                            ),
                             onClick = {
                                 onAction(ShowSavePointsAction.Select(item))
                             },

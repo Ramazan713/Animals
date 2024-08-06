@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.masterplus.animals.core.domain.models.AnimalData
 import com.masterplus.animals.core.presentation.components.DefaultImage
 import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.presentation.utils.ShapeUtils
 
 
 @Composable
@@ -95,12 +96,7 @@ fun BioCard(
 
     onClick: (() -> Unit)? = null,
 ) {
-    val imageShape = RoundedCornerShape(
-        topStart = cornerRadiusDp,
-        topEnd = if(isRow) 0.dp else cornerRadiusDp,
-        bottomStart = if(isRow) cornerRadiusDp else 0.dp,
-        bottomEnd = 0.dp
-    )
+    val imageShape = ShapeUtils.getRowStyleShape(isRow, cornerRadiusDp)
     val containerShape = RoundedCornerShape(cornerRadiusDp)
 
     if(isRow){

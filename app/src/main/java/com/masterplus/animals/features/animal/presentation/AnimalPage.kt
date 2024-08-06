@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -35,6 +36,7 @@ import com.masterplus.animals.core.presentation.components.SharedLoadingPageCont
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
+import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItemDefaults
 import com.masterplus.animals.features.animal.presentation.navigation.ItemId
 import org.koin.androidx.compose.koinViewModel
 
@@ -218,13 +220,16 @@ private fun SavePointSection(
     onNavigateToShowSavePoints: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val savePointsSize = 5
+    val savePointsLimited = state.savePoints.subList(0,savePointsSize)
+
     ImageCategoryRow(
         modifier = modifier
             .height(intrinsicSize = IntrinsicSize.Max),
         contentPaddings = contentPaddings,
         title = "Kaldıgın yerden devam et",
         onClickMore = onNavigateToShowSavePoints,
-        showMore = true,
+        showMore = state.savePoints.size > savePointsSize,
     ){ showMoreBtn ->
         Row (
             modifier = Modifier
@@ -234,12 +239,17 @@ private fun SavePointSection(
             ,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ){
-            state.savePoints.forEach { savePoint ->
+            savePointsLimited.forEach { savePoint ->
                 SavePointItem(
                     modifier = Modifier
                         .widthIn(min = 170.dp, max = 200.dp)
                         .fillMaxHeight(),
-                    showAsRow = false,
+                    itemDefaults = SavePointItemDefaults(
+                        showAsRow = false,
+                        compactContent = true,
+                        titleMaxLineLimit = 1,
+                        titleStyle = MaterialTheme.typography.titleSmall
+                    ),
                     savePoint = savePoint,
                     onClick = {
                         onNavigateToBioList(

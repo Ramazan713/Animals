@@ -12,8 +12,8 @@ sealed class SavePointDestination(
     val saveKey: String? = null,
     val destinationType: SavePointDestinationType
 ){
-    val title = destinationType.title
-    val destinationTypeId = destinationType.destinationTypeId
+    val title get() = destinationType.title
+    val destinationTypeId get() = destinationType.destinationTypeId
 
     data object All: SavePointDestination(
         destinationId = null,
@@ -89,14 +89,6 @@ sealed class SavePointDestination(
 
 
     companion object {
-        val All_DESTINATION_TYPE_IDS = listOf(
-            All.destinationTypeId,
-            ListType.DESTINATION_TYPE_ID,
-            Habitat.DESTINATION_TYPE_ID,
-            ClassType.DESTINATION_TYPE_ID,
-            Order.DESTINATION_TYPE_ID,
-            Family.DESTINATION_TYPE_ID
-        )
         fun from(
             destinationTypeId: Int,
             destinationId: Int?,

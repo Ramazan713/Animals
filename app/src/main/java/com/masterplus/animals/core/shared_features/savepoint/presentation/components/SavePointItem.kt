@@ -12,29 +12,38 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.components.DefaultImage
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.presentation.utils.ShapeUtils
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointItemMenu
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.core.shared_features.savepoint.presentation.extensions.asReadableModifiedData
+
+data class SavePointItemDefaults(
+    val titleMaxLineLimit: Int = Int.MAX_VALUE,
+    val showImage: Boolean = true,
+    val showAsRow: Boolean = true,
+    val compactContent: Boolean = false,
+    val titleStyle: TextStyle? = null
+)
+
 
 @Composable
 fun SavePointItem(
@@ -42,17 +51,17 @@ fun SavePointItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
-    showImage: Boolean = true,
-    showAsRow: Boolean = true,
+    itemDefaults: SavePointItemDefaults = SavePointItemDefaults(),
     onMenuClick: ((SavePointItemMenu) -> Unit)? = null,
 ){
     val shape = MaterialTheme.shapes.medium
+    val imageShape = ShapeUtils.getRowStyleShape(itemDefaults.showAsRow, shape)
 
     val backgroundColor = if(isSelected) MaterialTheme.colorScheme.secondaryContainer else
         CardDefaults.cardColors().containerColor
 
-    val currentImageUrl = remember(showImage, savePoint) {
-        if(showImage) savePoint.imageData ?: R.drawable.all_animals else null
+    val currentImageUrl = remember(itemDefaults.showImage, savePoint) {
+        if(itemDefaults.showImage) savePoint.imageData ?: R.drawable.all_animals else null
     }
 
     Card(
@@ -69,22 +78,21 @@ fun SavePointItem(
         ),
         shape = shape
     ) {
-
-        if(showAsRow){
+        if(itemDefaults.showAsRow){
             Row(
                 modifier = Modifier
+                    .padding(if(currentImageUrl == null) 4.dp else 0.dp)
             ) {
                 GetImageSection(
                     imageUrl = currentImageUrl,
-                    shape = shape,
+                    shape = imageShape,
                     modifier = Modifier.fillMaxHeight()
                 )
-                if(currentImageUrl == null){
-                    Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-                }
+
                 GetContentSection(
                     savePoint = savePoint,
                     onMenuClick = onMenuClick,
+                    itemDefaults = itemDefaults,
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 8.dp)
                 )
@@ -97,16 +105,18 @@ fun SavePointItem(
             ) {
                 GetImageSection(
                     imageUrl = currentImageUrl,
-                    shape = shape,
+                    shape = imageShape,
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 GetContentSection(
                     savePoint = savePoint,
                     onMenuClick = onMenuClick,
+                    itemDefaults = itemDefaults,
                     modifier = Modifier
-                        .width(IntrinsicSize.Max)
-                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 0.dp)
+                        .padding(bottom = 8.dp)
                 )
 
             }
@@ -117,7 +127,7 @@ fun SavePointItem(
 @Composable
 fun GetImageSection(
     imageUrl: Any?,
-    shape: CornerBasedShape,
+    shape: Shape,
     modifier: Modifier = Modifier,
 ) {
     imageUrl?.let { imageData ->
@@ -134,124 +144,160 @@ fun GetImageSection(
 private fun GetContentSection(
     savePoint: SavePoint,
     onMenuClick: ((SavePointItemMenu) -> Unit)?,
+    itemDefaults: SavePointItemDefaults,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
+    Column(
         modifier = modifier
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
+                modifier = Modifier.weight(1f),
                 text = savePoint.title,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 3
+                style = itemDefaults.titleStyle ?: MaterialTheme.typography.titleMedium,
+                maxLines = itemDefaults.titleMaxLineLimit,
+                overflow = TextOverflow.Ellipsis
             )
-            Spacer(
-                modifier = Modifier
-                    .padding(bottom = 4.dp)
-            )
+            if(onMenuClick != null){
+                CustomDropdownBarMenu(
+                    items = SavePointItemMenu.entries,
+                    onItemChange = onMenuClick
+                )
+            }else{
+                Spacer(modifier = Modifier.padding(vertical = 16.dp))
+            }
+        }
 
+        SavePointInfoItem(
+            compactContent = itemDefaults.compactContent,
+            savePoint = savePoint
+        )
+
+        Spacer(
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .weight(1f)
+        )
+
+        Text(
+            text = savePoint.asReadableModifiedData(),
+            style = MaterialTheme.typography.bodySmall
+        )
+
+    }
+}
+
+
+@Composable
+private fun SavePointInfoItem(
+    compactContent: Boolean,
+    savePoint: SavePoint
+) {
+    if(compactContent){
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
                 text = "pos: ${savePoint.itemPosIndex + 1}",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
+            Spacer(modifier = Modifier.width(8.dp))
 
             Text(
                 text = "type: ${savePoint.destination.title.asString()}",
                 style = MaterialTheme.typography.bodyMedium
             )
-
-            Spacer(
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .weight(1f)
-            )
-
-            Text(
-                text = savePoint.asReadableModifiedData(),
-                style = MaterialTheme.typography.bodySmall
-            )
-
         }
-        if(onMenuClick != null){
-            CustomDropdownBarMenu(
-                items = SavePointItemMenu.entries,
-                onItemChange = onMenuClick
-            )
-        }
+    }else{
+        Text(
+            text = "pos: ${savePoint.itemPosIndex + 1}",
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Text(
+            text = "type: ${savePoint.destination.title.asString()}",
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
-
-
 }
 
 
 @Preview(showBackground = true)
 @Composable
 private fun SavePointItemPreview() {
-    val savePoint = SampleDatas.generateSavePoint().copy(imageData = R.drawable.all_animals)
+    val savePoint = SampleDatas.generateSavePoint().copy(imageData = R.drawable.all_animals, title = "Title".repeat(7))
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .padding(4.dp)
-            .verticalScroll(rememberScrollState())
+//            .verticalScroll(rememberScrollState())
     ) {
-        LazyRow(
-            modifier = Modifier
-        ) {
-            item {
-                SavePointItem(
-                    modifier = Modifier
-                        .widthIn(min = 150.dp, max = 200.dp)
-                        .fillParentMaxHeight(),
-                    savePoint = savePoint,
-                    isSelected = false,
-                    showAsRow = false,
-                    onMenuClick = {
-
-                    },
-                    onClick = {},
-                )
-            }
-
-            item {
-                SavePointItem(
-                    modifier = Modifier
-                        .widthIn(min = 150.dp, max = 200.dp)
-                        .fillParentMaxHeight()
-                    ,
-                    savePoint = savePoint.copy(title = "Title"),
-                    isSelected = false,
-                    showAsRow = false,
-                    showImage = true,
-                    onMenuClick = {
-
-                    },
-                    onClick = {},
-                )
-            }
-        }
+//        LazyRow(
+//            modifier = Modifier
+//        ) {
+//            item {
+//                SavePointItem(
+//                    modifier = Modifier
+//                        .widthIn(min = 150.dp, max = 200.dp)
+//                        .fillParentMaxHeight(),
+//                    savePoint = savePoint,
+//                    isSelected = false,
+//                    showAsRow = false,
+//                    onMenuClick = {
+//
+//                    },
+//                    onClick = {},
+//                )
+//            }
+//
+//            item {
+//                SavePointItem(
+//                    modifier = Modifier
+//                        .widthIn(min = 150.dp, max = 200.dp)
+//                        .fillParentMaxHeight()
+//                    ,
+//                    savePoint = savePoint.copy(title = "Title"),
+//                    isSelected = false,
+//                    showAsRow = false,
+//                    showImage = true,
+//                    onMenuClick = {
+//
+//                    },
+//                    onClick = {},
+//                )
+//            }
+//        }
 
         SavePointItem(
             modifier = Modifier.fillMaxWidth(),
             savePoint = savePoint,
             isSelected = true,
-            showImage = false,
-            onMenuClick = {
+            itemDefaults = SavePointItemDefaults(
+                showImage = false,
+                compactContent = false,
+                titleMaxLineLimit = 1,
+            ),
 
-            },
+//            onMenuClick = {},
             onClick = {},
         )
 
         SavePointItem(
             savePoint = savePoint,
             isSelected = false,
-            showAsRow = false,
-            onMenuClick = {},
+            itemDefaults = SavePointItemDefaults(
+                showAsRow = false,
+                compactContent = false,
+                titleMaxLineLimit = 1,
+            ),
+//            onMenuClick = {},
             onClick = {},
         )
     }

@@ -76,12 +76,10 @@ class AnimalViewModel(
     }
 
     private fun loadSavePoints(){
-        val filter = SavePointDestination.All_DESTINATION_TYPE_IDS.filter { typeId -> typeId != SavePointDestination.ListType.DESTINATION_TYPE_ID }
-
         savePointRepo
             .getAllSavePointsByContentType(
                 contentType = SavePointContentType.Content,
-                filteredDestinationTypeIds = filter
+                filteredDestinationTypeIds = null
             )
             .onEach { savePoints ->
                 _state.update { it.copy(
