@@ -23,11 +23,16 @@ interface AnimalDao {
     """)
     suspend fun getAnimalDetailById(id: Int): AnimalDetailEmbeddedEntity?
 
+    @Query("""
+        select count(*) from animals
+    """)
+    suspend fun getAnimalsSize(): Int
+
     @Transaction
     @Query("""
-        select * from animals limit 1
+        select * from animals limit 1 offset :offset
     """)
-    suspend fun getAnimals(): List<AnimalDataDetailEmbedded>
+    suspend fun getAnimalByOffset(offset: Int): AnimalDataDetailEmbedded?
 
 
     @Transaction

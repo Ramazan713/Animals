@@ -106,6 +106,9 @@ fun MyApp(
                 },
                 onNavigateToShowSavePoints = {
                     navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null)
+                },
+                onNavigateToBioDetail = { itemId ->
+                    navHostController.navigateToBioDetail(itemId)
                 }
             )
 

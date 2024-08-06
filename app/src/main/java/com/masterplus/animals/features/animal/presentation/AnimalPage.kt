@@ -14,18 +14,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryRow
+import com.masterplus.animals.core.presentation.components.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
@@ -40,15 +45,16 @@ fun AnimalPageRoot(
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
+    onNavigateToBioDetail: (Int) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     AnimalPage(
         state = state,
-        onAction = viewModel::onAction,
         onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
         onNavigateToCategoryList = onNavigateToCategoryList,
         onNavigateToBioList = onNavigateToBioList,
-        onNavigateToShowSavePoints = onNavigateToShowSavePoints
+        onNavigateToShowSavePoints = onNavigateToShowSavePoints,
+        onNavigateToBioDetail = onNavigateToBioDetail
     )
 }
 
@@ -57,11 +63,11 @@ fun AnimalPageRoot(
 @Composable
 fun AnimalPage(
     state: AnimalState,
-    onAction: (AnimalAction) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
+    onNavigateToBioDetail: (Int) -> Unit
 ) {
     val contentPaddings = PaddingValues(horizontal = 12.dp)
     Scaffold(
@@ -82,6 +88,15 @@ fun AnimalPage(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
+
+                item {
+                    DailyAnimalsSection(
+                        state = state,
+                        contentPaddings = contentPaddings,
+                        onNavigateToBioDetail = onNavigateToBioDetail
+                    )
+                }
+
                 if(state.savePoints.isNotEmpty()){
                     item {
                         SavePointSection(
@@ -156,6 +171,45 @@ fun AnimalPage(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DailyAnimalsSection(
+    state: AnimalState,
+    contentPaddings: PaddingValues,
+    onNavigateToBioDetail: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val dailyAnimalTitleModels = state.dailyAnimals.imageWithTitleModels
+    if(dailyAnimalTitleModels.isNotEmpty()){
+        ImageCategoryRow(
+            modifier = modifier,
+            title = "Günün Hayvanları",
+            contentPaddings = contentPaddings
+        ){
+            HorizontalUncontainedCarousel(
+                state = rememberCarouselState {
+                    dailyAnimalTitleModels.size
+                },
+                itemSpacing = 4.dp,
+                itemWidth = 250.dp,
+                contentPadding = contentPaddings
+            ) { index ->
+                val animalData = dailyAnimalTitleModels[index]
+                ImageWithTitle(
+                    imageData = animalData.imageUrl,
+                    onClick = {
+                        onNavigateToBioDetail(animalData.id ?: return@ImageWithTitle)
+                    },
+                    title = animalData.title,
+                    subTitle = animalData.subTitle,
+                    size = DpSize(250.dp,250.dp),
+                    shape = RoundedCornerShape(16.dp)
+                )
+            }
+        }
+    }
+}
+
 @Composable
 private fun SavePointSection(
     state: AnimalState,
@@ -209,10 +263,10 @@ fun AnimalPagePreview() {
             isLoading = false,
             savePoints = listOf(SampleDatas.generateSavePoint(), SampleDatas.generateSavePoint(id = 2).copy(title = "Title"))
         ),
-        onAction = {},
-        onNavigateToCategoryListWithDetail = { x, y ->},
+        onNavigateToCategoryListWithDetail = { _, _ ->},
         onNavigateToCategoryList = {},
-        onNavigateToBioList = {x,y, z -> },
-        onNavigateToShowSavePoints = {}
+        onNavigateToBioList = { _, _, _ -> },
+        onNavigateToShowSavePoints = {},
+        onNavigateToBioDetail = {}
     )
 }

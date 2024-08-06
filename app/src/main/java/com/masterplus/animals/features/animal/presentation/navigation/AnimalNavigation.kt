@@ -17,13 +17,15 @@ fun NavGraphBuilder.animal(
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
+    onNavigateToBioDetail: (Int) -> Unit
 ){
     composable<AnimalRoute> {
         AnimalPageRoot(
             onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
             onNavigateToCategoryList = onNavigateToCategoryList,
             onNavigateToBioList = onNavigateToBioList,
-            onNavigateToShowSavePoints = onNavigateToShowSavePoints
+            onNavigateToShowSavePoints = onNavigateToShowSavePoints,
+            onNavigateToBioDetail = onNavigateToBioDetail
         )
     }
 }

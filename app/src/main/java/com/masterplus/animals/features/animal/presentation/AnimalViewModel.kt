@@ -6,6 +6,7 @@ import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
+import com.masterplus.animals.features.animal.domain.repo.DailyAnimalRepo
 import com.masterplus.animals.features.animal.presentation.AnimalAction
 import com.masterplus.animals.features.animal.presentation.AnimalState
 import com.masterplus.animals.features.animal.presentation.models.CategoryRowModel
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 
 class AnimalViewModel(
     private val categoryRepo: CategoryRepo,
-    private val savePointRepo: SavePointRepo
+    private val savePointRepo: SavePointRepo,
+    private val dailyAnimalRepo: DailyAnimalRepo
 ): ViewModel() {
 
     private val _state = MutableStateFlow(AnimalState())
@@ -57,12 +59,18 @@ class AnimalViewModel(
                     CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
                 }
 
+            val dailyAnimals = dailyAnimalRepo.getTodayAnimals(3)
+                .mapNotNull { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
+                    CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = false)
+                }
+
             _state.update { it.copy(
                 isLoading = false,
                 habitats = habitats,
                 orders = orders,
                 classes = classes,
-                families = families
+                families = families,
+                dailyAnimals = dailyAnimals
             ) }
         }
     }

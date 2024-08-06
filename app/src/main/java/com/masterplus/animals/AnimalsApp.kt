@@ -9,6 +9,7 @@ import com.masterplus.animals.core.shared_features.list.presentation.di.sharedLi
 import com.masterplus.animals.core.shared_features.savepoint.data.di.savePointDataModule
 import com.masterplus.animals.core.shared_features.savepoint.domain.di.savePointDomainModule
 import com.masterplus.animals.core.shared_features.savepoint.presentation.di.sharedSavePointPresentationModule
+import com.masterplus.animals.features.animal.data.di.animalDataModule
 import com.masterplus.animals.features.animal.presentation.di.animalPresentationModule
 import com.masterplus.animals.features.bio_detail.presentation.di.bioDetailPresentationModule
 import com.masterplus.animals.features.bio_list.presentation.di.bioListPresentationModule
@@ -27,7 +28,7 @@ class AnimalsApp: Application() {
             modules(
                 databaseModule, animalPresentationModule, coreDataModule,
                 categoryListPresentationModule, bioListPresentationModule,
-                bioDetailPresentationModule,
+                bioDetailPresentationModule, animalDataModule,
                 listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule,
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule
             )
