@@ -33,10 +33,12 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryRow
 import com.masterplus.animals.core.presentation.components.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItemDefaults
+import com.masterplus.animals.features.animal.domain.enums.AnimalTopBarMenu
 import com.masterplus.animals.features.animal.presentation.navigation.ItemId
 import org.koin.androidx.compose.koinViewModel
 
@@ -47,7 +49,8 @@ fun AnimalPageRoot(
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
-    onNavigateToBioDetail: (Int) -> Unit
+    onNavigateToBioDetail: (Int) -> Unit,
+    onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     AnimalPage(
@@ -56,7 +59,8 @@ fun AnimalPageRoot(
         onNavigateToCategoryList = onNavigateToCategoryList,
         onNavigateToBioList = onNavigateToBioList,
         onNavigateToShowSavePoints = onNavigateToShowSavePoints,
-        onNavigateToBioDetail = onNavigateToBioDetail
+        onNavigateToBioDetail = onNavigateToBioDetail,
+        onNavigateToSettings = onNavigateToSettings
     )
 }
 
@@ -69,7 +73,8 @@ fun AnimalPage(
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
-    onNavigateToBioDetail: (Int) -> Unit
+    onNavigateToBioDetail: (Int) -> Unit,
+    onNavigateToSettings: () -> Unit
 ) {
     val contentPaddings = PaddingValues(horizontal = 12.dp)
     Scaffold(
@@ -77,6 +82,16 @@ fun AnimalPage(
             TopAppBar(
                 title = { 
                     Text(text = "Hayvanlar Alemi")
+                },
+                actions = {
+                    CustomDropdownBarMenu(
+                        items = AnimalTopBarMenu.entries,
+                        onItemChange = { menuItem ->
+                            when(menuItem){
+                                AnimalTopBarMenu.Settings -> onNavigateToSettings()
+                            }
+                        }
+                    )
                 }
             )
         }
@@ -278,6 +293,7 @@ fun AnimalPagePreview() {
         onNavigateToCategoryList = {},
         onNavigateToBioList = { _, _, _ -> },
         onNavigateToShowSavePoints = {},
-        onNavigateToBioDetail = {}
+        onNavigateToBioDetail = {},
+        onNavigateToSettings = {}
     )
 }

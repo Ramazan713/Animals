@@ -1,15 +1,24 @@
 package com.masterplus.animals.features.settings.presentation.navigation
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.masterplus.animals.features.settings.presentation.SettingsPage
+import com.masterplus.animals.features.settings.presentation.SettingsPageRoot
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object SettingsRoute
+private data object SettingsRoute
 
-fun NavGraphBuilder.settings(){
+fun NavController.navigateToSettings(){
+    navigate(SettingsRoute)
+}
+
+fun NavGraphBuilder.settings(
+    onNavigateBack: () -> Unit
+){
     composable<SettingsRoute> {
-        SettingsPage()
+        SettingsPageRoot(
+            onNavigateBack = onNavigateBack
+        )
     }
 }

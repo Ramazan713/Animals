@@ -10,7 +10,6 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.masterplus.animals.features.animal.presentation.navigation.AnimalRoute
 import com.masterplus.animals.features.list.presentation.show_list.navigation.ShowListRoute
-import com.masterplus.animals.features.settings.presentation.navigation.SettingsRoute
 
 sealed class AppNavRoute(
     val route: Any,
@@ -24,13 +23,6 @@ sealed class AppNavRoute(
         selectedIconVector = Icons.Filled.Home,
         unSelectedIconVector = Icons.Outlined.Home,
         title = "Animal"
-    )
-
-    data object Settings: AppNavRoute(
-        route = SettingsRoute,
-        selectedIconVector = Icons.Filled.Settings,
-        unSelectedIconVector = Icons.Outlined.Settings,
-        title = "Settings"
     )
 
     data object Lists: AppNavRoute(

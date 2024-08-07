@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -9,6 +12,10 @@ plugins {
     alias(libs.plugins.firebase.perf.plugin)
     alias(libs.plugins.room)
 }
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
     namespace = "com.masterplus.animals"
@@ -25,6 +32,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_CLIENT_ID"]}\"")
+
     }
 
     buildTypes {
@@ -100,4 +110,5 @@ dependencies {
     implementation(libs.bundles.paging)
     implementation(libs.bundles.datastore)
     implementation(libs.bundles.koin)
+    implementation(libs.bundles.credentials)
 }

@@ -57,4 +57,23 @@
     <string name="dropdown_menu_text">Aşağıya açılan menu</string>
     <string name="load_and_go">Yükle ve Git</string>
     <string name="something_went_wrong">Bir hata oluştu</string>
+    <string name="email_send_for_reset_password">E-posta şifrenizi sırfırlamanız için gönderildi</string>
+    <string name="successfully_log_out">Başarıyla çıkış yapıldı</string>
+    <string name="delete_account_success">Hesap başarıyla silindi</string>
+    <string name="sign_in">Giriş yap</string>
+    <string name="login_with_n_c">%1$s ile Giriş Yap</string>
+    <string name="sign_up_c">Kayıt Ol</string>
+    <string name="sign_in_c">Giriş Yap</string>
+    <string name="forget_password">Şifremi unuttum</string>
+    <string name="password">Şifre</string>
+    <string name="email">E-posta</string>
+    <string name="password_field_can_not_be_empty">Şifre alanı boş olamaz</string>
+    <string name="password_field_must_be_at_least_seven_size">Şifre alanı en az 7 karekter olmalıdır</string>
+    <string name="email_field_can_not_be_empty">E-posta alanı boş olamaz</string>
+    <string name="enter_valid_email">Geçerli bir e-posta yazınız</string>
+    <string name="enter_email_for_reset_password">Şifresini sıfırlamak istediğiniz e-posta adresini giriniz</string>
+    <string name="login_again_to_continue">Devam etmek için tekrar giriş yap</string>
+    <string name="sign_out">Çıkış yap</string>
+    <string name="question_sign_out">Çıkış yapmak istediğinize emin misiniz?</string>
+    <string name="or">veya</string>
 </resources>

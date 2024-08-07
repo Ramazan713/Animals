@@ -37,6 +37,7 @@ import com.masterplus.animals.features.list.presentation.archive_list.navigation
 import com.masterplus.animals.features.list.presentation.show_list.navigation.showList
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.navigateToShowSavePoints
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.showSavePoints
+import com.masterplus.animals.features.settings.presentation.navigation.navigateToSettings
 import com.masterplus.animals.features.settings.presentation.navigation.settings
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
@@ -109,10 +110,17 @@ fun MyApp(
                 },
                 onNavigateToBioDetail = { itemId ->
                     navHostController.navigateToBioDetail(itemId)
+                },
+                onNavigateToSettings = {
+                    navHostController.navigateToSettings()
                 }
             )
 
-            settings()
+            settings(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                }
+            )
 
             showList(
                 onNavigateToDetailList = {listId ->
