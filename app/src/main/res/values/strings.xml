@@ -76,4 +76,9 @@
     <string name="sign_out">Çıkış yap</string>
     <string name="question_sign_out">Çıkış yapmak istediğinize emin misiniz?</string>
     <string name="or">veya</string>
+    <string name="advanced_setting">Gelişmiş ayarlar</string>
+    <string name="delete_account">Hesabı sil</string>
+    <string name="q_delete_account">Hesabı silmek istediğinize emin misiniz?</string>
+    <string name="delete_account_warning">Hesabı sildiğinizde tüm verinize tekrar ulaşamayacaksınız</string>
+    <string name="unlink_account_warning">Bağlantısını kaldırırsanız, tekrardan bu oturum açma sağlayıcısıyla hesaba giriş yapamazsınız</string>
 </resources>

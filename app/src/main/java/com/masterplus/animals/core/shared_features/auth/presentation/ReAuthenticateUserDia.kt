@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.shared_features.auth.presentation
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.OAuthProvider
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.utils.UiText
@@ -27,16 +26,18 @@ import com.masterplus.animals.core.presentation.dialogs.BaseDialog
 import com.masterplus.animals.core.presentation.dialogs.ShowLoadingDialog
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.auth.presentation.components.AuthProvidersComponent
-import com.masterplus.animals.core.shared_features.auth.presentation.components.OrDivider
 import com.masterplus.animals.core.shared_features.auth.presentation.components.EmailAuthProviderComponent
 import com.masterplus.animals.core.shared_features.auth.presentation.components.EmailAuthProviderStyles
 import com.masterplus.animals.core.shared_features.auth.presentation.components.EmailString
+import com.masterplus.animals.core.shared_features.auth.presentation.components.OrDivider
 import com.masterplus.animals.core.shared_features.auth.presentation.components.PasswordString
+import com.masterplus.animals.core.shared_features.auth.presentation.utils.AuthProviderUtils
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun ShowDeleteAccountDia(
-    onEvent: (AuthEvent) -> Unit,
+    onAction: (AuthAction) -> Unit,
     state: AuthState,
     isDarkMode: Boolean,
     onClose: () -> Unit,
@@ -53,10 +54,10 @@ fun ShowDeleteAccountDia(
         isDarkMode = isDarkMode,
         onClose = onClose,
         onReAuthenticateWithCredential = {
-            onEvent(AuthEvent.DeleteUserWithCredentials(it))
+            onAction(AuthAction.DeleteUserWithCredentials(it))
         },
         onReAuthenticateWithEmail = { email, password ->
-            onEvent(AuthEvent.DeleteUserWithEmail(email, password))
+            onAction(AuthAction.DeleteUserWithEmail(email, password))
         }
     )
 }
@@ -70,10 +71,8 @@ fun ReAuthenticateUserDia(
     isDarkMode: Boolean,
     onClose: () -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val firebaseAuth = remember {
-        FirebaseAuth.getInstance()
-    }
 
     var error by remember {
         mutableStateOf<UiText?>(null)
@@ -89,9 +88,12 @@ fun ReAuthenticateUserDia(
         isDarkMode = isDarkMode,
         onClose = onClose,
         onSignInWithOAuthProvider = { oAuthProvider ->
-            firebaseAuth.currentUser?.startActivityForReauthenticateWithProvider(context as Activity,oAuthProvider)?.addOnCompleteListener {
-                it.result?.credential?.let { credential ->
-                    onReAuthenticateWithCredential(credential)
+            scope.launch {
+                AuthProviderUtils.reAuthenticateWithFirebaseProvider(context, oAuthProvider).also {result ->
+                    result.getSuccessData?.let { credential ->
+                        onReAuthenticateWithCredential(credential)
+                    }
+                    result.getFailureError?.let { error = it.text }
                 }
             }
         },

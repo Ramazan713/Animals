@@ -1,6 +1,5 @@
 package com.masterplus.animals.features.settings.presentation.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 
@@ -24,7 +23,7 @@ fun SettingItem(
     onClick: ()->Unit,
     modifier: Modifier = Modifier,
     subTitle: String? = null,
-    @DrawableRes resourceId: Int? = null,
+    imageVector: ImageVector? = null,
     color: Color? = null
 ){
     val shape = MaterialTheme.shapes.small
@@ -38,9 +37,9 @@ fun SettingItem(
             .padding(vertical = if(subTitle!=null) 13.dp else 17.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
-        resourceId?.let {
+        imageVector?.let {
             Icon(
-                painter = painterResource(it),
+                imageVector = it,
                 contentDescription = null,
                 modifier = Modifier.padding(start = 7.dp),
                 tint = color ?: LocalContentColor.current

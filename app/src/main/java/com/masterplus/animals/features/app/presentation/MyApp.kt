@@ -37,6 +37,8 @@ import com.masterplus.animals.features.list.presentation.archive_list.navigation
 import com.masterplus.animals.features.list.presentation.show_list.navigation.showList
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.navigateToShowSavePoints
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.showSavePoints
+import com.masterplus.animals.features.settings.presentation.navigation.linkAccounts
+import com.masterplus.animals.features.settings.presentation.navigation.navigateToLinkAccounts
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToSettings
 import com.masterplus.animals.features.settings.presentation.navigation.settings
 
@@ -117,6 +119,15 @@ fun MyApp(
             )
 
             settings(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                },
+                onNavigateToLinkedAccounts = {
+                    navHostController.navigateToLinkAccounts()
+                }
+            )
+
+            linkAccounts(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 }

@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.shared_features.auth.presentation
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,14 +10,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.OAuthProvider
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.utils.UiText
@@ -27,36 +25,36 @@ import com.masterplus.animals.core.presentation.dialogs.BaseDialog
 import com.masterplus.animals.core.presentation.dialogs.ShowLoadingDialog
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.auth.presentation.components.AuthProvidersComponent
+import com.masterplus.animals.core.shared_features.auth.presentation.components.EmailAuthProviderComponent
 import com.masterplus.animals.core.shared_features.auth.presentation.components.OrDivider
 import com.masterplus.animals.core.shared_features.auth.presentation.handlers.AuthDialogEventHandler
-import com.masterplus.animals.core.shared_features.auth.presentation.components.EmailAuthProviderComponent
+import com.masterplus.animals.core.shared_features.auth.presentation.utils.AuthProviderUtils
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginDia(
-    onEvent: (AuthEvent) -> Unit,
+    onAction: (AuthAction) -> Unit,
     state: AuthState,
     isDarkMode: Boolean,
     onClose: () -> Unit,
 ){
     val context = LocalContext.current
-    val firebaseAuth = remember {
-        FirebaseAuth.getInstance()
-    }
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(state.user){
         if(state.user != null){
             onClose()
         }
     }
     LoginDiaUI(
-        onEvent = onEvent,
+        onAction = onAction,
         state = state,
         isDarkMode = isDarkMode,
         onClose = onClose,
         onSignInWithOAuthProvider = { oAuthProvider ->
-            firebaseAuth.startActivityForSignInWithProvider(context as Activity,oAuthProvider).addOnCompleteListener {
-                it.result?.credential?.let { credential ->
-                    onEvent(AuthEvent.SignInWithCredential(credential))
-                }
+            scope.launch {
+                AuthProviderUtils.signInWithFirebaseProvider(context, oAuthProvider).getSuccessData?.let { credential ->
+                    onAction(AuthAction.SignInWithCredential(credential)) }
             }
         }
     )
@@ -65,7 +63,7 @@ fun LoginDia(
 
 @Composable
 private fun LoginDiaUI(
-    onEvent: (AuthEvent) -> Unit,
+    onAction: (AuthAction) -> Unit,
     state: AuthState,
     isDarkMode: Boolean,
     onClose: () -> Unit,
@@ -74,8 +72,6 @@ private fun LoginDiaUI(
     var error by remember {
         mutableStateOf<UiText?>(null)
     }
-    val currentOnEvent by rememberUpdatedState(newValue = onEvent)
-
     ShowLifecycleToastMessage(
         message = error
     ) {
@@ -105,21 +101,21 @@ private fun LoginDiaUI(
                 item {
                     EmailAuthProviderComponent(
                         onForgetPassword = { email ->
-                            onEvent(
-                                AuthEvent.ShowDialog(
+                            onAction(
+                                AuthAction.ShowDialog(
                                     AuthDialogEvent.EnterEmailForResetPassword(
                                         email = email,
-                                        onResult = {newEmail->
-                                            onEvent(AuthEvent.ResetPassword(newEmail))
+                                        onResult = { newEmail->
+                                            onAction(AuthAction.ResetPassword(newEmail))
                                         }
                                     )
                             ))
                         },
                         onSignIn = { email, password ->
-                            onEvent(AuthEvent.SignInWithEmail(email, password))
+                            onAction(AuthAction.SignInWithEmail(email, password))
                         },
                         onSignUp = { email, password ->
-                            onEvent(AuthEvent.SignUpWithEmail(email, password))
+                            onAction(AuthAction.SignUpWithEmail(email, password))
                         },
                     )
                 }
@@ -136,7 +132,7 @@ private fun LoginDiaUI(
                     AuthProvidersComponent(
                         isDarkMode = isDarkMode,
                         onSignInWithCredential = { credential->
-                            currentOnEvent(AuthEvent.SignInWithCredential(credential))
+                            onAction(AuthAction.SignInWithCredential(credential))
                         },
                         onSignInWithOAuthProvider = onSignInWithOAuthProvider,
                         onError = {
@@ -146,16 +142,17 @@ private fun LoginDiaUI(
                 }
             }
         }
+
+
     }
 
     state.dialogEvent?.let { dialogEvent->
-        AuthDialogEventHandler(dialogEvent = dialogEvent, onEvent = onEvent)
+        AuthDialogEventHandler(dialogEvent = dialogEvent, onAction = onAction)
     }
 
     if(state.isLoading){
         ShowLoadingDialog()
     }
-
 }
 
 
@@ -164,8 +161,10 @@ private fun LoginDiaUI(
 @Composable
 private fun LoginPreview() {
     LoginDiaUI(
-        onEvent = {},
-        state = AuthState(),
+        onAction = {},
+        state = AuthState(
+            isLoading = true
+        ),
         isDarkMode = false,
         onClose = {},
         onSignInWithOAuthProvider = {}

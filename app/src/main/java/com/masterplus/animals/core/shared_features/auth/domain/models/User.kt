@@ -6,5 +6,6 @@ data class User(
     val uid: String,
     val email: String?,
     val photoUri: Uri?,
-    val name: String?
+    val name: String?,
+    val authProviders: List<AuthProviderData> = emptyList()
 )

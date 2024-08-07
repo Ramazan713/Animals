@@ -1,5 +1,7 @@
 package com.masterplus.animals.core.domain.utils
 
+import androidx.annotation.StringRes
+
 
 sealed interface Result<out D, out E: Error> {
 
@@ -19,6 +21,27 @@ sealed interface Result<out D, out E: Error> {
 
     val getFailureError: E?
         get() = if (this is Error) this.error else null
+
+    fun onSuccess(callback: (data: D) -> Unit){
+        getSuccessData?.let(callback)
+    }
+    fun onFailure(callback: (error: E) -> Unit){
+        getFailureError?.let(callback)
+    }
+
+    companion object {
+        fun errorWithUiText(uiText: UiText): Error<ErrorText>{
+            return Error(ErrorText(uiText))
+        }
+        fun errorWithText(error: String): Error<ErrorText>{
+            return errorWithUiText(UiText.Text(error))
+        }
+
+        fun errorWithResource(@StringRes resId: Int): Error<ErrorText> {
+            return errorWithUiText(UiText.Resource(resId))
+        }
+    }
+
 }
 
 inline fun <T, E: Error, R> Result<T, E>.map(map: (T) -> R): Result<R, E> {

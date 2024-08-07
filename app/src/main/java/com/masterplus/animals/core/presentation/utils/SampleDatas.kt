@@ -11,7 +11,9 @@ import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.models.PhylumModel
 import com.masterplus.animals.core.domain.models.SpeciesModel
+import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
+import com.masterplus.animals.core.shared_features.auth.domain.enums.AuthProviderType
 import com.masterplus.animals.core.shared_features.list.domain.models.ListView
 import com.masterplus.animals.core.shared_features.list.domain.models.SelectableListView
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
@@ -19,6 +21,7 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.bio_detail.presentation.models.TitleSectionModel
+import com.masterplus.animals.features.settings.presentation.link_accounts.models.LinkAccountModel
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -202,6 +205,20 @@ object SampleDatas {
     ): SavePoint {
         return SavePoint(id, title, SavePointContentType.Content,savePointDestination, itemPosIndex, modifiedDate,
             imageUrl,null)
+    }
+
+    fun generateLinkAccountModel(
+        providerType: AuthProviderType = AuthProviderType.Email,
+        isConnected: Boolean = true,
+        title: UiText = providerType.title,
+        info: UiText? = null
+    ): LinkAccountModel {
+        return LinkAccountModel(
+            providerType = providerType,
+            isConnected = isConnected,
+            title = title,
+            info = info
+        )
     }
 
     fun generateAnimalData(

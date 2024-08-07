@@ -3,52 +3,34 @@ package com.masterplus.animals.core.shared_features.auth.data.repo
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.utils.DefaultResult
+import com.masterplus.animals.core.domain.utils.EmptyResult
 import com.masterplus.animals.core.domain.utils.ErrorText
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.domain.utils.safeCall
 import com.masterplus.animals.core.shared_features.auth.data.mapper.toUser
+import com.masterplus.animals.core.shared_features.auth.domain.enums.AuthProviderType
 import com.masterplus.animals.core.shared_features.auth.domain.models.User
 import com.masterplus.animals.core.shared_features.auth.domain.repo.AuthRepo
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
 class FirebaseAuthRepo: AuthRepo {
+
     private val firebaseAuth = FirebaseAuth.getInstance()
-
-    override suspend fun signInWithEmail(email: String, password: String): DefaultResult<User> {
-        return safeCallWithFirebase {
-            firebaseAuth.signInWithEmailAndPassword(email, password).await().user!!.toUser()
-        }
-    }
-
-    override suspend fun signUpWithEmail(email: String, password: String): DefaultResult<User> {
-        return safeCallWithFirebase {
-            firebaseAuth.createUserWithEmailAndPassword(email, password).await().user!!.toUser()
-        }
-    }
-
-    override suspend fun signInWithCredential(credential: AuthCredential): DefaultResult<User> {
-        return firebaseCredentialSignIn(credential)
-    }
-
-
-    override suspend fun resetPassword(email: String): DefaultResult<UiText> {
-        return safeCallWithFirebase {
-            firebaseAuth.sendPasswordResetEmail(email)
-            return@safeCallWithFirebase UiText.Resource(R.string.email_send_for_reset_password)
-        }
-    }
+    private val userChangesFlow = MutableSharedFlow<User?>(replay = 1)
 
     override fun userFlow(): Flow<User?> {
-        return callbackFlow {
+        val authStateFlow = callbackFlow {
             val authStateListener = AuthStateListener{auth->
                 launch { send(auth.currentUser?.toUser()) }
             }
@@ -57,6 +39,7 @@ class FirebaseAuthRepo: AuthRepo {
                 firebaseAuth.removeAuthStateListener(authStateListener)
             }
         }
+        return merge(authStateFlow, userChangesFlow).conflate()
     }
 
     override fun isLogin(): Boolean {
@@ -66,6 +49,47 @@ class FirebaseAuthRepo: AuthRepo {
     override fun currentUser(): User? {
         return firebaseAuth.currentUser?.toUser()
     }
+
+    override suspend fun signInWithEmail(email: String, password: String): DefaultResult<User> {
+        return safeCallWithFirebase {
+            firebaseAuth.signInWithEmailAndPassword(email.trim(), password.trim()).await().user!!.toUser()
+        }
+    }
+
+    override suspend fun signUpWithEmail(email: String, password: String): DefaultResult<User> {
+        return safeCallWithFirebase {
+            firebaseAuth.createUserWithEmailAndPassword(email.trim(), password.trim()).await().user!!.toUser()
+        }
+    }
+
+    override suspend fun signInWithCredential(credential: AuthCredential): DefaultResult<User> {
+        return firebaseCredentialSignIn(credential)
+    }
+
+    override suspend fun linkWithCredential(credential: AuthCredential): EmptyResult<ErrorText> {
+        return safeCallWithFirebase {
+            firebaseAuth.currentUser!!.linkWithCredential(credential).await()?.let { user ->
+                userChangesFlow.emit(user.user?.toUser())
+            }
+        }
+    }
+
+    override suspend fun unLinkWith(providerType: AuthProviderType): EmptyResult<ErrorText> {
+        return safeCallWithFirebase {
+            firebaseAuth.currentUser!!.unlink(providerType.providerId).await()?.let { user ->
+                userChangesFlow.emit(user.user?.toUser())
+            }
+        }
+    }
+
+    override suspend fun resetPassword(email: String): DefaultResult<UiText> {
+        return safeCallWithFirebase {
+            firebaseAuth.sendPasswordResetEmail(email.trim()).await()
+            return@safeCallWithFirebase UiText.Resource(R.string.email_send_for_reset_password)
+        }
+    }
+
+
 
     override suspend fun signOut(): DefaultResult<UiText> {
         return safeCallWithFirebase {
@@ -100,11 +124,8 @@ class FirebaseAuthRepo: AuthRepo {
         return safeCall(
             execute = execute,
             onException = { e ->
-                if(e is FirebaseAuthInvalidUserException){
-                    return Result.Error(ErrorText(UiText.Text(e.localizedMessage ?: "")))
-                }
                 val error = e.localizedMessage?.let { UiText.Text(it) } ?: UiText.Resource(R.string.something_went_wrong)
-                return Result.Error(ErrorText(error))
+                return Result.errorWithUiText(error)
             },
 
         )

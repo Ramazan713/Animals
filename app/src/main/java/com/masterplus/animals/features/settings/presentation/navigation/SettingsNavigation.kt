@@ -14,11 +14,13 @@ fun NavController.navigateToSettings(){
 }
 
 fun NavGraphBuilder.settings(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToLinkedAccounts: () -> Unit
 ){
     composable<SettingsRoute> {
         SettingsPageRoot(
-            onNavigateBack = onNavigateBack
+            onNavigateBack = onNavigateBack,
+            onNavigateToLinkedAccounts = onNavigateToLinkedAccounts
         )
     }
 }

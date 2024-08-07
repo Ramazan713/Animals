@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,6 +29,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -156,6 +161,10 @@ private fun PasswordField(
             .semantics {
                 contentDescription = context.getString(R.string.password)
             },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
+        ),
         value = password,
         onValueChange = onPasswordChange,
         label = { Text(text = stringResource(id = R.string.password)) },
@@ -186,11 +195,24 @@ private fun EmailField(
             .semantics {
                 contentDescription = context.getString(R.string.email)
             },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
+        ),
         value = email,
         onValueChange = onEmailChange,
         label = { Text(text = stringResource(id = R.string.email)) },
         leadingIcon = {
             Icon(imageVector = Icons.Default.Email, contentDescription = stringResource(id = R.string.email))
+        },
+        trailingIcon = {
+            if(email.isNotBlank()){
+                IconButton(onClick = {
+                    onEmailChange("")
+                }) {
+                    Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                }
+            }
         }
     )
 }
@@ -202,7 +224,7 @@ private fun EmailField(
 
 @Preview(showBackground = true)
 @Composable
-fun EmailAuthProviderComponentPreview() {
+private fun EmailAuthProviderComponentPreview() {
     EmailAuthProviderComponent(
         providerStyles = EmailAuthProviderStyles(
             showSignUp = true
@@ -212,7 +234,7 @@ fun EmailAuthProviderComponentPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun EmailAuthProviderComponentPreview2() {
+private fun EmailAuthProviderComponentPreview2() {
     EmailAuthProviderComponent(
         providerStyles = EmailAuthProviderStyles(
             showSignUp = false
@@ -222,7 +244,7 @@ fun EmailAuthProviderComponentPreview2() {
 
 @Preview(showBackground = true)
 @Composable
-fun EmailAuthProviderComponentPreview3() {
+private fun EmailAuthProviderComponentPreview3() {
     EmailAuthProviderComponent(
         providerStyles = EmailAuthProviderStyles(
             showSignUp = false,

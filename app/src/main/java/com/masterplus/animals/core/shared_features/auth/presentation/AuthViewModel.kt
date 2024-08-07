@@ -33,67 +33,67 @@ class AuthViewModel @Inject constructor(
         listenUser()
     }
 
-    fun onEvent(event: AuthEvent){
-        when(event){
-            is AuthEvent.ResetPassword -> {
-                validateFields(email = event.email){
-                    val result = authRepo.resetPassword(event.email)
-
+    fun onAction(action: AuthAction){
+        when(action){
+            is AuthAction.ResetPassword -> {
+                validateFields(email = action.email){
+                    executeLoadingWithSuccess(
+                        call = { authRepo.resetPassword(action.email) },
+                        onSuccess = { data ->
+                            _state.update { it.copy(
+                                isLoading = false,
+                                message = data,
+                                dialogEvent = null
+                            ) }
+                        }
+                    )
                 }
             }
-            is AuthEvent.SignInWithCredential -> {
+            is AuthAction.SignInWithCredential -> {
                 handleSignIn {
-                    authRepo.signInWithCredential(event.credential)
+                    authRepo.signInWithCredential(action.credential)
                 }
             }
-            is AuthEvent.SignInWithEmail -> {
-                validateFields(email = event.email,password = event.password){
+            is AuthAction.SignInWithEmail -> {
+                validateFields(email = action.email,password = action.password){
                     handleSignIn {
-                        authRepo.signInWithEmail(event.email,event.password)
+                        authRepo.signInWithEmail(action.email,action.password)
                     }
                 }
             }
-            is AuthEvent.SignUpWithEmail -> {
-                validateFields(email = event.email,password = event.password) {
+            is AuthAction.SignUpWithEmail -> {
+                validateFields(email = action.email,password = action.password) {
                     handleSignIn {
-                        authRepo.signUpWithEmail(event.email,event.password)
+                        authRepo.signUpWithEmail(action.email,action.password)
                     }
                 }
             }
-            is AuthEvent.SignOut -> {
-                viewModelScope.launch {
-                    _state.update { it.copy(isLoading = true) }
-                    val result = authRepo.signOut()
-                    _state.update { state-> state.copy(
-                        isLoading = false,
-                        message = result.getFailureError?.text ?: result.getSuccessData
-                    ) }
-                }
+            is AuthAction.SignOut -> {
+                executeLoadingWithSuccess(
+                    call = { authRepo.signOut() },
+                    onSuccess = { data ->
+                        _state.update { it.copy(message = data) }
+                    }
+                )
             }
 
-            AuthEvent.ClearMessage -> {
+            AuthAction.ClearMessage -> {
                 _state.update { it.copy(message = null) }
             }
-            is AuthEvent.ShowDialog -> {
-                _state.update { it.copy(dialogEvent = event.dialogEvent) }
+            is AuthAction.ShowDialog -> {
+                _state.update { it.copy(dialogEvent = action.dialogEvent) }
             }
-            is AuthEvent.DeleteUserWithCredentials -> {
-                viewModelScope.launch {
-                    _state.update { it.copy(isLoading = true) }
-                    val result = authRepo.deleteUser(event.credential)
-                    _state.update { it.copy(
-                        isLoading = false,
-                        message = result.getSuccessData ?: result.getFailureError?.text
-                    ) }
-                }
+            is AuthAction.DeleteUserWithCredentials -> {
+                executeLoadingWithSuccess(
+                    call = { authRepo.deleteUser(action.credential) },
+                    onSuccess = { data -> _state.update { it.copy(message = data) }}
+                )
             }
 
-            is AuthEvent.DeleteUserWithEmail -> {
-                viewModelScope.launch {
-                    validateFields(email = event.email,password = event.password){
-                        val credential = EmailAuthProvider.getCredential(event.email, event.password)
-                        onEvent(AuthEvent.DeleteUserWithCredentials(credential))
-                    }
+            is AuthAction.DeleteUserWithEmail -> {
+                validateFields(email = action.email,password = action.password){
+                    val credential = EmailAuthProvider.getCredential(action.email, action.password)
+                    onAction(AuthAction.DeleteUserWithCredentials(credential))
                 }
             }
         }
@@ -116,6 +116,27 @@ class AuthViewModel @Inject constructor(
                 isLoading = false,
                 message = result.getFailureError?.text ?: UiText.Text("Success")
             ) }
+        }
+    }
+
+
+    private fun<T> executeLoadingWithSuccess(
+        call: suspend () -> Result<T,ErrorText>,
+        onSuccess: ((T) -> Unit)? = null
+    ){
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            val result = call()
+            result.onFailure { error ->
+                _state.update { it.copy(
+                    isLoading = false,
+                    message = error.text
+                ) }
+            }
+            result.onSuccess { data ->
+                _state.update { it.copy(isLoading = false) }
+                onSuccess?.invoke(data)
+            }
         }
     }
 

@@ -25,9 +25,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.dialogs.ShowLoadingDialog
-import com.masterplus.animals.core.shared_features.auth.presentation.AuthEvent
+import com.masterplus.animals.core.shared_features.auth.presentation.AuthAction
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthState
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthViewModel
+import com.masterplus.animals.features.settings.presentation.sections.AdvancedSettingSection
 import com.masterplus.animals.features.settings.presentation.sections.ProfileSettingSection
 import com.masterplus.animals.features.settings.presentation.sections.SettingListeners
 import com.masterplus.animals.features.settings.presentation.sections.ShowSettingDialog
@@ -36,6 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SettingsPageRoot(
     onNavigateBack: () -> Unit,
+    onNavigateToLinkedAccounts: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(),
     authViewModel: AuthViewModel = koinViewModel()
 ) {
@@ -46,8 +48,9 @@ fun SettingsPageRoot(
         state = state,
         onAction = viewModel::onAction,
         authState = authState,
-        onAuthAction = authViewModel::onEvent,
-        onNavigateBack = onNavigateBack
+        onAuthAction = authViewModel::onAction,
+        onNavigateBack = onNavigateBack,
+        onNavigateToLinkedAccounts = onNavigateToLinkedAccounts
     )
 }
 
@@ -58,8 +61,9 @@ fun SettingsPage(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
     authState: AuthState,
-    onAuthAction: (AuthEvent) -> Unit,
+    onAuthAction: (AuthAction) -> Unit,
     onNavigateBack: () -> Unit,
+    onNavigateToLinkedAccounts: () -> Unit
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -90,6 +94,15 @@ fun SettingsPage(
                 ProfileSettingSection(
                     user = authState.user,
                     onAction = onAction
+                )
+            }
+
+            item {
+                AdvancedSettingSection(
+                    state = state,
+                    onEvent = onAction,
+                    user = authState.user,
+                    onNavigateToLinkedAccounts = onNavigateToLinkedAccounts
                 )
             }
 
