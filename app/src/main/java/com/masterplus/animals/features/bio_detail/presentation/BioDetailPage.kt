@@ -280,11 +280,11 @@ private fun InfoPageContent(
         modifier = modifier
     ) {
         Text(
-            text = animal.name,
+            text = animal.species.name,
             style = MaterialTheme.typography.titleLarge
         )
         Text(
-            text = animal.scientificName,
+            text = animal.species.scientificName,
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -292,7 +292,7 @@ private fun InfoPageContent(
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .fillMaxWidth(),
-            text = animal.introduction,
+            text = animal.species.introduction,
             style = MaterialTheme.typography.bodyMedium
         )
 

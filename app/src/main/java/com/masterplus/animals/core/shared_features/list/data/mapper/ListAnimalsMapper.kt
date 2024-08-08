@@ -1,20 +1,20 @@
 package com.masterplus.animals.core.shared_features.list.data.mapper
 
-import com.masterplus.animals.core.shared_features.database.entity.ListAnimalsEntity
-import com.masterplus.animals.core.shared_features.list.domain.models.ListAnimals
+import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEntity
+import com.masterplus.animals.core.shared_features.list.domain.models.ListSpecies
 
-fun ListAnimalsEntity.toListAnimals(): ListAnimals {
-    return ListAnimals(
+fun ListSpeciesEntity.toListSpecies(): ListSpecies {
+    return ListSpecies(
         listId = listId,
-        animalId = animalId,
+        speciesId = speciesId,
         pos = pos
     )
 }
 
-fun ListAnimals.toListWordsEntity(): ListAnimalsEntity {
-    return ListAnimalsEntity(
+fun ListSpecies.toListSpeciesEntity(): ListSpeciesEntity {
+    return ListSpeciesEntity(
         listId = listId,
-        animalId = animalId,
+        speciesId = speciesId,
         pos = pos
     )
 }

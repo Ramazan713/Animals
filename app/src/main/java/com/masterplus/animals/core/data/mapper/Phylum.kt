@@ -8,6 +8,7 @@ fun PhylumEntity.toPhylumModel(): PhylumModel{
     return PhylumModel(
         id = id,
         scientificName = scientific_name,
-        phylum = phylum_tr
+        phylum = phylum_tr,
+        kingdomId = kingdom_id
     )
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -28,7 +27,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.R
-import com.masterplus.animals.core.domain.models.AnimalData
+import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
@@ -71,7 +70,7 @@ fun BioListPageRoot(
 )
 @Composable
 fun BioListPage(
-    pagingItems: LazyPagingItems<AnimalData>,
+    pagingItems: LazyPagingItems<SpeciesDetail>,
     state: BioListState,
     args: BioListRoute,
     onAction: (BioListAction) -> Unit,
@@ -117,7 +116,7 @@ fun BioListPage(
                     val item = pagingItems[index]
                     if(item != null){
                         BioCard(
-                            animalData = item,
+                            species = item,
                             orderNum = index + 1,
                             isFavorited = item.isFavorited,
                             onClick = {
@@ -210,7 +209,7 @@ fun BioListPagePreview() {
         ),
         onNavigateToBioDetail = {},
         pagingItems = getPreviewLazyPagingData(
-            items = listOf(SampleDatas.generateAnimalData(id = 1), SampleDatas.generateAnimalData(id = 2), SampleDatas.generateAnimalData(id = 3)),
+            items = listOf(SampleDatas.generateSpeciesDetail(id = 1), SampleDatas.generateSpeciesDetail(id = 2), SampleDatas.generateSpeciesDetail(id = 3)),
             sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading, append = LoadState.Loading),
         )
     )

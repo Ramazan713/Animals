@@ -3,21 +3,22 @@ package com.masterplus.animals.core.shared_features.database.entity_helper
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.masterplus.animals.core.shared_features.database.entity.AnimalEntity
-import com.masterplus.animals.core.shared_features.database.entity.AnimalImageEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 
-data class AnimalWithImagesEntity(
+data class AnimalDataEmbedded(
     @Embedded
-    val animal: AnimalEntity,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "animal_id"
-    )
-    val images: List<AnimalImageEntity>,
+    val species: SpeciesEntity,
 
     @Relation(
-        parentColumn = "species_id",
-        entityColumn = "id",
+        parentColumn = "id",
+        entityColumn = "species_id",
     )
-    val species: SpeciesEntity
+    val animal: AnimalEntity,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "species_id"
+    )
+    val images: List<SpeciesImageEntity>,
 )

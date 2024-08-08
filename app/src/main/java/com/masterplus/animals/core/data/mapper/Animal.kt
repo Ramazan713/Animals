@@ -2,18 +2,26 @@ package com.masterplus.animals.core.data.mapper
 
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.shared_features.database.entity.AnimalEntity
-import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalWithImagesEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
+import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDataEmbedded
 
+
+fun AnimalDataEmbedded.toAnimal(): Animal{
+    return animal.toAnimal(
+        species = species,
+        images = images
+    )
+}
 
 fun AnimalEntity.toAnimal(
-    imageUrls: List<String>,
-    scientificName: String
+    species: SpeciesEntity,
+    images: List<SpeciesImageEntity>
 ): Animal{
     return Animal(
         id = id,
-        introduction = introduction_tr,
-        scientificName = scientificName,
-        name = name_tr,
+        species = species.toSpecies(),
+        images = images.map { it.toAnimalImage() },
         physicalCharacteristics = physical_characteristics_tr,
         naturalHabitat = natural_habitat_tr,
         ecosystem = ecosystem_tr,
@@ -32,13 +40,6 @@ fun AnimalEntity.toAnimal(
         interestingBehaviors = interesting_behaviors_tr,
         unknownFeatures = unknown_features_tr,
         funFacts = fun_facts_tr,
-        habitatCategoryId = habitat_category_id,
-        phylumId = phylum_id,
-        classId = class_id,
-        orderId = order_id,
-        familyId = family_id,
-        genusId = genus_id,
-        speciesId = species_id,
         size = size_tr,
         weight = weight_tr,
         color = color_tr,
@@ -56,15 +57,5 @@ fun AnimalEntity.toAnimal(
         economicSimple = economic_simple_tr,
         adaptation = adaptation_tr,
         evolution = evolution_tr,
-        recognitionAndInteraction = recognition_and_interaction,
-        imageUrls = imageUrls
-    )
-}
-
-
-fun AnimalWithImagesEntity.toAnimal(): Animal {
-    return animal.toAnimal(
-        scientificName = species.scientific_name,
-        imageUrls = images.map { it.image_url }
     )
 }

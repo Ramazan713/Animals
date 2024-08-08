@@ -1,6 +1,6 @@
 package com.masterplus.animals.core.shared_features.list.data.repo
 
-import com.masterplus.animals.core.shared_features.database.dao.ListAnimalsDao
+import com.masterplus.animals.core.shared_features.database.dao.ListSpeciesDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.list.domain.models.ListModel
@@ -8,7 +8,7 @@ import com.masterplus.animals.core.shared_features.list.domain.repo.ListRepo
 
 class ListRepoImpl(
     private val listDao: ListDao,
-    private val listAnimalsDao: ListAnimalsDao
+    private val listSpeciesDao: ListSpeciesDao
 ): ListRepo {
 
     override suspend fun insertList(listName: String): Int {
@@ -53,11 +53,11 @@ class ListRepoImpl(
         val newListId = insertList(
             listName = "${listModel.name} Copy"
         )
-        val listAnimals = listAnimalsDao.getListAnimalsByListId(listModel.id ?: 0)
-        val copiedListAnimals = listAnimals.map {
+        val listSpecies = listSpeciesDao.getListSpeciesByListId(listModel.id ?: 0)
+        val copiedListSpecies = listSpecies.map {
             it.copy(listId = newListId)
         }
-        listAnimalsDao.insertListAnimals(copiedListAnimals)
+        listSpeciesDao.insertListSpecies(copiedListSpecies)
     }
 
 

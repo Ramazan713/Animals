@@ -5,19 +5,19 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "AnimalImages",
+    tableName = "SpeciesImages",
     foreignKeys = [
         ForeignKey(
-            entity = AnimalEntity::class,
+            entity = SpeciesEntity::class,
             parentColumns = arrayOf("id"),
-            childColumns = arrayOf("animal_id"),
+            childColumns = arrayOf("species_id"),
         )
     ]
 )
-data class AnimalImageEntity(
+data class SpeciesImageEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
-    val animal_id: Int,
+    val species_id: Int,
     val name: String?,
     val image_path: String,
     val image_url: String,

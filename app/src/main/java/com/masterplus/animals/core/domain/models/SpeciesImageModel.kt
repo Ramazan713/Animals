@@ -1,8 +1,8 @@
 package com.masterplus.animals.core.domain.models
 
-data class AnimalImageModel(
+data class SpeciesImageModel(
     val id: Int?,
-    val animalId: Int,
+    val speciesId: Int,
     val name: String?,
     val imagePath: String,
     val imageUrl: String,

@@ -9,5 +9,5 @@ data class AnimalDetail(
     val genus: GenusModel,
     val species: SpeciesModel,
     val habitatCategory: HabitatCategoryModel,
-    val images: List<AnimalImageModel>
+    val images: List<SpeciesImageModel>
 )

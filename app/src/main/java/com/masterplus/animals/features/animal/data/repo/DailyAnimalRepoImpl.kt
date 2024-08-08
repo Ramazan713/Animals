@@ -1,7 +1,7 @@
 package com.masterplus.animals.features.animal.data.repo
 
-import com.masterplus.animals.core.data.mapper.toAnimalData
-import com.masterplus.animals.core.domain.models.AnimalData
+import com.masterplus.animals.core.data.mapper.toAnimal
+import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.shared_features.database.dao.AnimalDao
 import com.masterplus.animals.features.animal.domain.repo.DailyAnimalRepo
 import kotlinx.datetime.Clock
@@ -13,8 +13,8 @@ class DailyAnimalRepoImpl(
     private val animalDao: AnimalDao
 ): DailyAnimalRepo {
 
-    override suspend fun getTodayAnimals(pageSize: Int): List<AnimalData> {
-        val animalsResult = mutableListOf<AnimalData>()
+    override suspend fun getTodayAnimals(pageSize: Int): List<Animal> {
+        val animalsResult = mutableListOf<Animal>()
 
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
         val random = Random(today.toEpochDays())
@@ -23,7 +23,7 @@ class DailyAnimalRepoImpl(
         for(i in 1..pageSize){
             val randomOffset = random.nextInt(animalSize)
             val animal = animalDao.getAnimalByOffset(randomOffset) ?: continue
-            animalsResult.add(animal.toAnimalData())
+            animalsResult.add(animal.toAnimal())
         }
         return animalsResult
     }

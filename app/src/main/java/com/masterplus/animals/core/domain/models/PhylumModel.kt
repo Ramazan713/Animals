@@ -4,4 +4,5 @@ data class PhylumModel(
     val id: Int?,
     val scientificName: String,
     val phylum: String,
+    val kingdomId: Int
 )

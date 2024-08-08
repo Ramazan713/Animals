@@ -2,7 +2,7 @@ package com.masterplus.animals.core.shared_features.list.presentation.select_lis
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masterplus.animals.core.shared_features.list.domain.repo.ListAnimalsRepo
+import com.masterplus.animals.core.shared_features.list.domain.repo.ListSpeciesRepo
 import com.masterplus.animals.core.shared_features.list.domain.repo.ListRepo
 import com.masterplus.animals.core.shared_features.list.domain.repo.ListViewRepo
 import kotlinx.coroutines.Job
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SelectListViewModel @Inject constructor(
-    private val listAnimalsRepo: ListAnimalsRepo,
+    private val listSpeciesRepo: ListSpeciesRepo,
     private val listRepo: ListRepo,
     private val listViewRepo: ListViewRepo
 
@@ -32,7 +32,7 @@ class SelectListViewModel @Inject constructor(
         when(event){
             is SelectListAction.AddToList -> {
                 viewModelScope.launch {
-                    listAnimalsRepo.addOrRemoveListAnimal(event.listView, event.animalId)
+                    listSpeciesRepo.addOrRemoveListSpecies(event.listView, event.animalId)
                 }
             }
             is SelectListAction.LoadData -> {
@@ -64,7 +64,7 @@ class SelectListViewModel @Inject constructor(
         }
     }
     private suspend fun addToList(event: SelectListAction.AddOrAskToList){
-        listAnimalsRepo.addOrRemoveListAnimal(event.selectableListView.listView, event.animalId)
+        listSpeciesRepo.addOrRemoveListSpecies(event.selectableListView.listView, event.animalId)
     }
 
     private fun loadData(event: SelectListAction.LoadData){

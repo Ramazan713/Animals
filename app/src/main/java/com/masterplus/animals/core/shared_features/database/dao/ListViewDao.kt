@@ -29,8 +29,8 @@ interface ListViewDao {
 
     @Query(
         """
-        select LV.* from listViews LV, listanimals LA 
-        where LV.id = LA.listId and LA.animalId = :animalId
+        select LV.* from listViews LV, listSpecies LS 
+        where LV.id = LS.listId and LS.speciesId = :animalId
     """
     )
     fun getListViewsByAnimalId(animalId: Int): Flow<List<ListViewEntity>>

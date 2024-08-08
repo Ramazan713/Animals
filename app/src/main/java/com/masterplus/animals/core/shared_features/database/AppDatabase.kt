@@ -4,34 +4,37 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.masterplus.animals.core.shared_features.database.dao.AnimalDao
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
-import com.masterplus.animals.core.shared_features.database.dao.ListAnimalsDao
+import com.masterplus.animals.core.shared_features.database.dao.ListSpeciesDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
 import com.masterplus.animals.core.shared_features.database.dao.SavePointDao
+import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
 import com.masterplus.animals.core.shared_features.database.entity.AnimalEntity
-import com.masterplus.animals.core.shared_features.database.entity.AnimalImageEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.GenusEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
-import com.masterplus.animals.core.shared_features.database.entity.ListAnimalsEntity
+import com.masterplus.animals.core.shared_features.database.entity.KingdomEntity
+import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
 import com.masterplus.animals.core.shared_features.database.entity.SavePointEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.view.ListViewEntity
+import com.masterplus.animals.core.shared_features.database.view.SpeciesRelationsView
 import com.masterplus.trdictionary.core.data.local.services.ListViewDao
 
 @Database(
     version = 1,
     entities = [
-        AnimalEntity::class, AnimalImageEntity::class, ClassEntity::class, FamilyEntity::class,
+        KingdomEntity::class, AnimalEntity::class, SpeciesImageEntity::class, ClassEntity::class, FamilyEntity::class,
         GenusEntity::class, HabitatCategoryEntity::class, OrderEntity::class, PhylumEntity::class,
-        SpeciesEntity::class, ListEntity::class, ListAnimalsEntity::class,
+        SpeciesEntity::class, ListEntity::class, ListSpeciesEntity::class,
         SavePointEntity::class
     ],
     views = [
-        ListViewEntity::class
+        ListViewEntity::class, SpeciesRelationsView::class
     ]
 )
 abstract class AppDatabase: RoomDatabase() {
@@ -44,8 +47,10 @@ abstract class AppDatabase: RoomDatabase() {
 
     abstract val listViewDao: ListViewDao
 
-    abstract val listAnimalsDao: ListAnimalsDao
+    abstract val listSpeciesDao: ListSpeciesDao
 
     abstract val savePointDao: SavePointDao
+
+    abstract val speciesDao: SpeciesDao
 
 }

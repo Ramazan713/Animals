@@ -1,6 +1,5 @@
 package com.masterplus.animals.features.animal.presentation
 
-import com.masterplus.animals.core.domain.models.AnimalData
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.features.animal.presentation.models.CategoryRowModel
 

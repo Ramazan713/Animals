@@ -6,12 +6,12 @@ import androidx.room.Index
 
 
 @Entity(
-    tableName = "ListAnimals",
+    tableName = "ListSpecies",
     foreignKeys = [
         ForeignKey(
-            entity = AnimalEntity::class,
+            entity = SpeciesEntity::class,
             parentColumns = ["id"],
-            childColumns = ["animalId"],
+            childColumns = ["speciesId"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         ),
@@ -23,13 +23,13 @@ import androidx.room.Index
             onUpdate = ForeignKey.CASCADE
         )
     ],
-    primaryKeys = ["listId","animalId"],
+    primaryKeys = ["listId","speciesId"],
     indices = [
-        Index("animalId")
+        Index("speciesId")
     ],
 )
-data class ListAnimalsEntity(
+data class ListSpeciesEntity(
     val listId: Int,
-    val animalId: Int,
+    val speciesId: Int,
     val pos: Int
 )

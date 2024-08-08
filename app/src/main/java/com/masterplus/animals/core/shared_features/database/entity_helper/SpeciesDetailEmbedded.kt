@@ -3,32 +3,26 @@ package com.masterplus.animals.core.shared_features.database.entity_helper
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.masterplus.animals.core.shared_features.database.entity.AnimalImageEntity
-import com.masterplus.animals.core.shared_features.database.entity.ListAnimalsEntity
+import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 
-data class AnimalDataDetailEmbedded(
+data class SpeciesDetailEmbedded(
     @Embedded
-    val animalData: AnimalDataEntityHelper,
+    val species: SpeciesEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "animal_id"
+        entityColumn = "species_id"
     )
-    val images: List<AnimalImageEntity>,
-
-    @Relation(
-        parentColumn = "species_id",
-        entityColumn = "id",
-    )
-    val species: SpeciesEntity,
+    val images: List<SpeciesImageEntity>,
 
     @Relation(
         parentColumn = "id",
         entityColumn = "id",
         associateBy = Junction(
-            value = ListAnimalsEntity::class,
-            parentColumn = "animalId",
+            value = ListSpeciesEntity::class,
+            parentColumn = "speciesId",
             entityColumn = "listId"
         ),
         projection = ["isRemovable"],

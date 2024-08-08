@@ -8,36 +8,6 @@ import androidx.room.PrimaryKey
     tableName = "Animals",
     foreignKeys = [
         ForeignKey(
-            entity = HabitatCategoryEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["habitat_category_id"],
-        ),
-        ForeignKey(
-            entity = PhylumEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["phylum_id"],
-        ),
-        ForeignKey(
-            entity = ClassEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["class_id"],
-        ),
-        ForeignKey(
-            entity = OrderEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["order_id"],
-        ),
-        ForeignKey(
-            entity = FamilyEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["family_id"],
-        ),
-        ForeignKey(
-            entity = GenusEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["genus_id"],
-        ),
-        ForeignKey(
             entity = SpeciesEntity::class,
             parentColumns = ["id"],
             childColumns = ["species_id"],
@@ -47,10 +17,7 @@ import androidx.room.PrimaryKey
 data class AnimalEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
-    val introduction_en: String = "",
-    val introduction_tr: String = "",
-    val name_en: String = "",
-    val name_tr: String = "",
+    val species_id: Int,
     val physical_characteristics_en: String = "",
     val physical_characteristics_tr: String = "",
     val natural_habitat_en: String = "",
@@ -87,13 +54,6 @@ data class AnimalEntity(
     val unknown_features_tr: String = "",
     val fun_facts_en: String = "",
     val fun_facts_tr: String = "",
-    val habitat_category_id: Int,
-    val phylum_id: Int,
-    val class_id: Int,
-    val order_id: Int,
-    val family_id: Int,
-    val genus_id: Int,
-    val species_id: Int,
     val size_en: String = "",
     val size_tr: String = "",
     val weight_en: String = "",
@@ -128,5 +88,4 @@ data class AnimalEntity(
     val adaptation_tr: String = "",
     val evolution_en: String = "",
     val evolution_tr: String = "",
-    val recognition_and_interaction: Int?
 )

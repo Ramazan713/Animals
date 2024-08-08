@@ -3,7 +3,7 @@ package com.masterplus.animals.core.shared_features.list.presentation.select_lis
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.core.shared_features.list.domain.enums.SelectListMenuEnum
-import com.masterplus.animals.core.shared_features.list.domain.repo.ListAnimalsRepo
+import com.masterplus.animals.core.shared_features.list.domain.repo.ListSpeciesRepo
 import com.masterplus.animals.core.shared_features.list.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SelectListMenuViewModel @Inject constructor(
-    private val listAnimalsRepo: ListAnimalsRepo,
+    private val listSpeciesRepo: ListSpeciesRepo,
     private val listInFavoriteUseCase: ListInFavoriteControlForDeletionUseCase
 ): ViewModel(){
 
@@ -59,16 +59,16 @@ class SelectListMenuViewModel @Inject constructor(
     }
 
     private suspend fun addFavoriteAnimal(wordId: Int){
-        listAnimalsRepo.addOrRemoveFavoriteAnimal(wordId)
+        listSpeciesRepo.addOrRemoveFavoriteSpecies(wordId)
     }
 
 
     private fun loadData(event: SelectListMenuAction.LoadData){
         _state.update { it.copy(listIdControl = event.listId)}
         loadDataJob?.cancel()
-        loadDataJob = listAnimalsRepo
-            .getHasAnimalInListFlow(event.animalId, true)
-            .combine(listAnimalsRepo.getHasAnimalInListFlow(event.animalId, false)){ inFavorite,inLists ->
+        loadDataJob = listSpeciesRepo
+            .getHasSpeciesInListFlow(event.animalId, true)
+            .combine(listSpeciesRepo.getHasSpeciesInListFlow(event.animalId, false)){ inFavorite, inLists ->
                 return@combine Pair(inFavorite, inLists)
             }
             .distinctUntilChanged()

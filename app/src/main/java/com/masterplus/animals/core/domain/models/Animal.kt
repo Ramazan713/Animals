@@ -2,9 +2,8 @@ package com.masterplus.animals.core.domain.models
 
 data class Animal(
     val id: Int?,
-    val introduction: String,
-    val name: String,
-    val scientificName: String,
+    val species: SpeciesModel,
+    val images: List<SpeciesImageModel>,
     val physicalCharacteristics: String,
     val naturalHabitat: String,
     val ecosystem: String,
@@ -23,13 +22,6 @@ data class Animal(
     val interestingBehaviors: String,
     val unknownFeatures: String,
     val funFacts: String,
-    val habitatCategoryId: Int,
-    val phylumId: Int,
-    val classId: Int,
-    val orderId: Int,
-    val familyId: Int,
-    val genusId: Int,
-    val speciesId: Int,
     val size: String,
     val weight: String,
     val color: String,
@@ -47,6 +39,6 @@ data class Animal(
     val economicSimple: String,
     val adaptation: String,
     val evolution: String,
-    val recognitionAndInteraction: Int?,
-    val imageUrls: List<String>
-)
+){
+    val imageUrls get() = images.map { it.imageUrl }
+}

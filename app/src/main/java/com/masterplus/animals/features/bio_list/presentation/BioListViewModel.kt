@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import com.masterplus.animals.core.domain.enums.CategoryType
-import com.masterplus.animals.core.domain.repo.AnimalRepo
 import com.masterplus.animals.core.domain.repo.CategoryRepo
-import com.masterplus.animals.core.shared_features.list.domain.repo.ListAnimalsRepo
+import com.masterplus.animals.core.domain.repo.SpeciesRepo
+import com.masterplus.animals.core.shared_features.list.domain.repo.ListSpeciesRepo
 import com.masterplus.animals.core.shared_features.list.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BioListViewModel(
-    private val animalRepo: AnimalRepo,
+    private val speciesRepo: SpeciesRepo,
     private val categoryRepo: CategoryRepo,
-    private val listAnimalsRepo: ListAnimalsRepo,
+    private val listSpeciesRepo: ListSpeciesRepo,
     private val listInFavoriteUseCase: ListInFavoriteControlForDeletionUseCase,
     private val savePointRepo: SavePointRepo,
     savedStateHandle: SavedStateHandle
@@ -32,7 +32,7 @@ class BioListViewModel(
     val state = _state.asStateFlow()
 
     val pagingItems = args.let { args->
-        animalRepo.getPagingAnimalsList(args.categoryType, args.realItemId, 20)
+        speciesRepo.getPagingSpeciesList(args.categoryType, args.realItemId, 20)
     }.cachedIn(viewModelScope)
 
     init {
@@ -92,7 +92,7 @@ class BioListViewModel(
     }
 
     private suspend fun addFavoriteAnimal(wordId: Int){
-        listAnimalsRepo.addOrRemoveFavoriteAnimal(wordId)
+        listSpeciesRepo.addOrRemoveFavoriteSpecies(wordId)
     }
 
 

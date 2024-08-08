@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.masterplus.animals.core.domain.models.AnimalData
+import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.presentation.components.DefaultImage
 import com.masterplus.animals.core.presentation.components.OrderText
 import com.masterplus.animals.core.presentation.utils.SampleDatas
@@ -43,7 +43,7 @@ import com.masterplus.animals.core.presentation.utils.ShapeUtils
 
 @Composable
 fun BioCard(
-    animalData: AnimalData,
+    species: SpeciesDetail,
     onMenuButtonClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onUnFavoriteClick: () -> Unit,
@@ -56,17 +56,17 @@ fun BioCard(
     onClick: (() -> Unit)? = null,
 ){
     BioCard(
-        imageData = animalData.imageUrls.firstOrNull() ?: "",
-        name = animalData.name,
-        bioDescription = animalData.introduction,
+        imageData = species.imageUrls.firstOrNull() ?: "",
+        name = species.name,
+        bioDescription = species.introduction,
         onMenuButtonClick = onMenuButtonClick,
         onFavoriteClick = onFavoriteClick,
         onUnFavoriteClick = onUnFavoriteClick,
         modifier = modifier,
         orderNum = orderNum,
         isFavorited = isFavorited,
-        scientificName = animalData.scientificName,
-        imageContentDescription = animalData.name,
+        scientificName = species.scientificName,
+        imageContentDescription = species.name,
         isRow = isRow,
         cornerRadiusDp = cornerRadiusDp,
         contentScale = contentScale,
@@ -286,7 +286,7 @@ fun BioCardPreviewRow() {
         modifier = Modifier.fillMaxWidth()
     ) {
         BioCard(
-            animalData = SampleDatas.animalData,
+            species = SampleDatas.generateSpeciesDetail(),
             modifier = Modifier.fillMaxWidth(),
             orderNum = 10,
             onClick = {},
@@ -309,7 +309,7 @@ fun BioCardPreviewVertical() {
 
         items(2){
             BioCard(
-                animalData = SampleDatas.animalData,
+                species = SampleDatas.generateSpeciesDetail(),
                 orderNum = it + 1,
                 isRow = false,
                 isFavorited = it % 2 == 1,

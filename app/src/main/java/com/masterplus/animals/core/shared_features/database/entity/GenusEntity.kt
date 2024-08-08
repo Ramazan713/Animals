@@ -20,5 +20,7 @@ data class GenusEntity(
     val scientific_name: String,
     val genus_en: String,
     val genus_tr: String,
-    val family_id: Int
+    val family_id: Int,
+    val created_at: String,
+    val updated_at: String
 )

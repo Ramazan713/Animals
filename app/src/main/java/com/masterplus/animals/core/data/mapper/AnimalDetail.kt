@@ -1,14 +1,14 @@
 package com.masterplus.animals.core.data.mapper
 
 import com.masterplus.animals.core.domain.models.AnimalDetail
-import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDetailEmbeddedEntity
+import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDetailEmbedded
 
 
-fun AnimalDetailEmbeddedEntity.toAnimalDetail(): AnimalDetail{
+fun AnimalDetailEmbedded.toAnimalDetail(): AnimalDetail{
     return AnimalDetail(
         animal = animal.toAnimal(
-            imageUrls = images.map { it.image_url },
-            scientificName = species.scientific_name
+            species = species,
+            images = images
         ),
         phylum = phylum.toPhylumModel(),
         classModel = classEntity.toClass(),
