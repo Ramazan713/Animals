@@ -27,13 +27,13 @@ fun NavController.navigateToShowSavePoints(
 
 fun NavGraphBuilder.showSavePoints(
     onNavigateBack: () -> Unit,
-    onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
 ){
     composable<ShowSavePointsRoute> {
         ShowSavePointsPageRoot(
             onNavigateBack = onNavigateBack,
-            onNavigateToBioList = { savepoint->
-                onNavigateToBioList(
+            onNavigateToSpeciesList = { savepoint->
+                onNavigateToSpeciesList(
                     savepoint.destination.toCategoryType() ?: CategoryType.Order,
                     savepoint.destination.destinationId,
                     savepoint.itemPosIndex

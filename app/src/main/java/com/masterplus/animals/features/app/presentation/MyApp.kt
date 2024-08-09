@@ -24,10 +24,10 @@ import com.masterplus.animals.features.animal.presentation.navigation.AnimalRout
 import com.masterplus.animals.features.animal.presentation.navigation.animal
 import com.masterplus.animals.features.app.presentation.extensions.navigateToBar
 import com.masterplus.animals.features.app.presentation.model.kBottomBarRoutes
-import com.masterplus.animals.features.bio_detail.presentation.navigation.bioDetail
-import com.masterplus.animals.features.bio_detail.presentation.navigation.navigateToBioDetail
-import com.masterplus.animals.features.bio_list.presentation.navigation.bioList
-import com.masterplus.animals.features.bio_list.presentation.navigation.navigateToBioList
+import com.masterplus.animals.features.species_detail.presentation.navigation.speciesDetail
+import com.masterplus.animals.features.species_detail.presentation.navigation.navigateToSpeciesDetail
+import com.masterplus.animals.features.species_list.presentation.navigation.speciesList
+import com.masterplus.animals.features.species_list.presentation.navigation.navigateToSpeciesList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryListWithDetail
 import com.masterplus.animals.features.category_list.presentation.navigation.navigateToCategoryList
@@ -104,14 +104,14 @@ fun MyApp(
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
-                onNavigateToBioList = { categoryType, itemId, pos ->
-                    navHostController.navigateToBioList(categoryType.catId, itemId, pos)
+                onNavigateToSpeciesList = { categoryType, itemId, pos ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
                 },
                 onNavigateToShowSavePoints = {
                     navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null)
                 },
-                onNavigateToBioDetail = { itemId ->
-                    navHostController.navigateToBioDetail(itemId)
+                onNavigateToSpeciesDetail = { itemId ->
+                    navHostController.navigateToSpeciesDetail(itemId)
                 },
                 onNavigateToSettings = {
                     navHostController.navigateToSettings()
@@ -135,7 +135,7 @@ fun MyApp(
 
             showList(
                 onNavigateToDetailList = {listId ->
-                    navHostController.navigateToBioList(CategoryType.List.catId, listId)
+                    navHostController.navigateToSpeciesList(CategoryType.List.catId, listId)
                 },
                 onNavigateToArchive = {
                     navHostController.navigateToArchiveList()
@@ -147,7 +147,7 @@ fun MyApp(
                     navHostController.navigateUp()
                 },
                 onNavigateToDetailList = { listId ->
-                    navHostController.navigateToBioList(CategoryType.List.catId, listId)
+                    navHostController.navigateToSpeciesList(CategoryType.List.catId, listId)
                 }
             )
 
@@ -155,8 +155,8 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToBioList = { categoryType, itemId ->
-                    navHostController.navigateToBioList(categoryType.catId, itemId)
+                onNavigateToSpeciesList = { categoryType, itemId ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
@@ -167,24 +167,24 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToBioList = { categoryType, itemId ->
-                    navHostController.navigateToBioList(categoryType.catId, itemId)
+                onNavigateToSpeciesList = { categoryType, itemId ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
             )
 
-            bioList(
+            speciesList(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToBioDetail = { itemId ->
-                    navHostController.navigateToBioDetail(itemId)
+                onNavigateToSpeciesDetail = { itemId ->
+                    navHostController.navigateToSpeciesDetail(itemId)
                 }
             )
 
-            bioDetail(
+            speciesDetail(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 }
@@ -194,8 +194,8 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToBioList = { categoryType, itemId, pos ->
-                    navHostController.navigateToBioList(categoryType.catId, itemId, pos)
+                onNavigateToSpeciesList = { categoryType, itemId, pos ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
                 },
             )
         }

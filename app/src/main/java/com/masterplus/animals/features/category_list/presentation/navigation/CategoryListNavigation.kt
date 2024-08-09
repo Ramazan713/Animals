@@ -25,7 +25,7 @@ fun NavController.navigateToCategoryList(categoryType: CategoryType){
 
 fun NavGraphBuilder.categoryList(
     onNavigateBack: () -> Unit,
-    onNavigateToBioList: (CategoryType, Int?) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, Int) -> Unit,
 ){
     composable<CategoryListRoute> {
@@ -40,13 +40,13 @@ fun NavGraphBuilder.categoryList(
             onNavigateBack = onNavigateBack,
             onItemClick = { item ->
                 if(args.categoryType == CategoryType.Family){
-                    onNavigateToBioList(args.categoryType, item.id)
+                    onNavigateToSpeciesList(args.categoryType, item.id)
                 }else{
                     onNavigateToCategoryListWithDetail(args.categoryType, item.id ?: 0)
                 }
             },
             onAllItemClick = {
-                onNavigateToBioList(args.categoryType, null)
+                onNavigateToSpeciesList(args.categoryType, null)
             }
         )
     }

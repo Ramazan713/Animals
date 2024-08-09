@@ -47,7 +47,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ShowSavePointsPageRoot(
     onNavigateBack: () -> Unit,
-    onNavigateToBioList: (SavePoint) -> Unit,
+    onNavigateToSpeciesList: (SavePoint) -> Unit,
     viewModel: ShowSavePointsViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -61,7 +61,7 @@ fun ShowSavePointsPageRoot(
         state = state,
         onAction = viewModel::onAction,
         onNavigateBack = onNavigateBack,
-        onNavigateToBioList = onNavigateToBioList
+        onNavigateToSpeciesList = onNavigateToSpeciesList
     )
 }
 
@@ -74,7 +74,7 @@ fun ShowSavePointsPage(
     state: ShowSavePointsState,
     onAction: (ShowSavePointsAction) -> Unit,
     onNavigateBack: () -> Unit,
-    onNavigateToBioList: (SavePoint) -> Unit,
+    onNavigateToSpeciesList: (SavePoint) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -112,7 +112,7 @@ fun ShowSavePointsPage(
                 Button(
                     onClick = {
                         state.currentSelectedSavePoint?.let { savePoint ->
-                            onNavigateToBioList(savePoint)
+                            onNavigateToSpeciesList(savePoint)
                         }
                     },
                     enabled = state.currentSelectedSavePoint != null
@@ -222,6 +222,6 @@ private fun ShowSavePointsPagePreview() {
         ),
         onAction = {},
         onNavigateBack = {},
-        onNavigateToBioList = {x->}
+        onNavigateToSpeciesList = { x->}
     )
 }

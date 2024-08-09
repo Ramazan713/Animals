@@ -26,7 +26,7 @@ fun NavController.navigateToCategoryListWithDetail(categoryType: CategoryType, i
 
 fun NavGraphBuilder.categoryListWithDetail(
     onNavigateBack: () -> Unit,
-    onNavigateToBioList: (CategoryType, Int?) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, Int) -> Unit,
 ){
     composable<CategoryListWithDetailRoute> {
@@ -42,13 +42,13 @@ fun NavGraphBuilder.categoryListWithDetail(
             onItemClick = { item ->
                 val detailCategoryType = viewModel.getDetailCategoryType()
                 if(detailCategoryType == CategoryType.Family){
-                    onNavigateToBioList(viewModel.getDetailCategoryType(), item.id ?: 0)
+                    onNavigateToSpeciesList(viewModel.getDetailCategoryType(), item.id ?: 0)
                 }else{
                     onNavigateToCategoryListWithDetail(viewModel.getDetailCategoryType(), item.id ?: 0)
                 }
             },
             onAllItemClick = {
-                onNavigateToBioList(args.categoryType, args.itemId)
+                onNavigateToSpeciesList(args.categoryType, args.itemId)
             }
         )
     }

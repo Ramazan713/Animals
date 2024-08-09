@@ -14,8 +14,8 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.di.savePoint
 import com.masterplus.animals.core.shared_features.savepoint.presentation.di.sharedSavePointPresentationModule
 import com.masterplus.animals.features.animal.data.di.animalDataModule
 import com.masterplus.animals.features.animal.presentation.di.animalPresentationModule
-import com.masterplus.animals.features.bio_detail.presentation.di.bioDetailPresentationModule
-import com.masterplus.animals.features.bio_list.presentation.di.bioListPresentationModule
+import com.masterplus.animals.features.species_detail.presentation.di.speciesDetailPresentationModule
+import com.masterplus.animals.features.species_list.presentation.di.speciesListPresentationModule
 import com.masterplus.animals.features.category_list.presentation.di.categoryListPresentationModule
 import com.masterplus.animals.features.list.presentation.di.showListPresentationModule
 import com.masterplus.animals.features.savepoints.presentation.di.savePointsPresentationModule
@@ -31,8 +31,8 @@ class AnimalsApp: Application() {
             androidContext(this@AnimalsApp)
             modules(
                 databaseModule, animalPresentationModule, coreDataModule,
-                categoryListPresentationModule, bioListPresentationModule,
-                bioDetailPresentationModule, animalDataModule,
+                categoryListPresentationModule, speciesListPresentationModule,
+                speciesDetailPresentationModule, animalDataModule,
                 listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule,
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule,
                 authDataModule, authDomainModule, authPresentationModule, settingsPresentationModule

@@ -47,9 +47,9 @@ fun AnimalPageRoot(
     viewModel: AnimalViewModel = koinViewModel(),
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
-    onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
-    onNavigateToBioDetail: (Int) -> Unit,
+    onNavigateToSpeciesDetail: (Int) -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -57,9 +57,9 @@ fun AnimalPageRoot(
         state = state,
         onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
         onNavigateToCategoryList = onNavigateToCategoryList,
-        onNavigateToBioList = onNavigateToBioList,
+        onNavigateToSpeciesList = onNavigateToSpeciesList,
         onNavigateToShowSavePoints = onNavigateToShowSavePoints,
-        onNavigateToBioDetail = onNavigateToBioDetail,
+        onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
         onNavigateToSettings = onNavigateToSettings
     )
 }
@@ -71,9 +71,9 @@ fun AnimalPage(
     state: AnimalState,
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
-    onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
-    onNavigateToBioDetail: (Int) -> Unit,
+    onNavigateToSpeciesDetail: (Int) -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
     val contentPaddings = PaddingValues(horizontal = 12.dp)
@@ -110,7 +110,7 @@ fun AnimalPage(
                     DailyAnimalsSection(
                         state = state,
                         contentPaddings = contentPaddings,
-                        onNavigateToBioDetail = onNavigateToBioDetail
+                        onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
                     )
                 }
 
@@ -119,7 +119,7 @@ fun AnimalPage(
                         SavePointSection(
                             state = state,
                             contentPaddings = contentPaddings,
-                            onNavigateToBioList = onNavigateToBioList,
+                            onNavigateToSpeciesList = onNavigateToSpeciesList,
                             onNavigateToShowSavePoints = onNavigateToShowSavePoints
                         )
                     }
@@ -133,7 +133,7 @@ fun AnimalPage(
                         items = state.habitats.imageWithTitleModels,
                         showMore = state.habitats.showMore,
                         onClickItem = { item ->
-                            onNavigateToBioList(CategoryType.Habitat, item.id, 0)
+                            onNavigateToSpeciesList(CategoryType.Habitat, item.id, 0)
                         }
                     )
                 }
@@ -178,7 +178,7 @@ fun AnimalPage(
                             onNavigateToCategoryList(CategoryType.Family)
                         },
                         onClickItem = { item ->
-                            onNavigateToBioList(CategoryType.Family, item.id, 0)
+                            onNavigateToSpeciesList(CategoryType.Family, item.id, 0)
                         }
                     )
                 }
@@ -193,7 +193,7 @@ fun AnimalPage(
 private fun DailyAnimalsSection(
     state: AnimalState,
     contentPaddings: PaddingValues,
-    onNavigateToBioDetail: (Int) -> Unit,
+    onNavigateToSpeciesDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dailyAnimalTitleModels = state.dailyAnimals.imageWithTitleModels
@@ -215,7 +215,7 @@ private fun DailyAnimalsSection(
                 ImageWithTitle(
                     imageData = animalData.imageUrl,
                     onClick = {
-                        onNavigateToBioDetail(animalData.id ?: return@ImageWithTitle)
+                        onNavigateToSpeciesDetail(animalData.id ?: return@ImageWithTitle)
                     },
                     title = animalData.title,
                     subTitle = animalData.subTitle,
@@ -231,7 +231,7 @@ private fun DailyAnimalsSection(
 private fun SavePointSection(
     state: AnimalState,
     contentPaddings: PaddingValues,
-    onNavigateToBioList: (CategoryType, Int?, Int) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -268,7 +268,7 @@ private fun SavePointSection(
                     ),
                     savePoint = savePoint,
                     onClick = {
-                        onNavigateToBioList(
+                        onNavigateToSpeciesList(
                             savePoint.destination.toCategoryType() ?: CategoryType.Order,
                             savePoint.destination.destinationId,
                             savePoint.itemPosIndex
@@ -291,9 +291,9 @@ fun AnimalPagePreview() {
         ),
         onNavigateToCategoryListWithDetail = { _, _ ->},
         onNavigateToCategoryList = {},
-        onNavigateToBioList = { _, _, _ -> },
+        onNavigateToSpeciesList = { _, _, _ -> },
         onNavigateToShowSavePoints = {},
-        onNavigateToBioDetail = {},
+        onNavigateToSpeciesDetail = {},
         onNavigateToSettings = {}
     )
 }
