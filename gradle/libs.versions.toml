@@ -75,8 +75,8 @@ lib-zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomableVe
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 
-androidx-datastore-core-android = { module = "androidx.datastore:datastore-core-android", version.ref = "datastore" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+datastore-core-android = { module = "androidx.datastore:datastore-core-android", version.ref = "datastore" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
@@ -107,7 +107,7 @@ firebase = [
     "firebase-perf", "firebase-storage"
 ]
 datastore = [
-    "androidx-datastore-core-android", "androidx-datastore-preferences"
+    "datastore-core-android", "datastore-preferences"
 ]
 room = [
     "room-paging", "room-runtime", "room-ktx"

@@ -111,4 +111,5 @@ dependencies {
     implementation(libs.bundles.datastore)
     implementation(libs.bundles.koin)
     implementation(libs.bundles.credentials)
+    implementation(libs.bundles.datastore)
 }
