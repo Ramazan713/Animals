@@ -12,4 +12,6 @@ sealed interface SettingsDialogEvent {
 
     data object ShowReAuthenticateForDeletingAccount: SettingsDialogEvent
 
+    data object ShowSelectTheme: SettingsDialogEvent
+
 }

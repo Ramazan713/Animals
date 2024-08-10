@@ -29,7 +29,7 @@ fun SwitchItem(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .toggleable(value = value, onValueChange = onValueChange, role = Role.Switch)
-            .padding(horizontal = 7.dp, vertical = 5.dp)
+            .padding(horizontal = 8.dp, vertical = 12.dp)
         ,
         verticalAlignment = Alignment.CenterVertically
     ){

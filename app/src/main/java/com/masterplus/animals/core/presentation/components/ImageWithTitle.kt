@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.ColorUtils
+import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
+import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
+import com.masterplus.animals.ui.theme.AnimalsTheme
 
 
 @Composable
@@ -133,7 +136,7 @@ private fun GetTitleSection(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.inverseOnSurface
+                    color = Color.White
                 )
             )
             if(hasSubtitle){
@@ -141,7 +144,7 @@ private fun GetTitleSection(
                 Text(
                     text = subTitle ?: "",
                     style = MaterialTheme.typography.labelMedium.copy(
-                        color = MaterialTheme.colorScheme.inverseOnSurface
+                        color = Color.White
                     )
                 )
             }
@@ -153,17 +156,21 @@ private fun GetTitleSection(
 @Preview(showBackground = true)
 @Composable
 fun ImageWithTitlePreview() {
-    Column {
-        ImageWithTitle(
-            title = "Kartallar",
-            subTitle = "sadsadasdasdasd",
-            imageData = ""
+    AnimalsTheme(
+        state = ThemeModel(
+            themeEnum = ThemeEnum.Dark
         )
-        ImageWithTitle(
-            title = "Kartallar",
-            imageData = ""
-        )
+    ) {
+        Column {
+            ImageWithTitle(
+                title = "Kartallar",
+                subTitle = "sadsadasdasdasd",
+                imageData = ""
+            )
+            ImageWithTitle(
+                title = "Kartallar",
+                imageData = ""
+            )
+        }
     }
-
-
 }

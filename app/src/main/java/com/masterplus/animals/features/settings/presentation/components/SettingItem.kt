@@ -34,20 +34,20 @@ fun SettingItem(
             .clickable {
                 onClick()
             }
-            .padding(vertical = if(subTitle!=null) 13.dp else 17.dp),
+            .padding(vertical = if(subTitle!=null) 12.dp else 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
         imageVector?.let {
             Icon(
                 imageVector = it,
                 contentDescription = null,
-                modifier = Modifier.padding(start = 7.dp),
+                modifier = Modifier.padding(start = 8.dp),
                 tint = color ?: LocalContentColor.current
             )
         }
         Column(
             modifier = Modifier.weight(1f)
-                .padding(horizontal = 17.dp),
+                .padding(horizontal = 16.dp),
         ) {
             Text(
                 title,

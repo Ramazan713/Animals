@@ -29,6 +29,7 @@ import com.masterplus.animals.core.shared_features.auth.presentation.AuthAction
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthState
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthViewModel
 import com.masterplus.animals.features.settings.presentation.sections.AdvancedSettingSection
+import com.masterplus.animals.features.settings.presentation.sections.GeneralSettingSection
 import com.masterplus.animals.features.settings.presentation.sections.ProfileSettingSection
 import com.masterplus.animals.features.settings.presentation.sections.SettingListeners
 import com.masterplus.animals.features.settings.presentation.sections.ShowSettingDialog
@@ -98,6 +99,13 @@ fun SettingsPage(
             }
 
             item {
+                GeneralSettingSection(
+                    state = state,
+                    onAction = onAction
+                )
+            }
+
+            item {
                 AdvancedSettingSection(
                     state = state,
                     onEvent = onAction,
@@ -131,7 +139,7 @@ fun SettingsPage(
     state.dialogEvent?.let { dialogEvent->
         ShowSettingDialog(
             state = state,
-            onEvent = onAction,
+            onAction = onAction,
             onAuthEvent = onAuthAction,
             authState = authState,
             dialogEvent = dialogEvent

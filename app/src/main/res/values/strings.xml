@@ -81,4 +81,11 @@
     <string name="q_delete_account">Hesabı silmek istediğinize emin misiniz?</string>
     <string name="delete_account_warning">Hesabı sildiğinizde tüm verinize tekrar ulaşamayacaksınız</string>
     <string name="unlink_account_warning">Bağlantısını kaldırırsanız, tekrardan bu oturum açma sağlayıcısıyla hesaba giriş yapamazsınız</string>
+    <string name="system">Sistem</string>
+    <string name="light">Aydınlık</string>
+    <string name="dark">Karanlık</string>
+    <string name="general_setting">Genel ayarlar</string>
+    <string name="theme_mode">Tema modu</string>
+    <string name="use_dynamic_colors">Dinamik renkler kullan</string>
+    <string name="choice_theme">Tema seç</string>
 </resources>

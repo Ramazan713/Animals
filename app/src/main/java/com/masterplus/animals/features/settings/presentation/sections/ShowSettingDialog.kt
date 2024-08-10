@@ -1,10 +1,13 @@
 package com.masterplus.animals.features.settings.presentation.sections
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
+import com.masterplus.animals.core.presentation.selections.ShowSelectRadioItemDia
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthAction
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthState
 import com.masterplus.animals.features.settings.presentation.SettingsAction
@@ -13,19 +16,20 @@ import com.masterplus.animals.features.settings.presentation.SettingsState
 import com.masterplus.animals.core.shared_features.auth.presentation.LoginDia
 import com.masterplus.animals.core.shared_features.auth.presentation.ShowDeleteAccountDia
 import com.masterplus.animals.core.shared_features.auth.presentation.ShowQuestionReAuthenticateDia
+import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 
 
 @Composable
 fun ShowSettingDialog(
     dialogEvent: SettingsDialogEvent,
     state: SettingsState,
-    onEvent: (SettingsAction)->Unit,
+    onAction: (SettingsAction)->Unit,
     authState: AuthState,
     onAuthEvent: (AuthAction) -> Unit,
 ){
 
-    val close =  remember(onEvent) { {
-        onEvent(SettingsAction.ShowDialog(null))
+    val close =  remember(onAction) { {
+        onAction(SettingsAction.ShowDialog(null))
     }}
 
     when(dialogEvent){
@@ -50,7 +54,7 @@ fun ShowSettingDialog(
             ShowQuestionDialog(
                 title = stringResource(R.string.q_delete_account),
                 content = stringResource(id = R.string.delete_account_warning),
-                onApproved = { onEvent(SettingsAction.ShowDialog(dialogEvent = SettingsDialogEvent.AskReAuthenticateForDeletingAccount)) },
+                onApproved = { onAction(SettingsAction.ShowDialog(dialogEvent = SettingsDialogEvent.AskReAuthenticateForDeletingAccount)) },
                 onClosed = close,
             )
         }
@@ -59,7 +63,7 @@ fun ShowSettingDialog(
             ShowQuestionReAuthenticateDia(
                 onCancel = close,
                 onApprove = {
-                    onEvent(SettingsAction.ShowDialog(dialogEvent = SettingsDialogEvent.ShowReAuthenticateForDeletingAccount))
+                    onAction(SettingsAction.ShowDialog(dialogEvent = SettingsDialogEvent.ShowReAuthenticateForDeletingAccount))
                 }
             )
         }
@@ -70,6 +74,17 @@ fun ShowSettingDialog(
                 state = authState,
                 isDarkMode = false,
                 onClose = close,
+            )
+        }
+
+        SettingsDialogEvent.ShowSelectTheme -> {
+            ShowSelectRadioItemDia(
+                items = ThemeEnum.entries,
+                selectedItem = state.themeModel.themeEnum,
+                title = stringResource(R.string.choice_theme),
+                onClose = close,
+                onApprove = {onAction(SettingsAction.SetThemeEnum(it))},
+                imageVector = Icons.Default.Palette
             )
         }
     }

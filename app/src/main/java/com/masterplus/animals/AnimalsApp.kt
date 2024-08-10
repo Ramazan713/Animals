@@ -13,6 +13,8 @@ import com.masterplus.animals.core.shared_features.preferences.data.di.preferenc
 import com.masterplus.animals.core.shared_features.savepoint.data.di.savePointDataModule
 import com.masterplus.animals.core.shared_features.savepoint.domain.di.savePointDomainModule
 import com.masterplus.animals.core.shared_features.savepoint.presentation.di.sharedSavePointPresentationModule
+import com.masterplus.animals.core.shared_features.theme.data.di.themeDataModule
+import com.masterplus.animals.core.shared_features.theme.presentation.di.themePresentationModule
 import com.masterplus.animals.features.animal.data.di.animalDataModule
 import com.masterplus.animals.features.animal.presentation.di.animalPresentationModule
 import com.masterplus.animals.features.species_detail.presentation.di.speciesDetailPresentationModule
@@ -31,7 +33,7 @@ class AnimalsApp: Application() {
         startKoin {
             androidContext(this@AnimalsApp)
             modules(
-                databaseModule, animalPresentationModule, coreDataModule,
+                databaseModule, animalPresentationModule, coreDataModule, themeDataModule, themePresentationModule,
                 categoryListPresentationModule, speciesListPresentationModule,
                 speciesDetailPresentationModule, animalDataModule, preferencesDataModule,
                 listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule,

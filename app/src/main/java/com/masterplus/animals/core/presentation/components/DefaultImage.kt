@@ -33,6 +33,10 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageScope
 import coil.request.ImageRequest
 import com.masterplus.animals.R
+import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
+import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
+import com.masterplus.animals.ui.theme.AnimalsTheme
+import com.masterplus.animals.ui.theme.lightColorScheme
 
 @Composable
 fun DefaultImage(
@@ -141,7 +145,7 @@ private fun ErrorIcon(
             id = R.drawable.baseline_error_24,
         ),
         contentDescription = stringResource(R.string.something_went_wrong),
-        tint = MaterialTheme.colorScheme.error
+        tint = MaterialTheme.lightColorScheme.error
     )
 }
 
@@ -149,12 +153,16 @@ private fun ErrorIcon(
 @Preview(showBackground = true)
 @Composable
 private fun DefaultImagePreview(modifier: Modifier = Modifier) {
-    DefaultImage(
-        imageData = R.drawable.all_animals,
+   AnimalsTheme(
+       state = ThemeModel(themeEnum = ThemeEnum.Dark)
+   ) {
+       DefaultImage(
+           imageData = R.drawable.all_animals,
 //        imageData = "dads",
-        modifier = Modifier
-            .size(150.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.Blue.copy(alpha = 0.3f)),
-    )
+           modifier = Modifier
+               .size(150.dp)
+               .clip(RoundedCornerShape(8.dp))
+               .background(Color.Blue.copy(alpha = 0.3f)),
+       )
+   }
 }
