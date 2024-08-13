@@ -20,7 +20,6 @@ data class Animal(
     val environmentalAdaptations: String,
     val evolutionaryProcesses: String,
     val interestingBehaviors: String,
-    val unknownFeatures: String,
     val funFacts: String,
     val size: String,
     val weight: String,
@@ -39,6 +38,10 @@ data class Animal(
     val economicSimple: String,
     val adaptation: String,
     val evolution: String,
+    val comparativeAnalysis: String,
+    val ethologicalInsights: String,
+    val modernDayPerception: String,
+    val conservationChallenges: String,
 ){
     val imageUrls get() = images.map { it.imageUrl }
 }

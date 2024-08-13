@@ -38,7 +38,6 @@ fun AnimalEntity.toAnimal(
         environmentalAdaptations = environmental_adaptations_tr,
         evolutionaryProcesses = evolutionary_processes_tr,
         interestingBehaviors = interesting_behaviors_tr,
-        unknownFeatures = unknown_features_tr,
         funFacts = fun_facts_tr,
         size = size_tr,
         weight = weight_tr,
@@ -57,5 +56,9 @@ fun AnimalEntity.toAnimal(
         economicSimple = economic_simple_tr,
         adaptation = adaptation_tr,
         evolution = evolution_tr,
+        conservationChallenges = conservation_challenges_tr,
+        comparativeAnalysis = comparative_analysis_tr,
+        ethologicalInsights = ethological_insights_tr,
+        modernDayPerception = modern_day_perception_tr
     )
 }

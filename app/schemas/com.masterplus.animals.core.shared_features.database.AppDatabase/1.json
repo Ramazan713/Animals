@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "92a1668b99617ca1a2b425e8f6ba32e2",
+    "identityHash": "4e21f3142b63bea3d46517c9b302fac5",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -32,7 +32,7 @@
       },
       {
         "tableName": "Animals",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `species_id` INTEGER NOT NULL, `physical_characteristics_en` TEXT NOT NULL, `physical_characteristics_tr` TEXT NOT NULL, `natural_habitat_en` TEXT NOT NULL, `natural_habitat_tr` TEXT NOT NULL, `ecosystem_en` TEXT NOT NULL, `ecosystem_tr` TEXT NOT NULL, `feeding_habits_en` TEXT NOT NULL, `feeding_habits_tr` TEXT NOT NULL, `social_structure_en` TEXT NOT NULL, `social_structure_tr` TEXT NOT NULL, `reproductive_behaviors_en` TEXT NOT NULL, `reproductive_behaviors_tr` TEXT NOT NULL, `development_stages_en` TEXT NOT NULL, `development_stages_tr` TEXT NOT NULL, `sounds_produced_en` TEXT NOT NULL, `sounds_produced_tr` TEXT NOT NULL, `communication_methods_en` TEXT NOT NULL, `communication_methods_tr` TEXT NOT NULL, `threats_en` TEXT NOT NULL, `threats_tr` TEXT NOT NULL, `conservation_efforts_en` TEXT NOT NULL, `conservation_efforts_tr` TEXT NOT NULL, `cultural_significance_en` TEXT NOT NULL, `cultural_significance_tr` TEXT NOT NULL, `economic_importance_en` TEXT NOT NULL, `economic_importance_tr` TEXT NOT NULL, `environmental_adaptations_en` TEXT NOT NULL, `environmental_adaptations_tr` TEXT NOT NULL, `evolutionary_processes_en` TEXT NOT NULL, `evolutionary_processes_tr` TEXT NOT NULL, `interesting_behaviors_en` TEXT NOT NULL, `interesting_behaviors_tr` TEXT NOT NULL, `unknown_features_en` TEXT NOT NULL, `unknown_features_tr` TEXT NOT NULL, `fun_facts_en` TEXT NOT NULL, `fun_facts_tr` TEXT NOT NULL, `size_en` TEXT NOT NULL, `size_tr` TEXT NOT NULL, `weight_en` TEXT NOT NULL, `weight_tr` TEXT NOT NULL, `color_en` TEXT NOT NULL, `color_tr` TEXT NOT NULL, `habitat_en` TEXT NOT NULL, `habitat_tr` TEXT NOT NULL, `ecosystem_category_en` TEXT NOT NULL, `ecosystem_category_tr` TEXT NOT NULL, `feeding_en` TEXT NOT NULL, `feeding_tr` TEXT NOT NULL, `social_structure_simple_en` TEXT NOT NULL, `social_structure_simple_tr` TEXT NOT NULL, `reproductive_simple_en` TEXT NOT NULL, `reproductive_simple_tr` TEXT NOT NULL, `development_simple_en` TEXT NOT NULL, `development_simple_tr` TEXT NOT NULL, `sounds_en` TEXT NOT NULL, `sounds_tr` TEXT NOT NULL, `communication_en` TEXT NOT NULL, `communication_tr` TEXT NOT NULL, `threats_simple_en` TEXT NOT NULL, `threats_simple_tr` TEXT NOT NULL, `conservation_status_en` TEXT NOT NULL, `conservation_status_tr` TEXT NOT NULL, `cultural_simple_en` TEXT NOT NULL, `cultural_simple_tr` TEXT NOT NULL, `economic_simple_en` TEXT NOT NULL, `economic_simple_tr` TEXT NOT NULL, `adaptation_en` TEXT NOT NULL, `adaptation_tr` TEXT NOT NULL, `evolution_en` TEXT NOT NULL, `evolution_tr` TEXT NOT NULL, FOREIGN KEY(`species_id`) REFERENCES `Species`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `species_id` INTEGER NOT NULL, `physical_characteristics_en` TEXT NOT NULL, `physical_characteristics_tr` TEXT NOT NULL, `natural_habitat_en` TEXT NOT NULL, `natural_habitat_tr` TEXT NOT NULL, `ecosystem_en` TEXT NOT NULL, `ecosystem_tr` TEXT NOT NULL, `feeding_habits_en` TEXT NOT NULL, `feeding_habits_tr` TEXT NOT NULL, `social_structure_en` TEXT NOT NULL, `social_structure_tr` TEXT NOT NULL, `reproductive_behaviors_en` TEXT NOT NULL, `reproductive_behaviors_tr` TEXT NOT NULL, `development_stages_en` TEXT NOT NULL, `development_stages_tr` TEXT NOT NULL, `sounds_produced_en` TEXT NOT NULL, `sounds_produced_tr` TEXT NOT NULL, `communication_methods_en` TEXT NOT NULL, `communication_methods_tr` TEXT NOT NULL, `threats_en` TEXT NOT NULL, `threats_tr` TEXT NOT NULL, `conservation_efforts_en` TEXT NOT NULL, `conservation_efforts_tr` TEXT NOT NULL, `cultural_significance_en` TEXT NOT NULL, `cultural_significance_tr` TEXT NOT NULL, `economic_importance_en` TEXT NOT NULL, `economic_importance_tr` TEXT NOT NULL, `environmental_adaptations_en` TEXT NOT NULL, `environmental_adaptations_tr` TEXT NOT NULL, `evolutionary_processes_en` TEXT NOT NULL, `evolutionary_processes_tr` TEXT NOT NULL, `interesting_behaviors_en` TEXT NOT NULL, `interesting_behaviors_tr` TEXT NOT NULL, `fun_facts_en` TEXT NOT NULL, `fun_facts_tr` TEXT NOT NULL, `size_en` TEXT NOT NULL, `size_tr` TEXT NOT NULL, `weight_en` TEXT NOT NULL, `weight_tr` TEXT NOT NULL, `color_en` TEXT NOT NULL, `color_tr` TEXT NOT NULL, `habitat_en` TEXT NOT NULL, `habitat_tr` TEXT NOT NULL, `ecosystem_category_en` TEXT NOT NULL, `ecosystem_category_tr` TEXT NOT NULL, `feeding_en` TEXT NOT NULL, `feeding_tr` TEXT NOT NULL, `social_structure_simple_en` TEXT NOT NULL, `social_structure_simple_tr` TEXT NOT NULL, `reproductive_simple_en` TEXT NOT NULL, `reproductive_simple_tr` TEXT NOT NULL, `development_simple_en` TEXT NOT NULL, `development_simple_tr` TEXT NOT NULL, `sounds_en` TEXT NOT NULL, `sounds_tr` TEXT NOT NULL, `communication_en` TEXT NOT NULL, `communication_tr` TEXT NOT NULL, `threats_simple_en` TEXT NOT NULL, `threats_simple_tr` TEXT NOT NULL, `conservation_status_en` TEXT NOT NULL, `conservation_status_tr` TEXT NOT NULL, `cultural_simple_en` TEXT NOT NULL, `cultural_simple_tr` TEXT NOT NULL, `economic_simple_en` TEXT NOT NULL, `economic_simple_tr` TEXT NOT NULL, `adaptation_en` TEXT NOT NULL, `adaptation_tr` TEXT NOT NULL, `evolution_en` TEXT NOT NULL, `evolution_tr` TEXT NOT NULL, `comparative_analysis_tr` TEXT NOT NULL, `comparative_analysis_en` TEXT NOT NULL, `ethological_insights_tr` TEXT NOT NULL, `ethological_insights_en` TEXT NOT NULL, `modern_day_perception_tr` TEXT NOT NULL, `modern_day_perception_en` TEXT NOT NULL, `conservation_challenges_tr` TEXT NOT NULL, `conservation_challenges_en` TEXT NOT NULL, FOREIGN KEY(`species_id`) REFERENCES `Species`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -235,18 +235,6 @@
           {
             "fieldPath": "interesting_behaviors_tr",
             "columnName": "interesting_behaviors_tr",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "unknown_features_en",
-            "columnName": "unknown_features_en",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "unknown_features_tr",
-            "columnName": "unknown_features_tr",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -463,6 +451,54 @@
           {
             "fieldPath": "evolution_tr",
             "columnName": "evolution_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comparative_analysis_tr",
+            "columnName": "comparative_analysis_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comparative_analysis_en",
+            "columnName": "comparative_analysis_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ethological_insights_tr",
+            "columnName": "ethological_insights_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ethological_insights_en",
+            "columnName": "ethological_insights_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modern_day_perception_tr",
+            "columnName": "modern_day_perception_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modern_day_perception_en",
+            "columnName": "modern_day_perception_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conservation_challenges_tr",
+            "columnName": "conservation_challenges_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conservation_challenges_en",
+            "columnName": "conservation_challenges_en",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -1266,7 +1302,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '92a1668b99617ca1a2b425e8f6ba32e2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4e21f3142b63bea3d46517c9b302fac5')"
     ]
   }
 }

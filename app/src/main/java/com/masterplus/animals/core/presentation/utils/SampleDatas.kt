@@ -141,7 +141,6 @@ object SampleDatas {
         environmentalAdaptations="Arılar, karmaşık görme yetenekleri ve hassas antenleri sayesinde çiçekleri kolayca bulabilirler. Ayrıca, kovanlarını korumak ve sıcaklık düzenlemesi yapmak için etkili yöntemler geliştirmişlerdir.",
         evolutionaryProcesses="Arılar, sosyal davranışları ve iş bölümü ile evrimsel bir başarı örneğidir. Milyonlarca yıl süren evrimsel süreçte, karmaşık sosyal yapıları ve polinasyon becerileri sayesinde hayatta kalmayı başarmışlardır.",
         interestingBehaviors="Arılar, dans dili ile iletişim kurarak diğer arılara nektar ve polen kaynaklarını tarif ederler. Ayrıca, kovan savunması sırasında topluca saldırıya geçer ve düşmanlarına karşı kendilerini savunurlar.",
-        unknownFeatures="Arıların kanatları saniyede 200 defa çırpabilir. Ayrıca, arılar ısırdıklarında bir feromon salgılarlar, bu feromon diğer arıları uyararak saldırıya geçmelerine neden olur.",
         funFacts="Bir arı, hayatı boyunca yaklaşık bir çay kaşığı bal üretebilir. Ayrıca, arılar geri geri uçabilen nadir böceklerdendir ve dans ederek mesafe ve yön bilgisini aktarabilirler.",
         size="12-20 mm",
         weight="0.1 gram",
@@ -160,6 +159,10 @@ object SampleDatas {
         economicSimple="Tozlaşma ve bal üretimi",
         adaptation="Karmaşık görme ve anten kullanımı",
         evolution="Sosyal yapı ve iş bölümü",
+        comparativeAnalysis = "Bal arıları, diğer tozlayıcılardan (örneğin, kelebekler) farklı olarak, poleni taşımak için özel olarak evrimleşmiş vücut yapılarıyla dikkat çekerler. Ayrıca, diğer arı türlerinden daha karmaşık bir sosyal yapıya sahiptirler.",
+        conservationChallenges = "",
+        modernDayPerception = "",
+        ethologicalInsights = ""
     )
 
     val animalDetail = AnimalDetail(

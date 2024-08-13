@@ -28,7 +28,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
             sectionTitle = "Yaşam Alanı",
             titleContents = listOf(
                 TitleContentModel(
-                    title = "Doğal Habitat",
+                    title = "Doğal Yaşam Alanı",
                     content = naturalHabitat
                 ),
                 TitleContentModel(
@@ -64,8 +64,8 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = interestingBehaviors
                 ),
                 TitleContentModel(
-                    title = "Bilinmeyen veya Az Bilinen Özellikler",
-                    content = unknownFeatures
+                    title = "Etolojik Bilgiler",
+                    content = ethologicalInsights
                 )
             ),
             imageUrl = imageUrls.getOrNull(1)
@@ -81,6 +81,10 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     title = "İlginç ve eğlenceli bilgiler",
                     content = funFacts
                 ),
+                TitleContentModel(
+                    title = "Karşılaştırmalı Analiz",
+                    content = comparativeAnalysis
+                ),
             )
         )
     )
@@ -94,7 +98,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = reproductiveBehaviors
                 ),
                 TitleContentModel(
-                    title = "Yavruların Gelişimi",
+                    title = "Yavru Gelişimi",
                     content = developmentStages
                 )
             )
@@ -145,6 +149,10 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                 TitleContentModel(
                     title = "Ekonomik ve Bilimsel Önemi",
                     content = economicImportance
+                ),
+                TitleContentModel(
+                    title = "Günümüz Algısı",
+                    content = modernDayPerception
                 )
             )
         )
@@ -166,8 +174,16 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
         )
     )
 
-
-    return titleSections
+    return titleSections.mapNotNull { titleSection ->
+        val newTitleContents = titleSection.titleContents.mapNotNull { titleContent ->
+            if(titleContent.content.isBlank()) null
+            else titleContent
+        }
+        if(newTitleContents.isEmpty()) return@mapNotNull null
+        titleSection.copy(
+            titleContents = newTitleContents
+        )
+    }
 }
 
 
@@ -217,7 +233,10 @@ fun AnimalDetail.toScientificNomenclatureSection(): List<TitleContentModel>{
         )
     )
 
-    return titleContents
+    return titleContents.mapNotNull { titleContent ->
+        if(titleContent.content.isBlank()) return@mapNotNull null
+        titleContent
+    }
 }
 
 fun AnimalDetail.toFeatureSection2(): List<TitleContentModel>{
@@ -250,7 +269,10 @@ fun AnimalDetail.toFeatureSection2(): List<TitleContentModel>{
             content = animal.color
         )
     )
-    return titleContents
+    return titleContents.mapNotNull { titleContent ->
+        if(titleContent.content.isBlank()) return@mapNotNull null
+        titleContent
+    }
 }
 
 
@@ -320,5 +342,8 @@ fun Animal.toFeatureSection3(): List<TitleContentModel>{
             content = economicSimple
         )
     )
-    return titleContents
+    return titleContents.mapNotNull { titleContent ->
+        if(titleContent.content.isBlank()) return@mapNotNull null
+        titleContent
+    }
 }
