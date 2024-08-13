@@ -22,7 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -71,8 +73,6 @@ fun ImageWithTitle(
     contentScale: ContentScale = ContentScale.Crop,
     order: Int? = null
 ) {
-    val context = LocalContext.current
-
     Box(
         modifier = modifier
             .clip(shape)
@@ -97,7 +97,8 @@ fun ImageWithTitle(
 
         GetTitleSection(
             title = title,
-            subTitle = subTitle
+            subTitle = subTitle,
+            height = minOf(size.height / 3, 100.dp)
         )
 
         DefaultImage(
@@ -114,13 +115,14 @@ fun ImageWithTitle(
 @Composable
 private fun GetTitleSection(
     title: String,
-    subTitle: String?
+    subTitle: String?,
+    height: Dp
 ){
     val hasSubtitle = subTitle != null && subTitle.trim() != ""
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
+            .height(height)
             .background(
                 Brush.verticalGradient(*ColorUtils.getImageGradientColors())
             )
@@ -137,7 +139,9 @@ private fun GetTitleSection(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = Color.White
-                )
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             if(hasSubtitle){
                 Spacer(modifier = Modifier.height(2.dp))
@@ -145,7 +149,9 @@ private fun GetTitleSection(
                     text = subTitle ?: "",
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = Color.White
-                    )
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
             Spacer(modifier = Modifier.weight(1f))

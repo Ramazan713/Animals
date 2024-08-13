@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -54,8 +56,8 @@ fun ShowImageDia(
     imageDataList: List<Any>,
     onDismiss: () -> Unit,
     currentPageIndex: Int = 0,
-    fullPage: Boolean = false,
-    enabledChangePageSize: Boolean = true
+    fullPage: Boolean = true,
+    enabledChangePageSize: Boolean = false
 ) {
     val pageSize = imageDataList.size
     val pagerState = rememberPagerState(
@@ -90,22 +92,35 @@ fun ShowImageDia(
                 )
                 .fillMaxWidth()
                 .clickableWithoutRipple {
-                    showButtons = !showButtons
+                    onDismiss()
                 }
                 .animateContentSize()
             ,
             contentAlignment = Alignment.TopCenter
         ) {
             HorizontalPager(
-                modifier = Modifier.matchParentSize(),
+                modifier = Modifier
+                    .matchParentSize(),
                 state = pagerState,
             ) { pageIndex ->
-                DefaultImage(
-                    imageData = imageDataList[pageIndex],
+                Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
+                        .fillMaxSize()
                         .zoomable(zoomState = zoomState)
-                )
+                    ,
+                    contentAlignment = Alignment.Center
+                ) {
+                    DefaultImage(
+                        imageData = imageDataList[pageIndex],
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickableWithoutRipple {
+                                showButtons = !showButtons
+                            }
+                        ,
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
             IconButtonForImage(
@@ -205,15 +220,35 @@ private fun Dot(
 }
 
 
-@Preview(showBackground = true)
+@Preview(showBackground = true,
+    device = "spec:parent=pixel_5,orientation=landscape"
+)
 @Composable
 private fun SamplePreview() {
     ShowImageDia(
         imageDataList = listOf(
             R.drawable.all_animals,
-            R.drawable.all_animals
+            R.drawable.all_animals,
         ),
         currentPageIndex = 0,
-        onDismiss = {}
+        onDismiss = {},
+        fullPage = true
+    )
+}
+
+
+@Preview(showBackground = true,
+    device = "spec:parent=pixel_5"
+)
+@Composable
+private fun SamplePreview2() {
+    ShowImageDia(
+        imageDataList = listOf(
+            R.drawable.all_animals,
+            R.drawable.all_animals,
+        ),
+        currentPageIndex = 0,
+        onDismiss = {},
+        fullPage = true
     )
 }

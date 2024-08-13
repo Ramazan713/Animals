@@ -33,7 +33,7 @@ class SpeciesDetailViewModel(
     init {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val animalDetail = animalRepo.getAnimalDetailById(args.id)
+            val animalDetail = animalRepo.getAnimalDetailBySpeciesId(args.speciesId)
             _state.update { it.copy(
                 animalDetail = animalDetail,
                 isLoading = false

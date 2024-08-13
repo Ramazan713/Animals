@@ -9,4 +9,5 @@ interface AnimalRepo {
 
     suspend fun getAnimalDetailById(animalId: Int): AnimalDetail?
 
+    suspend fun getAnimalDetailBySpeciesId(speciesId: Int): AnimalDetail?
 }

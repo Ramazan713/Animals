@@ -19,4 +19,8 @@ class AnimalRepoImpl constructor(
         return animalDao.getAnimalDetailById(animalId)?.toAnimalDetail()
     }
 
+    override suspend fun getAnimalDetailBySpeciesId(speciesId: Int): AnimalDetail? {
+        return animalDao.getAnimalDetailBySpeciesId(speciesId)?.toAnimalDetail()
+    }
+
 }

@@ -23,6 +23,12 @@ interface AnimalDao {
     """)
     suspend fun getAnimalDetailById(id: Int): AnimalDetailEmbedded?
 
+    @Transaction
+    @Query("""
+        select * from species where id = :speciesId
+    """)
+    suspend fun getAnimalDetailBySpeciesId(speciesId: Int): AnimalDetailEmbedded?
+
     @Query("""
         select count(*) from animals
     """)
