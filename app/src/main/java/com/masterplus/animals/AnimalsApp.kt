@@ -23,6 +23,7 @@ import com.masterplus.animals.features.category_list.presentation.di.categoryLis
 import com.masterplus.animals.features.list.presentation.di.showListPresentationModule
 import com.masterplus.animals.features.savepoints.presentation.di.savePointsPresentationModule
 import com.masterplus.animals.features.search.data.di.searchDataModule
+import com.masterplus.animals.features.search.domain.di.searchDomainModule
 import com.masterplus.animals.features.search.presentation.di.searchPresentationModule
 import com.masterplus.animals.features.settings.presentation.di.settingsPresentationModule
 import org.koin.android.ext.koin.androidContext
@@ -41,7 +42,7 @@ class AnimalsApp: Application() {
                 listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule,
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule,
                 authDataModule, authDomainModule, authPresentationModule, settingsPresentationModule,
-                searchPresentationModule, searchDataModule
+                searchPresentationModule, searchDataModule, searchDomainModule
             )
         }
     }

@@ -33,10 +33,10 @@ import com.masterplus.animals.features.list.presentation.archive_list.navigation
 import com.masterplus.animals.features.list.presentation.show_list.navigation.showList
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.navigateToShowSavePoints
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.showSavePoints
-import com.masterplus.animals.features.search.presentation.navigation.categorySearch
-import com.masterplus.animals.features.search.presentation.navigation.categorySpeciesSearch
-import com.masterplus.animals.features.search.presentation.navigation.navigateToCategorySearch
-import com.masterplus.animals.features.search.presentation.navigation.navigateToCategorySpeciesSearch
+import com.masterplus.animals.features.search.presentation.navigation.searchCategory
+import com.masterplus.animals.features.search.presentation.navigation.searchSpecies
+import com.masterplus.animals.features.search.presentation.navigation.navigateToSearchCategory
+import com.masterplus.animals.features.search.presentation.navigation.navigateToSearchSpecies
 import com.masterplus.animals.features.settings.presentation.navigation.linkAccounts
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToLinkAccounts
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToSettings
@@ -166,7 +166,7 @@ fun MyApp(
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
                 onNavigateToCategorySearch = { catType, contentType ->
-                    navHostController.navigateToCategorySearch(catType,contentType,null)
+                    navHostController.navigateToSearchCategory(catType,contentType,null)
                 }
             )
 
@@ -181,7 +181,7 @@ fun MyApp(
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
                 onNavigateToCategorySearch = { catType, contentType, itemId ->
-                    navHostController.navigateToCategorySearch(catType,contentType, itemId)
+                    navHostController.navigateToSearchCategory(catType,contentType, itemId)
                 }
             )
 
@@ -193,7 +193,7 @@ fun MyApp(
                     navHostController.navigateToSpeciesDetail(itemId)
                 },
                 onNavigateToCategorySearch = {catType, contentType, itemId ->
-                    navHostController.navigateToCategorySpeciesSearch(catType,contentType, itemId)
+                    navHostController.navigateToSearchSpecies(catType,contentType, itemId)
                 }
             )
 
@@ -212,13 +212,13 @@ fun MyApp(
                 },
             )
 
-            categorySearch(
+            searchCategory(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
             )
 
-            categorySpeciesSearch(
+            searchSpecies(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },

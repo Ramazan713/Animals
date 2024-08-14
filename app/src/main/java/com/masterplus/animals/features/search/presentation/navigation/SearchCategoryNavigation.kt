@@ -5,11 +5,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
-import com.masterplus.animals.features.search.presentation.category_search.CategorySpeciesSearchPageRoot
+import com.masterplus.animals.features.search.presentation.category_search.search_category.SearchCategoryPageRoot
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CategorySpeciesSearchRoute(
+data class SearchCategoryRoute(
     val contentTypeId: Int,
     val categoryId: Int,
     val itemId: Int
@@ -19,19 +19,19 @@ data class CategorySpeciesSearchRoute(
     val realItemId get() = if(itemId == 0) null else itemId
 }
 
-fun NavController.navigateToCategorySpeciesSearch(categoryType: CategoryType, contentType: ContentType, itemId: Int?){
-    navigate(CategorySpeciesSearchRoute(
+fun NavController.navigateToSearchCategory(categoryType: CategoryType, contentType: ContentType, itemId: Int?){
+    navigate(SearchCategoryRoute(
         categoryId = categoryType.catId,
         contentTypeId = contentType.contentTypeId,
         itemId = itemId ?: 0
     ))
 }
 
-fun NavGraphBuilder.categorySpeciesSearch(
+fun NavGraphBuilder.searchCategory(
     onNavigateBack: () -> Unit
 ){
-    composable<CategorySpeciesSearchRoute> {
-        CategorySpeciesSearchPageRoot(
+    composable<SearchCategoryRoute> {
+        SearchCategoryPageRoot(
             onNavigateBack = onNavigateBack
         )
     }

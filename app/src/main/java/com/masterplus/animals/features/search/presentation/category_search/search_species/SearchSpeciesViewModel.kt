@@ -1,4 +1,4 @@
-package com.masterplus.animals.features.search.presentation.category_search
+package com.masterplus.animals.features.search.presentation.category_search.search_species
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -6,9 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import com.masterplus.animals.core.domain.repo.CategoryRepo
-import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.features.search.domain.repo.SearchRepo
-import com.masterplus.animals.features.search.presentation.navigation.CategorySearchRoute
+import com.masterplus.animals.features.search.presentation.category_search.CategorySearchAction
+import com.masterplus.animals.features.search.presentation.category_search.CategorySearchState
+import com.masterplus.animals.features.search.presentation.navigation.SearchSpeciesRoute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +21,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CategorySearchViewModel(
+class SearchSpeciesViewModel(
     private val searchRepo: SearchRepo,
     private val categoryRepo: CategoryRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-    private val args = savedStateHandle.toRoute<CategorySearchRoute>()
+    private val args = savedStateHandle.toRoute<SearchSpeciesRoute>()
 
     private val _state = MutableStateFlow(CategorySearchState())
     val state = _state.asStateFlow()
@@ -38,21 +39,16 @@ class CategorySearchViewModel(
         .distinctUntilChanged()
         .flatMapLatest {
             if(args.realItemId != null){
-                searchRepo.searchCategory(categoryType = args.categoryType, query = it, itemId = args.itemId)
+                searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = it, itemId = args.itemId)
             }else{
-                searchRepo.searchCategory(categoryType = args.categoryType, query = it)
+                searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = it)
             }
         }
         .cachedIn(viewModelScope)
 
     init {
         viewModelScope.launch {
-            val titleForPlaceholder = if(args.realItemId == null){
-                UiText.Text(args.categoryType.title)
-            }
-            else {
-                categoryRepo.getCategoryName(args.categoryType, args.itemId)
-            }
+            val titleForPlaceholder = categoryRepo.getCategoryName(args.categoryType, args.itemId)
             _state.update { it.copy(
                 titleForPlaceHolder = titleForPlaceholder
             ) }
