@@ -27,7 +27,7 @@ fun NavController.navigateToSpeciesList(categoryId: Int, itemId: Int?, initPosIn
 fun NavGraphBuilder.speciesList(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
-    onNavigateToCategorySearch: (CategoryType, ContentType, Int) -> Unit
+    onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit
 ){
     composable<SpeciesListRoute> {
         SpeciesListPageRoot(

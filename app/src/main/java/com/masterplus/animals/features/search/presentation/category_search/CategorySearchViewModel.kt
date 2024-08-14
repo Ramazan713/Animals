@@ -38,7 +38,7 @@ class CategorySearchViewModel(
         .distinctUntilChanged()
         .flatMapLatest {
             if(args.realItemId != null){
-                searchRepo.searchCategory(categoryType = args.categoryType, query = it, categoryId = args.itemId)
+                searchRepo.searchCategory(categoryType = args.categoryType, query = it, itemId = args.itemId)
             }else{
                 searchRepo.searchCategory(categoryType = args.categoryType, query = it)
             }

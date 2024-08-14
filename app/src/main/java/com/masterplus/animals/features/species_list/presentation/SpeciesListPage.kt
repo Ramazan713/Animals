@@ -56,7 +56,7 @@ fun SpeciesListPageRoot(
     viewModel: SpeciesListViewModel = koinViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
-    onNavigateToCategorySearch: (CategoryType, ContentType, Int) -> Unit
+    onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit
 ) {
     val args = viewModel.args
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -70,7 +70,7 @@ fun SpeciesListPageRoot(
         onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
         pagingItems = pagingItems,
         onNavigateToCategorySearch = {
-            onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.itemId)
+            onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.realItemId)
         }
     )
 }

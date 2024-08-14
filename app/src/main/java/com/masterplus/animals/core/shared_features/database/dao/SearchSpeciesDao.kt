@@ -9,6 +9,22 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.Specie
 @Dao
 interface SearchSpeciesDao {
 
+    @Transaction
+    @Query("""
+        select * from species where
+        (scientific_name like :query or name_tr like :query)
+        order by case  when scientific_name like :queryOrder then 1 when name_tr like :queryOrder then 2 else 3 end
+    """)
+    fun searchPagingSpeciesTr(query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
+
+    @Transaction
+    @Query("""
+        select * from species where
+        (scientific_name like :query or name_en like :query)
+        order by case  when scientific_name like :queryOrder then 1 when name_en like :queryOrder then 2 else 3 end
+    """)
+    fun searchPagingSpeciesEn(query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
+
 
     @Transaction
     @Query("""
@@ -56,7 +72,7 @@ interface SearchSpeciesDao {
         (S.scientific_name like :query or S.name_tr like :query)
         order by case  when scientific_name like :queryOrder then 1 when S.name_tr like :queryOrder then 2 else 3 end
     """)
-    fun searchPagingFamiliesTrByFamilyId(familyId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
+    fun searchPagingSpeciesTrByFamilyId(familyId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
@@ -65,7 +81,7 @@ interface SearchSpeciesDao {
         (S.scientific_name like :query or S.name_en like :query)
         order by case  when scientific_name like :queryOrder then 1 when S.name_en like :queryOrder then 2 else 3 end
     """)
-    fun searchPagingFamiliesEnByFamilyId(familyId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
+    fun searchPagingSpeciesEnByFamilyId(familyId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
 
 
 

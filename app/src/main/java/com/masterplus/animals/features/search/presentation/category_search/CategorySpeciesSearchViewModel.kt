@@ -36,7 +36,11 @@ class CategorySpeciesSearchViewModel(
         .debounce(300L)
         .distinctUntilChanged()
         .flatMapLatest {
-            searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = it, categoryId = args.categoryId)
+            if(args.realItemId != null){
+                searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = it, itemId = args.itemId)
+            }else{
+                searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = it)
+            }
         }
         .cachedIn(viewModelScope)
 

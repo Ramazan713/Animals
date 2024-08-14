@@ -62,12 +62,20 @@ fun SharedLoadingPageContent(
         }
 
         if(!isLoading && isEmptyResult){
-            Text(
-                emptyMessage,
-                modifier = Modifier.align(Alignment.Center),
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(2f)
+                    .align(Alignment.Center),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    emptyMessage,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+            }
+
         }
 
         if(showContent){

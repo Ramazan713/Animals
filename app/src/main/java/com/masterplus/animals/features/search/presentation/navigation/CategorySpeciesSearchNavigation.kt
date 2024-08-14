@@ -16,13 +16,14 @@ data class CategorySpeciesSearchRoute(
 ){
     val contentType get() =  ContentType.from(contentTypeId)
     val categoryType get() =  CategoryType.fromCatId(categoryId)
+    val realItemId get() = if(itemId == 0) null else itemId
 }
 
-fun NavController.navigateToCategorySpeciesSearch(categoryType: CategoryType, contentType: ContentType, itemId: Int){
+fun NavController.navigateToCategorySpeciesSearch(categoryType: CategoryType, contentType: ContentType, itemId: Int?){
     navigate(CategorySpeciesSearchRoute(
         categoryId = categoryType.catId,
         contentTypeId = contentType.contentTypeId,
-        itemId = itemId
+        itemId = itemId ?: 0
     ))
 }
 

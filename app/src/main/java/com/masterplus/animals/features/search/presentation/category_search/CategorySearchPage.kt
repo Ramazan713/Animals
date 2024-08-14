@@ -2,10 +2,12 @@ package com.masterplus.animals.features.search.presentation.category_search
 
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
@@ -46,7 +49,7 @@ fun CategorySearchPageRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val searchResults = viewModel.searchResults.collectAsLazyPagingItems()
-
+    
     CategorySearchPage(
         state = state,
         onAction = viewModel::onAction,
@@ -57,7 +60,7 @@ fun CategorySearchPageRoot(
             searchResults = searchResults,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(1f)
         )
     }
 }
@@ -130,7 +133,6 @@ fun CategorySearchPage(
             AnimatedVisibility(
                 visible = state.query.isNotBlank()
             ) {
-
                 searchResultContent(contentPadding)
             }
         }
@@ -196,7 +198,7 @@ private fun SearchResultLazyColumn(
             contentPadding = contentPaddings,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
-                .fillMaxSize()
+                .matchParentSize()
         ) {
             items(
                 count = searchResults.itemCount,
@@ -284,11 +286,15 @@ private fun SearchResult2LazyColumn(
 @Composable
 private fun CategorySearchPagePreview() {
     CategorySearchPage(
-        state = CategorySearchState(),
+        state = CategorySearchState(
+            query = "a"
+        ),
         onAction = {},
         onNavigateBack = {},
         searchResultContent = {
-            SearchResultLazyColumn(contentPaddings = it, searchResults = getPreviewLazyPagingData(items = listOf(SampleDatas.categoryData), previewPagingLoadStates()))
+            SearchResultLazyColumn(contentPaddings = it, searchResults = getPreviewLazyPagingData(items = listOf(
+//                SampleDatas.categoryData
+            ), previewPagingLoadStates()))
         }
     )
 }
