@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.features.category_list.presentation.CategoryListPage
 import com.masterplus.animals.features.category_list.presentation.CategoryListViewModel
 import kotlinx.serialization.Serializable
@@ -27,6 +28,7 @@ fun NavGraphBuilder.categoryList(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, Int) -> Unit,
+    onNavigateToCategorySearch: (CategoryType, ContentType) -> Unit
 ){
     composable<CategoryListRoute> {
         val viewModel: CategoryListViewModel = koinViewModel()
@@ -47,6 +49,9 @@ fun NavGraphBuilder.categoryList(
             },
             onAllItemClick = {
                 onNavigateToSpeciesList(args.categoryType, null)
+            },
+            onNavigateToCategorySearch = {
+                onNavigateToCategorySearch(args.categoryType, ContentType.Category)
             }
         )
     }

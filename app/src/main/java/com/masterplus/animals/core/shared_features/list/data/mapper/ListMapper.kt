@@ -1,5 +1,7 @@
 package com.masterplus.animals.core.shared_features.list.data.mapper
 
+import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.list.domain.models.ListModel
 
@@ -22,5 +24,14 @@ fun ListModel.toListEntity(): ListEntity {
         isArchive = isArchive,
         isRemovable = isRemovable,
         pos = pos
+    )
+}
+
+fun ListModel.toCategoryData(): CategoryData {
+    return CategoryData(
+        id = id,
+        imageUrl = "",
+        title = name,
+        categoryType = CategoryType.List
     )
 }

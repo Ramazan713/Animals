@@ -21,19 +21,43 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.ColorUtils
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
 import com.masterplus.animals.ui.theme.AnimalsTheme
 
+
+@Composable
+fun ImageWithTitle(
+    model: CategoryData,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    size: DpSize = DpSize(150.dp, 180.dp),
+    shape: Shape = RoundedCornerShape(8.dp),
+    contentScale: ContentScale = ContentScale.Crop,
+    order: Int? = null
+){
+    ImageWithTitle(
+        imageData = model.imageUrl,
+        title = model.title,
+        modifier = modifier,
+        subTitle = model.secondaryTitle,
+        onClick = onClick,
+        contentDescription = model.title,
+        size = size,
+        shape = shape,
+        contentScale = contentScale,
+        order = order
+    )
+}
 
 @Composable
 fun ImageWithTitle(

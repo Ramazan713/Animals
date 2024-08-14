@@ -28,4 +28,9 @@ val databaseModule = module {
     single { get<AppDatabase>().savePointDao }
 
     single { get<AppDatabase>().speciesDao }
+
+    single { get<AppDatabase>().searchCategoryDao }
+
+    single { get<AppDatabase>().searchSpeciesDao }
+
 }

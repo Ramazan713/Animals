@@ -88,4 +88,7 @@
     <string name="theme_mode">Tema modu</string>
     <string name="use_dynamic_colors">Dinamik renkler kullan</string>
     <string name="choice_theme">Tema seç</string>
+    <string name="back">Geri</string>
+    <string name="clear_v">Temizle</string>
+    <string name="n_search_in">%1$s içinde arayın</string>
 </resources>

@@ -24,10 +24,6 @@ import com.masterplus.animals.features.animal.presentation.navigation.AnimalRout
 import com.masterplus.animals.features.animal.presentation.navigation.animal
 import com.masterplus.animals.features.app.presentation.extensions.navigateToBar
 import com.masterplus.animals.features.app.presentation.model.kBottomBarRoutes
-import com.masterplus.animals.features.species_detail.presentation.navigation.speciesDetail
-import com.masterplus.animals.features.species_detail.presentation.navigation.navigateToSpeciesDetail
-import com.masterplus.animals.features.species_list.presentation.navigation.speciesList
-import com.masterplus.animals.features.species_list.presentation.navigation.navigateToSpeciesList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryListWithDetail
 import com.masterplus.animals.features.category_list.presentation.navigation.navigateToCategoryList
@@ -37,10 +33,18 @@ import com.masterplus.animals.features.list.presentation.archive_list.navigation
 import com.masterplus.animals.features.list.presentation.show_list.navigation.showList
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.navigateToShowSavePoints
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.showSavePoints
+import com.masterplus.animals.features.search.presentation.navigation.categorySearch
+import com.masterplus.animals.features.search.presentation.navigation.categorySpeciesSearch
+import com.masterplus.animals.features.search.presentation.navigation.navigateToCategorySearch
+import com.masterplus.animals.features.search.presentation.navigation.navigateToCategorySpeciesSearch
 import com.masterplus.animals.features.settings.presentation.navigation.linkAccounts
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToLinkAccounts
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToSettings
 import com.masterplus.animals.features.settings.presentation.navigation.settings
+import com.masterplus.animals.features.species_detail.presentation.navigation.navigateToSpeciesDetail
+import com.masterplus.animals.features.species_detail.presentation.navigation.speciesDetail
+import com.masterplus.animals.features.species_list.presentation.navigation.navigateToSpeciesList
+import com.masterplus.animals.features.species_list.presentation.navigation.speciesList
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class
@@ -161,6 +165,9 @@ fun MyApp(
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
+                onNavigateToCategorySearch = { catType, contentType ->
+                    navHostController.navigateToCategorySearch(catType,contentType,null)
+                }
             )
 
             categoryListWithDetail(
@@ -173,6 +180,9 @@ fun MyApp(
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
                 },
+                onNavigateToCategorySearch = { catType, contentType, itemId ->
+                    navHostController.navigateToCategorySearch(catType,contentType, itemId)
+                }
             )
 
             speciesList(
@@ -181,6 +191,9 @@ fun MyApp(
                 },
                 onNavigateToSpeciesDetail = { itemId ->
                     navHostController.navigateToSpeciesDetail(itemId)
+                },
+                onNavigateToCategorySearch = {catType, contentType, itemId ->
+                    navHostController.navigateToCategorySpeciesSearch(catType,contentType, itemId)
                 }
             )
 
@@ -196,6 +209,18 @@ fun MyApp(
                 },
                 onNavigateToSpeciesList = { categoryType, itemId, pos ->
                     navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
+                },
+            )
+
+            categorySearch(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                },
+            )
+
+            categorySpeciesSearch(
+                onNavigateBack = {
+                    navHostController.navigateUp()
                 },
             )
         }

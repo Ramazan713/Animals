@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,6 +31,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.R
+import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
@@ -49,18 +55,23 @@ import org.koin.androidx.compose.koinViewModel
 fun SpeciesListPageRoot(
     viewModel: SpeciesListViewModel = koinViewModel(),
     onNavigateBack: () -> Unit,
-    onNavigateToSpeciesDetail: (Int) -> Unit
+    onNavigateToSpeciesDetail: (Int) -> Unit,
+    onNavigateToCategorySearch: (CategoryType, ContentType, Int) -> Unit
 ) {
+    val args = viewModel.args
     val state by viewModel.state.collectAsStateWithLifecycle()
     val pagingItems = viewModel.pagingItems.collectAsLazyPagingItems()
 
     SpeciesListPage(
         state = state,
         onAction = viewModel::onAction,
-        args = viewModel.args,
+        args = args,
         onNavigateBack = onNavigateBack,
         onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
-        pagingItems = pagingItems
+        pagingItems = pagingItems,
+        onNavigateToCategorySearch = {
+            onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.itemId)
+        }
     )
 }
 
@@ -75,7 +86,8 @@ fun SpeciesListPage(
     args: SpeciesListRoute,
     onAction: (SpeciesListAction) -> Unit,
     onNavigateBack: () -> Unit,
-    onNavigateToSpeciesDetail: (Int) -> Unit
+    onNavigateToSpeciesDetail: (Int) -> Unit,
+    onNavigateToCategorySearch: () -> Unit
 ) {
     val lazyListState = rememberLazyListState(
         initialFirstVisibleItemIndex = args.initPosIndex
@@ -90,6 +102,11 @@ fun SpeciesListPage(
                 },
                 navigationIcon = {
                     NavigationBackIcon(onNavigateBack = onNavigateBack)
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToCategorySearch) {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                    }
                 }
             )
         }
@@ -211,6 +228,7 @@ fun SpeciesListPagePreview() {
         pagingItems = getPreviewLazyPagingData(
             items = listOf(SampleDatas.generateSpeciesDetail(id = 1), SampleDatas.generateSpeciesDetail(id = 2), SampleDatas.generateSpeciesDetail(id = 3)),
             sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading, append = LoadState.Loading),
-        )
+        ),
+        onNavigateToCategorySearch = {}
     )
 }

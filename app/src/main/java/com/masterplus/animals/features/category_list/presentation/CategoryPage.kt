@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -49,7 +53,8 @@ fun CategoryListPage(
     onAction: (CategoryAction) -> Unit,
     onNavigateBack: () -> Unit,
     onAllItemClick: () -> Unit,
-    onItemClick: (ImageWithTitleModel) -> Unit
+    onItemClick: (ImageWithTitleModel) -> Unit,
+    onNavigateToCategorySearch: () -> Unit
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -70,7 +75,8 @@ fun CategoryListPage(
                 topBarScrollBehaviour = topBarScrollBehaviour,
                 onNavigateBack = onNavigateBack,
                 title = state.title,
-                subTitle = state.subTitle
+                subTitle = state.subTitle,
+                onNavigateToCategorySearch = onNavigateToCategorySearch
             )
         }
     ) { paddings->
@@ -143,6 +149,7 @@ fun CategoryListPage(
 private fun GetTopBar(
     topBarScrollBehaviour: TopAppBarScrollBehavior,
     onNavigateBack: () -> Unit,
+    onNavigateToCategorySearch: () -> Unit,
     title: String,
     subTitle: String?
 ) {
@@ -165,7 +172,12 @@ private fun GetTopBar(
         navigationIcon = {
             NavigationBackIcon(onNavigateBack = onNavigateBack)
         },
-        scrollBehavior = topBarScrollBehaviour
+        scrollBehavior = topBarScrollBehaviour,
+        actions = {
+            IconButton(onClick = onNavigateToCategorySearch) {
+                Icon(imageVector = Icons.Default.Search, contentDescription = null)
+            }
+        }
     )
 }
 
@@ -187,7 +199,8 @@ private fun CategoryListPagePreview1() {
 
         },
         onItemClick = {},
-        onAllItemClick = {}
+        onAllItemClick = {},
+        onNavigateToCategorySearch = {}
     )
 }
 

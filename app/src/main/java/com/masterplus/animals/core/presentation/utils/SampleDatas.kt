@@ -1,7 +1,9 @@
 package com.masterplus.animals.core.presentation.utils
 
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.domain.models.AnimalDetail
+import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.GenusModel
@@ -19,9 +21,9 @@ import com.masterplus.animals.core.shared_features.list.domain.models.Selectable
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
+import com.masterplus.animals.features.settings.presentation.link_accounts.models.LinkAccountModel
 import com.masterplus.animals.features.species_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.species_detail.presentation.models.TitleSectionModel
-import com.masterplus.animals.features.settings.presentation.link_accounts.models.LinkAccountModel
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -52,6 +54,14 @@ object SampleDatas {
         subTitle = "Sub Title",
         id = 2,
         imageUrl = imageUrl
+    )
+
+    val categoryData = CategoryData(
+        title = "Kartal",
+        secondaryTitle = "Sub Title",
+        id = 2,
+        imageUrl = imageUrl,
+        categoryType = CategoryType.Class
     )
 
     val phylum = PhylumModel(
