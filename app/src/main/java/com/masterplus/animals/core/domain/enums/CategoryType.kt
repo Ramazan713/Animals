@@ -23,8 +23,18 @@ enum class CategoryType(
     List(
         catId = 5,
         title = "Listeler"
-    )
-    ;
+    );
+
+
+    fun toChildType(): CategoryType?{
+        return when(this){
+            Habitat -> null
+            Class -> Order
+            Order -> Family
+            Family -> null
+            List -> null
+        }
+    }
 
     companion object {
         fun fromCatId(catId: Int): CategoryType{

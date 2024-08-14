@@ -33,6 +33,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SearchSpeciesPageRoot(
     onNavigateBack: () -> Unit,
+    onNavigateToSpeciesDetail: (Int) -> Unit,
     viewModel: SearchSpeciesViewModel = koinViewModel(),
     addSpeciesToListViewModel: AddSpeciesToListViewModel = koinViewModel(),
 ) {
@@ -60,6 +61,9 @@ fun SearchSpeciesPageRoot(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
+            onItemClick = {
+                onNavigateToSpeciesDetail(it.id ?: 0)
+            }
         )
     }
 }
@@ -71,6 +75,7 @@ private fun SearchResultLazyColumn(
     contentPaddings: PaddingValues,
     searchResults: LazyPagingItems<SpeciesDetail>,
     onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
+    onItemClick: (SpeciesDetail) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SharedLoadingPageContent(
@@ -96,7 +101,7 @@ private fun SearchResultLazyColumn(
                         orderNum = index + 1,
                         isFavorited = item.isFavorited,
                         onClick = {
-
+                            onItemClick(item)
                         },
                         onFavoriteClick = {
                             onAddSpeciesAction(AddSpeciesToListAction.AddToFavorite(item.id ?: 0))
@@ -136,7 +141,8 @@ private fun SearchCategoryPagePreview() {
                     items = listOf(SampleDatas.generateSpeciesDetail()),
                     sourceLoadStates = previewPagingLoadStates()
                 ),
-                onAddSpeciesAction = {}
+                onAddSpeciesAction = {},
+                onItemClick = {}
             )
         }
     )

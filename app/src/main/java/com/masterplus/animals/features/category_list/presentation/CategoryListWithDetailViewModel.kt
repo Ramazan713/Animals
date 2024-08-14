@@ -10,7 +10,6 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
 import com.masterplus.animals.features.category_list.presentation.navigation.CategoryListWithDetailRoute
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -80,13 +79,4 @@ class CategoryListWithDetailViewModel(
     fun onAction(action: CategoryAction){
 
     }
-
-    fun getDetailCategoryType(): CategoryType{
-        return when(args.categoryType){
-            CategoryType.Class -> CategoryType.Order
-            CategoryType.Order -> CategoryType.Family
-            else -> args.categoryType
-        }
-    }
-
 }

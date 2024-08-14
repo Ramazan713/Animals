@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler
 import com.masterplus.animals.features.category_list.presentation.CategoryListPage
 import com.masterplus.animals.features.category_list.presentation.CategoryListViewModel
 import kotlinx.serialization.Serializable
@@ -41,11 +42,12 @@ fun NavGraphBuilder.categoryList(
             pagingItems = items,
             onNavigateBack = onNavigateBack,
             onItemClick = { item ->
-                if(args.categoryType == CategoryType.Family){
-                    onNavigateToSpeciesList(args.categoryType, item.id)
-                }else{
-                    onNavigateToCategoryListWithDetail(args.categoryType, item.id ?: 0)
-                }
+                categoryNavigateHandler(
+                    itemId = item.id,
+                    categoryType = args.categoryType,
+                    onNavigateToSpeciesList = onNavigateToSpeciesList,
+                    onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
+                )
             },
             onAllItemClick = {
                 onNavigateToSpeciesList(args.categoryType, null)

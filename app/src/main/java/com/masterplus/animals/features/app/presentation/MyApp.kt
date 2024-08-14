@@ -216,11 +216,20 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
+                onNavigateToSpeciesList = { categoryType, itemId ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId)
+                },
+                onNavigateToCategoryListWithDetail = { categoryType, itemId ->
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                },
             )
 
             searchSpecies(
                 onNavigateBack = {
                     navHostController.navigateUp()
+                },
+                onNavigateToSpeciesDetail = { itemId ->
+                    navHostController.navigateToSpeciesDetail(itemId)
                 },
             )
         }

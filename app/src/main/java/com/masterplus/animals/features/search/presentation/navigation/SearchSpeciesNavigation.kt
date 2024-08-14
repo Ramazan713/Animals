@@ -28,11 +28,13 @@ fun NavController.navigateToSearchSpecies(categoryType: CategoryType, contentTyp
 }
 
 fun NavGraphBuilder.searchSpecies(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToSpeciesDetail: (Int) -> Unit,
 ){
     composable<SearchSpeciesRoute> {
         SearchSpeciesPageRoot(
-            onNavigateBack = onNavigateBack
+            onNavigateBack = onNavigateBack,
+            onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
         )
     }
 }

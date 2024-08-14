@@ -14,10 +14,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.presentation.components.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
@@ -28,9 +30,12 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SearchCategoryPageRoot(
     onNavigateBack: () -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
+    onNavigateToCategoryListWithDetail: (CategoryType, Int) -> Unit,
     viewModel: SearchCategoryViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val args = viewModel.args
     val searchResults = viewModel.searchResults.collectAsLazyPagingItems()
 
     CategorySearchPage(
@@ -43,7 +48,16 @@ fun SearchCategoryPageRoot(
             searchResults = searchResults,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
+            onItemClick = { categoryData ->
+                val categoryType = if(args.realItemId != null) args.categoryType.toChildType() else null
+                categoryNavigateHandler(
+                    itemId = categoryData.id,
+                    categoryType = categoryType ?: args.categoryType ,
+                    onNavigateToSpeciesList = onNavigateToSpeciesList,
+                    onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
+                )
+            }
         )
     }
 }
@@ -53,6 +67,7 @@ fun SearchCategoryPageRoot(
 private fun SearchResultLazyColumn(
     contentPaddings: PaddingValues,
     searchResults: LazyPagingItems<CategoryData>,
+    onItemClick: (CategoryData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SharedLoadingPageContent(
@@ -80,7 +95,7 @@ private fun SearchResultLazyColumn(
                         model = item,
                         order = index + 1,
                         onClick = {
-
+                            onItemClick(item)
                         }
                     )
                 }
@@ -110,7 +125,8 @@ private fun SearchCategoryPagePreview() {
                 searchResults = getPreviewLazyPagingData(
                     items = listOf(SampleDatas.categoryData),
                     sourceLoadStates = previewPagingLoadStates()
-                )
+                ),
+                onItemClick = {}
             )
         }
     )

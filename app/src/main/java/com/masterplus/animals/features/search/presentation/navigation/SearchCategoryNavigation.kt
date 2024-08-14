@@ -28,11 +28,15 @@ fun NavController.navigateToSearchCategory(categoryType: CategoryType, contentTy
 }
 
 fun NavGraphBuilder.searchCategory(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
+    onNavigateToCategoryListWithDetail: (CategoryType, Int) -> Unit,
 ){
     composable<SearchCategoryRoute> {
         SearchCategoryPageRoot(
-            onNavigateBack = onNavigateBack
+            onNavigateBack = onNavigateBack,
+            onNavigateToSpeciesList = onNavigateToSpeciesList,
+            onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
         )
     }
 }
