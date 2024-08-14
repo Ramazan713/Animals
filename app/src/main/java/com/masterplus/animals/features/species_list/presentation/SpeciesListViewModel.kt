@@ -21,8 +21,6 @@ import kotlinx.coroutines.launch
 class SpeciesListViewModel(
     private val speciesRepo: SpeciesRepo,
     private val categoryRepo: CategoryRepo,
-    private val listSpeciesRepo: ListSpeciesRepo,
-    private val listInFavoriteUseCase: ListInFavoriteControlForDeletionUseCase,
     private val savePointRepo: SavePointRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -56,27 +54,6 @@ class SpeciesListViewModel(
                     dialogEvent = action.dialogEvent
                 ) }
             }
-            is SpeciesListAction.AddOrAskFavorite -> {
-                viewModelScope.launch {
-                    listInFavoriteUseCase(_state.value.listIdControl,true).let { showDia->
-                        if(showDia){
-                            _state.update { state->
-                                state.copy(
-                                    dialogEvent = SpeciesListDialogEvent.AskFavoriteDelete(action.animalId)
-                                )
-                            }
-                        }else{
-                            addFavoriteAnimal(action.animalId)
-                        }
-                    }
-                }
-            }
-            is SpeciesListAction.AddToFavorite -> {
-                viewModelScope.launch {
-                    addFavoriteAnimal(action.animalId)
-                }
-            }
-
             is SpeciesListAction.SavePosition -> {
                 viewModelScope.launch {
                     savePointRepo.insertContentSavePoint(
@@ -91,10 +68,4 @@ class SpeciesListViewModel(
             }
         }
     }
-
-    private suspend fun addFavoriteAnimal(wordId: Int){
-        listSpeciesRepo.addOrRemoveFavoriteSpecies(wordId)
-    }
-
-
 }

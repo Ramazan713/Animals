@@ -14,12 +14,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListViewModel
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchPage
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchState
 import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
@@ -28,10 +33,20 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SearchSpeciesPageRoot(
     onNavigateBack: () -> Unit,
-    viewModel: SearchSpeciesViewModel = koinViewModel()
+    viewModel: SearchSpeciesViewModel = koinViewModel(),
+    addSpeciesToListViewModel: AddSpeciesToListViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val searchResults = viewModel.searchResults.collectAsLazyPagingItems()
+    val args = viewModel.args
+
+    val addSpeciesState by addSpeciesToListViewModel.state.collectAsStateWithLifecycle()
+
+    AddSpeciesToListHandler(
+        state = addSpeciesState,
+        onAction = addSpeciesToListViewModel::onAction,
+        listIdControl = if(args.categoryType == CategoryType.List) args.realItemId else null
+    )
 
     CategorySearchPage(
         state = state,
@@ -41,6 +56,7 @@ fun SearchSpeciesPageRoot(
         SearchResultLazyColumn(
             contentPaddings = it,
             searchResults = searchResults,
+            onAddSpeciesAction = addSpeciesToListViewModel::onAction,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
@@ -54,6 +70,7 @@ fun SearchSpeciesPageRoot(
 private fun SearchResultLazyColumn(
     contentPaddings: PaddingValues,
     searchResults: LazyPagingItems<SpeciesDetail>,
+    onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SharedLoadingPageContent(
@@ -82,13 +99,14 @@ private fun SearchResultLazyColumn(
 
                         },
                         onFavoriteClick = {
-
+                            onAddSpeciesAction(AddSpeciesToListAction.AddToFavorite(item.id ?: 0))
                         },
                         onUnFavoriteClick = {
-
+                            onAddSpeciesAction(AddSpeciesToListAction.AddOrAskFavorite(item.id ?: 0))
                         },
                         onMenuButtonClick = {
-
+                            onAddSpeciesAction(AddSpeciesToListAction.ShowDialog(
+                                AddSpeciesToListDialogEvent.ShowItemBottomMenu(item,index)))
                         },
                     )
                 }
@@ -117,7 +135,8 @@ private fun SearchCategoryPagePreview() {
                 searchResults = getPreviewLazyPagingData(
                     items = listOf(SampleDatas.generateSpeciesDetail()),
                     sourceLoadStates = previewPagingLoadStates()
-                )
+                ),
+                onAddSpeciesAction = {}
             )
         }
     )

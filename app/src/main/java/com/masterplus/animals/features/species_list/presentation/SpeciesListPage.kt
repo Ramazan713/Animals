@@ -23,25 +23,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
-import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
-import com.masterplus.animals.core.shared_features.list.presentation.select_list_with_menu.ShowBottomMenuWithSelectList
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListState
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListViewModel
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.EditSavePointLoadParam
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
@@ -54,6 +55,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SpeciesListPageRoot(
     viewModel: SpeciesListViewModel = koinViewModel(),
+    addSpeciesToListViewModel: AddSpeciesToListViewModel = koinViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit
@@ -62,9 +64,13 @@ fun SpeciesListPageRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val pagingItems = viewModel.pagingItems.collectAsLazyPagingItems()
 
+    val addSpeciesState by addSpeciesToListViewModel.state.collectAsStateWithLifecycle()
+
     SpeciesListPage(
         state = state,
         onAction = viewModel::onAction,
+        addSpeciesState = addSpeciesState,
+        onAddSpeciesAction = addSpeciesToListViewModel::onAction,
         args = args,
         onNavigateBack = onNavigateBack,
         onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
@@ -83,8 +89,10 @@ fun SpeciesListPageRoot(
 fun SpeciesListPage(
     pagingItems: LazyPagingItems<SpeciesDetail>,
     state: SpeciesListState,
-    args: SpeciesListRoute,
     onAction: (SpeciesListAction) -> Unit,
+    addSpeciesState: AddSpeciesToListState,
+    onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
+    args: SpeciesListRoute,
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
     onNavigateToCategorySearch: () -> Unit
@@ -140,13 +148,13 @@ fun SpeciesListPage(
                                 onNavigateToSpeciesDetail(item.id ?: 0)
                             },
                             onFavoriteClick = {
-                                onAction(SpeciesListAction.AddToFavorite(item.id ?: 0))
+                                onAddSpeciesAction(AddSpeciesToListAction.AddToFavorite(item.id ?: 0))
                             },
                             onUnFavoriteClick = {
-                                onAction(SpeciesListAction.AddOrAskFavorite(item.id ?: 0))
+                                onAddSpeciesAction(AddSpeciesToListAction.AddOrAskFavorite(item.id ?: 0))
                             },
                             onMenuButtonClick = {
-                                onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowItemBottomMenu(item,index)))
+                                onAddSpeciesAction(AddSpeciesToListAction.ShowDialog(AddSpeciesToListDialogEvent.ShowItemBottomMenu(item,index)))
                             },
                         )
                     }
@@ -160,39 +168,25 @@ fun SpeciesListPage(
         }
     }
 
+    AddSpeciesToListHandler(
+        state = addSpeciesState,
+        onAction = onAddSpeciesAction,
+        listIdControl = state.listIdControl,
+        bottomMenuItems = SpeciesListItemMenu.entries,
+        onBottomMenuItemClick = { menuItem, item, pos ->
+            when(menuItem){
+                SpeciesListItemMenu.Savepoint -> {
+                    onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(item, pos)))
+                }
+            }
+        }
+    )
 
     state.dialogEvent?.let { dialogEvent ->
         val close = remember {{
             onAction(SpeciesListAction.ShowDialog(null))
         }}
         when(dialogEvent){
-            is SpeciesListDialogEvent.ShowItemBottomMenu -> {
-                ShowBottomMenuWithSelectList(
-                    items = SpeciesListItemMenu.entries,
-                    title = stringResource(id = R.string.n_for_number_word,dialogEvent.posIndex + 1, dialogEvent.item.name),
-                    animalId = dialogEvent.item.id ?: 0,
-                    onClose = close,
-                    listIdControl = state.listIdControl,
-                    onClickItem = { menuItem ->
-                        when(menuItem){
-                            SpeciesListItemMenu.Savepoint -> {
-                                onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(dialogEvent.item,dialogEvent.posIndex)))
-                            }
-                        }
-                    }
-                )
-            }
-            is SpeciesListDialogEvent.AskFavoriteDelete -> {
-                ShowQuestionDialog(
-                    title = stringResource(R.string.question_remove_list_from_favorite),
-                    content = stringResource(R.string.affect_current_list),
-                    onClosed = close,
-                    onApproved = {
-                        onAction(SpeciesListAction.AddToFavorite(dialogEvent.animalId))
-                    }
-                )
-            }
-
             is SpeciesListDialogEvent.ShowEditSavePoint -> {
                 EditSavePointDialog(
                     loadParam = EditSavePointLoadParam(
@@ -217,7 +211,9 @@ fun SpeciesListPage(
 fun SpeciesListPagePreview() {
     SpeciesListPage(
         state = SpeciesListState(),
+        addSpeciesState = AddSpeciesToListState(),
         onAction = {},
+        onAddSpeciesAction = {},
         onNavigateBack = {},
         args = SpeciesListRoute(
             categoryId = 1,

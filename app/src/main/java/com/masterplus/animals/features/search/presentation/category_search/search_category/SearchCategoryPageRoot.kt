@@ -2,6 +2,7 @@ package com.masterplus.animals.features.search.presentation.category_search.sear
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -64,7 +65,7 @@ private fun SearchResultLazyColumn(
             contentPadding = contentPaddings,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
-                .matchParentSize()
+                .fillMaxSize()
         ) {
             items(
                 count = searchResults.itemCount,

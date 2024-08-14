@@ -27,7 +27,7 @@ class SearchSpeciesViewModel(
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-    private val args = savedStateHandle.toRoute<SearchSpeciesRoute>()
+    val args = savedStateHandle.toRoute<SearchSpeciesRoute>()
 
     private val _state = MutableStateFlow(CategorySearchState())
     val state = _state.asStateFlow()

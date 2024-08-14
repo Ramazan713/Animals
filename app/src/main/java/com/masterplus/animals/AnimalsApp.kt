@@ -3,6 +3,7 @@ package com.masterplus.animals
 import android.app.Application
 import com.masterplus.animals.core.shared_features.database.di.databaseModule
 import com.masterplus.animals.core.data.di.coreDataModule
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.di.addSpeciesToListModule
 import com.masterplus.animals.core.shared_features.auth.data.di.authDataModule
 import com.masterplus.animals.core.shared_features.auth.domain.di.authDomainModule
 import com.masterplus.animals.core.shared_features.auth.presentation.di.authPresentationModule
@@ -37,7 +38,7 @@ class AnimalsApp: Application() {
             androidContext(this@AnimalsApp)
             modules(
                 databaseModule, animalPresentationModule, coreDataModule, themeDataModule, themePresentationModule,
-                categoryListPresentationModule, speciesListPresentationModule,
+                categoryListPresentationModule, speciesListPresentationModule, addSpeciesToListModule,
                 speciesDetailPresentationModule, animalDataModule, preferencesDataModule,
                 listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule,
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule,

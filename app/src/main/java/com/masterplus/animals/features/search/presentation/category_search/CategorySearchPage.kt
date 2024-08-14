@@ -13,31 +13,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.R
-import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.extentions.clearFocusOnTap
-import com.masterplus.animals.core.presentation.components.SharedCircularProgress
-import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
-import com.masterplus.animals.features.search.presentation.category_search.search_species.SearchSpeciesViewModel
 import com.masterplus.animals.features.search.presentation.components.SearchField
-import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
-import org.koin.androidx.compose.koinViewModel
-
-
-
-
-
-
 
 
 @Composable
