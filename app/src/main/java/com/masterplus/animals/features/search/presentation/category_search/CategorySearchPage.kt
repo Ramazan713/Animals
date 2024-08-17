@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,6 +20,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
 import com.masterplus.animals.core.extentions.clearFocusOnTap
+import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.features.search.presentation.components.HistoryItem
 import com.masterplus.animals.features.search.presentation.components.SearchField
 
 
@@ -58,7 +60,9 @@ fun CategorySearchPage(
             ) {
                 HistoryLazyColumn(
                     contentPaddings = contentPadding,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    state = state,
+                    onAction = onAction
                 )
             }
 
@@ -86,7 +90,11 @@ private fun GetSearchBar(
         query = state.query,
         onValueChange = { onAction(CategorySearchAction.SearchQuery(it)) },
         onBackPressed = onNavigateBack,
+        onSearch = {
+            onAction(CategorySearchAction.InsertHistory(state.query))
+        },
         onClear = {
+            onAction(CategorySearchAction.InsertHistory(state.query))
             onAction(CategorySearchAction.SearchQuery(""))
         },
         placeholder = placeholder
@@ -95,20 +103,35 @@ private fun GetSearchBar(
 
 @Composable
 private fun HistoryLazyColumn(
-    modifier: Modifier = Modifier,
-    contentPaddings: PaddingValues
+    state: CategorySearchState,
+    onAction: (CategorySearchAction) -> Unit,
+    contentPaddings: PaddingValues,
+    modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        contentPadding = contentPaddings,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
+    SharedLoadingPageContent(
+        isLoading = state.historyLoading,
+        isEmptyResult = state.histories.isEmpty(),
+        emptyMessage = "No history found"
     ) {
-        items(
-            count = 3,
-        ) { index ->
-            Text(
-                text = "Search item $index"
-            )
+        LazyColumn(
+            contentPadding = contentPaddings,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = modifier
+        ) {
+            items(
+                state.histories,
+                key = { it.id ?: 0}
+            ) { history ->
+                HistoryItem(
+                    history = history,
+                    onClick = {
+                        onAction(CategorySearchAction.SearchQuery(history.content))
+                    },
+                    onDeleteClick = {
+                        onAction(CategorySearchAction.DeleteHistory(history))
+                    }
+                )
+            }
         }
     }
 }

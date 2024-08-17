@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.masterplus.animals.core.shared_features.database.dao.AnimalDao
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
+import com.masterplus.animals.core.shared_features.database.dao.HistoryDao
 import com.masterplus.animals.core.shared_features.database.dao.ListSpeciesDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
 import com.masterplus.animals.core.shared_features.database.dao.SavePointDao
@@ -16,6 +17,7 @@ import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.GenusEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
+import com.masterplus.animals.core.shared_features.database.entity.HistoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.KingdomEntity
 import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
@@ -33,7 +35,7 @@ import com.masterplus.trdictionary.core.data.local.services.ListViewDao
         KingdomEntity::class, AnimalEntity::class, SpeciesImageEntity::class, ClassEntity::class, FamilyEntity::class,
         GenusEntity::class, HabitatCategoryEntity::class, OrderEntity::class, PhylumEntity::class,
         SpeciesEntity::class, ListEntity::class, ListSpeciesEntity::class,
-        SavePointEntity::class
+        SavePointEntity::class, HistoryEntity::class
     ],
     views = [
         ListViewEntity::class, SpeciesRelationsView::class
@@ -58,4 +60,6 @@ abstract class AppDatabase: RoomDatabase() {
     abstract val searchCategoryDao: SearchCategoryDao
 
     abstract val searchSpeciesDao: SearchSpeciesDao
+
+    abstract val historyDao: HistoryDao
 }

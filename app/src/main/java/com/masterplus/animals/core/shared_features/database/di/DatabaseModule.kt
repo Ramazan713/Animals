@@ -33,4 +33,6 @@ val databaseModule = module {
 
     single { get<AppDatabase>().searchSpeciesDao }
 
+    single { get<AppDatabase>().historyDao }
+
 }
