@@ -8,7 +8,7 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.Animal
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
 
-fun AnimalDataEmbedded.toAnimal(language: LanguageEnum = LanguageEnum.Tr): Animal{
+fun AnimalDataEmbedded.toAnimal(language: LanguageEnum): Animal{
     return animal.toAnimal(
         species = species,
         images = images,
@@ -17,7 +17,7 @@ fun AnimalDataEmbedded.toAnimal(language: LanguageEnum = LanguageEnum.Tr): Anima
 }
 
 fun AnimalEntity.toAnimal(
-    language: LanguageEnum = LanguageEnum.Tr,
+    language: LanguageEnum,
     species: SpeciesEntity,
     images: List<SpeciesImageEntity>
 ): Animal{

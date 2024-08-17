@@ -9,6 +9,7 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
+import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -19,7 +20,8 @@ class SpeciesRepoImpl(
     override fun getPagingSpeciesList(
         categoryType: CategoryType,
         itemId: Int?,
-        pageSize: Int
+        pageSize: Int,
+        language: LanguageEnum
     ): Flow<PagingData<SpeciesDetail>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
@@ -46,7 +48,7 @@ class SpeciesRepoImpl(
                 }
             }
         ).flow.map { items ->
-            items.map { it.toSpeciesDetail() }
+            items.map { it.toSpeciesDetail(language) }
         }
     }
 }

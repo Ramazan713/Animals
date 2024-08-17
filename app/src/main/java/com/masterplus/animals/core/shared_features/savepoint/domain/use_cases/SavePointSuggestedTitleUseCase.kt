@@ -7,6 +7,7 @@ import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -15,7 +16,8 @@ import kotlinx.datetime.toLocalDateTime
 
 class SavePointSuggestedTitleUseCase(
     private val categoryRepo: CategoryRepo,
-    private val context: Context
+    private val context: Context,
+    private val translationRepo: TranslationRepo
 ) {
 
     suspend operator fun invoke(
@@ -63,7 +65,8 @@ class SavePointSuggestedTitleUseCase(
 
                 return categoryRepo.getCategoryName(
                     categoryType = categoryType,
-                    itemId = destinationId
+                    itemId = destinationId,
+                    language = translationRepo.getLanguage()
                 ) ?: defaultResult
             }
         }

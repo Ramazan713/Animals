@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -24,11 +23,58 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 
 
+@Composable
+fun ImageCategoryDataRow(
+    title: String,
+    items: List<CategoryData>,
+    modifier: Modifier = Modifier,
+    showMore: Boolean = false,
+    onClickMore: (() -> Unit)? = null,
+    onClickItem: (CategoryData) -> Unit,
+    imageSize: DpSize = DpSize(150.dp, 180.dp),
+    contentPaddings: PaddingValues = PaddingValues()
+) {
+    ImageCategoryDataRow(
+        title = title,
+        modifier = modifier,
+        showMore = showMore,
+        onClickMore = onClickMore,
+        contentPaddings = contentPaddings
+    ){ showMoreBtn ->
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = contentPaddings
+        ) {
+            this.items(
+                items = items,
+                key = { it.id ?: it.title }
+            ){ item ->
+                ImageWithTitle(
+                    model = item,
+                    size = imageSize,
+                    onClick = {
+                        onClickItem(item)
+                    }
+                )
+            }
 
+            item {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.height(imageSize.height)
+                ) {
+                    showMoreBtn()
+                }
+            }
+        }
+
+    }
+}
 
 
 @Composable
@@ -42,7 +88,7 @@ fun ImageCategoryRow(
     imageSize: DpSize = DpSize(150.dp, 180.dp),
     contentPaddings: PaddingValues = PaddingValues()
 ) {
-    ImageCategoryRow(
+    ImageCategoryDataRow(
         title = title,
         modifier = modifier,
         showMore = showMore,
@@ -58,11 +104,7 @@ fun ImageCategoryRow(
                 key = { it.id ?: it.title }
             ){ item ->
                 ImageWithTitle(
-                    imageData = item.imageUrl,
-                    title = item.title,
-                    size = imageSize,
-                    subTitle = item.subTitle,
-                    contentDescription = item.contentDescription,
+                    model = item,
                     onClick = {
                         onClickItem(item)
                     }
@@ -83,7 +125,7 @@ fun ImageCategoryRow(
 }
 
 @Composable
-fun ImageCategoryRow(
+fun ImageCategoryDataRow(
     title: String,
     modifier: Modifier = Modifier,
     showMore: Boolean = false,

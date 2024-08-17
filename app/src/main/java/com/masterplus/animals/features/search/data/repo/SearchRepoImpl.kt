@@ -14,6 +14,7 @@ import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.shared_features.database.dao.SearchCategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.SearchSpeciesDao
+import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.features.search.domain.repo.SearchRepo
 import com.masterplus.animals.features.search.domain.use_cases.GetSearchQueryUseCase
 import kotlinx.coroutines.flow.Flow
@@ -23,11 +24,12 @@ import kotlinx.coroutines.flow.map
 class SearchRepoImpl(
     private val searchCategoryDao: SearchCategoryDao,
     private val searchSpeciesDao: SearchSpeciesDao,
-    private val getQueryUseCase: GetSearchQueryUseCase
+    private val getQueryUseCase: GetSearchQueryUseCase,
 ): SearchRepo {
     override fun searchSpeciesWithCategory(
         query: String,
-        categoryType: CategoryType
+        categoryType: CategoryType,
+        language: LanguageEnum
     ): Flow<PagingData<SpeciesDetail>> {
         val pagingConfig = PagingConfig(pageSize = 10)
         val queryResult = getQueryUseCase(query)
@@ -35,15 +37,20 @@ class SearchRepoImpl(
         return Pager(
             config = pagingConfig,
             pagingSourceFactory = {
-               searchSpeciesDao.searchPagingSpeciesTr(queryResult.queryInLike, queryResult.queryForOrder)
+                if(language.isEn){
+                    searchSpeciesDao.searchPagingSpeciesEn(queryResult.queryInLike, queryResult.queryForOrder)
+                }else{
+                    searchSpeciesDao.searchPagingSpeciesTr(queryResult.queryInLike, queryResult.queryForOrder)
+                }
             }
-        ).flow.map { items -> items.map { it.toSpeciesDetail() } }
+        ).flow.map { items -> items.map { it.toSpeciesDetail(language) } }
     }
 
     override fun searchSpeciesWithCategory(
         query: String,
         categoryType: CategoryType,
-        itemId: Int
+        itemId: Int,
+        language: LanguageEnum
     ): Flow<PagingData<SpeciesDetail>> {
         val pagingConfig = PagingConfig(pageSize = 10)
         val queryResult = getQueryUseCase(query)
@@ -54,20 +61,36 @@ class SearchRepoImpl(
             config = pagingConfig,
             pagingSourceFactory = {
                 when(categoryType){
-                    CategoryType.Habitat -> searchSpeciesDao.searchPagingSpeciesTrByHabitatCategoryId(itemId, queryInLike, queryForOrder)
-                    CategoryType.Class -> searchSpeciesDao.searchPagingSpeciesTrByClassId(itemId, queryInLike, queryForOrder)
-                    CategoryType.Order -> searchSpeciesDao.searchPagingSpeciesTrByOrderId(itemId, queryInLike, queryForOrder)
-                    CategoryType.Family -> searchSpeciesDao.searchPagingSpeciesTrByFamilyId(itemId, queryInLike, queryForOrder)
-                    CategoryType.List -> searchSpeciesDao.searchPagingSpeciesTrByListId(itemId, queryInLike, queryForOrder)
+                    CategoryType.Habitat -> {
+                        if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByHabitatCategoryId(itemId, queryInLike, queryForOrder) else
+                            searchSpeciesDao.searchPagingSpeciesTrByHabitatCategoryId(itemId, queryInLike, queryForOrder)
+                    }
+                    CategoryType.Class -> {
+                        if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByClassId(itemId, queryInLike, queryForOrder) else
+                            searchSpeciesDao.searchPagingSpeciesTrByClassId(itemId, queryInLike, queryForOrder)
+                    }
+                    CategoryType.Order -> {
+                        if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByOrderId(itemId, queryInLike, queryForOrder) else
+                            searchSpeciesDao.searchPagingSpeciesTrByOrderId(itemId, queryInLike, queryForOrder)
+                    }
+                    CategoryType.Family -> {
+                        if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByFamilyId(itemId, queryInLike, queryForOrder) else
+                            searchSpeciesDao.searchPagingSpeciesTrByFamilyId(itemId, queryInLike, queryForOrder)
+                    }
+                    CategoryType.List -> {
+                        if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByListId(itemId, queryInLike, queryForOrder) else
+                            searchSpeciesDao.searchPagingSpeciesTrByListId(itemId, queryInLike, queryForOrder)
+                    }
                 }
             }
-        ).flow.map { items -> items.map { it.toSpeciesDetail() } }
+        ).flow.map { items -> items.map { it.toSpeciesDetail(language) } }
     }
 
 
     override fun searchCategory(
         query: String,
         categoryType: CategoryType,
+        language: LanguageEnum
     ): Flow<PagingData<CategoryData>> {
         val pagingConfig = PagingConfig(pageSize = 10)
         val queryResult = getQueryUseCase(query)
@@ -79,25 +102,28 @@ class SearchRepoImpl(
                 Pager(
                     config = pagingConfig,
                     pagingSourceFactory = {
-                        searchCategoryDao.searchPagingClassesTr(queryInLike, queryForOrder)
+                        if(language.isEn) searchCategoryDao.searchPagingClassesEn(queryInLike, queryForOrder) else
+                            searchCategoryDao.searchPagingClassesTr(queryInLike, queryForOrder)
                     }
-                ).flow.map { items -> items.map { it.toClass().toCategoryData() } }
+                ).flow.map { items -> items.map { it.toClass(language).toCategoryData() } }
             }
             CategoryType.Order -> {
                 Pager(
                     config = pagingConfig,
                     pagingSourceFactory = {
-                        searchCategoryDao.searchOrdersTr(queryInLike, queryForOrder)
+                        if(language.isEn) searchCategoryDao.searchOrdersEn(queryInLike, queryForOrder) else
+                            searchCategoryDao.searchOrdersTr(queryInLike, queryForOrder)
                     }
-                ).flow.map { items -> items.map { it.toOrder().toCategoryData() } }
+                ).flow.map { items -> items.map { it.toOrder(language).toCategoryData() } }
             }
             CategoryType.Family -> {
                 Pager(
                     config = pagingConfig,
                     pagingSourceFactory = {
-                        searchCategoryDao.searchFamiliesTr(queryInLike, queryForOrder)
+                        if(language.isEn) searchCategoryDao.searchFamiliesEn(queryInLike, queryForOrder) else
+                            searchCategoryDao.searchFamiliesTr(queryInLike, queryForOrder)
                     }
-                ).flow.map { items -> items.map { it.toFamily().toCategoryData() } }
+                ).flow.map { items -> items.map { it.toFamily(language).toCategoryData() } }
             }
             else -> flowOf()
         }
@@ -106,7 +132,8 @@ class SearchRepoImpl(
     override fun searchCategory(
         query: String,
         categoryType: CategoryType,
-        itemId: Int
+        itemId: Int,
+        language: LanguageEnum
     ): Flow<PagingData<CategoryData>> {
         val pagingConfig = PagingConfig(pageSize = 10)
         val queryResult = getQueryUseCase(query)
@@ -118,18 +145,20 @@ class SearchRepoImpl(
                 Pager(
                     config = pagingConfig,
                     pagingSourceFactory = {
-                        searchCategoryDao.searchOrdersTrWithClassId(queryInLike, queryForOrder, itemId)
+                        if(language.isEn) searchCategoryDao.searchOrdersEnWithClassId(queryInLike, queryForOrder, itemId) else
+                            searchCategoryDao.searchOrdersTrWithClassId(queryInLike, queryForOrder, itemId)
                     }
-                ).flow.map { items -> items.map { it.toOrder().toCategoryData() } }
+                ).flow.map { items -> items.map { it.toOrder(language).toCategoryData() } }
             }
 
             CategoryType.Order -> {
                 Pager(
                     config = pagingConfig,
                     pagingSourceFactory = {
-                        searchCategoryDao.searchFamiliesTrWithOrderId(queryInLike, queryForOrder, itemId)
+                        if(language.isEn) searchCategoryDao.searchFamiliesEnWithOrderId(queryInLike, queryForOrder, itemId) else
+                            searchCategoryDao.searchFamiliesTrWithOrderId(queryInLike, queryForOrder, itemId)
                     }
-                ).flow.map { items -> items.map { it.toFamily().toCategoryData() } }
+                ).flow.map { items -> items.map { it.toFamily(language).toCategoryData() } }
             }
             else -> flowOf()
         }

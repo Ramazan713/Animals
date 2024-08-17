@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
-import com.masterplus.animals.core.presentation.components.ImageCategoryRow
+import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
 import com.masterplus.animals.core.presentation.components.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
@@ -129,10 +129,10 @@ fun AnimalPage(
 
 
                 item {
-                    ImageCategoryRow(
+                    ImageCategoryDataRow(
                         contentPaddings = contentPaddings,
                         title = "Yaşam Alanları",
-                        items = state.habitats.imageWithTitleModels,
+                        items = state.habitats.categoryDatas,
                         showMore = state.habitats.showMore,
                         onClickItem = { item ->
                             onNavigateToSpeciesList(CategoryType.Habitat, item.id, 0)
@@ -141,10 +141,10 @@ fun AnimalPage(
                 }
 
                 item {
-                    ImageCategoryRow(
+                    ImageCategoryDataRow(
                         contentPaddings = contentPaddings,
                         title = "Sınıflar",
-                        items = state.classes.imageWithTitleModels,
+                        items = state.classes.categoryDatas,
                         showMore = state.classes.showMore,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Class)
@@ -156,10 +156,10 @@ fun AnimalPage(
                 }
 
                 item {
-                    ImageCategoryRow(
+                    ImageCategoryDataRow(
                         contentPaddings = contentPaddings,
                         title = "Takımlar",
-                        items = state.orders.imageWithTitleModels,
+                        items = state.orders.categoryDatas,
                         showMore = state.orders.showMore,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Order)
@@ -171,10 +171,10 @@ fun AnimalPage(
                 }
 
                 item {
-                    ImageCategoryRow(
+                    ImageCategoryDataRow(
                         contentPaddings = contentPaddings,
                         title = "Familyalar",
-                        items = state.families.imageWithTitleModels,
+                        items = state.families.categoryDatas,
                         showMore = state.families.showMore,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Family)
@@ -200,7 +200,7 @@ private fun DailyAnimalsSection(
 ) {
     val dailyAnimalTitleModels = state.dailyAnimals.imageWithTitleModels
     if(dailyAnimalTitleModels.isNotEmpty()){
-        ImageCategoryRow(
+        ImageCategoryDataRow(
             modifier = modifier,
             title = "Günün Hayvanları",
             contentPaddings = contentPaddings
@@ -241,7 +241,7 @@ private fun SavePointSection(
     val savePointsSize = state.savePoints.size
     val savePointsLimited = state.savePoints.subList(0, minOf(maxSavePointsSize,savePointsSize))
 
-    ImageCategoryRow(
+    ImageCategoryDataRow(
         modifier = modifier
             .height(intrinsicSize = IntrinsicSize.Max),
         contentPaddings = contentPaddings,

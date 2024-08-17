@@ -5,7 +5,7 @@ import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
 fun SpeciesEntity.toSpecies(
-    language: LanguageEnum = LanguageEnum.Tr
+    language: LanguageEnum
 ): SpeciesModel {
     val isEn = language.isEn
     return SpeciesModel(

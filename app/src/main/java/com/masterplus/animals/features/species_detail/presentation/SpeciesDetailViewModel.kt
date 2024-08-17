@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.masterplus.animals.core.domain.repo.AnimalRepo
+import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.species_detail.presentation.mapper.toFeatureSection2
 import com.masterplus.animals.features.species_detail.presentation.mapper.toFeatureSection3
 import com.masterplus.animals.features.species_detail.presentation.mapper.toScientificNomenclatureSection
@@ -18,10 +19,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class SpeciesDetailViewModel(
     private val animalRepo: AnimalRepo,
+    private val translationRepo: TranslationRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -31,15 +32,17 @@ class SpeciesDetailViewModel(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            val animalDetail = animalRepo.getAnimalDetailBySpeciesId(args.speciesId)
-            _state.update { it.copy(
-                animalDetail = animalDetail,
-                isLoading = false
-            ) }
-        }
-
+        translationRepo
+            .getFlowLanguage()
+            .onEach { language ->
+                _state.update { it.copy(isLoading = true) }
+                val animalDetail = animalRepo.getAnimalDetailBySpeciesId(args.speciesId, language)
+                _state.update { it.copy(
+                    animalDetail = animalDetail,
+                    isLoading = false
+                ) }
+            }
+            .launchIn(viewModelScope)
         _state
             .map { it.animalDetail }
             .filterNotNull()

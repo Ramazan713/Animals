@@ -8,20 +8,25 @@ import androidx.paging.cachedIn
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
-import com.masterplus.animals.core.shared_features.list.domain.repo.ListSpeciesRepo
-import com.masterplus.animals.core.shared_features.list.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
+import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.species_list.presentation.navigation.SpeciesListRoute
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SpeciesListViewModel(
     private val speciesRepo: SpeciesRepo,
     private val categoryRepo: CategoryRepo,
     private val savePointRepo: SavePointRepo,
+    private val translationRepo: TranslationRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     val args = savedStateHandle.toRoute<SpeciesListRoute>()
@@ -29,19 +34,27 @@ class SpeciesListViewModel(
     private val _state = MutableStateFlow(SpeciesListState())
     val state = _state.asStateFlow()
 
-    val pagingItems = args.let { args->
-        speciesRepo.getPagingSpeciesList(args.categoryType, args.realItemId, 20)
-    }.cachedIn(viewModelScope)
+    val pagingItems = translationRepo
+        .getFlowLanguage()
+        .flatMapLatest { language ->
+            args.let { args ->
+                speciesRepo.getPagingSpeciesList(args.categoryType, args.realItemId, 20, language)
+            }
+        }
+        .cachedIn(viewModelScope)
 
     init {
+        translationRepo
+            .getFlowLanguage()
+            .onEach { language ->
+                val itemId = args.realItemId ?: return@onEach
+                val title = categoryRepo.getCategoryName(args.categoryType, itemId, language) ?: return@onEach
+                _state.update { it.copy(
+                    title = title
+                ) }
+            }
+            .launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            val itemId = args.realItemId ?: return@launch
-            val title = categoryRepo.getCategoryName(args.categoryType, itemId) ?: return@launch
-            _state.update { it.copy(
-                title = title
-            ) }
-        }
         _state.update { it.copy(
             listIdControl = if(args.categoryType == CategoryType.List) args.realItemId else null
         ) }
