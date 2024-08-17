@@ -32,6 +32,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        resourceConfigurations += arrayOf("tr","en")
 
         buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_CLIENT_ID"]}\"")
 

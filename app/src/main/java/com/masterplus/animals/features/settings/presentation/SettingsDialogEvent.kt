@@ -14,4 +14,5 @@ sealed interface SettingsDialogEvent {
 
     data object ShowSelectTheme: SettingsDialogEvent
 
+    data object ShowSelectLanguage: SettingsDialogEvent
 }

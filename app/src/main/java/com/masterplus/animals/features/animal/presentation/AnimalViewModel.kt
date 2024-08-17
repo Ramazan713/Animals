@@ -6,6 +6,7 @@ import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
+import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.animal.domain.repo.DailyAnimalRepo
 import com.masterplus.animals.features.animal.presentation.AnimalAction
 import com.masterplus.animals.features.animal.presentation.AnimalState
@@ -20,7 +21,8 @@ import kotlinx.coroutines.launch
 class AnimalViewModel(
     private val categoryRepo: CategoryRepo,
     private val savePointRepo: SavePointRepo,
-    private val dailyAnimalRepo: DailyAnimalRepo
+    private val dailyAnimalRepo: DailyAnimalRepo,
+    private val translationRepo: TranslationRepo
 ): ViewModel() {
 
     private val _state = MutableStateFlow(AnimalState())
@@ -31,48 +33,47 @@ class AnimalViewModel(
         loadSavePoints()
     }
 
-    fun onAction(action: AnimalAction){
-
-    }
-
-
+    fun onAction(action: AnimalAction){}
 
     private fun loadCategories(){
-        viewModelScope.launch {
-            _state.update { it.copy(
-                isLoading = true
-            ) }
-            val habitats = categoryRepo.getHabitatCategories(CATEGORY_LIMIT)
-                .map { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
-                    CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
-                }
-            val orders = categoryRepo.getOrders(CATEGORY_LIMIT)
-                .map { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
-                    CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
-                }
-            val classes = categoryRepo.getClasses(CATEGORY_LIMIT)
-                .map { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
-                    CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
-                }
-            val families = categoryRepo.getFamilies(CATEGORY_LIMIT)
-                .map { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
-                    CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
-                }
+        translationRepo
+            .getFlowLanguage()
+            .onEach { language->
+                _state.update { it.copy(
+                    isLoading = true
+                ) }
+                val habitats = categoryRepo.getHabitatCategories(CATEGORY_LIMIT)
+                    .map { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
+                        CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
+                    }
+                val orders = categoryRepo.getOrders(CATEGORY_LIMIT)
+                    .map { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
+                        CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
+                    }
+                val classes = categoryRepo.getClasses(CATEGORY_LIMIT)
+                    .map { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
+                        CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
+                    }
+                val families = categoryRepo.getFamilies(CATEGORY_LIMIT)
+                    .map { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
+                        CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
+                    }
 
-            val dailyAnimals = dailyAnimalRepo.getTodayAnimals(3)
-                .mapNotNull { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
-                    CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = false)
-                }
+                val dailyAnimals = dailyAnimalRepo.getTodayAnimals(3, language = language)
+                    .mapNotNull { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
+                        CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = false)
+                    }
 
-            _state.update { it.copy(
-                isLoading = false,
-                habitats = habitats,
-                orders = orders,
-                classes = classes,
-                families = families,
-                dailyAnimals = dailyAnimals
-            ) }
-        }
+                _state.update { it.copy(
+                    isLoading = false,
+                    habitats = habitats,
+                    orders = orders,
+                    classes = classes,
+                    families = families,
+                    dailyAnimals = dailyAnimals
+                ) }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun loadSavePoints(){

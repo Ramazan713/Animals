@@ -1,6 +1,7 @@
 package com.masterplus.animals.features.settings.presentation.sections
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,15 @@ fun GeneralSettingSection(
                     SettingsAction.ShowDialog(SettingsDialogEvent.ShowSelectTheme))
             },
             imageVector = Icons.Default.Palette,
+        )
+        SettingItem(
+            title = "Dil Seç",
+            subTitle = state.language.title.asString(),
+            onClick = {
+                onAction(
+                    SettingsAction.ShowDialog(SettingsDialogEvent.ShowSelectLanguage))
+            },
+            imageVector = Icons.Default.Language,
         )
 
         if(state.themeModel.enabledDynamicColor){

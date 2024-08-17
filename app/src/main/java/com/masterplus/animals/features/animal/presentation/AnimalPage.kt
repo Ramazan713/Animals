@@ -25,10 +25,12 @@ import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryRow
 import com.masterplus.animals.core.presentation.components.ImageWithTitle
@@ -81,7 +83,7 @@ fun AnimalPage(
         topBar = {
             TopAppBar(
                 title = { 
-                    Text(text = "Hayvanlar Alemi")
+                    Text(text = stringResource(id = R.string.animal_kingdom))
                 },
                 actions = {
                     CustomDropdownBarMenu(

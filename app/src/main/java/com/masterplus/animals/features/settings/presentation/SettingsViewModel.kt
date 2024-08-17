@@ -3,14 +3,18 @@ package com.masterplus.animals.features.settings.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.core.shared_features.theme.domain.repo.ThemeRepo
+import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val themeRepo: ThemeRepo,
+    private val translationRepo: TranslationRepo
 ): ViewModel() {
 
     private val _state = MutableStateFlow(SettingsState())
@@ -54,6 +58,12 @@ class SettingsViewModel(
                     themeRepo.updateThemeModel(updatedState.themeModel)
                 }
             }
+
+            is SettingsAction.SetLanguage -> {
+                viewModelScope.launch {
+                    translationRepo.setLanguage(action.language)
+                }
+            }
         }
     }
 
@@ -66,5 +76,15 @@ class SettingsViewModel(
                 )
             }
         }
+
+        translationRepo
+            .getFlowLanguage()
+            .onEach { language->
+                _state.update { it.copy(
+                    language = language
+                ) }
+            }
+            .launchIn(viewModelScope)
+
     }
 }

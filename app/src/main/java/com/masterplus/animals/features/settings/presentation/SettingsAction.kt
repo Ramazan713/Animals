@@ -1,6 +1,7 @@
 package com.masterplus.animals.features.settings.presentation
 
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
+import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
 sealed interface SettingsAction {
 
@@ -12,6 +13,7 @@ sealed interface SettingsAction {
 
     data class SetThemeEnum(val themeEnum: ThemeEnum): SettingsAction
 
+    data class SetLanguage(val language: LanguageEnum): SettingsAction
 
     data object ClearMessage: SettingsAction
 
