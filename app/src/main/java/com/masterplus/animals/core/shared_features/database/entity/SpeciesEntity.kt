@@ -20,9 +20,9 @@ import androidx.room.PrimaryKey
     ]
 )
 data class SpeciesEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
-    val scientific_name: String,
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
+    val scientific_name: String = "",
     val name_en: String = "",
     val name_tr: String = "",
     val genus_id: Int,

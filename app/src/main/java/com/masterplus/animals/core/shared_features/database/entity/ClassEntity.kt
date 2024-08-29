@@ -15,8 +15,8 @@ import androidx.room.PrimaryKey
     ]
 )
 data class ClassEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
     val scientific_name: String,
     val class_en: String,
     val class_tr: String,

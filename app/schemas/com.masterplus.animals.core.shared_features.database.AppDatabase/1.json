@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fe983aebb31f14f37b37d3f02c4fb659",
+    "identityHash": "5639ef6e5bba301235b4b543cddf5863",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -600,13 +600,13 @@
       },
       {
         "tableName": "Classes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `scientific_name` TEXT NOT NULL, `class_en` TEXT NOT NULL, `class_tr` TEXT NOT NULL, `phylum_id` INTEGER NOT NULL, `image_path` TEXT NOT NULL, `image_url` TEXT NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, FOREIGN KEY(`phylum_id`) REFERENCES `Phylums`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `class_en` TEXT NOT NULL, `class_tr` TEXT NOT NULL, `phylum_id` INTEGER NOT NULL, `image_path` TEXT NOT NULL, `image_url` TEXT NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`phylum_id`) REFERENCES `Phylums`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "scientific_name",
@@ -658,7 +658,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
@@ -680,13 +680,13 @@
       },
       {
         "tableName": "Families",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `scientific_name` TEXT NOT NULL, `family_en` TEXT NOT NULL, `family_tr` TEXT NOT NULL, `order_id` INTEGER NOT NULL, `image_path` TEXT NOT NULL, `image_url` TEXT NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, FOREIGN KEY(`order_id`) REFERENCES `Orders`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `family_en` TEXT NOT NULL, `family_tr` TEXT NOT NULL, `order_id` INTEGER NOT NULL, `image_path` TEXT NOT NULL, `image_url` TEXT NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`order_id`) REFERENCES `Orders`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "scientific_name",
@@ -738,7 +738,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
@@ -760,13 +760,13 @@
       },
       {
         "tableName": "Genuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `scientific_name` TEXT NOT NULL, `genus_en` TEXT NOT NULL, `genus_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, FOREIGN KEY(`family_id`) REFERENCES `Families`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `genus_en` TEXT NOT NULL, `genus_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`family_id`) REFERENCES `Families`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "scientific_name",
@@ -806,7 +806,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
@@ -860,13 +860,13 @@
       },
       {
         "tableName": "Orders",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `scientific_name` TEXT NOT NULL, `order_en` TEXT NOT NULL, `order_tr` TEXT NOT NULL, `class_id` INTEGER NOT NULL, `image_path` TEXT NOT NULL, `image_url` TEXT NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, FOREIGN KEY(`class_id`) REFERENCES `Classes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `order_en` TEXT NOT NULL, `order_tr` TEXT NOT NULL, `class_id` INTEGER NOT NULL, `image_path` TEXT NOT NULL, `image_url` TEXT NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`class_id`) REFERENCES `Classes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "scientific_name",
@@ -918,7 +918,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
@@ -940,13 +940,13 @@
       },
       {
         "tableName": "Phylums",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `scientific_name` TEXT NOT NULL, `phylum_en` TEXT NOT NULL, `phylum_tr` TEXT NOT NULL, `kingdom_id` INTEGER NOT NULL, FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `phylum_en` TEXT NOT NULL, `phylum_tr` TEXT NOT NULL, `kingdom_id` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "scientific_name",
@@ -974,7 +974,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
@@ -996,13 +996,13 @@
       },
       {
         "tableName": "Species",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `genus_id` INTEGER NOT NULL, `habitat_category_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, FOREIGN KEY(`genus_id`) REFERENCES `Genuses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`habitat_category_id`) REFERENCES `HabitatCategories`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `genus_id` INTEGER NOT NULL, `habitat_category_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`genus_id`) REFERENCES `Genuses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`habitat_category_id`) REFERENCES `HabitatCategories`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "scientific_name",
@@ -1066,7 +1066,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
@@ -1346,7 +1346,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fe983aebb31f14f37b37d3f02c4fb659')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5639ef6e5bba301235b4b543cddf5863')"
     ]
   }
 }

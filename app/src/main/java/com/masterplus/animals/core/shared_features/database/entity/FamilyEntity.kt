@@ -15,8 +15,8 @@ import androidx.room.PrimaryKey
     ]
 )
 data class FamilyEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
     val scientific_name: String,
     val family_en: String,
     val family_tr: String,

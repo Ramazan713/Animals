@@ -15,8 +15,8 @@ import androidx.room.PrimaryKey
     ]
 )
 data class PhylumEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
     val scientific_name: String,
     val phylum_en: String,
     val phylum_tr: String,
