@@ -7,7 +7,7 @@ data class SpeciesDetail(
     val scientificName: String,
     val genusId: Int,
     val recognitionAndInteraction: Int?,
-    val habitatCategoryId: Int,
+    val habitatCategoryIds: List<Int>,
     val images: List<SpeciesImageModel>,
     val isFavorited: Boolean,
     val isListSelected: Boolean,

@@ -87,7 +87,7 @@ interface SearchSpeciesDao {
 
     @Transaction
     @Query("""
-        select * from species where habitat_category_id = :habitatCategoryId and
+        select * from species S, SpeciesHabitatCategories SHC where S.id = SHC.species_id and SHC.category_id = :habitatCategoryId and
         (scientific_name like :query or name_tr like :query)
         order by case  when scientific_name like :queryOrder then 1 when name_tr like :queryOrder then 2 else 3 end
     """)
@@ -95,7 +95,7 @@ interface SearchSpeciesDao {
 
     @Transaction
     @Query("""
-        select * from species where habitat_category_id = :habitatCategoryId and
+        select * from species S, SpeciesHabitatCategories SHC where S.id = SHC.species_id and SHC.category_id = :habitatCategoryId and
         (scientific_name like :query or name_en like :query)
         order by case  when scientific_name like :queryOrder then 1 when name_en like :queryOrder then 2 else 3 end
     """)

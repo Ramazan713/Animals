@@ -21,8 +21,8 @@ data class FamilyEntity(
     val family_en: String,
     val family_tr: String,
     val order_id: Int,
-    val image_path: String,
-    val image_url: String,
+    val image_path: String?,
+    val image_url: String?,
     val created_at: String,
     val updated_at: String
 )

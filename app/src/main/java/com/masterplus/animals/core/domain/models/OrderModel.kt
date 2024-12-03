@@ -5,6 +5,6 @@ data class OrderModel(
     val scientificName: String,
     val order: String,
     val classId: Int,
-    val imagePath: String,
-    val imageUrl: String
+    val imagePath: String?,
+    val imageUrl: String?
 )

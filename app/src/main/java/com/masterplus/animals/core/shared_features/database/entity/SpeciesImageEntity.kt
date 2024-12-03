@@ -20,7 +20,7 @@ data class SpeciesImageEntity(
     val species_id: Int,
     val name: String?,
     val image_path: String,
-    val image_url: String,
+    val image_url: String?,
     val image_order: Int,
     val created_at: String,
     val updated_at: String

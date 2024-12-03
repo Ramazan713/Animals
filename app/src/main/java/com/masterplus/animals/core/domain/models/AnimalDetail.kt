@@ -8,6 +8,6 @@ data class AnimalDetail(
     val family: FamilyModel,
     val genus: GenusModel,
     val species: SpeciesModel,
-    val habitatCategory: HabitatCategoryModel,
+    val habitatCategories: List<HabitatCategoryModel>,
     val images: List<SpeciesImageModel>
 )

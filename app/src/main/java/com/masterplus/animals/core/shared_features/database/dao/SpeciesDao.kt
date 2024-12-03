@@ -17,7 +17,8 @@ interface SpeciesDao {
 
     @Transaction
     @Query("""
-        select * from species where habitat_category_id = :habitatCategoryId order by id
+        select S.* from species S, SpeciesHabitatCategories SHC
+        where S.id = SHC.species_id and SHC.category_id = :habitatCategoryId order by id
     """)
     fun getPagingSpeciesByHabitatCategoryId(habitatCategoryId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 

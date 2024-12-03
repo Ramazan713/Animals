@@ -45,7 +45,7 @@ fun TitleSectionRow(
                     style = MaterialTheme.typography.titleSmall
                 )
                 Text(
-                    text = titleContent.content,
+                    text = titleContent.content ?: "Empty",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

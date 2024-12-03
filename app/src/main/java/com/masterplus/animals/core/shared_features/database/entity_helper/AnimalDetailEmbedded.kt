@@ -12,6 +12,7 @@ import com.masterplus.animals.core.shared_features.database.entity.HabitatCatego
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.view.SpeciesRelationsView
 
 data class AnimalDetailEmbedded(
@@ -80,10 +81,16 @@ data class AnimalDetailEmbedded(
     val genus: GenusEntity,
 
     @Relation(
-        parentColumn = "habitat_category_id",
+        parentColumn = "id",
         entityColumn = "id",
+        associateBy = Junction(
+            value = SpeciesHabitatCategoryEntity::class,
+            entityColumn = "category_id",
+            parentColumn = "species_id"
+        ),
+        entity = HabitatCategoryEntity::class
     )
-    val habitatCategory: HabitatCategoryEntity,
+    val habitatCategories: List<HabitatCategoryEntity>,
 
     @Relation(
         parentColumn = "id",

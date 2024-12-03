@@ -20,5 +20,7 @@ data class PhylumEntity(
     val scientific_name: String,
     val phylum_en: String,
     val phylum_tr: String,
-    val kingdom_id: Int
+    val kingdom_id: Int,
+    val image_path: String?,
+    val image_url: String?,
 )

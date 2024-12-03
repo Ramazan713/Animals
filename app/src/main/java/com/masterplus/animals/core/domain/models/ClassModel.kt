@@ -5,6 +5,6 @@ data class ClassModel(
     val scientificName: String,
     val className: String,
     val phylumId: Int,
-    val imagePath: String,
-    val imageUrl: String
+    val imagePath: String?,
+    val imageUrl: String?
 )

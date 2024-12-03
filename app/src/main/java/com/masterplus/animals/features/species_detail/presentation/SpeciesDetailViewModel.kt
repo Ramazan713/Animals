@@ -48,7 +48,7 @@ class SpeciesDetailViewModel(
             .filterNotNull()
             .distinctUntilChanged()
             .onEach { animalDetail ->
-                val titleSectionImages = animalDetail.images.takeLastWhile { it.imageOrder > 2 }.map { it.imageUrl }
+                val titleSectionImages = animalDetail.images.takeLastWhile { it.imageOrder > 2 }.mapNotNull { it.imageUrl }
                 _state.update { it.copy(
                     titleSectionModels = animalDetail.animal.toTitleSections(imageUrls = titleSectionImages),
                     scientificNomenclatureSection = animalDetail.toScientificNomenclatureSection(),

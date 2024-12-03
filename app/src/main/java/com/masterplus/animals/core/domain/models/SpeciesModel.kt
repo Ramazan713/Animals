@@ -7,5 +7,4 @@ data class SpeciesModel(
     val scientificName: String,
     val genusId: Int,
     val recognitionAndInteraction: Int?,
-    val habitatCategoryId: Int
 )

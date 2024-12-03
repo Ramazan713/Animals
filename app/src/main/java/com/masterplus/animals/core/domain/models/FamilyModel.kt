@@ -5,6 +5,6 @@ data class FamilyModel(
     val scientificName: String,
     val family: String,
     val orderId: Int,
-    val imagePath: String,
-    val imageUrl: String
+    val imagePath: String?,
+    val imageUrl: String?
 )

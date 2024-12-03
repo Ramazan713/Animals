@@ -47,10 +47,6 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     title = "Beslenme Alışkanlıkları",
                     content = feedingHabits
                 ),
-                TitleContentModel(
-                    title = "Sosyal Yapı ve Davranışlar",
-                    content = socialStructure
-                )
             )
         )
     )
@@ -59,10 +55,6 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
         TitleSectionModel(
             sectionTitle = "İlginç Davranışlar",
             titleContents = listOf(
-                TitleContentModel(
-                    title = "Gözlemlenen İlginç Davranışlar",
-                    content = interestingBehaviors
-                ),
                 TitleContentModel(
                     title = "Etolojik Bilgiler",
                     content = ethologicalInsights
@@ -77,10 +69,6 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
         TitleSectionModel(
             sectionTitle = "Eğlenceli Gerçekler",
             titleContents = listOf(
-                TitleContentModel(
-                    title = "İlginç ve eğlenceli bilgiler",
-                    content = funFacts
-                ),
                 TitleContentModel(
                     title = "Karşılaştırmalı Analiz",
                     content = comparativeAnalysis
@@ -97,10 +85,6 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     title = "Üreme Davranışları",
                     content = reproductiveBehaviors
                 ),
-                TitleContentModel(
-                    title = "Yavru Gelişimi",
-                    content = developmentStages
-                )
             )
         )
     )
@@ -147,10 +131,6 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = culturalSignificance
                 ),
                 TitleContentModel(
-                    title = "Ekonomik ve Bilimsel Önemi",
-                    content = economicImportance
-                ),
-                TitleContentModel(
                     title = "Günümüz Algısı",
                     content = modernDayPerception
                 )
@@ -176,7 +156,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
 
     return titleSections.mapNotNull { titleSection ->
         val newTitleContents = titleSection.titleContents.mapNotNull { titleContent ->
-            if(titleContent.content.isBlank()) null
+            if(titleContent.content.isNullOrBlank()) null
             else titleContent
         }
         if(newTitleContents.isEmpty()) return@mapNotNull null
@@ -234,20 +214,13 @@ fun AnimalDetail.toScientificNomenclatureSection(): List<TitleContentModel>{
     )
 
     return titleContents.mapNotNull { titleContent ->
-        if(titleContent.content.isBlank()) return@mapNotNull null
+        if(titleContent.content.isNullOrBlank()) return@mapNotNull null
         titleContent
     }
 }
 
 fun AnimalDetail.toFeatureSection2(): List<TitleContentModel>{
     val titleContents = mutableListOf<TitleContentModel>()
-
-    titleContents.add(
-        TitleContentModel(
-            title = "Yaşam Alanı",
-            content = habitatCategory.habitatCategory
-        )
-    )
 
     titleContents.add(
         TitleContentModel(
@@ -270,7 +243,7 @@ fun AnimalDetail.toFeatureSection2(): List<TitleContentModel>{
         )
     )
     return titleContents.mapNotNull { titleContent ->
-        if(titleContent.content.isBlank()) return@mapNotNull null
+        if(titleContent.content.isNullOrBlank()) return@mapNotNull null
         titleContent
     }
 }
@@ -282,45 +255,11 @@ fun Animal.toFeatureSection3(): List<TitleContentModel>{
 
     titleContents.add(
         TitleContentModel(
-            title = "Habitat",
-            content = habitat
-        )
-    )
-
-    titleContents.add(
-        TitleContentModel(
-            title = "Ekosistem",
-            content = ecosystemCategory
-        )
-    )
-
-    titleContents.add(
-        TitleContentModel(
             title = "Beslenme",
             content = feeding
         )
     )
 
-    titleContents.add(
-        TitleContentModel(
-            title = "Sosyal Yapı",
-            content = socialStructureSimple
-        )
-    )
-
-    titleContents.add(
-        TitleContentModel(
-            title = "Üreme Davranışları",
-            content = reproductiveSimple
-        )
-    )
-
-    titleContents.add(
-        TitleContentModel(
-            title = "Yavruların Gelişimi",
-            content = developmentSimple
-        )
-    )
 
     titleContents.add(
         TitleContentModel(
@@ -329,21 +268,8 @@ fun Animal.toFeatureSection3(): List<TitleContentModel>{
         )
     )
 
-    titleContents.add(
-        TitleContentModel(
-            title = "Kültürel Önemi",
-            content = culturalSimple
-        )
-    )
-
-    titleContents.add(
-        TitleContentModel(
-            title = "Ekonomik Önemi",
-            content = economicSimple
-        )
-    )
     return titleContents.mapNotNull { titleContent ->
-        if(titleContent.content.isBlank()) return@mapNotNull null
+        if(titleContent.content.isNullOrBlank()) return@mapNotNull null
         titleContent
     }
 }

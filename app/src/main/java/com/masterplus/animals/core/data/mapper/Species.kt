@@ -14,7 +14,6 @@ fun SpeciesEntity.toSpecies(
         introduction = if(isEn) introduction_en else introduction_tr,
         scientificName = scientific_name,
         genusId = genus_id,
-        recognitionAndInteraction = recognition_and_interaction,
-        habitatCategoryId = habitat_category_id
+        recognitionAndInteraction = recognition_and_interaction
     )
 }

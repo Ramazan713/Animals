@@ -20,7 +20,7 @@ fun AnimalDetailEmbedded.toAnimalDetail(
         family = family.toFamily(language),
         genus = genus.toGenus(language),
         species = species.toSpecies(language),
-        habitatCategory = habitatCategory.toHabitatCategory(language),
-        images = images.map { it.toAnimalImage() }
+        habitatCategories = habitatCategories.map { it.toHabitatCategory(language) },
+        images = images.map { it.toSpeciesImage() }
     )
 }

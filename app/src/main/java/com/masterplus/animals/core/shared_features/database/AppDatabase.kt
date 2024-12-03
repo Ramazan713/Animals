@@ -23,8 +23,10 @@ import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEn
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
+import com.masterplus.animals.core.shared_features.database.entity.PlantEntity
 import com.masterplus.animals.core.shared_features.database.entity.SavePointEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.view.ListViewEntity
 import com.masterplus.animals.core.shared_features.database.view.SpeciesRelationsView
 import com.masterplus.trdictionary.core.data.local.services.ListViewDao
@@ -35,7 +37,7 @@ import com.masterplus.trdictionary.core.data.local.services.ListViewDao
         KingdomEntity::class, AnimalEntity::class, SpeciesImageEntity::class, ClassEntity::class, FamilyEntity::class,
         GenusEntity::class, HabitatCategoryEntity::class, OrderEntity::class, PhylumEntity::class,
         SpeciesEntity::class, ListEntity::class, ListSpeciesEntity::class,
-        SavePointEntity::class, HistoryEntity::class
+        SavePointEntity::class, HistoryEntity::class, PlantEntity::class, SpeciesHabitatCategoryEntity::class
     ],
     views = [
         ListViewEntity::class, SpeciesRelationsView::class

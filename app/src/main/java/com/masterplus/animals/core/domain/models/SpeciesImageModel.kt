@@ -5,7 +5,7 @@ data class SpeciesImageModel(
     val speciesId: Int,
     val name: String?,
     val imagePath: String,
-    val imageUrl: String,
+    val imageUrl: String?,
     val imageOrder: Int,
     val createdAt: String,
     val updatedAt: String

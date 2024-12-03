@@ -13,9 +13,9 @@ import androidx.room.PrimaryKey
             childColumns = arrayOf("genus_id"),
         ),
         ForeignKey(
-            entity = HabitatCategoryEntity::class,
+            entity = KingdomEntity::class,
             parentColumns = ["id"],
-            childColumns = ["habitat_category_id"],
+            childColumns = ["kingdom_id"],
         ),
     ]
 )
@@ -26,7 +26,7 @@ data class SpeciesEntity(
     val name_en: String = "",
     val name_tr: String = "",
     val genus_id: Int,
-    val habitat_category_id: Int,
+    val kingdom_id: Int,
     val introduction_en: String = "",
     val introduction_tr: String = "",
     val recognition_and_interaction: Int?,

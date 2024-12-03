@@ -17,10 +17,10 @@ fun SpeciesDetailEmbedded.toSpeciesDetail(
             scientificName = scientific_name,
             genusId = genus_id,
             recognitionAndInteraction = recognition_and_interaction,
-            habitatCategoryId = habitat_category_id,
+            habitatCategoryIds = habitatCategories.mapNotNull { it.id },
             isFavorited = listsIsRemovable.any { !it },
             isListSelected = listsIsRemovable.any { it },
-            images = images.map { it.toAnimalImage() }
+            images = images.map { it.toSpeciesImage() }
         )
     }
 }

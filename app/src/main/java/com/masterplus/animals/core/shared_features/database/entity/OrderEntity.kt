@@ -21,8 +21,8 @@ data class OrderEntity(
     val order_en: String,
     val order_tr: String,
     val class_id: Int,
-    val image_path: String,
-    val image_url: String,
+    val image_path: String?,
+    val image_url: String?,
     val created_at: String,
     val updated_at: String
 )

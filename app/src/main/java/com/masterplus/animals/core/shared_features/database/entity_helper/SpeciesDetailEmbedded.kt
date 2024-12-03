@@ -3,9 +3,11 @@ package com.masterplus.animals.core.shared_features.database.entity_helper
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 
 data class SpeciesDetailEmbedded(
@@ -16,6 +18,18 @@ data class SpeciesDetailEmbedded(
         entityColumn = "species_id"
     )
     val images: List<SpeciesImageEntity>,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = SpeciesHabitatCategoryEntity::class,
+            entityColumn = "category_id",
+            parentColumn = "species_id"
+        ),
+        entity = HabitatCategoryEntity::class
+    )
+    val habitatCategories: List<HabitatCategoryEntity>,
 
     @Relation(
         parentColumn = "id",

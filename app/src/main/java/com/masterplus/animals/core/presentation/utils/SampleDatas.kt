@@ -10,6 +10,7 @@ import com.masterplus.animals.core.domain.models.GenusModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.models.PhylumModel
+import com.masterplus.animals.core.domain.models.Plant
 import com.masterplus.animals.core.domain.models.SpeciesDetail
 import com.masterplus.animals.core.domain.models.SpeciesImageModel
 import com.masterplus.animals.core.domain.models.SpeciesModel
@@ -68,7 +69,9 @@ object SampleDatas {
         id = 2,
         scientificName = "Arthropoda",
         phylum = "Arthropoda",
-        kingdomId = 1
+        kingdomId = 1,
+        imageUrl = "",
+        imagePath = ""
     )
     val classModel = ClassModel(
         id = 2,
@@ -108,9 +111,8 @@ object SampleDatas {
         scientificName = "Apis mellifera",
         introduction="Arılar, dünya genelinde tarımın ve doğal ekosistemlerin sürdürülebilirliği için hayati öneme sahip polinatörlerdir. Bal üretimi ile tanınsalar da, bitkilerin tozlaşmasını sağlayarak birçok meyve ve sebzenin oluşmasında kritik rol oynarlar. Arılar, karmaşık sosyal yapıları ve etkileyici iş bölümleriyle de dikkat çekerler. Özellikle bal arıları, ürettikleri bal ve balmumu ile insanlık için ekonomik değere sahiptir.",
         name ="Bal Arısı",
-        habitatCategoryId=1,
+        recognitionAndInteraction = 4,
         genusId=2,
-        recognitionAndInteraction=8,
     )
 
     val habitatCategory = HabitatCategoryModel(
@@ -135,44 +137,68 @@ object SampleDatas {
         id=2,
         species = species,
         images = listOf(speciesImageModel),
-        physicalCharacteristics="Bal arıları, sarı ve siyah çizgili vücutları ve kıllı yapıları ile tanınırlar. Kanatları saydamdır ve vücutlarının arka kısmında bir iğne bulunur. İşçi arılar, kraliçeye göre daha küçük olup, yaklaşık 12-15 mm uzunluğundadır. Kraliçe arı ise yaklaşık 20 mm uzunluğunda olabilir.",
-        naturalHabitat="Arılar, ormanlar, bahçeler, tarım alanları ve hatta şehirlerdeki parklarda ve bahçelerde yaşarlar. Çiçekli bitkilerin bol olduğu bölgelerde yoğun olarak bulunurlar.",
-        ecosystem="Arılar, polinatör olarak ekosistemlerin sağlığı için kritik bir rol oynar. Çiçekli bitkilerin tozlaşmasını sağlayarak bitkilerin üremesine yardımcı olurlar, bu da gıda zincirinin temelini oluşturur.",
-        feedingHabits="Arılar, nektar ve polen ile beslenirler. Nektar, enerji sağlamak için şeker içerirken, polen protein ve diğer besin maddeleri sağlar. İşçi arılar, bu kaynakları toplamak için çiçeklere uçar ve böylece tozlaşma sürecine katkıda bulunurlar.",
-        socialStructure="Bal arıları, oldukça organize kolonilerde yaşar. Bir kolonide bir kraliçe, binlerce işçi arı ve birkaç yüz erkek arı (drone) bulunur. Kraliçe arı, yumurtlama göreviyle koloninin devamlılığını sağlar, işçi arılar ise yiyecek toplama, yavru bakımı ve kovanın temizliği gibi görevleri üstlenir.",
-        reproductiveBehaviors="Kraliçe arı, koloninin tek yumurtlayan bireyidir ve hayatı boyunca milyonlarca yumurta bırakabilir. Erkek arılar kraliçe ile çiftleşir, ardından genellikle ölürler. Kraliçe arı, döllenmiş yumurtalardan işçi arılar ve yeni kraliçeler, döllenmemiş yumurtalardan ise erkek arılar üretir.",
-        developmentStages="Yumurtadan çıkan larvalar, işçi arılar tarafından beslenir ve bakılır. Larvalar birkaç kez deri değiştirir ve sonunda pupaya dönüşür. Birkaç gün içinde yetişkin bir arı olarak kovandan çıkarlar ve çalışmaya başlarlar.",
-        soundsProduced="Arılar, kovan içinde vızıltı şeklinde sesler çıkararak iletişim kurarlar. Ayrıca, kraliçe arının özel bir sesi olan 'piping' sesi, kovan içindeki diğer arılar için önemli sinyaller taşır.",
-        communicationMethods="Arılar, dans dili adı verilen karmaşık hareketlerle iletişim kurarlar. Özellikle işçi arılar, diğer arılara nektar kaynaklarının yerini tarif etmek için 'wagtail dansı' yaparlar. Bu dans, nektar kaynağının uzaklığı ve yönü hakkında bilgi verir.",
-        threats="Arılar, pestisitler, habitat kaybı, hastalıklar ve parazitler nedeniyle tehdit altındadır. Özellikle varroa akarı ve koloni çöküş bozukluğu, arı popülasyonları üzerinde büyük bir etkiye sahiptir.",
-        conservationEfforts="Arıların korunması için çeşitli çabalar yürütülmektedir. Organik tarım yöntemlerinin teşvik edilmesi, pestisit kullanımının azaltılması ve arı habitatlarının korunması, bu çabalar arasında yer almaktadır.",
-        culturalSignificance="Arılar, binlerce yıldır insanlar için önemli bir yer tutmuştur. Antik Mısır'dan Yunan mitolojisine kadar, arılar pek çok kültürde simgesel bir öneme sahiptir. Bal, hem gıda hem de ilaç olarak kullanılmıştır.",
-        economicImportance="Bal arıları, tarımsal üretim için kritik bir rol oynar. Tozlaşma, birçok meyve ve sebzenin verimliliğini artırır. Ayrıca, bal ve balmumu üretimi, arıcılık sektörünün ekonomik değerini oluşturur. Bilimsel araştırmalar, arıların davranışları ve ekolojisi hakkında önemli bilgiler sağlamaktadır.",
-        environmentalAdaptations="Arılar, karmaşık görme yetenekleri ve hassas antenleri sayesinde çiçekleri kolayca bulabilirler. Ayrıca, kovanlarını korumak ve sıcaklık düzenlemesi yapmak için etkili yöntemler geliştirmişlerdir.",
-        evolutionaryProcesses="Arılar, sosyal davranışları ve iş bölümü ile evrimsel bir başarı örneğidir. Milyonlarca yıl süren evrimsel süreçte, karmaşık sosyal yapıları ve polinasyon becerileri sayesinde hayatta kalmayı başarmışlardır.",
-        interestingBehaviors="Arılar, dans dili ile iletişim kurarak diğer arılara nektar ve polen kaynaklarını tarif ederler. Ayrıca, kovan savunması sırasında topluca saldırıya geçer ve düşmanlarına karşı kendilerini savunurlar.",
-        funFacts="Bir arı, hayatı boyunca yaklaşık bir çay kaşığı bal üretebilir. Ayrıca, arılar geri geri uçabilen nadir böceklerdendir ve dans ederek mesafe ve yön bilgisini aktarabilirler.",
-        size="12-20 mm",
-        weight="0.1 gram",
-        color="Sarı ve siyah çizgili",
-        habitat="Ormanlar, bahçeler, tarım alanları",
-        ecosystemCategory="Çiçekli bitkilerin bulunduğu alanlar",
-        feeding="Nektar ve polen",
-        socialStructureSimple="Sosyal, koloniler halinde yaşar",
-        reproductiveSimple="Kraliçe arı yumurtlar, erkek arılar çiftleşir",
-        developmentSimple="Larvalar beslenir ve pupaya dönüşür",
-        sounds="Vızıltı, piping",
-        communication="Dans dili, vızıltı",
-        threatsSimple="Pestisitler, habitat kaybı, hastalıklar",
-        conservationStatus="Tehdit altında",
-        culturalSimple="Mitoloji ve folklorda önemli yer tutar",
-        economicSimple="Tozlaşma ve bal üretimi",
-        adaptation="Karmaşık görme ve anten kullanımı",
-        evolution="Sosyal yapı ve iş bölümü",
-        comparativeAnalysis = "Bal arıları, diğer tozlayıcılardan (örneğin, kelebekler) farklı olarak, poleni taşımak için özel olarak evrimleşmiş vücut yapılarıyla dikkat çekerler. Ayrıca, diğer arı türlerinden daha karmaşık bir sosyal yapıya sahiptirler.",
-        conservationChallenges = "",
-        modernDayPerception = "",
-        ethologicalInsights = ""
+        size = "1.2 meters at the shoulder",
+        weight = "150-250 kg (males), 120-182 kg (females)",
+        color = "Golden to tawny, with a black mane in males",
+        feeding = "Carnivore",
+        threats = "Habitat loss, human-wildlife conflict, poaching",
+        conservationStatus = "Vulnerable (IUCN)",
+        culturalSignificance = "Symbol of strength and royalty",
+        physicalCharacteristics = "Lions are large, muscular cats with a well-defined physique. Males typically weigh between 150-250 kg and stand about 1.2 meters at the shoulder, while females are slightly smaller, weighing 120-182 kg. The most distinctive feature of male lions is their mane, which varies in color from blonde to black and serves as a sign of maturity and health.",
+        naturalHabitat = "Lions primarily inhabit savanna and grassland ecosystems. They prefer open plains with some dense bush or waterholes where prey is abundant.",
+        ecosystem = "African savannas and grasslands.",
+        feedingHabits = "Lions are carnivorous and primarily hunt large ungulates such as zebras, wildebeests, and buffaloes. They usually hunt in groups, with females doing most of the hunting and males protecting the pride's territory.",
+        socialStructureAndBehaviors = "Lions are unique among big cats for their social structure, living in prides that typically consist of several related females, their offspring, and a small number of adult males. This social organization provides advantages in hunting and territory defense.",
+        reproductiveBehaviors = "Females in a pride typically synchronize their reproductive cycles, allowing them to give birth to cubs around the same time. Males do not participate in raising cubs; their role is mainly to protect the pride.",
+        developmentOfTheYoung = "Lion cubs are born blind and rely on their mothers for care and protection. They begin to accompany the pride on hunts by the age of 2-3 years and leave the pride to establish their own territories around 2-3 years of age.",
+        soundsProduced = "Lions are known for their powerful roars, which can be heard over long distances and are used to communicate between prides and establish territory. They also make a variety of other sounds, including growls, grunts, and purrs, for different social interactions.",
+        communicationMethods = "Lions use vocalizations, body language, and scent marking to communicate with each other. Roaring is the most significant method of long-distance communication, while close-range interactions involve physical contact and various vocalizations.",
+        threatsAndDangers = "Lions face several threats, including habitat loss due to human encroachment, reduction of prey species, and conflict with humans. In some areas, they are also targeted by poachers and are affected by diseases such as canine distemper.",
+        conservationEfforts = "Conservation efforts for lions include the establishment of protected areas, wildlife reserves, and national parks. Efforts are also being made to mitigate human-wildlife conflict and reduce poaching through community-based conservation programs.",
+        conservationChallenges = "The main challenges to lion conservation include the fragmentation of their habitats, the decline of prey animals, and ongoing human-wildlife conflict. Ensuring a stable and sufficient population of lions requires effective management of their habitats and conservation programs.",
+        culturalAndHistoricalSignificance = "Lions have been revered and symbolized power, courage, and royalty in many cultures throughout history. They are often depicted in art, literature, and mythology and have a significant cultural presence in various societies.",
+        economicAndScientificImportance = "Lions are an important species for wildlife tourism, attracting tourists to national parks and reserves. They are also subjects of scientific research, particularly in studies of animal behavior, social structures, and conservation biology.",
+        modernDayPerception = "Today, lions are viewed as symbols of wildlife conservation efforts. Despite their popularity, their conservation status remains critical, and they are often featured in campaigns aimed at raising awareness about endangered species.",
+        environmentalAdaptations = "Lions are well adapted to life in the savanna with their keen eyesight, powerful muscles, and social hunting strategies. Their golden coats provide camouflage in the grasslands, and their roars are adapted for long-distance communication.",
+        evolutionaryProcesses = "The evolution of lions has involved the development of social behavior and dominance hierarchies that are unique among big cats. Over millions of years, lions have adapted to various environments across Africa and parts of Asia, although modern lions are primarily confined to Africa.",
+        observedInterestingBehaviors = "Lions are known for their cooperative hunting behavior, which includes strategic planning and teamwork among pride members. Males are also known to engage in 'coalition' behavior, where brothers or related males work together to control and defend a territory.",
+        ethologicalInsights = "Ethological studies have revealed that the social structure of lion prides is highly complex, with intricate relationships and roles among members. Research has also shown that female lions often exhibit higher levels of cooperation and social bonding than males.",
+        interestingAndFunFacts = "A lion's roar can be heard up to 8 kilometers (5 miles) away. Male lions typically spend around 20 hours a day resting and sleeping, while females are more active in hunting and caring for cubs.",
+        comparativeAnalysis = "Compared to other big cats, lions are unique in their social behavior. While most big cats are solitary, lions' pride structure allows them to tackle larger prey and defend their territory more effectively together.",
+        roleInEcosystem = "As apex predators, lions play a crucial role in maintaining the balance of their ecosystems by controlling the population of herbivores. This helps to prevent overgrazing and supports the health of their habitat."
+    )
+
+    val plant = Plant(
+        id = 5,
+        species = species,
+        images = listOf(speciesImageModel),
+        size = "1-3 meters in height",
+        color = "Pale pink flowers, red hips",
+        floweringTime = "May to June",
+        culturalImportance = "Valued for fragrance and beauty in gardens",
+        conservationStatus = "Not endangered, may be invasive",
+        medicinalBenefits = "High in vitamin C, immune support",
+        potentialHarm = "Digestive discomfort from excessive consumption",
+        physicalCharacteristics = "Thorny stems, soft green leaves with apple-like scent, pink to light red flowers, red hips",
+        naturalHabitat = "Temperate regions including woodland edges, hedgerows, and scrubland",
+        ecosystem = "Temperate, terrestrial",
+        growthConditions = "Grows best in well-drained soils and full sun but can tolerate a range of soil types",
+        developmentProcess = "Develops thorny stems and fragrant leaves; flowering occurs in late spring to early summer",
+        floweringTimeAndCharacteristics = "Flowers from May to June, producing fragrant, pale pink to light red blossoms",
+        reproductionMethods = "Reproduces sexually through seeds and asexually through suckering and layering",
+        roleInEcosystem = "Provides food and habitat for various wildlife, including pollinators and seed dispersers",
+        economicValue = "Used in herbal medicine and traditional remedies; valued for ornamental qualities",
+        environmentalAdaptations = "Adapted to drought and poor soils; thorny stems deter herbivores",
+        evolutionaryProcesses = "Adapted to temperate regions with thorny stems, fragrant leaves, and seed-dispersing hips",
+        culturalContext = "Symbolizes love and friendship; featured in folklore",
+        historicalUsage = "Historically used in traditional medicine for its antiseptic and vitamin-rich properties",
+        threatsAndDangers = "Not endangered but can be invasive, outcompeting native flora",
+        conservationEfforts = "Regular management recommended in areas where it is invasive",
+        medicinalUsesAndBenefits = "Hips are high in vitamin C and used to boost the immune system",
+        potentialHarmAndSideEffects = "May cause digestive discomfort if consumed in excess",
+        noteworthyCharacteristics = "Apple-scented leaves and attractive red hips, especially in autumn",
+        surprisingFacts = "Red hips remain on the plant even in winter, providing food for wildlife",
+        interestingAndFunFacts = "A single cup of rosehip tea can contain 10 times more vitamin C than an orange"
     )
 
     val animalDetail = AnimalDetail(
@@ -183,7 +209,7 @@ object SampleDatas {
         family = family,
         genus = genus,
         species = species,
-        habitatCategory = habitatCategory,
+        habitatCategories = listOf(habitatCategory),
         images = listOf(animalImage, animalImage, animalImage)
     )
 
@@ -192,11 +218,11 @@ object SampleDatas {
         titleContents = listOf(
             TitleContentModel(
                 title = "Doğal Habitat",
-                content = animal.naturalHabitat
+                content = animal.naturalHabitat ?: ""
             ),
             TitleContentModel(
                 title = "Ekosistem",
-                content = animal.ecosystem
+                content = animal.ecosystem ?: ""
             )
         ),
         imageUrl = imageUrl
@@ -245,7 +271,7 @@ object SampleDatas {
             images = imageUrls,
             isFavorited = isFavorited,
             isListSelected = isListSelected,
-            habitatCategoryId = habitatCategoryId,
+            habitatCategoryIds = listOf(habitatCategoryId),
             recognitionAndInteraction = 1,
             genusId = 1
         )

@@ -46,7 +46,7 @@ fun ImageWithTitle(
     order: Int? = null
 ){
     ImageWithTitle(
-        imageData = model.imageUrl,
+        imageData = model.imageUrl ?: "",
         title = model.title,
         modifier = modifier,
         subTitle = model.secondaryTitle,
@@ -70,7 +70,7 @@ fun ImageWithTitle(
     order: Int? = null
 ){
     ImageWithTitle(
-        imageData = model.imageUrl,
+        imageData = model.imageUrl ?: "",
         title = model.title,
         modifier = modifier,
         subTitle = model.subTitle,

@@ -24,7 +24,7 @@ fun TitleContentInfo(
             style = MaterialTheme.typography.labelLarge
         )
         Text(
-            text = titleContent.content,
+            text = titleContent.content ?: "Empty",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.typography.bodyMedium.color.copy(alpha = 0.7f)
             )
