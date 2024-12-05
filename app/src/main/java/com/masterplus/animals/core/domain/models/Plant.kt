@@ -31,4 +31,6 @@ data class Plant(
     val noteworthyCharacteristics: String?,
     val surprisingFacts: String?,
     val interestingAndFunFacts: String?
-)
+){
+    val imageUrls get() = images.mapNotNull { it.imageUrl }
+}

@@ -4,12 +4,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.LocalFlorist
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.LocalFlorist
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.masterplus.animals.features.animal.presentation.navigation.AnimalRoute
 import com.masterplus.animals.features.list.presentation.show_list.navigation.ShowListRoute
+import com.masterplus.animals.features.plant.presentation.navigation.PlantRoute
 
 sealed class AppNavRoute(
     val route: Any,
@@ -23,6 +24,13 @@ sealed class AppNavRoute(
         selectedIconVector = Icons.Filled.Home,
         unSelectedIconVector = Icons.Outlined.Home,
         title = "Animal"
+    )
+
+    data object Plant: AppNavRoute(
+        route = PlantRoute,
+        selectedIconVector = Icons.Filled.LocalFlorist,
+        unSelectedIconVector = Icons.Outlined.LocalFlorist,
+        title = "Plant"
     )
 
     data object Lists: AppNavRoute(
@@ -40,5 +48,5 @@ sealed class AppNavRoute(
 }
 
 val kBottomBarRoutes = listOf(
-   AppNavRoute.Animal,  AppNavRoute.Lists
+   AppNavRoute.Animal,  AppNavRoute.Plant, AppNavRoute.Lists
 )

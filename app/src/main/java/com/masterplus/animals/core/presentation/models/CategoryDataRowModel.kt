@@ -1,10 +1,9 @@
-package com.masterplus.animals.features.animal.presentation.models
+package com.masterplus.animals.core.presentation.models
 
 import com.masterplus.animals.core.domain.models.CategoryData
-import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 
 data class CategoryDataRowModel(
-    val categoryDatas: List<CategoryData> = emptyList(),
+    val categoryDataList: List<CategoryData> = emptyList(),
     val showMore: Boolean = false
 )
 

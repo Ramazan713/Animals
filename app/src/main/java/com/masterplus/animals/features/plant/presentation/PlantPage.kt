@@ -1,7 +1,7 @@
-package com.masterplus.animals.features.animal.presentation
+package com.masterplus.animals.features.plant.presentation
 
 
-import AnimalViewModel
+import PlantViewModel
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -40,14 +40,14 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItemDefaults
-import com.masterplus.animals.features.animal.domain.enums.AnimalTopBarMenu
 import com.masterplus.animals.features.animal.presentation.navigation.ItemId
+import com.masterplus.animals.features.plant.domain.enums.PlantTopBarMenu
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AnimalPageRoot(
-    viewModel: AnimalViewModel = koinViewModel(),
-    onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
+fun PlantPageRoot(
+    viewModel: PlantViewModel = koinViewModel(),
+    onNavigateToCategoryListWithDetail: (CategoryType, Int) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
@@ -55,7 +55,7 @@ fun AnimalPageRoot(
     onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    AnimalPage(
+    PlantPage(
         state = state,
         onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
         onNavigateToCategoryList = onNavigateToCategoryList,
@@ -69,8 +69,8 @@ fun AnimalPageRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AnimalPage(
-    state: AnimalState,
+fun PlantPage(
+    state: PlantState,
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
@@ -83,14 +83,14 @@ fun AnimalPage(
         topBar = {
             TopAppBar(
                 title = { 
-                    Text(text = stringResource(id = R.string.animal_kingdom))
+                    Text(text = stringResource(id = R.string.plant_kingdom))
                 },
                 actions = {
                     CustomDropdownBarMenu(
-                        items = AnimalTopBarMenu.entries,
+                        items = PlantTopBarMenu.entries,
                         onItemChange = { menuItem ->
                             when(menuItem){
-                                AnimalTopBarMenu.Settings -> onNavigateToSettings()
+                                PlantTopBarMenu.Settings -> onNavigateToSettings()
                             }
                         }
                     )
@@ -109,7 +109,7 @@ fun AnimalPage(
             ) {
 
                 item {
-                    DailyAnimalsSection(
+                    DailyPlantsSection(
                         state = state,
                         contentPaddings = contentPaddings,
                         onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
@@ -192,35 +192,35 @@ fun AnimalPage(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DailyAnimalsSection(
-    state: AnimalState,
+private fun DailyPlantsSection(
+    state: PlantState,
     contentPaddings: PaddingValues,
     onNavigateToSpeciesDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val dailyAnimalTitleModels = state.dailyAnimals.imageWithTitleModels
-    if(dailyAnimalTitleModels.isNotEmpty()){
+    val dailyPlantTitleModels = state.dailyPlants.imageWithTitleModels
+    if(dailyPlantTitleModels.isNotEmpty()){
         ImageCategoryDataRow(
             modifier = modifier,
-            title = "Günün Hayvanları",
+            title = "Günün Bitkileri",
             contentPaddings = contentPaddings
         ){
             HorizontalUncontainedCarousel(
                 state = rememberCarouselState {
-                    dailyAnimalTitleModels.size
+                    dailyPlantTitleModels.size
                 },
                 itemSpacing = 4.dp,
                 itemWidth = 250.dp,
                 contentPadding = contentPaddings
             ) { index ->
-                val animalData = dailyAnimalTitleModels[index]
+                val plantData = dailyPlantTitleModels[index]
                 ImageWithTitle(
-                    imageData = animalData.imageUrl ?: "",
+                    imageData = plantData.imageUrl ?: "",
                     onClick = {
-                        onNavigateToSpeciesDetail(animalData.id ?: return@ImageWithTitle)
+                        onNavigateToSpeciesDetail(plantData.id ?: return@ImageWithTitle)
                     },
-                    title = animalData.title,
-                    subTitle = animalData.subTitle,
+                    title = plantData.title,
+                    subTitle = plantData.subTitle,
                     size = DpSize(250.dp,250.dp),
                     shape = RoundedCornerShape(16.dp)
                 )
@@ -231,7 +231,7 @@ private fun DailyAnimalsSection(
 
 @Composable
 private fun SavePointSection(
-    state: AnimalState,
+    state: PlantState,
     contentPaddings: PaddingValues,
     onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
@@ -285,9 +285,9 @@ private fun SavePointSection(
 
 @Preview(showBackground = true)
 @Composable
-fun AnimalPagePreview() {
-    AnimalPage(
-        state = AnimalState(
+fun PlantPagePreview() {
+    PlantPage(
+        state = PlantState(
             isLoading = false,
             savePoints = listOf(SampleDatas.generateSavePoint(), SampleDatas.generateSavePoint(id = 2).copy(title = "Title"))
         ),

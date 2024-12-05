@@ -24,6 +24,8 @@ import com.masterplus.animals.features.species_detail.presentation.di.speciesDet
 import com.masterplus.animals.features.species_list.presentation.di.speciesListPresentationModule
 import com.masterplus.animals.features.category_list.presentation.di.categoryListPresentationModule
 import com.masterplus.animals.features.list.presentation.di.showListPresentationModule
+import com.masterplus.animals.features.plant.data.di.plantDataModule
+import com.masterplus.animals.features.plant.presentation.di.plantPresentationModule
 import com.masterplus.animals.features.savepoints.presentation.di.savePointsPresentationModule
 import com.masterplus.animals.features.search.data.di.searchDataModule
 import com.masterplus.animals.features.search.domain.di.searchDomainModule
@@ -46,7 +48,7 @@ class AnimalsApp: Application() {
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule,
                 authDataModule, authDomainModule, authPresentationModule, settingsPresentationModule,
                 searchPresentationModule, searchDataModule, searchDomainModule,
-                translationDataModule, translationPresentationModule
+                translationDataModule, translationPresentationModule, plantDataModule, plantPresentationModule
             )
         }
     }

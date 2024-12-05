@@ -31,12 +31,13 @@ import com.masterplus.animals.features.category_list.presentation.navigation.nav
 import com.masterplus.animals.features.list.presentation.archive_list.navigation.archiveList
 import com.masterplus.animals.features.list.presentation.archive_list.navigation.navigateToArchiveList
 import com.masterplus.animals.features.list.presentation.show_list.navigation.showList
+import com.masterplus.animals.features.plant.presentation.navigation.plant
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.navigateToShowSavePoints
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.showSavePoints
-import com.masterplus.animals.features.search.presentation.navigation.searchCategory
-import com.masterplus.animals.features.search.presentation.navigation.searchSpecies
 import com.masterplus.animals.features.search.presentation.navigation.navigateToSearchCategory
 import com.masterplus.animals.features.search.presentation.navigation.navigateToSearchSpecies
+import com.masterplus.animals.features.search.presentation.navigation.searchCategory
+import com.masterplus.animals.features.search.presentation.navigation.searchSpecies
 import com.masterplus.animals.features.settings.presentation.navigation.linkAccounts
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToLinkAccounts
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToSettings
@@ -102,6 +103,27 @@ fun MyApp(
             startDestination = AnimalRoute
         ){
             animal(
+                onNavigateToCategoryList = { categoryType ->
+                    navHostController.navigateToCategoryList(categoryType)
+                },
+                onNavigateToCategoryListWithDetail = { categoryType, itemId ->
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                },
+                onNavigateToSpeciesList = { categoryType, itemId, pos ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
+                },
+                onNavigateToShowSavePoints = {
+                    navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null)
+                },
+                onNavigateToSpeciesDetail = { itemId ->
+                    navHostController.navigateToSpeciesDetail(itemId)
+                },
+                onNavigateToSettings = {
+                    navHostController.navigateToSettings()
+                }
+            )
+
+            plant(
                 onNavigateToCategoryList = { categoryType ->
                     navHostController.navigateToCategoryList(categoryType)
                 },

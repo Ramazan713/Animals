@@ -4,8 +4,16 @@ import com.masterplus.animals.core.domain.models.Plant
 import com.masterplus.animals.core.shared_features.database.entity.PlantEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
+import com.masterplus.animals.core.shared_features.database.entity_helper.PlantDataEmbedded
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
+fun PlantDataEmbedded.toPlant(language: LanguageEnum): Plant {
+    return plant.toPlant(
+        species = species,
+        images = images,
+        language = language
+    )
+}
 
 fun PlantEntity.toPlant(
     language: LanguageEnum,
