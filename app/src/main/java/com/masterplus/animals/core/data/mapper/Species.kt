@@ -1,5 +1,6 @@
 package com.masterplus.animals.core.data.mapper
 
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
@@ -14,6 +15,7 @@ fun SpeciesEntity.toSpecies(
         introduction = if(isEn) introduction_en else introduction_tr,
         scientificName = scientific_name,
         genusId = genus_id,
-        recognitionAndInteraction = recognition_and_interaction
+        recognitionAndInteraction = recognition_and_interaction,
+        kingdomType = KingdomType.fromKingdomId(kingdom_id)
     )
 }

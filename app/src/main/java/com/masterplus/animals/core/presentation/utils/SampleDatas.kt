@@ -118,6 +118,7 @@ object SampleDatas {
         name ="Bal Arısı",
         recognitionAndInteraction = 4,
         genusId=2,
+        kingdomType = KingdomType.Animals
     )
 
     val habitatCategory = HabitatCategoryModel(

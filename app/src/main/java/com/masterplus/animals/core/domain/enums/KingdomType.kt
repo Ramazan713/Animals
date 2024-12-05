@@ -10,9 +10,13 @@ enum class KingdomType(
         kingdomId = 2
     );
 
+
     companion object {
-        fun fromKingdomId(kingdomId: Int): KingdomType{
-            return Plants
+        fun fromKingdomId(catId: Int): KingdomType{
+            KingdomType.entries.forEach { cat ->
+                if(cat.kingdomId == catId) return cat
+            }
+            return Animals
         }
     }
 }

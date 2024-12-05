@@ -2,6 +2,7 @@ package com.masterplus.animals.core.domain.repo
 
 import androidx.paging.PagingData
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepo {
 
-    suspend fun getCategoryData(categoryType: CategoryType, limit: Int, language: LanguageEnum): List<CategoryData>
+    suspend fun getCategoryData(categoryType: CategoryType, limit: Int, language: LanguageEnum, kingdomType: KingdomType): List<CategoryData>
 
     suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): UiText?
 
@@ -22,16 +23,16 @@ interface CategoryRepo {
 
     suspend fun getOrderWithId(orderId: Int, language: LanguageEnum): OrderModel?
 
-    fun getPagingOrdersWithClassId(classId: Int, pageSize: Int, language: LanguageEnum): Flow<PagingData<OrderModel>>
+    fun getPagingOrdersWithClassId(classId: Int, pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>>
 
-    fun getPagingFamiliesWithOrderId(orderId: Int, pageSize: Int, language: LanguageEnum): Flow<PagingData<FamilyModel>>
+    fun getPagingFamiliesWithOrderId(orderId: Int, pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>>
 
 
 
-    fun getPagingClasses(pageSize: Int, language: LanguageEnum): Flow<PagingData<ClassModel>>
+    fun getPagingClasses(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<ClassModel>>
 
-    fun getPagingFamilies(pageSize: Int, language: LanguageEnum): Flow<PagingData<FamilyModel>>
+    fun getPagingFamilies(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>>
 
-    fun getPagingOrders(pageSize: Int, language: LanguageEnum): Flow<PagingData<OrderModel>>
+    fun getPagingOrders(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>>
 
 }

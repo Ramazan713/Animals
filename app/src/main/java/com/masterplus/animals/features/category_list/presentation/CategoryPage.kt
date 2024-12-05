@@ -42,7 +42,6 @@ import com.masterplus.animals.core.presentation.components.SharedLoadingPageCont
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
-import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 
 
 @OptIn(ExperimentalMaterial3Api::class)

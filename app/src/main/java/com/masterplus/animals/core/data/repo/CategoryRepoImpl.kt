@@ -10,6 +10,7 @@ import com.masterplus.animals.core.data.mapper.toFamily
 import com.masterplus.animals.core.data.mapper.toHabitatCategory
 import com.masterplus.animals.core.data.mapper.toOrder
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
@@ -29,13 +30,15 @@ class CategoryRepoImpl constructor(
     override suspend fun getCategoryData(
         categoryType: CategoryType,
         limit: Int,
-        language: LanguageEnum
+        language: LanguageEnum,
+        kingdomType: KingdomType
     ): List<CategoryData> {
+        val kingdomId = kingdomType.kingdomId
         return when(categoryType){
             CategoryType.Habitat -> categoryDao.getHabitatCategories(limit).map { it.toHabitatCategory(language).toCategoryData() }
-            CategoryType.Class -> categoryDao.getClasses(limit).map { it.toClass(language).toCategoryData() }
-            CategoryType.Order -> categoryDao.getOrders(limit).map { it.toOrder(language).toCategoryData() }
-            CategoryType.Family -> categoryDao.getFamilies(limit).map { it.toFamily(language).toCategoryData() }
+            CategoryType.Class -> categoryDao.getClasses(limit, kingdomId).map { it.toClass(language).toCategoryData() }
+            CategoryType.Order -> categoryDao.getOrders(limit, kingdomId).map { it.toOrder(language).toCategoryData() }
+            CategoryType.Family -> categoryDao.getFamilies(limit, kingdomId).map { it.toFamily(language).toCategoryData() }
             CategoryType.List -> emptyList()
         }
     }
@@ -65,43 +68,45 @@ class CategoryRepoImpl constructor(
     override fun getPagingOrdersWithClassId(
         classId: Int,
         pageSize: Int,
-        language: LanguageEnum
+        language: LanguageEnum,
+        kingdomType: KingdomType
     ): Flow<PagingData<OrderModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingOrdersWithClassId(classId) }
+            pagingSourceFactory = { categoryDao.getPagingOrdersWithClassId(classId, kingdomType.kingdomId) }
         ).flow.map { items -> items.map { it.toOrder(language) } }
     }
 
     override fun getPagingFamiliesWithOrderId(
         orderId: Int,
         pageSize: Int,
-        language: LanguageEnum
+        language: LanguageEnum,
+        kingdomType: KingdomType
     ): Flow<PagingData<FamilyModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingFamiliesWithOrderId(orderId) }
+            pagingSourceFactory = { categoryDao.getPagingFamiliesWithOrderId(orderId, kingdomType.kingdomId) }
         ).flow.map { items -> items.map { it.toFamily(language) } }
     }
 
-    override fun getPagingClasses(pageSize: Int, language: LanguageEnum): Flow<PagingData<ClassModel>> {
+    override fun getPagingClasses(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<ClassModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingClasses() }
+            pagingSourceFactory = { categoryDao.getPagingClasses(kingdomType.kingdomId) }
         ).flow.map { items -> items.map { it.toClass(language) } }
     }
 
-    override fun getPagingOrders(pageSize: Int, language: LanguageEnum): Flow<PagingData<OrderModel>> {
+    override fun getPagingOrders(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingOrders() }
+            pagingSourceFactory = { categoryDao.getPagingOrders(kingdomType.kingdomId) }
         ).flow.map { items -> items.map { it.toOrder(language) } }
     }
 
-    override fun getPagingFamilies(pageSize: Int, language: LanguageEnum): Flow<PagingData<FamilyModel>> {
+    override fun getPagingFamilies(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingFamilies() }
+            pagingSourceFactory = { categoryDao.getPagingFamilies(kingdomType.kingdomId) }
         ).flow.map { items -> items.map { it.toFamily(language) } }
     }
 }

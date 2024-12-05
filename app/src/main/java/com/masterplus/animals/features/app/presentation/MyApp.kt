@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.features.animal.presentation.navigation.AnimalRoute
 import com.masterplus.animals.features.animal.presentation.navigation.animal
 import com.masterplus.animals.features.app.presentation.extensions.navigateToBar
@@ -104,12 +105,13 @@ fun MyApp(
         ){
             animal(
                 onNavigateToCategoryList = { categoryType ->
-                    navHostController.navigateToCategoryList(categoryType)
+                    navHostController.navigateToCategoryList(categoryType, KingdomType.Animals)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
-                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId, KingdomType.Animals)
                 },
                 onNavigateToSpeciesList = { categoryType, itemId, pos ->
+
                     navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
                 },
                 onNavigateToShowSavePoints = {
@@ -125,10 +127,10 @@ fun MyApp(
 
             plant(
                 onNavigateToCategoryList = { categoryType ->
-                    navHostController.navigateToCategoryList(categoryType)
+                    navHostController.navigateToCategoryList(categoryType, KingdomType.Plants)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId ->
-                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId, KingdomType.Plants)
                 },
                 onNavigateToSpeciesList = { categoryType, itemId, pos ->
                     navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
@@ -184,11 +186,11 @@ fun MyApp(
                 onNavigateToSpeciesList = { categoryType, itemId ->
                     navHostController.navigateToSpeciesList(categoryType.catId, itemId)
                 },
-                onNavigateToCategoryListWithDetail = { categoryType, itemId ->
-                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                onNavigateToCategoryListWithDetail = { categoryType, itemId, kingdomType ->
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)
                 },
-                onNavigateToCategorySearch = { catType, contentType ->
-                    navHostController.navigateToSearchCategory(catType,contentType,null)
+                onNavigateToCategorySearch = { catType, contentType, kingdomType ->
+                    navHostController.navigateToSearchCategory(catType,contentType,null, kingdomType)
                 }
             )
 
@@ -199,11 +201,11 @@ fun MyApp(
                 onNavigateToSpeciesList = { categoryType, itemId ->
                     navHostController.navigateToSpeciesList(categoryType.catId, itemId)
                 },
-                onNavigateToCategoryListWithDetail = { categoryType, itemId ->
-                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                onNavigateToCategoryListWithDetail = { categoryType, itemId, kingdomType ->
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)
                 },
-                onNavigateToCategorySearch = { catType, contentType, itemId ->
-                    navHostController.navigateToSearchCategory(catType,contentType, itemId)
+                onNavigateToCategorySearch = { catType, contentType, itemId, kingdomType ->
+                    navHostController.navigateToSearchCategory(catType,contentType, itemId, kingdomType)
                 }
             )
 
@@ -241,8 +243,8 @@ fun MyApp(
                 onNavigateToSpeciesList = { categoryType, itemId ->
                     navHostController.navigateToSpeciesList(categoryType.catId, itemId)
                 },
-                onNavigateToCategoryListWithDetail = { categoryType, itemId ->
-                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId)
+                onNavigateToCategoryListWithDetail = { categoryType, itemId, kingdomType ->
+                    navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)
                 },
             )
 

@@ -4,10 +4,14 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesDetailEmbedded
 
 @Dao
 interface SpeciesDao {
+
+    @Query("select * from species where id = :id")
+    suspend fun getSpeciesById(id: Int): SpeciesEntity?
 
     @Transaction
     @Query("""

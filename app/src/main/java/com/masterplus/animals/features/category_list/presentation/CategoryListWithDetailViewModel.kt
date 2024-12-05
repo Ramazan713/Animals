@@ -39,14 +39,14 @@ class CategoryListWithDetailViewModel(
             args.categoryType.let { categoryType ->
                 when (categoryType) {
                     CategoryType.Class -> {
-                        categoryRepo.getPagingOrdersWithClassId(args.itemId, 10, language)
+                        categoryRepo.getPagingOrdersWithClassId(args.itemId, 10, language, args.kingdomType)
                             .map { items ->
                                 items.map { it.toImageWithTitleModel() }
                             }
                     }
 
                     CategoryType.Order -> {
-                        categoryRepo.getPagingFamiliesWithOrderId(args.itemId, 10, language)
+                        categoryRepo.getPagingFamiliesWithOrderId(args.itemId, 10, language, args.kingdomType)
                             .map { items ->
                                 items.map { it.toImageWithTitleModel() }
                             }

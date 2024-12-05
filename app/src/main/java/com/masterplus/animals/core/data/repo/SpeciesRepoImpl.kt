@@ -4,9 +4,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.masterplus.animals.core.data.mapper.toSpecies
 import com.masterplus.animals.core.data.mapper.toSpeciesDetail
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
@@ -50,5 +52,9 @@ class SpeciesRepoImpl(
         ).flow.map { items ->
             items.map { it.toSpeciesDetail(language) }
         }
+    }
+
+    override suspend fun getSpeciesById(speciesId: Int, lang: LanguageEnum): SpeciesModel? {
+        return speciesDao.getSpeciesById(speciesId)?.toSpecies(lang)
     }
 }

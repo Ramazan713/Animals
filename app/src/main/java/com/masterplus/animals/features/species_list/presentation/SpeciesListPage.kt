@@ -18,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -65,7 +66,6 @@ fun SpeciesListPageRoot(
     val pagingItems = viewModel.pagingItems.collectAsLazyPagingItems()
 
     val addSpeciesState by addSpeciesToListViewModel.state.collectAsStateWithLifecycle()
-
     SpeciesListPage(
         state = state,
         onAction = viewModel::onAction,

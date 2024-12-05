@@ -34,32 +34,35 @@ interface CategoryDao {
 
 
     @Query("""
-        select * from classes order by id asc limit :limit
+        select * from classes where kingdom_id = :kingdomId
+        order by id asc limit :limit
     """)
-    suspend fun getClasses(limit: Int): List<ClassEntity>
+    suspend fun getClasses(limit: Int, kingdomId: Int): List<ClassEntity>
 
 
     @Query("""
-        select * from classes order by id asc
+        select * from classes where kingdom_id = :kingdomId order by id asc
     """)
-    fun getPagingClasses(): PagingSource<Int, ClassEntity>
+    fun getPagingClasses(kingdomId: Int): PagingSource<Int, ClassEntity>
 
 
 
     @Query("""
-        select * from families order by id asc limit :limit
+        select * from families where kingdom_id = :kingdomId
+        order by id asc limit :limit
     """)
-    suspend fun getFamilies(limit: Int): List<FamilyEntity>
+    suspend fun getFamilies(limit: Int, kingdomId: Int): List<FamilyEntity>
 
     @Query("""
-        select * from families where order_id = :orderId order by id asc
+        select * from families where kingdom_id = :kingdomId and order_id = :orderId order by id asc
     """)
-    fun getPagingFamiliesWithOrderId(orderId: Int): PagingSource<Int, FamilyEntity>
+    fun getPagingFamiliesWithOrderId(orderId: Int, kingdomId: Int): PagingSource<Int, FamilyEntity>
 
     @Query("""
-        select * from families order by id asc
+        select * from families where kingdom_id = :kingdomId
+        order by id asc
     """)
-    fun getPagingFamilies(): PagingSource<Int, FamilyEntity>
+    fun getPagingFamilies(kingdomId: Int): PagingSource<Int, FamilyEntity>
 
 
 
@@ -71,17 +74,19 @@ interface CategoryDao {
 
 
     @Query("""
-        select * from orders order by id asc limit :limit
+        select * from orders where kingdom_id = :kingdomId
+        order by id asc limit :limit
     """)
-    suspend fun getOrders(limit: Int): List<OrderEntity>
+    suspend fun getOrders(limit: Int, kingdomId: Int): List<OrderEntity>
 
     @Query("""
-        select * from orders where class_id = :classId order by id asc
+        select * from orders where kingdom_id = :kingdomId and class_id = :classId order by id asc
     """)
-    fun getPagingOrdersWithClassId(classId: Int): PagingSource<Int, OrderEntity>
+    fun getPagingOrdersWithClassId(classId: Int, kingdomId: Int): PagingSource<Int, OrderEntity>
 
     @Query("""
-        select * from orders order by id asc
+        select * from orders where kingdom_id = :kingdomId 
+        order by id asc
     """)
-    fun getPagingOrders(): PagingSource<Int, OrderEntity>
+    fun getPagingOrders(kingdomId: Int): PagingSource<Int, OrderEntity>
 }

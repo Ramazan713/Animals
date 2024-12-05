@@ -2,6 +2,7 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
@@ -25,6 +26,7 @@ class PlantViewModel(
     private val translationRepo: TranslationRepo
 ): ViewModel() {
 
+    private val kingdomType = KingdomType.Plants
     private val _state = MutableStateFlow(PlantState())
     val state = _state.asStateFlow()
 
@@ -42,16 +44,16 @@ class PlantViewModel(
                 _state.update { it.copy(
                     isLoading = true
                 ) }
-                val habitats = categoryRepo.getCategoryData(CategoryType.Habitat, CATEGORY_LIMIT, language).let { imageWithTitleModels ->
+                val habitats = categoryRepo.getCategoryData(CategoryType.Habitat, CATEGORY_LIMIT, language, kingdomType).let { imageWithTitleModels ->
                         CategoryDataRowModel(categoryDataList = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
                     }
-                val orders = categoryRepo.getCategoryData(CategoryType.Order, CATEGORY_LIMIT, language).let { imageWithTitleModels ->
+                val orders = categoryRepo.getCategoryData(CategoryType.Order, CATEGORY_LIMIT, language, kingdomType).let { imageWithTitleModels ->
                         CategoryDataRowModel(categoryDataList = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
                     }
-                val classes = categoryRepo.getCategoryData(CategoryType.Class, CATEGORY_LIMIT, language).let { imageWithTitleModels ->
+                val classes = categoryRepo.getCategoryData(CategoryType.Class, CATEGORY_LIMIT, language, kingdomType).let { imageWithTitleModels ->
                         CategoryDataRowModel(categoryDataList = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
                     }
-                val families = categoryRepo.getCategoryData(CategoryType.Family, CATEGORY_LIMIT, language).let { imageWithTitleModels ->
+                val families = categoryRepo.getCategoryData(CategoryType.Family, CATEGORY_LIMIT, language, kingdomType).let { imageWithTitleModels ->
                         CategoryDataRowModel(categoryDataList = imageWithTitleModels, showMore = imageWithTitleModels.size >= CATEGORY_LIMIT)
                     }
 

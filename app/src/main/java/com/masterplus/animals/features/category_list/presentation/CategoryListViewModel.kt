@@ -37,15 +37,15 @@ class CategoryListViewModel(
             args.categoryType.let { categoryType ->
                 when(categoryType){
                     CategoryType.Class -> {
-                        categoryRepo.getPagingClasses(10, language)
+                        categoryRepo.getPagingClasses(10, language, args.kingdomType)
                             .map { items -> items.map { it.toImageWithTitleModel() } }
                     }
                     CategoryType.Order -> {
-                        categoryRepo.getPagingOrders(10, language)
+                        categoryRepo.getPagingOrders(10, language, args.kingdomType)
                             .map { items -> items.map { it.toImageWithTitleModel() } }
                     }
                     CategoryType.Family -> {
-                        categoryRepo.getPagingFamilies(10, language)
+                        categoryRepo.getPagingFamilies(10, language, args.kingdomType)
                             .map { items -> items.map { it.toImageWithTitleModel() } }
                     }
                     else -> flowOf()

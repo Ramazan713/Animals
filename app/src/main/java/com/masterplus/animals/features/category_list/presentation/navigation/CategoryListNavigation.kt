@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler
 import com.masterplus.animals.features.category_list.presentation.CategoryListPage
 import com.masterplus.animals.features.category_list.presentation.CategoryListViewModel
@@ -16,20 +17,25 @@ import org.koin.androidx.compose.koinViewModel
 
 @Serializable
 data class CategoryListRoute(
-    val categoryId: Int
+    val categoryId: Int,
+    val kingdomId: Int
 ){
     val categoryType get() = CategoryType.fromCatId(categoryId)
+    val kingdomType get() = KingdomType.fromKingdomId(kingdomId)
 }
 
-fun NavController.navigateToCategoryList(categoryType: CategoryType){
-    navigate(CategoryListRoute(categoryType.catId))
+fun NavController.navigateToCategoryList(categoryType: CategoryType, kingdomType: KingdomType){
+    navigate(CategoryListRoute(
+        categoryId = categoryType.catId,
+        kingdomId = kingdomType.kingdomId
+    ))
 }
 
 fun NavGraphBuilder.categoryList(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
-    onNavigateToCategoryListWithDetail: (CategoryType, Int) -> Unit,
-    onNavigateToCategorySearch: (CategoryType, ContentType) -> Unit
+    onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
+    onNavigateToCategorySearch: (CategoryType, ContentType, KingdomType) -> Unit
 ){
     composable<CategoryListRoute> {
         val viewModel: CategoryListViewModel = koinViewModel()
@@ -45,6 +51,7 @@ fun NavGraphBuilder.categoryList(
                 categoryNavigateHandler(
                     itemId = item.id,
                     categoryType = args.categoryType,
+                    kingdomType = args.kingdomType,
                     onNavigateToSpeciesList = onNavigateToSpeciesList,
                     onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
                 )
@@ -53,7 +60,7 @@ fun NavGraphBuilder.categoryList(
                 onNavigateToSpeciesList(args.categoryType, null)
             },
             onNavigateToCategorySearch = {
-                onNavigateToCategorySearch(args.categoryType, ContentType.Category)
+                onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.kingdomType)
             }
         )
     }

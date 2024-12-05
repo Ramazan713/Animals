@@ -15,6 +15,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.presentation.components.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
@@ -31,7 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SearchCategoryPageRoot(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
-    onNavigateToCategoryListWithDetail: (CategoryType, Int) -> Unit,
+    onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
     viewModel: SearchCategoryViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -53,7 +54,8 @@ fun SearchCategoryPageRoot(
                 val categoryType = if(args.realItemId != null) args.categoryType.toChildType() else null
                 categoryNavigateHandler(
                     itemId = categoryData.id,
-                    categoryType = categoryType ?: args.categoryType ,
+                    categoryType = categoryType ?: args.categoryType,
+                    kingdomType = args.kingdomType,
                     onNavigateToSpeciesList = onNavigateToSpeciesList,
                     onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
                 )
