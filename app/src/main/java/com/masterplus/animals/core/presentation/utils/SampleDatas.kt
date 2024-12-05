@@ -1,6 +1,7 @@
 package com.masterplus.animals.core.presentation.utils
 
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.domain.models.AnimalDetail
 import com.masterplus.animals.core.domain.models.CategoryData
@@ -69,7 +70,7 @@ object SampleDatas {
         id = 2,
         scientificName = "Arthropoda",
         phylum = "Arthropoda",
-        kingdomId = 1,
+        kingdomType = KingdomType.Animals,
         imageUrl = "",
         imagePath = ""
     )
@@ -79,7 +80,8 @@ object SampleDatas {
         className = "",
         phylumId = 2,
         imageUrl = "",
-        imagePath = ""
+        imagePath = "",
+        kingdomType = KingdomType.Animals,
     )
     val order = OrderModel(
         id = 2,
@@ -87,7 +89,8 @@ object SampleDatas {
         order = "",
         classId = 2,
         imageUrl = "",
-        imagePath = ""
+        imagePath = "",
+        kingdomType = KingdomType.Animals,
     )
 
     val family = FamilyModel(
@@ -96,7 +99,8 @@ object SampleDatas {
         family = "",
         orderId = 2,
         imageUrl = "",
-        imagePath = ""
+        imagePath = "",
+        kingdomType = KingdomType.Animals,
     )
 
     val genus = GenusModel(
@@ -104,6 +108,7 @@ object SampleDatas {
         scientificName = "Apis",
         genus = "",
         familyId = 2,
+        kingdomType = KingdomType.Animals,
     )
 
     val species = SpeciesModel(

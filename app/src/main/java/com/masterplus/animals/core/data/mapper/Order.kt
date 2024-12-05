@@ -1,6 +1,7 @@
 package com.masterplus.animals.core.data.mapper
 
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
@@ -15,7 +16,8 @@ fun OrderEntity.toOrder(
         order = if(language.isEn) order_en else order_tr,
         classId = class_id,
         imagePath = image_path,
-        imageUrl = image_url
+        imageUrl = image_url,
+        kingdomType = KingdomType.fromKingdomId(kingdom_id)
     )
 }
 

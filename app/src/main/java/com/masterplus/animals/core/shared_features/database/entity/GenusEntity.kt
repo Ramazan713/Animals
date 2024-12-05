@@ -11,6 +11,11 @@ import androidx.room.PrimaryKey
             entity = FamilyEntity::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("family_id"),
+        ),
+        ForeignKey(
+            entity = KingdomEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["kingdom_id"]
         )
     ]
 )
@@ -21,6 +26,7 @@ data class GenusEntity(
     val genus_en: String,
     val genus_tr: String,
     val family_id: Int,
+    val kingdom_id: Int,
     val created_at: String,
     val updated_at: String
 )

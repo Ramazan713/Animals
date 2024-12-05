@@ -1,6 +1,7 @@
 package com.masterplus.animals.core.data.mapper
 
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
@@ -15,7 +16,8 @@ fun FamilyEntity.toFamily(
         family = if(language.isEn) family_en else family_tr,
         orderId = order_id,
         imagePath = image_path,
-        imageUrl = image_url
+        imageUrl = image_url,
+        kingdomType = KingdomType.fromKingdomId(kingdom_id)
     )
 }
 

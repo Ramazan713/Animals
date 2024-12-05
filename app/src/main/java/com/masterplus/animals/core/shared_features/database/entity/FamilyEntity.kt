@@ -11,6 +11,11 @@ import androidx.room.PrimaryKey
             entity = OrderEntity::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("order_id"),
+        ),
+        ForeignKey(
+            entity = KingdomEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["kingdom_id"]
         )
     ]
 )
@@ -21,6 +26,7 @@ data class FamilyEntity(
     val family_en: String,
     val family_tr: String,
     val order_id: Int,
+    val kingdom_id: Int,
     val image_path: String?,
     val image_url: String?,
     val created_at: String,
