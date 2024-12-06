@@ -11,3 +11,23 @@ data class SpeciesModel(
     val genusId: Int,
     val recognitionAndInteraction: Int?,
 )
+
+
+interface SpeciesDetail{
+    val detail: ISpeciesType
+    val phylum: PhylumModel
+    val classModel: ClassModel
+    val order: OrderModel
+    val family: FamilyModel
+    val genus: GenusModel
+    val species: SpeciesModel
+    val habitatCategories: List<HabitatCategoryModel>
+    val images: List<SpeciesImageModel>
+}
+
+interface ISpeciesType {
+    val id: Int?
+    val species: SpeciesModel
+    val images: List<SpeciesImageModel>
+    val imageUrls get() = images.mapNotNull { it.imageUrl }
+}

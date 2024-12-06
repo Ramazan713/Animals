@@ -1,6 +1,6 @@
 package com.masterplus.animals.core.domain.models
 
-data class SpeciesDetail(
+data class SpeciesListDetail(
     val id: Int,
     val introduction: String,
     val name: String,

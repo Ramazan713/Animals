@@ -1,11 +1,11 @@
 package com.masterplus.animals.core.shared_features.add_species_to_list.presentation
 
-import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 
 sealed interface AddSpeciesToListDialogEvent {
 
     data class ShowItemBottomMenu(
-        val item: SpeciesDetail,
+        val item: SpeciesListDetail,
         val posIndex: Int
     ): AddSpeciesToListDialogEvent
 

@@ -1,9 +1,11 @@
 package com.masterplus.animals.core.data.mapper
 
+import com.masterplus.animals.core.domain.models.PlantDetail
 import com.masterplus.animals.core.domain.models.Plant
 import com.masterplus.animals.core.shared_features.database.entity.PlantEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
+import com.masterplus.animals.core.shared_features.database.entity_helper.PlantDetailEmbedded
 import com.masterplus.animals.core.shared_features.database.entity_helper.PlantDataEmbedded
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
@@ -52,5 +54,26 @@ fun PlantEntity.toPlant(
         noteworthyCharacteristics = if (isEn) noteworthy_characteristics_en else noteworthy_characteristics_tr,
         surprisingFacts = if (isEn) surprising_facts_en else surprising_facts_tr,
         interestingAndFunFacts = if (isEn) interesting_and_fun_facts_en else interesting_and_fun_facts_tr
+    )
+}
+
+
+fun PlantDetailEmbedded.toPlantDetail(
+    language: LanguageEnum
+): PlantDetail {
+    return PlantDetail(
+        detail = plant.toPlant(
+            species = species,
+            images = images,
+            language = language
+        ),
+        phylum = phylum.toPhylumModel(language),
+        classModel = classEntity.toClass(language),
+        order = order.toOrder(language),
+        family = family.toFamily(language),
+        genus = genus.toGenus(language),
+        species = species.toSpecies(language),
+        habitatCategories = habitatCategories.map { it.toHabitatCategory(language) },
+        images = images.map { it.toSpeciesImage() }
     )
 }

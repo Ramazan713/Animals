@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.IMenuItemEnum
-import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
 import com.masterplus.animals.core.shared_features.list.presentation.select_list_with_menu.ShowBottomMenuWithSelectList
 
@@ -34,8 +34,8 @@ fun AddSpeciesToListHandler(
 fun <T: IMenuItemEnum> AddSpeciesToListHandler(
     state: AddSpeciesToListState,
     onAction: (AddSpeciesToListAction) -> Unit,
-    bottomMenuItems: List<T> ,
-    onBottomMenuItemClick: (T, SpeciesDetail, Int) -> Unit,
+    bottomMenuItems: List<T>,
+    onBottomMenuItemClick: (T, SpeciesListDetail, Int) -> Unit,
     listIdControl: Int?
 ) {
 

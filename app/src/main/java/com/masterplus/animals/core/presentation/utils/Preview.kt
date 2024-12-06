@@ -6,7 +6,6 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.masterplus.animals.core.domain.models.SpeciesDetail
 import kotlinx.coroutines.flow.flowOf
 
 @Composable

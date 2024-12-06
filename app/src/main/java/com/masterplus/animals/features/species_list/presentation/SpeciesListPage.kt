@@ -18,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,7 +31,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
-import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
@@ -87,7 +86,7 @@ fun SpeciesListPageRoot(
 )
 @Composable
 fun SpeciesListPage(
-    pagingItems: LazyPagingItems<SpeciesDetail>,
+    pagingItems: LazyPagingItems<SpeciesListDetail>,
     state: SpeciesListState,
     onAction: (SpeciesListAction) -> Unit,
     addSpeciesState: AddSpeciesToListState,

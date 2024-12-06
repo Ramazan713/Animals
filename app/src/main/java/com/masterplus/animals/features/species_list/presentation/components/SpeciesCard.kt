@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.presentation.components.DefaultImage
 import com.masterplus.animals.core.presentation.components.OrderText
 import com.masterplus.animals.core.presentation.utils.SampleDatas
@@ -43,7 +43,7 @@ import com.masterplus.animals.core.presentation.utils.ShapeUtils
 
 @Composable
 fun SpeciesCard(
-    species: SpeciesDetail,
+    species: SpeciesListDetail,
     onMenuButtonClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onUnFavoriteClick: () -> Unit,

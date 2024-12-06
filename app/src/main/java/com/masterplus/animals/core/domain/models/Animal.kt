@@ -1,9 +1,9 @@
 package com.masterplus.animals.core.domain.models
 
 data class Animal(
-    val id: Int?,
-    val species: SpeciesModel,
-    val images: List<SpeciesImageModel>,
+    override val id: Int?,
+    override val species: SpeciesModel,
+    override val images: List<SpeciesImageModel>,
     val size: String?,
     val weight: String?,
     val color: String?,
@@ -33,6 +33,17 @@ data class Animal(
     val interestingAndFunFacts: String?,
     val comparativeAnalysis: String?,
     val roleInEcosystem: String?
-){
-    val imageUrls get() = images.mapNotNull { it.imageUrl }
-}
+): ISpeciesType
+
+
+data class AnimalDetail(
+    override val detail: Animal,
+    override val phylum: PhylumModel,
+    override val classModel: ClassModel,
+    override val order: OrderModel,
+    override val family: FamilyModel,
+    override val genus: GenusModel,
+    override val species: SpeciesModel,
+    override val habitatCategories: List<HabitatCategoryModel>,
+    override val images: List<SpeciesImageModel>
+): SpeciesDetail

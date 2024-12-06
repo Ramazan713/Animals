@@ -5,9 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toSpecies
-import com.masterplus.animals.core.data.mapper.toSpeciesDetail
+import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
 import com.masterplus.animals.core.domain.enums.CategoryType
-import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
@@ -24,7 +24,7 @@ class SpeciesRepoImpl(
         itemId: Int?,
         pageSize: Int,
         language: LanguageEnum
-    ): Flow<PagingData<SpeciesDetail>> {
+    ): Flow<PagingData<SpeciesListDetail>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
             pagingSourceFactory = {
@@ -50,7 +50,7 @@ class SpeciesRepoImpl(
                 }
             }
         ).flow.map { items ->
-            items.map { it.toSpeciesDetail(language) }
+            items.map { it.toSpeciesListDetail(language) }
         }
     }
 

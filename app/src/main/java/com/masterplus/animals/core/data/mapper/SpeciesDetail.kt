@@ -1,16 +1,16 @@
 package com.masterplus.animals.core.data.mapper
 
-import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesDetailEmbedded
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
 
-fun SpeciesDetailEmbedded.toSpeciesDetail(
+fun SpeciesDetailEmbedded.toSpeciesListDetail(
     language: LanguageEnum
-): SpeciesDetail{
+): SpeciesListDetail{
     val isEn = language.isEn
     return with(species){
-        SpeciesDetail(
+        SpeciesListDetail(
             id = id,
             name = if(isEn) name_en else name_tr,
             introduction = if(isEn) introduction_en else introduction_tr,

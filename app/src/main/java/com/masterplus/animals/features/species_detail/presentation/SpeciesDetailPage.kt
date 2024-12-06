@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,7 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.masterplus.animals.core.domain.models.Animal
+import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.presentation.components.DefaultImage
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.dialogs.ShowImageDia
@@ -89,16 +90,16 @@ fun SpeciesDetailPage(
     }
 
     Scaffold { paddings ->
-        val animal = state.animal
+        val species = state.speciesDetail?.species
 
         SharedLoadingPageContent(
             modifier = Modifier
                 .padding(paddings)
                 .fillMaxSize(),
             isLoading = state.isLoading,
-            isEmptyResult = animal == null,
+            isEmptyResult = species == null,
         ) {
-            if(animal == null) return@SharedLoadingPageContent
+            if(species == null) return@SharedLoadingPageContent
             Column(
                 modifier = Modifier
                     .padding(paddings)
@@ -124,7 +125,7 @@ fun SpeciesDetailPage(
                     onNavigateBack = onNavigateBack,
                     onShowImageClick = {
                         onAction(SpeciesDetailAction.ShowDialog(SpeciesDetailDialogEvent.ShowImages(
-                            imageUrls = state.animal?.imageUrls ?: emptyList(),
+                            imageUrls = state.speciesDetail.detail.imageUrls ?: emptyList(),
                             index = it
                         )))
                     }
@@ -143,7 +144,7 @@ fun SpeciesDetailPage(
                             InfoPageContent(
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 state = state,
-                                animal = animal,
+                                species = species,
                                 onShowImageClick = { imageUrl ->
                                     onAction(SpeciesDetailAction.ShowDialog(SpeciesDetailDialogEvent.ShowImages(
                                         imageUrls = listOf(imageUrl),
@@ -191,7 +192,7 @@ private fun TopBarImage(
     onShowImageClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val imageUrls = state.animal?.imageUrls ?: emptyList()
+    val imageUrls = state.speciesDetail?.detail?.imageUrls ?: emptyList()
     val carouselState = rememberCarouselState {
         imageUrls.size
     }
@@ -271,7 +272,7 @@ private fun SegmentedButtonInPage(
 @Composable
 private fun InfoPageContent(
     state: SpeciesDetailState,
-    animal: Animal,
+    species: SpeciesModel,
     onShowImageClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -280,11 +281,11 @@ private fun InfoPageContent(
         modifier = modifier
     ) {
         Text(
-            text = animal.species.name,
+            text = species.name,
             style = MaterialTheme.typography.titleLarge
         )
         Text(
-            text = animal.species.scientificName,
+            text = species.scientificName,
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -292,7 +293,7 @@ private fun InfoPageContent(
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .fillMaxWidth(),
-            text = animal.species.introduction,
+            text = species.introduction,
             style = MaterialTheme.typography.bodyMedium
         )
 
@@ -316,6 +317,7 @@ private fun FeaturePageContent(
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
+
     ) {
         Text(
             text = "Bilimsel Adlandırma",
@@ -324,7 +326,8 @@ private fun FeaturePageContent(
         state.scientificNomenclatureSection.chunked(2).forEach { titleContentsRow ->
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 titleContentsRow.forEach { titleContent ->
                     TitleContentInfo(
@@ -340,7 +343,8 @@ private fun FeaturePageContent(
         state.featureSection2.chunked(2).forEach { titleContentsRow ->
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 titleContentsRow.forEach { titleContent ->
                     TitleContentInfo(
@@ -358,6 +362,8 @@ private fun FeaturePageContent(
                 titleContent = titleContent
             )
         }
+
+        Spacer(Modifier.padding(bottom = 12.dp))
     }
 }
 
@@ -367,8 +373,8 @@ private fun FeaturePageContent(
 private fun SpeciesDetailPagePreview() {
     SpeciesDetailPage(
         state = SpeciesDetailState(
-            animalDetail = SampleDatas.animalDetail,
-            selectedPage = SpeciesInfoPageEnum.Info,
+            speciesDetail = SampleDatas.animalDetail,
+            selectedPage = SpeciesInfoPageEnum.Features,
             titleSectionModels = SampleDatas.animal.toTitleSections(),
             scientificNomenclatureSection = SampleDatas.animalDetail.toScientificNomenclatureSection(),
             featureSection2 = SampleDatas.animalDetail.toFeatureSection2(),

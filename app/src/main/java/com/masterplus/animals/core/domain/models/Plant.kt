@@ -1,9 +1,9 @@
 package com.masterplus.animals.core.domain.models
 
 data class Plant(
-    val id: Int?,
-    val species: SpeciesModel,
-    val images: List<SpeciesImageModel>,
+    override val id: Int?,
+    override val species: SpeciesModel,
+    override val images: List<SpeciesImageModel>,
     val size: String?,
     val color: String?,
     val floweringTime: String?,
@@ -31,6 +31,17 @@ data class Plant(
     val noteworthyCharacteristics: String?,
     val surprisingFacts: String?,
     val interestingAndFunFacts: String?
-){
-    val imageUrls get() = images.mapNotNull { it.imageUrl }
-}
+): ISpeciesType
+
+
+data class PlantDetail(
+    override val detail: Plant,
+    override val phylum: PhylumModel,
+    override val classModel: ClassModel,
+    override val order: OrderModel,
+    override val family: FamilyModel,
+    override val genus: GenusModel,
+    override val species: SpeciesModel,
+    override val habitatCategories: List<HabitatCategoryModel>,
+    override val images: List<SpeciesImageModel>
+): SpeciesDetail

@@ -4,7 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.models.SpeciesImageModel
 import com.masterplus.animals.core.domain.repo.AnimalRepo
+import com.masterplus.animals.core.domain.repo.PlantRepo
+import com.masterplus.animals.core.domain.repo.SpeciesRepo
+import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.species_detail.presentation.mapper.toFeatureSection2
 import com.masterplus.animals.features.species_detail.presentation.mapper.toFeatureSection3
@@ -13,15 +18,14 @@ import com.masterplus.animals.features.species_detail.presentation.mapper.toTitl
 import com.masterplus.animals.features.species_detail.presentation.navigation.SpeciesDetailRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 class SpeciesDetailViewModel(
     private val animalRepo: AnimalRepo,
+    private val speciesRepo: SpeciesRepo,
+    private val plantRepo: PlantRepo,
     private val translationRepo: TranslationRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -35,26 +39,7 @@ class SpeciesDetailViewModel(
         translationRepo
             .getFlowLanguage()
             .onEach { language ->
-                _state.update { it.copy(isLoading = true) }
-                val animalDetail = animalRepo.getAnimalDetailBySpeciesId(args.speciesId, language)
-                _state.update { it.copy(
-                    animalDetail = animalDetail,
-                    isLoading = false
-                ) }
-            }
-            .launchIn(viewModelScope)
-        _state
-            .map { it.animalDetail }
-            .filterNotNull()
-            .distinctUntilChanged()
-            .onEach { animalDetail ->
-                val titleSectionImages = animalDetail.images.takeLastWhile { it.imageOrder > 2 }.mapNotNull { it.imageUrl }
-                _state.update { it.copy(
-                    titleSectionModels = animalDetail.animal.toTitleSections(imageUrls = titleSectionImages),
-                    scientificNomenclatureSection = animalDetail.toScientificNomenclatureSection(),
-                    featureSection2 = animalDetail.toFeatureSection2(),
-                    featureSection3 = animalDetail.animal.toFeatureSection3()
-                ) }
+                loadSpeciesData(language)
             }
             .launchIn(viewModelScope)
     }
@@ -74,4 +59,46 @@ class SpeciesDetailViewModel(
             }
         }
     }
+
+    private fun getTitleSectionImages(images: List<SpeciesImageModel>): List<String>{
+        return images.mapNotNull { it.imageUrl }
+    }
+
+    private suspend fun loadSpeciesData(language: LanguageEnum){
+        _state.update { it.copy(isLoading = true) }
+        val species = speciesRepo.getSpeciesById(args.speciesId, language)
+        if(species != null){
+            when(species.kingdomType){
+                KingdomType.Animals -> {
+                    animalRepo.getAnimalDetailBySpeciesId(args.speciesId, language)?.let { animalDetail ->
+                        val titleSectionImages = getTitleSectionImages(animalDetail.images)
+                        _state.update { it.copy(
+                            speciesDetail = animalDetail,
+                            titleSectionModels = animalDetail.detail.toTitleSections(imageUrls = titleSectionImages),
+                            scientificNomenclatureSection = animalDetail.toScientificNomenclatureSection(),
+                            featureSection2 = animalDetail.toFeatureSection2(),
+                            featureSection3 = animalDetail.detail.toFeatureSection3()
+                        ) }
+                    }
+                }
+                KingdomType.Plants -> {
+                    plantRepo.getPlantDetailBySpeciesId(args.speciesId, language)?.let { plantDetail ->
+                        val titleSectionImages = getTitleSectionImages(plantDetail.images)
+                        _state.update { it.copy(
+                            speciesDetail = plantDetail ,
+                            titleSectionModels = plantDetail.detail.toTitleSections(imageUrls = titleSectionImages),
+                            scientificNomenclatureSection = plantDetail.toScientificNomenclatureSection(),
+                            featureSection2 = plantDetail.toFeatureSection2(),
+                            featureSection3 = plantDetail.detail.toFeatureSection3()
+                        ) }
+                    }
+
+                }
+            }
+        }
+        _state.update { it.copy(
+            isLoading = false
+        ) }
+    }
+
 }

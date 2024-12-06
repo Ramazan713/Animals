@@ -12,7 +12,7 @@ import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.models.PhylumModel
 import com.masterplus.animals.core.domain.models.Plant
-import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.models.SpeciesImageModel
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.domain.utils.UiText
@@ -208,7 +208,7 @@ object SampleDatas {
     )
 
     val animalDetail = AnimalDetail(
-        animal = animal,
+        detail = animal,
         phylum = phylum,
         classModel = classModel,
         order = order,
@@ -268,8 +268,8 @@ object SampleDatas {
         isFavorited: Boolean = false,
         isListSelected: Boolean = false,
         habitatCategoryId: Int = 1
-    ): SpeciesDetail{
-        return SpeciesDetail(
+    ): SpeciesListDetail{
+        return SpeciesListDetail(
             id = id,
             name = name,
             scientificName = scientificName,

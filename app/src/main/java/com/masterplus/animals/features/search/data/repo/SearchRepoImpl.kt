@@ -8,10 +8,10 @@ import com.masterplus.animals.core.data.mapper.toCategoryData
 import com.masterplus.animals.core.data.mapper.toClass
 import com.masterplus.animals.core.data.mapper.toFamily
 import com.masterplus.animals.core.data.mapper.toOrder
-import com.masterplus.animals.core.data.mapper.toSpeciesDetail
+import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.CategoryData
-import com.masterplus.animals.core.domain.models.SpeciesDetail
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.shared_features.database.dao.SearchCategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.SearchSpeciesDao
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
@@ -30,7 +30,7 @@ class SearchRepoImpl(
         query: String,
         categoryType: CategoryType,
         language: LanguageEnum
-    ): Flow<PagingData<SpeciesDetail>> {
+    ): Flow<PagingData<SpeciesListDetail>> {
         val pagingConfig = PagingConfig(pageSize = 10)
         val queryResult = getQueryUseCase(query)
 
@@ -43,7 +43,7 @@ class SearchRepoImpl(
                     searchSpeciesDao.searchPagingSpeciesTr(queryResult.queryInLike, queryResult.queryForOrder)
                 }
             }
-        ).flow.map { items -> items.map { it.toSpeciesDetail(language) } }
+        ).flow.map { items -> items.map { it.toSpeciesListDetail(language) } }
     }
 
     override fun searchSpeciesWithCategory(
@@ -51,7 +51,7 @@ class SearchRepoImpl(
         categoryType: CategoryType,
         itemId: Int,
         language: LanguageEnum
-    ): Flow<PagingData<SpeciesDetail>> {
+    ): Flow<PagingData<SpeciesListDetail>> {
         val pagingConfig = PagingConfig(pageSize = 10)
         val queryResult = getQueryUseCase(query)
         val queryInLike = queryResult.queryInLike
@@ -83,7 +83,7 @@ class SearchRepoImpl(
                     }
                 }
             }
-        ).flow.map { items -> items.map { it.toSpeciesDetail(language) } }
+        ).flow.map { items -> items.map { it.toSpeciesListDetail(language) } }
     }
 
 
