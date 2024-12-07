@@ -7,11 +7,11 @@ fun categoryNavigateHandler(
     itemId: Int?,
     categoryType: CategoryType,
     kingdomType: KingdomType,
-    onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?, KingdomType) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
 ){
     if(categoryType == CategoryType.Family){
-        onNavigateToSpeciesList(categoryType, itemId)
+        onNavigateToSpeciesList(categoryType, itemId, kingdomType)
     }else{
         onNavigateToCategoryListWithDetail(categoryType, itemId ?: 0, kingdomType)
     }

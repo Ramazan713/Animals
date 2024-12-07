@@ -227,8 +227,8 @@ private fun Dot(
 private fun SamplePreview() {
     ShowImageDia(
         imageDataList = listOf(
-            R.drawable.all_animals,
-            R.drawable.all_animals,
+            R.drawable.animals_plants,
+            R.drawable.animals_plants,
         ),
         currentPageIndex = 0,
         onDismiss = {},
@@ -244,8 +244,8 @@ private fun SamplePreview() {
 private fun SamplePreview2() {
     ShowImageDia(
         imageDataList = listOf(
-            R.drawable.all_animals,
-            R.drawable.all_animals,
+            R.drawable.animals_plants,
+            R.drawable.animals_plants,
         ),
         currentPageIndex = 0,
         onDismiss = {},

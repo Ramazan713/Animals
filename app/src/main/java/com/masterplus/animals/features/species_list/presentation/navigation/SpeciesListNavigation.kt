@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.features.species_list.presentation.SpeciesListPageRoot
 import kotlinx.serialization.Serializable
 
@@ -12,15 +13,22 @@ import kotlinx.serialization.Serializable
 data class SpeciesListRoute(
     val categoryId: Int,
     val itemId: Int,
-    val initPosIndex: Int
+    val initPosIndex: Int,
+    val kingdomId: Int?
 ){
     val categoryType get() = CategoryType.fromCatId(categoryId)
+    val kingdomType: KingdomType? get() = KingdomType.fromKingdomIdOrNull(kingdomId)
     val realItemId get() = if(itemId == 0) null else itemId
 }
 
 
-fun NavController.navigateToSpeciesList(categoryId: Int, itemId: Int?, initPosIndex: Int = 0){
-    navigate(SpeciesListRoute(categoryId, itemId ?: 0, initPosIndex))
+fun NavController.navigateToSpeciesList(categoryId: Int, itemId: Int?, kingdomType: KingdomType? = null, initPosIndex: Int = 0){
+    navigate(SpeciesListRoute(
+        categoryId = categoryId,
+        itemId = itemId ?: 0,
+        initPosIndex = initPosIndex,
+        kingdomId = kingdomType?.kingdomId
+    ))
 }
 
 

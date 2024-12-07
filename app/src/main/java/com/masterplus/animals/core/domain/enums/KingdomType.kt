@@ -10,13 +10,20 @@ enum class KingdomType(
         kingdomId = 2
     );
 
+    val isAnimals get() = this == Animals
+    val isPlants get() = this == Plants
 
     companion object {
         fun fromKingdomId(catId: Int): KingdomType{
+            return fromKingdomIdOrNull(catId) ?: Animals
+        }
+
+        fun fromKingdomIdOrNull(catId: Int?): KingdomType?{
+            if(catId == null) return null
             KingdomType.entries.forEach { cat ->
                 if(cat.kingdomId == catId) return cat
             }
-            return Animals
+            return null
         }
     }
 }

@@ -61,7 +61,7 @@ fun SavePointItem(
         CardDefaults.cardColors().containerColor
 
     val currentImageUrl = remember(itemDefaults.showImage, savePoint) {
-        if(itemDefaults.showImage) savePoint.imageData ?: R.drawable.all_animals else null
+        if(itemDefaults.showImage) savePoint.imageData ?: R.drawable.animals_plants else null
     }
 
     Card(
@@ -232,7 +232,7 @@ private fun SavePointInfoItem(
 @Preview(showBackground = true)
 @Composable
 private fun SavePointItemPreview() {
-    val savePoint = SampleDatas.generateSavePoint().copy(imageData = R.drawable.all_animals, title = "Title".repeat(7))
+    val savePoint = SampleDatas.generateSavePoint().copy(imageData = R.drawable.animals_plants, title = "Title".repeat(7))
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier

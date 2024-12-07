@@ -15,37 +15,37 @@ interface SpeciesDao {
 
     @Transaction
     @Query("""
-        select * from species order by id
+        select * from species where kingdom_id = :kingdomId order by id
     """)
-    fun getPagingSpecies(): PagingSource<Int, SpeciesDetailEmbedded>
+    fun getPagingSpecies(kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
         select S.* from species S, SpeciesHabitatCategories SHC
-        where S.id = SHC.species_id and SHC.category_id = :habitatCategoryId order by id
+        where S.id = SHC.species_id and SHC.category_id = :habitatCategoryId and S.kingdom_id = :kingdomId order by id
     """)
-    fun getPagingSpeciesByHabitatCategoryId(habitatCategoryId: Int): PagingSource<Int, SpeciesDetailEmbedded>
+    fun getPagingSpeciesByHabitatCategoryId(habitatCategoryId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
         select S.* from species S, speciesRelationsView SR 
-        where SR.species_id = S.id and SR.class_id = :classId order by S.id
+        where SR.species_id = S.id and SR.class_id = :classId and S.kingdom_id = :kingdomId order by S.id
     """)
-    fun getPagingSpeciesByClassId(classId: Int): PagingSource<Int, SpeciesDetailEmbedded>
+    fun getPagingSpeciesByClassId(classId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
         select S.* from species S, speciesRelationsView SR 
-        where SR.species_id = S.id and SR.family_id = :familyId order by S.id
+        where SR.species_id = S.id and SR.family_id = :familyId and S.kingdom_id = :kingdomId order by S.id
     """)
-    fun getPagingSpeciesByFamilyId(familyId: Int): PagingSource<Int, SpeciesDetailEmbedded>
+    fun getPagingSpeciesByFamilyId(familyId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
         select S.* from species S, speciesRelationsView SR
-        where SR.species_id = S.id and SR.order_id = :orderId order by S.id
+        where SR.species_id = S.id and SR.order_id = :orderId and S.kingdom_id = :kingdomId order by S.id
     """)
-    fun getPagingSpeciesByOrderId(orderId: Int): PagingSource<Int, SpeciesDetailEmbedded>
+    fun getPagingSpeciesByOrderId(orderId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""

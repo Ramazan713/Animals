@@ -31,6 +31,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
@@ -105,7 +106,9 @@ fun SpeciesListPage(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = state.title.asString())
+                    state.title?.let { title ->
+                        Text(text = title.asString())
+                    }
                 },
                 navigationIcon = {
                     NavigationBackIcon(onNavigateBack = onNavigateBack)
@@ -217,7 +220,8 @@ fun SpeciesListPagePreview() {
         args = SpeciesListRoute(
             categoryId = 1,
             itemId = 1,
-            initPosIndex = 0
+            initPosIndex = 0,
+            kingdomId = KingdomType.Animals.kingdomId
         ),
         onNavigateToSpeciesDetail = {},
         pagingItems = getPreviewLazyPagingData(

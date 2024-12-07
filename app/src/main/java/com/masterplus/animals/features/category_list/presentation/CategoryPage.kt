@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.R
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.presentation.components.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
@@ -62,7 +63,7 @@ fun CategoryListPage(
             when {
                 state.isLoading -> null
                 state.parentImageData != null && pagingItems.itemCount > 0 -> state.parentImageData
-                pagingItems.itemCount > 0 -> R.drawable.all_animals
+                pagingItems.itemCount > 0 -> R.drawable.animals_plants
                 else -> null
             }
         }
@@ -103,7 +104,7 @@ fun CategoryListPage(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 24.dp),
-                            title = "Hayvanlar Listesi",
+                            title = "${if(state.kingdomType.isAnimals) "Hayvanlar" else "Bitkiler"} Listesi",
                             imageData = imageUrl ?: "",
                             onClick = onAllItemClick
                         )
@@ -186,7 +187,7 @@ private fun GetTopBar(
 @Composable
 private fun CategoryListPagePreview1() {
     CategoryListPage(
-        state = CategoryState(),
+        state = CategoryState(kingdomType = KingdomType.Animals),
         onAction = {},
         pagingItems = getPreviewLazyPagingData(
             items = listOf(

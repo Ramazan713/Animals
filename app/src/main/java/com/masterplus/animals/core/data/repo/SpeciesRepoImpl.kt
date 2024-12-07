@@ -7,6 +7,7 @@ import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toSpecies
 import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
@@ -23,26 +24,28 @@ class SpeciesRepoImpl(
         categoryType: CategoryType,
         itemId: Int?,
         pageSize: Int,
-        language: LanguageEnum
+        language: LanguageEnum,
+        kingdom: KingdomType?
     ): Flow<PagingData<SpeciesListDetail>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
             pagingSourceFactory = {
+                val kingdomId = kingdom?.kingdomId ?: 0
                 if(itemId == null){
-                    return@Pager speciesDao.getPagingSpecies()
+                    return@Pager speciesDao.getPagingSpecies(kingdomId)
                 }
                 when(categoryType){
                     CategoryType.Habitat -> {
-                        speciesDao.getPagingSpeciesByHabitatCategoryId(itemId)
+                        speciesDao.getPagingSpeciesByHabitatCategoryId(itemId, kingdomId)
                     }
                     CategoryType.Class -> {
-                        speciesDao.getPagingSpeciesByClassId(itemId)
+                        speciesDao.getPagingSpeciesByClassId(itemId, kingdomId)
                     }
                     CategoryType.Order -> {
-                        speciesDao.getPagingSpeciesByOrderId(itemId)
+                        speciesDao.getPagingSpeciesByOrderId(itemId, kingdomId)
                     }
                     CategoryType.Family -> {
-                        speciesDao.getPagingSpeciesByFamilyId(itemId)
+                        speciesDao.getPagingSpeciesByFamilyId(itemId, kingdomId)
                     }
                     CategoryType.List -> {
                         speciesDao.getPagingSpeciesByListId(itemId)

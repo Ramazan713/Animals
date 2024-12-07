@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.ShowSavePointsPageRoot
@@ -27,7 +28,7 @@ fun NavController.navigateToShowSavePoints(
 
 fun NavGraphBuilder.showSavePoints(
     onNavigateBack: () -> Unit,
-    onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?, KingdomType, Int) -> Unit,
 ){
     composable<ShowSavePointsRoute> {
         ShowSavePointsPageRoot(
@@ -36,7 +37,8 @@ fun NavGraphBuilder.showSavePoints(
                 onNavigateToSpeciesList(
                     savepoint.destination.toCategoryType() ?: CategoryType.Order,
                     savepoint.destination.destinationId,
-                    savepoint.itemPosIndex
+                    KingdomType.Animals,
+                    savepoint.itemPosIndex,
                 )
             }
         )

@@ -27,7 +27,9 @@ class CategoryListViewModel(
 
     val args = savedStateHandle.toRoute<CategoryListRoute>()
 
-    private val _state = MutableStateFlow(CategoryState())
+    private val _state = MutableStateFlow(CategoryState(
+        kingdomType = args.kingdomType
+    ))
     val state = _state.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -31,7 +31,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SearchCategoryPageRoot(
     onNavigateBack: () -> Unit,
-    onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?, KingdomType) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
     viewModel: SearchCategoryViewModel = koinViewModel()
 ) {

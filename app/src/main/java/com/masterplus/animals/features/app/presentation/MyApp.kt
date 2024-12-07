@@ -112,7 +112,7 @@ fun MyApp(
                 },
                 onNavigateToSpeciesList = { categoryType, itemId, pos ->
 
-                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, KingdomType.Animals, pos)
                 },
                 onNavigateToShowSavePoints = {
                     navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null)
@@ -133,7 +133,7 @@ fun MyApp(
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId, KingdomType.Plants)
                 },
                 onNavigateToSpeciesList = { categoryType, itemId, pos ->
-                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, KingdomType.Plants, pos)
                 },
                 onNavigateToShowSavePoints = {
                     navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null)
@@ -183,8 +183,8 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToSpeciesList = { categoryType, itemId ->
-                    navHostController.navigateToSpeciesList(categoryType.catId, itemId)
+                onNavigateToSpeciesList = { categoryType, itemId, kingdomType ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, kingdomType)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId, kingdomType ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)
@@ -198,8 +198,8 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToSpeciesList = { categoryType, itemId ->
-                    navHostController.navigateToSpeciesList(categoryType.catId, itemId)
+                onNavigateToSpeciesList = { categoryType, itemId, kingdomType ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, kingdomType)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId, kingdomType ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)
@@ -231,8 +231,8 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToSpeciesList = { categoryType, itemId, pos ->
-                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, pos)
+                onNavigateToSpeciesList = { categoryType, itemId, kingdomType, pos ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, kingdomType, pos)
                 },
             )
 
@@ -240,8 +240,8 @@ fun MyApp(
                 onNavigateBack = {
                     navHostController.navigateUp()
                 },
-                onNavigateToSpeciesList = { categoryType, itemId ->
-                    navHostController.navigateToSpeciesList(categoryType.catId, itemId)
+                onNavigateToSpeciesList = { categoryType, itemId, kingdomType ->
+                    navHostController.navigateToSpeciesList(categoryType.catId, itemId, kingdomType)
                 },
                 onNavigateToCategoryListWithDetail = { categoryType, itemId, kingdomType ->
                     navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)

@@ -89,7 +89,7 @@ private fun GetErrorHolder(
         Image(
             modifier = Modifier,
             contentScale = contentScale,
-            painter = painterResource(id = errorResource ?: R.drawable.all_animals),
+            painter = painterResource(id = errorResource ?: R.drawable.animals_plants),
             contentDescription = null
         )
         if(showErrorIcon){
@@ -157,7 +157,7 @@ private fun DefaultImagePreview(modifier: Modifier = Modifier) {
        state = ThemeModel(themeEnum = ThemeEnum.Dark)
    ) {
        DefaultImage(
-           imageData = R.drawable.all_animals,
+           imageData = R.drawable.animals_plants,
 //        imageData = "dads",
            modifier = Modifier
                .size(150.dp)

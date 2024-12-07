@@ -35,7 +35,7 @@ fun NavController.navigateToCategoryListWithDetail(categoryType: CategoryType, i
 
 fun NavGraphBuilder.categoryListWithDetail(
     onNavigateBack: () -> Unit,
-    onNavigateToSpeciesList: (CategoryType, Int?) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, Int?, KingdomType) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int, KingdomType) -> Unit
 ){
@@ -59,7 +59,7 @@ fun NavGraphBuilder.categoryListWithDetail(
                 )
             },
             onAllItemClick = {
-                onNavigateToSpeciesList(args.categoryType, args.itemId)
+                onNavigateToSpeciesList(args.categoryType, args.itemId, args.kingdomType)
             },
             onNavigateToCategorySearch = {
                 onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.itemId, args.kingdomType)
