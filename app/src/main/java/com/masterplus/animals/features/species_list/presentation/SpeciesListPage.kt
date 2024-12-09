@@ -1,6 +1,7 @@
 package com.masterplus.animals.features.species_list.presentation
 
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +34,8 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
+import com.masterplus.animals.core.extentions.animateEnterExitForTransition
+import com.masterplus.animals.core.extentions.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
@@ -83,7 +86,7 @@ fun SpeciesListPageRoot(
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalComposeUiApi::class
+    ExperimentalComposeUiApi::class, ExperimentalSharedTransitionApi::class
 )
 @Composable
 fun SpeciesListPage(
@@ -117,7 +120,10 @@ fun SpeciesListPage(
                     IconButton(onClick = onNavigateToCategorySearch) {
                         Icon(imageVector = Icons.Default.Search, contentDescription = null)
                     }
-                }
+                },
+                modifier = Modifier
+                    .renderInSharedTransitionScopeOverlayDefault()
+                    .animateEnterExitForTransition()
             )
         }
     ) { paddings ->

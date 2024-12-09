@@ -1,5 +1,8 @@
-package com.masterplus.animals.core.presentation.components
+package com.masterplus.animals.core.presentation.components.image
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,10 +31,14 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.extentions.sharedBoundsText
+import com.masterplus.animals.core.presentation.components.OrderText
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.ColorUtils
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
+import com.masterplus.animals.core.presentation.transition.TransitionImageKey
+import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.ui.theme.AnimalsTheme
 
 
@@ -43,7 +50,8 @@ fun ImageWithTitle(
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
     contentScale: ContentScale = ContentScale.Crop,
-    order: Int? = null
+    order: Int? = null,
+    useTransition: Boolean = false
 ){
     ImageWithTitle(
         imageData = model.imageUrl ?: "",
@@ -55,7 +63,14 @@ fun ImageWithTitle(
         size = size,
         shape = shape,
         contentScale = contentScale,
-        order = order
+        order = order,
+        useTransition = model.imageUrl != null && useTransition,
+        transitionKey = TransitionImageType.fromCategoryType(model.categoryType)?.let {
+            TransitionImageKey(
+                id = model.id ?: 0,
+                imageType = it
+            )
+        }
     )
 }
 
@@ -79,11 +94,14 @@ fun ImageWithTitle(
         size = size,
         shape = shape,
         contentScale = contentScale,
-        order = order
+        order = order,
+        useTransition = model.imageUrl != null,
+        transitionKey = null
     )
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ImageWithTitle(
     imageData: Any,
@@ -95,7 +113,9 @@ fun ImageWithTitle(
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
     contentScale: ContentScale = ContentScale.Crop,
-    order: Int? = null
+    order: Int? = null,
+    transitionKey: TransitionImageKey?,
+    useTransition: Boolean = transitionKey != null,
 ) {
     Box(
         modifier = modifier
@@ -122,25 +142,32 @@ fun ImageWithTitle(
         GetTitleSection(
             title = title,
             subTitle = subTitle,
-            height = minOf(size.height / 3, 100.dp)
+            height = minOf(size.height / 3, 100.dp),
+            useTransition = useTransition
         )
-
-        DefaultImage(
+        TransitionImage(
             imageData = imageData,
+            shape = shape,
+            transitionKey = transitionKey,
+            enabled = useTransition,
             modifier = Modifier
-                .matchParentSize(),
+                .matchParentSize()
+            ,
             contentScale = contentScale,
             contentDescription = contentDescription,
         )
+
     }
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun GetTitleSection(
     title: String,
     subTitle: String?,
-    height: Dp
+    height: Dp,
+    useTransition: Boolean,
 ){
     val hasSubtitle = subTitle != null && subTitle.trim() != ""
     Box(
@@ -165,7 +192,12 @@ private fun GetTitleSection(
                     color = Color.White
                 ),
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .sharedBoundsText(
+                        enabled = useTransition,
+                        contentStateKey = title
+                    )
             )
             if(hasSubtitle){
                 Spacer(modifier = Modifier.height(2.dp))
@@ -175,7 +207,12 @@ private fun GetTitleSection(
                         color = Color.White
                     ),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .sharedBoundsText(
+                            enabled = useTransition,
+                            contentStateKey = subTitle ?: "",
+                        )
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -195,11 +232,19 @@ fun ImageWithTitlePreview() {
             ImageWithTitle(
                 title = "Kartallar",
                 subTitle = "sadsadasdasdasd",
-                imageData = ""
+                imageData = "",
+                transitionKey = TransitionImageKey(
+                    id = 1,
+                    TransitionImageType.Order
+                )
             )
             ImageWithTitle(
                 title = "Kartallar",
-                imageData = ""
+                imageData = "",
+                transitionKey = TransitionImageKey(
+                    id = 2,
+                    TransitionImageType.Order
+                )
             )
         }
     }

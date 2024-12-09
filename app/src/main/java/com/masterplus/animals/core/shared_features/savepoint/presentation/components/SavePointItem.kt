@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
-import com.masterplus.animals.core.presentation.components.DefaultImage
+import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShapeUtils

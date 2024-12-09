@@ -45,7 +45,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.masterplus.animals.R
 import com.masterplus.animals.core.extentions.clickableWithoutRipple
-import com.masterplus.animals.core.presentation.components.DefaultImage
+import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable

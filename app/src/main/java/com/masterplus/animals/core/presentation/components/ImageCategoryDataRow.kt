@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 
@@ -37,7 +38,8 @@ fun ImageCategoryDataRow(
     onClickMore: (() -> Unit)? = null,
     onClickItem: (CategoryData) -> Unit,
     imageSize: DpSize = DpSize(150.dp, 180.dp),
-    contentPaddings: PaddingValues = PaddingValues()
+    contentPaddings: PaddingValues = PaddingValues(),
+    useTransition: Boolean = false
 ) {
     ImageCategoryDataRow(
         title = title,
@@ -57,6 +59,7 @@ fun ImageCategoryDataRow(
                 ImageWithTitle(
                     model = item,
                     size = imageSize,
+                    useTransition = useTransition,
                     onClick = {
                         onClickItem(item)
                     }

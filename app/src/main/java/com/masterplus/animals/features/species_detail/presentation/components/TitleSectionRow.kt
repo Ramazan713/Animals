@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.masterplus.animals.core.presentation.components.DefaultImage
+import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.features.species_detail.presentation.models.TitleSectionModel
 

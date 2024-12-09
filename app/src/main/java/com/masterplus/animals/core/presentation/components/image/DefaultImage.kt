@@ -1,4 +1,4 @@
-package com.masterplus.animals.core.presentation.components
+package com.masterplus.animals.core.presentation.components.image
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -33,6 +33,8 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageScope
 import coil.request.ImageRequest
 import com.masterplus.animals.R
+import com.masterplus.animals.core.presentation.components.DefaultToolTip
+import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
 import com.masterplus.animals.ui.theme.AnimalsTheme
@@ -46,6 +48,7 @@ fun DefaultImage(
     contentScale: ContentScale? = ContentScale.Crop,
     error: @Composable() (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Error) -> Unit)? = null,
     @DrawableRes errorImageResource: Int? = null,
+    cacheKey: String? = null,
     showErrorIcon: Boolean = true,
 ) {
     val context = LocalContext.current
@@ -54,6 +57,8 @@ fun DefaultImage(
         modifier = modifier,
         model = ImageRequest.Builder(context)
             .data(imageData)
+            .placeholderMemoryCacheKey(cacheKey)
+            .memoryCacheKey(cacheKey)
             .build(),
         contentScale = currentContentScale,
         contentDescription = contentDescription,

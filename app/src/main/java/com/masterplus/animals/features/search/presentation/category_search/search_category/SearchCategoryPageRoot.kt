@@ -17,7 +17,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
-import com.masterplus.animals.core.presentation.components.ImageWithTitle
+import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler

@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
 import com.masterplus.animals.features.species_list.presentation.SpeciesListPageRoot
 import kotlinx.serialization.Serializable
 
@@ -38,10 +39,14 @@ fun NavGraphBuilder.speciesList(
     onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit
 ){
     composable<SpeciesListRoute> {
-        SpeciesListPageRoot(
-            onNavigateBack = onNavigateBack,
-            onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
-            onNavigateToCategorySearch = onNavigateToCategorySearch
-        )
+        NavAnimatedVisibilityProvider(
+            scope = this
+        ){
+            SpeciesListPageRoot(
+                onNavigateBack = onNavigateBack,
+                onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
+                onNavigateToCategorySearch = onNavigateToCategorySearch
+            )
+        }
     }
 }

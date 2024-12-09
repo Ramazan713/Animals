@@ -35,12 +35,16 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.R
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
-import com.masterplus.animals.core.presentation.components.ImageWithTitle
+import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
+import com.masterplus.animals.core.presentation.transition.TransitionImageKey
+import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 
@@ -49,11 +53,11 @@ import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 @Composable
 fun CategoryListPage(
     state: CategoryState,
-    pagingItems: LazyPagingItems<ImageWithTitleModel>,
+    pagingItems: LazyPagingItems<CategoryData>,
     onAction: (CategoryAction) -> Unit,
     onNavigateBack: () -> Unit,
     onAllItemClick: () -> Unit,
-    onItemClick: (ImageWithTitleModel) -> Unit,
+    onItemClick: (CategoryData) -> Unit,
     onNavigateToCategorySearch: () -> Unit
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -106,7 +110,15 @@ fun CategoryListPage(
                                 .padding(bottom = 24.dp),
                             title = "${if(state.kingdomType.isAnimals) "Hayvanlar" else "Bitkiler"} Listesi",
                             imageData = imageUrl ?: "",
-                            onClick = onAllItemClick
+                            onClick = onAllItemClick,
+                            useTransition = true,
+                            transitionKey = TransitionImageType.fromCategoryType(state.categoryType)
+                                ?.let {
+                                    TransitionImageKey(
+                                        id = state.itemId ?: 0,
+                                        imageType = it
+                                    )
+                                }
                         )
                     }
                 }
@@ -128,6 +140,7 @@ fun CategoryListPage(
                             modifier = Modifier.fillMaxWidth(),
                             model = item,
                             order = index + 1,
+                            useTransition = true,
                             onClick = {
                                 onItemClick(item)
                             }
@@ -158,7 +171,7 @@ private fun GetTopBar(
             Column {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.headlineMedium
+                    style = MaterialTheme.typography.headlineMedium,
                 )
                 if(!subTitle.isNullOrBlank() && topBarScrollBehaviour.state.collapsedFraction <= 0.4f ){
                     Spacer(modifier = Modifier.height(10.dp))
@@ -187,11 +200,11 @@ private fun GetTopBar(
 @Composable
 private fun CategoryListPagePreview1() {
     CategoryListPage(
-        state = CategoryState(kingdomType = KingdomType.Animals),
+        state = CategoryState(kingdomType = KingdomType.Animals, itemId = 1, categoryType = CategoryType.Class),
         onAction = {},
         pagingItems = getPreviewLazyPagingData(
             items = listOf(
-                SampleDatas.imageWithTitleModel1
+                SampleDatas.categoryData
             ),
 //            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading)
         ),

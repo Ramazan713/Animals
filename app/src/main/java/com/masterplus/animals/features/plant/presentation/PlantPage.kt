@@ -33,9 +33,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
-import com.masterplus.animals.core.presentation.components.ImageWithTitle
+import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
+import com.masterplus.animals.core.presentation.transition.TransitionImageKey
+import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
@@ -134,6 +136,7 @@ fun PlantPage(
                         title = "Yaşam Alanları",
                         items = state.habitats.categoryDataList,
                         showMore = state.habitats.showMore,
+                        useTransition = true,
                         onClickItem = { item ->
                             onNavigateToSpeciesList(CategoryType.Habitat, item.id, 0)
                         }
@@ -146,6 +149,7 @@ fun PlantPage(
                         title = "Sınıflar",
                         items = state.classes.categoryDataList,
                         showMore = state.classes.showMore,
+                        useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Class)
                         },
@@ -161,6 +165,7 @@ fun PlantPage(
                         title = "Takımlar",
                         items = state.orders.categoryDataList,
                         showMore = state.orders.showMore,
+                        useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Order)
                         },
@@ -176,6 +181,7 @@ fun PlantPage(
                         title = "Familyalar",
                         items = state.families.categoryDataList,
                         showMore = state.families.showMore,
+                        useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Family)
                         },
@@ -222,7 +228,8 @@ private fun DailyPlantsSection(
                     title = plantData.title,
                     subTitle = plantData.subTitle,
                     size = DpSize(250.dp,250.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
+                    transitionKey = null
                 )
             }
         }

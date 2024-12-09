@@ -10,6 +10,7 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler
+import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
 import com.masterplus.animals.features.category_list.presentation.CategoryListPage
 import com.masterplus.animals.features.category_list.presentation.CategoryListWithDetailViewModel
 import kotlinx.serialization.Serializable
@@ -44,26 +45,30 @@ fun NavGraphBuilder.categoryListWithDetail(
         val args = viewModel.args
         val state by viewModel.state.collectAsStateWithLifecycle()
         val items = viewModel.pagingItems.collectAsLazyPagingItems()
-        CategoryListPage(
-            state = state,
-            onAction = viewModel::onAction,
-            pagingItems = items,
-            onNavigateBack = onNavigateBack,
-            onItemClick = { item ->
-                categoryNavigateHandler(
-                    itemId = item.id,
-                    categoryType = args.categoryType.toChildType() ?: args.categoryType,
-                    kingdomType = args.kingdomType,
-                    onNavigateToSpeciesList = onNavigateToSpeciesList,
-                    onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
-                )
-            },
-            onAllItemClick = {
-                onNavigateToSpeciesList(args.categoryType, args.itemId, args.kingdomType)
-            },
-            onNavigateToCategorySearch = {
-                onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.itemId, args.kingdomType)
-            }
-        )
+        NavAnimatedVisibilityProvider(
+            scope = this
+        ){
+            CategoryListPage(
+                state = state,
+                onAction = viewModel::onAction,
+                pagingItems = items,
+                onNavigateBack = onNavigateBack,
+                onItemClick = { item ->
+                    categoryNavigateHandler(
+                        itemId = item.id,
+                        categoryType = args.categoryType.toChildType() ?: args.categoryType,
+                        kingdomType = args.kingdomType,
+                        onNavigateToSpeciesList = onNavigateToSpeciesList,
+                        onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
+                    )
+                },
+                onAllItemClick = {
+                    onNavigateToSpeciesList(args.categoryType, args.itemId, args.kingdomType)
+                },
+                onNavigateToCategorySearch = {
+                    onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.itemId, args.kingdomType)
+                }
+            )
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.masterplus.animals.features.animal.presentation
 
 
 import AnimalViewModel
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -32,10 +33,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.extentions.animateEnterExitForTransition
+import com.masterplus.animals.core.extentions.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
-import com.masterplus.animals.core.presentation.components.ImageWithTitle
+import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
+import com.masterplus.animals.core.presentation.transition.TransitionImageKey
+import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
@@ -67,7 +72,7 @@ fun AnimalPageRoot(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun AnimalPage(
     state: AnimalState,
@@ -94,7 +99,10 @@ fun AnimalPage(
                             }
                         }
                     )
-                }
+                },
+                modifier = Modifier
+                    .renderInSharedTransitionScopeOverlayDefault()
+                    .animateEnterExitForTransition()
             )
         }
     ) { paddings ->
@@ -134,6 +142,7 @@ fun AnimalPage(
                         title = "Yaşam Alanları",
                         items = state.habitats.categoryDataList,
                         showMore = state.habitats.showMore,
+                        useTransition = true,
                         onClickItem = { item ->
                             onNavigateToSpeciesList(CategoryType.Habitat, item.id, 0)
                         }
@@ -146,6 +155,7 @@ fun AnimalPage(
                         title = "Sınıflar",
                         items = state.classes.categoryDataList,
                         showMore = state.classes.showMore,
+                        useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Class)
                         },
@@ -161,6 +171,7 @@ fun AnimalPage(
                         title = "Takımlar",
                         items = state.orders.categoryDataList,
                         showMore = state.orders.showMore,
+                        useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Order)
                         },
@@ -176,6 +187,7 @@ fun AnimalPage(
                         title = "Familyalar",
                         items = state.families.categoryDataList,
                         showMore = state.families.showMore,
+                        useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Family)
                         },
@@ -222,7 +234,8 @@ private fun DailyAnimalsSection(
                     title = animalData.title,
                     subTitle = animalData.subTitle,
                     size = DpSize(250.dp,250.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
+                    transitionKey = null
                 )
             }
         }

@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.masterplus.animals.features.species_detail.presentation
 
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,11 +47,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.core.domain.models.SpeciesModel
-import com.masterplus.animals.core.presentation.components.DefaultImage
+import com.masterplus.animals.core.extentions.sharedBoundsText
+import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.image.TransitionImage
 import com.masterplus.animals.core.presentation.dialogs.ShowImageDia
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.presentation.transition.TransitionImageKey
+import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.features.species_detail.domain.enums.SpeciesInfoPageEnum
 import com.masterplus.animals.features.species_detail.presentation.components.TitleContentInfo
 import com.masterplus.animals.features.species_detail.presentation.components.TitleSectionRow
@@ -229,15 +236,21 @@ private fun TopBarImage(
                 itemSpacing = 4.dp,
                 contentPadding = PaddingValues(horizontal = 0.dp)
             ) { index ->
-                DefaultImage(
+                TransitionImage(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .clip(RoundedCornerShape(16.dp))
                         .clickable {
                             onShowImageClick(index)
                         }
                     ,
                     imageData = imageUrls[index],
+                    shape = RoundedCornerShape(16.dp),
+                    transitionKey = state.speciesDetail?.images?.get(index)?.id?.let {
+                        TransitionImageKey(
+                            id = it,
+                            imageType = TransitionImageType.SpeciesImages
+                        )
+                    }
                 )
             }
         }
@@ -282,20 +295,31 @@ private fun InfoPageContent(
     ) {
         Text(
             text = species.name,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.sharedBoundsText(
+                contentStateKey = species.name
+            )
         )
         Text(
             text = species.scientificName,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.sharedBoundsText(
+                contentStateKey = species.scientificName
+            )
         )
 
         Text(
             modifier = Modifier
+                .sharedBoundsText(
+                    contentStateKey = species.introduction
+                )
                 .padding(vertical = 16.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+            ,
             text = species.introduction,
             style = MaterialTheme.typography.bodyMedium
         )
+
 
         state.titleSectionModels.forEach { titleSectionModel ->
             TitleSectionRow(

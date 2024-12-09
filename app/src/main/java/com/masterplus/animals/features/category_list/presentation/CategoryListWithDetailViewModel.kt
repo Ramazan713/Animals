@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.masterplus.animals.core.data.mapper.toCategoryData
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
@@ -30,7 +31,9 @@ class CategoryListWithDetailViewModel(
     val args = savedStateHandle.toRoute<CategoryListWithDetailRoute>()
 
     private val _state = MutableStateFlow(CategoryState(
-        kingdomType = args.kingdomType
+        kingdomType = args.kingdomType,
+        categoryType = args.categoryType,
+        itemId = args.itemId
     ))
     val state = _state.asStateFlow()
 
@@ -43,14 +46,14 @@ class CategoryListWithDetailViewModel(
                     CategoryType.Class -> {
                         categoryRepo.getPagingOrdersWithClassId(args.itemId, 10, language, args.kingdomType)
                             .map { items ->
-                                items.map { it.toImageWithTitleModel() }
+                                items.map { it.toCategoryData() }
                             }
                     }
 
                     CategoryType.Order -> {
                         categoryRepo.getPagingFamiliesWithOrderId(args.itemId, 10, language, args.kingdomType)
                             .map { items ->
-                                items.map { it.toImageWithTitleModel() }
+                                items.map { it.toCategoryData() }
                             }
                     }
 

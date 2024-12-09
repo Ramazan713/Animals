@@ -1,5 +1,6 @@
 package com.masterplus.animals.features.species_list.presentation.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,13 +31,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
-import com.masterplus.animals.core.presentation.components.DefaultImage
+import com.masterplus.animals.core.extentions.sharedBoundsText
 import com.masterplus.animals.core.presentation.components.OrderText
+import com.masterplus.animals.core.presentation.components.image.TransitionImage
+import com.masterplus.animals.core.presentation.transition.TransitionImageKey
+import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShapeUtils
 
@@ -54,6 +57,7 @@ fun SpeciesCard(
     cornerRadiusDp: Dp = 8.dp,
     contentScale: ContentScale = ContentScale.Crop,
     onClick: (() -> Unit)? = null,
+    useTransition: Boolean = true
 ){
     SpeciesCard(
         imageData = species.imageUrls.firstOrNull() ?: "",
@@ -70,7 +74,13 @@ fun SpeciesCard(
         isRow = isRow,
         cornerRadiusDp = cornerRadiusDp,
         contentScale = contentScale,
-        onClick = onClick
+        onClick = onClick,
+        transitionKey = if(useTransition) species.images.firstOrNull()?.id?.let {
+            TransitionImageKey(
+                id = it,
+                TransitionImageType.SpeciesImages
+            )
+        } else null
     )
 }
 
@@ -93,8 +103,8 @@ fun SpeciesCard(
     isRow: Boolean = true,
     cornerRadiusDp: Dp = 8.dp,
     contentScale: ContentScale = ContentScale.Crop,
-
     onClick: (() -> Unit)? = null,
+    transitionKey: TransitionImageKey? = null
 ) {
     val imageShape = ShapeUtils.getRowStyleShape(isRow, cornerRadiusDp)
     val containerShape = RoundedCornerShape(cornerRadiusDp)
@@ -122,7 +132,8 @@ fun SpeciesCard(
                 orderNum = orderNum,
                 isFavorited = isFavorited,
                 onFavoriteClick = onFavoriteClick,
-                onUnFavoriteClick = onUnFavoriteClick
+                onUnFavoriteClick = onUnFavoriteClick,
+                transitionKey = transitionKey
             )
 
             GetContent(
@@ -155,7 +166,8 @@ fun SpeciesCard(
                 orderNum = orderNum,
                 isFavorited = isFavorited,
                 onFavoriteClick = onFavoriteClick,
-                onUnFavoriteClick = onUnFavoriteClick
+                onUnFavoriteClick = onUnFavoriteClick,
+                transitionKey = transitionKey
             )
 
             GetContent(
@@ -172,6 +184,7 @@ fun SpeciesCard(
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun GetImage(
     imageData: Any,
@@ -183,6 +196,7 @@ private fun GetImage(
     onUnFavoriteClick: (() -> Unit),
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
+    transitionKey: TransitionImageKey?
 ) {
     Box(
         modifier = modifier
@@ -192,13 +206,15 @@ private fun GetImage(
         contentAlignment = Alignment.BottomCenter
     ) {
 
-        DefaultImage(
+        TransitionImage(
             imageData = imageData,
             modifier = Modifier
                 .matchParentSize(),
+            shape = shape,
             contentScale = contentScale,
             contentDescription = contentDescription,
-            showErrorIcon = false
+            showErrorIcon = false,
+            transitionKey = transitionKey
         )
 
         Row(
@@ -231,6 +247,7 @@ private fun GetImage(
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun GetContent(
     modifier: Modifier = Modifier,
@@ -252,12 +269,18 @@ private fun GetContent(
             Column {
                 Text(
                     text = name,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.sharedBoundsText(
+                        contentStateKey = name
+                    )
                 )
-                if(scientificName != null){
+                if (scientificName != null) {
                     Text(
                         text = scientificName,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.sharedBoundsText(
+                            contentStateKey = scientificName
+                        )
                     )
                 }
 
@@ -272,7 +295,10 @@ private fun GetContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
             overflow = TextOverflow.Ellipsis,
-            maxLines = 10
+            maxLines = 10,
+            modifier = Modifier.sharedBoundsText(
+                contentStateKey = speciesDescription
+            )
         )
     }
 }
@@ -298,7 +324,7 @@ fun SpeciesCardPreviewRow() {
 }
 
 
-@Preview(showBackground = true, device = Devices.PHONE)
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
 fun SpeciesCardPreviewVertical() {
     LazyVerticalGrid(
