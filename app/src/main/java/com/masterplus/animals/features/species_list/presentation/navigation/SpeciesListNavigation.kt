@@ -15,10 +15,10 @@ data class SpeciesListRoute(
     val categoryId: Int,
     val itemId: Int,
     val initPosIndex: Int,
-    val kingdomId: Int?
+    val kingdomId: Int
 ){
     val categoryType get() = CategoryType.fromCatId(categoryId)
-    val kingdomType: KingdomType? get() = KingdomType.fromKingdomIdOrNull(kingdomId)
+    val kingdomType: KingdomType get() = KingdomType.fromKingdomId(kingdomId)
     val realItemId get() = if(itemId == 0) null else itemId
 }
 
@@ -28,7 +28,7 @@ fun NavController.navigateToSpeciesList(categoryId: Int, itemId: Int?, kingdomTy
         categoryId = categoryId,
         itemId = itemId ?: 0,
         initPosIndex = initPosIndex,
-        kingdomId = kingdomType?.kingdomId
+        kingdomId = kingdomType?.kingdomId ?: KingdomType.DEFAULT.kingdomId
     ))
 }
 

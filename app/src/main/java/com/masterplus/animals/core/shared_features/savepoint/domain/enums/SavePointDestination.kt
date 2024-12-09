@@ -1,32 +1,38 @@
 package com.masterplus.animals.core.shared_features.savepoint.domain.enums
 
 import com.masterplus.animals.core.domain.enums.CategoryType
-import com.masterplus.animals.core.domain.models.IMenuItemEnum
-import com.masterplus.animals.core.domain.models.IconInfo
-import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 
 
 sealed class SavePointDestination(
     val destinationId: Int?,
     val saveKey: String? = null,
-    val destinationType: SavePointDestinationType
+    val destinationType: SavePointDestinationType,
+    open val kingdomType: KingdomType
 ){
     val title get() = destinationType.title
     val destinationTypeId get() = destinationType.destinationTypeId
 
-    data object All: SavePointDestination(
+    data class All(
+        override val kingdomType: KingdomType
+    ): SavePointDestination(
         destinationId = null,
-        destinationType = SavePointDestinationType.All
+        destinationType = SavePointDestinationType.All,
+        kingdomType = kingdomType
     ) {
-        fun from(destinationId: Int?, saveKey: String?): All {
-            return All
+        companion object {
+            val DESTINATION_TYPE_ID = SavePointDestinationType.All.destinationTypeId
+            fun from(destinationId: Int?, kingdomType: KingdomType, saveKey: String?): All {
+                return All(kingdomType)
+            }
         }
     }
 
     data class ListType(val listId: Int): SavePointDestination(
         destinationId = listId,
-        destinationType = SavePointDestinationType.ListType
+        destinationType = SavePointDestinationType.ListType,
+        kingdomType = KingdomType.DEFAULT
     ) {
         companion object {
             val DESTINATION_TYPE_ID = SavePointDestinationType.ListType.destinationTypeId
@@ -36,50 +42,66 @@ sealed class SavePointDestination(
         }
     }
 
-    data class Habitat(val habitatId: Int): SavePointDestination(
+    data class Habitat(
+        val habitatId: Int,
+        override val kingdomType: KingdomType
+    ): SavePointDestination(
         destinationId = habitatId,
-        destinationType = SavePointDestinationType.Habitat
+        destinationType = SavePointDestinationType.Habitat,
+        kingdomType = kingdomType
     ) {
         companion object {
             val DESTINATION_TYPE_ID = SavePointDestinationType.Habitat.destinationTypeId
-            fun from(destinationId: Int?, saveKey: String?): Habitat {
-                return Habitat(destinationId ?: 0)
+            fun from(destinationId: Int?, kingdomType: KingdomType, saveKey: String?): Habitat {
+                return Habitat(destinationId ?: 0, kingdomType)
             }
         }
     }
 
-    data class ClassType(val classId: Int): SavePointDestination(
+    data class ClassType(
+        val classId: Int,
+        override val kingdomType: KingdomType
+    ): SavePointDestination(
         destinationId = classId,
-        destinationType = SavePointDestinationType.ClassType
+        destinationType = SavePointDestinationType.ClassType,
+        kingdomType = kingdomType
     ) {
         companion object {
             val DESTINATION_TYPE_ID = SavePointDestinationType.ClassType.destinationTypeId
-            fun from(destinationId: Int?, saveKey: String?): ClassType {
-                return ClassType(destinationId ?: 0)
+            fun from(destinationId: Int?, kingdomType: KingdomType, saveKey: String?): ClassType {
+                return ClassType(destinationId ?: 0, kingdomType)
             }
         }
     }
 
-    data class Order(val orderId: Int): SavePointDestination(
+    data class Order(
+        val orderId: Int,
+        override val kingdomType: KingdomType
+    ): SavePointDestination(
         destinationId = orderId,
-        destinationType = SavePointDestinationType.Order
+        destinationType = SavePointDestinationType.Order,
+        kingdomType = kingdomType
     ) {
         companion object {
             val DESTINATION_TYPE_ID = SavePointDestinationType.Order.destinationTypeId
-            fun from(destinationId: Int?, saveKey: String?): Order {
-                return Order(destinationId ?: 0)
+            fun from(destinationId: Int?, kingdomType: KingdomType, saveKey: String?): Order {
+                return Order(destinationId ?: 0, kingdomType)
             }
         }
     }
 
-    data class Family(val familyId: Int): SavePointDestination(
+    data class Family(
+        val familyId: Int,
+        override val kingdomType: KingdomType
+    ): SavePointDestination(
         destinationId = familyId,
-        destinationType = SavePointDestinationType.Family
+        destinationType = SavePointDestinationType.Family,
+        kingdomType = kingdomType
     ) {
         companion object {
             val DESTINATION_TYPE_ID = SavePointDestinationType.Family.destinationTypeId
-            fun from(destinationId: Int?, saveKey: String?): SavePointDestination {
-                return Family(destinationId ?: 0)
+            fun from(destinationId: Int?, kingdomType: KingdomType, saveKey: String?): SavePointDestination {
+                return Family(destinationId ?: 0, kingdomType)
             }
         }
     }
@@ -92,15 +114,16 @@ sealed class SavePointDestination(
         fun from(
             destinationTypeId: Int,
             destinationId: Int?,
+            kingdomType: KingdomType,
             saveKey: String? = null
         ): SavePointDestination?{
             return when(destinationTypeId){
-                SavePointDestinationType.All.destinationTypeId -> All.from(destinationId, saveKey)
+                SavePointDestinationType.All.destinationTypeId -> All.from(destinationId, kingdomType, saveKey)
                 SavePointDestinationType.ListType.destinationTypeId -> ListType.from(destinationId, saveKey)
-                SavePointDestinationType.Habitat.destinationTypeId -> Habitat.from(destinationId, saveKey)
-                SavePointDestinationType.ClassType.destinationTypeId -> ClassType.from(destinationId, saveKey)
-                SavePointDestinationType.Order.destinationTypeId -> Order.from(destinationId, saveKey)
-                SavePointDestinationType.Family.destinationTypeId -> Family.from(destinationId, saveKey)
+                SavePointDestinationType.Habitat.destinationTypeId -> Habitat.from(destinationId, kingdomType , saveKey)
+                SavePointDestinationType.ClassType.destinationTypeId -> ClassType.from(destinationId, kingdomType, saveKey)
+                SavePointDestinationType.Order.destinationTypeId -> Order.from(destinationId, kingdomType ,saveKey)
+                SavePointDestinationType.Family.destinationTypeId -> Family.from(destinationId, kingdomType ,saveKey)
                 else -> null
             }
         }
@@ -108,15 +131,17 @@ sealed class SavePointDestination(
         fun fromCategoryType(
             categoryType: CategoryType,
             destinationId: Int?,
+            kingdomType: KingdomType,
         ): SavePointDestination {
             val destinationTypeId = when {
-                destinationId != null -> All.destinationTypeId
+                destinationId != null -> SavePointDestinationType.All.destinationTypeId
                 else -> categoryType.toSavePointDestinationTypeId(1)
             }
             return from(
                 destinationTypeId = destinationTypeId,
-                destinationId = destinationId
-            ) ?: All
+                destinationId = destinationId,
+                kingdomType = kingdomType
+            ) ?: All(kingdomType)
         }
     }
 

@@ -14,6 +14,8 @@ enum class KingdomType(
     val isPlants get() = this == Plants
 
     companion object {
+        val DEFAULT = KingdomType.Animals
+
         fun fromKingdomId(catId: Int): KingdomType{
             return fromKingdomIdOrNull(catId) ?: Animals
         }

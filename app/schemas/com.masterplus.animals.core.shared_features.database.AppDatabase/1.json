@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "19a9143f115d7598bb8a79843d6e9e81",
+    "identityHash": "82ff7bc6b5939fb71fe986b471c11e8b",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -1183,7 +1183,7 @@
       },
       {
         "tableName": "SavePoints",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `titleEn` TEXT NOT NULL, `titleTr` TEXT NOT NULL, `contentTypeId` INTEGER NOT NULL, `destinationTypeId` INTEGER NOT NULL, `destinationId` INTEGER, `saveKey` TEXT, `itemPosIndex` INTEGER NOT NULL, `modifiedTime` TEXT NOT NULL, `imagePath` TEXT, `imageUrl` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `titleEn` TEXT NOT NULL, `titleTr` TEXT NOT NULL, `contentTypeId` INTEGER NOT NULL, `destinationTypeId` INTEGER NOT NULL, `destinationId` INTEGER, `kingdomId` INTEGER NOT NULL, `saveKey` TEXT, `itemPosIndex` INTEGER NOT NULL, `modifiedTime` TEXT NOT NULL, `imagePath` TEXT, `imageUrl` TEXT, FOREIGN KEY(`kingdomId`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1220,6 +1220,12 @@
             "columnName": "destinationId",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "kingdomId",
+            "columnName": "kingdomId",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "saveKey",
@@ -1259,7 +1265,19 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "Kingdoms",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "kingdomId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "Histories",
@@ -1730,7 +1748,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '19a9143f115d7598bb8a79843d6e9e81')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '82ff7bc6b5939fb71fe986b471c11e8b')"
     ]
   }
 }

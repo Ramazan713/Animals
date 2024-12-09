@@ -60,7 +60,7 @@ fun AppNavHost(
                 navHostController.navigateToSpeciesList(categoryType.catId, itemId, KingdomType.Animals, pos)
             },
             onNavigateToShowSavePoints = {
-                navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null)
+                navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null, kingdomType = KingdomType.Animals)
             },
             onNavigateToSpeciesDetail = { itemId ->
                 navHostController.navigateToSpeciesDetail(itemId)
@@ -81,7 +81,7 @@ fun AppNavHost(
                 navHostController.navigateToSpeciesList(categoryType.catId, itemId, KingdomType.Plants, pos)
             },
             onNavigateToShowSavePoints = {
-                navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null)
+                navHostController.navigateToShowSavePoints(filteredDestinationTypeIds = null, kingdomType = KingdomType.Plants)
             },
             onNavigateToSpeciesDetail = { itemId ->
                 navHostController.navigateToSpeciesDetail(itemId)

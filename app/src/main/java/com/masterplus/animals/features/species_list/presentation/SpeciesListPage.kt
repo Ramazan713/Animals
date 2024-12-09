@@ -199,7 +199,8 @@ fun SpeciesListPage(
                 EditSavePointDialog(
                     loadParam = EditSavePointLoadParam(
                         destinationTypeId = args.categoryType.toSavePointDestinationTypeId(args.realItemId),
-                        destinationId = args.realItemId
+                        destinationId = args.realItemId,
+                        kingdomType = args.kingdomType
                     ),
                     posIndex = dialogEvent.posIndex,
                     onClosed = close,

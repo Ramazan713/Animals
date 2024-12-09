@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.presentation.components.SharedHeader
 import com.masterplus.animals.core.presentation.dialogs.BaseDialog
 import com.masterplus.animals.core.presentation.dialogs.ShowGetTextDialog
@@ -258,7 +259,8 @@ private fun EditSavePointPagePreview() {
     EditSavePointDialog(
         loadParam = EditSavePointLoadParam(
             destinationTypeId = 1,
-            destinationId = null
+            destinationId = null,
+            kingdomType = KingdomType.Animals
         ),
         posIndex = 1,
         onClosed = {  },

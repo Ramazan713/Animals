@@ -78,7 +78,8 @@ class AnimalViewModel(
         savePointRepo
             .getAllSavePointsByContentType(
                 contentType = SavePointContentType.Content,
-                filteredDestinationTypeIds = null
+                filteredDestinationTypeIds = null,
+                kingdomType = KingdomType.Animals
             )
             .onEach { savePoints ->
                 _state.update { it.copy(

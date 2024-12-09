@@ -1,5 +1,6 @@
 package com.masterplus.animals.core.shared_features.savepoint.data.repo
 
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.database.dao.SavePointDao
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePoint
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointEntity
@@ -22,33 +23,38 @@ class SavePointRepoImpl(
 
     override fun getAllSavePointsByContentType(
         contentType: SavePointContentType,
-        filteredDestinationTypeIds: List<Int>?
+        filteredDestinationTypeIds: List<Int>?,
+        kingdomType: KingdomType
     ): Flow<List<SavePoint>> {
         val savePointsFlow = if(filteredDestinationTypeIds != null)
-            savePointDao.getAllFlowSavePointsByFilteredDestinations(contentType.contentTypeId, filteredDestinationTypeIds) else
-                savePointDao.getAllFlowSavePointsByContentType(contentType.contentTypeId)
+            savePointDao.getAllFlowSavePointsByFilteredDestinations(contentType.contentTypeId, filteredDestinationTypeIds, kingdomType.kingdomId) else
+                savePointDao.getAllFlowSavePointsByContentType(contentType.contentTypeId, kingdomType.kingdomId)
         return savePointsFlow.map { items -> items.mapNotNull { it.toSavePoint() } }
     }
 
     override fun getContentSavePointsByDestination(
         destinationTypeId: Int,
+        kingdomType: KingdomType,
         destinationId: Int?
     ): Flow<List<SavePoint>> {
         return getSavePointsByDestination(
             contentType = SavePointContentType.Content,
             destinationTypeId = destinationTypeId,
-            destinationId = destinationId
+            destinationId = destinationId,
+            kingdomType = kingdomType
         )
     }
 
     override fun getCategorySavePointsByDestination(
         destinationTypeId: Int,
+        kingdomType: KingdomType,
         destinationId: Int?,
     ): Flow<List<SavePoint>> {
         return getSavePointsByDestination(
             contentType = SavePointContentType.Category,
             destinationTypeId = destinationTypeId,
-            destinationId = destinationId
+            destinationId = destinationId,
+            kingdomType = kingdomType
         )
     }
 
@@ -98,14 +104,15 @@ class SavePointRepoImpl(
     private fun getSavePointsByDestination(
         contentType: SavePointContentType,
         destinationTypeId: Int,
-        destinationId: Int?
+        destinationId: Int?,
+        kingdomType: KingdomType
     ): Flow<List<SavePoint>> {
         return if(destinationId != null){
             savePointDao
-                .getFlowSavePointsDestinationByDestId(destinationTypeId, destinationId, contentType.contentTypeId)
+                .getFlowSavePointsDestinationByDestId(destinationTypeId, destinationId, contentType.contentTypeId, kingdomType.kingdomId)
         }else{
             savePointDao
-                .getFlowSavePointsDestinations(destinationTypeId, contentType.contentTypeId)
+                .getFlowSavePointsDestinations(destinationTypeId, contentType.contentTypeId, kingdomType.kingdomId)
         }.map { items -> items.mapNotNull { it.toSavePoint() } }
     }
 
@@ -125,6 +132,7 @@ class SavePointRepoImpl(
             modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
             imagePath = imageInfo.imagePath,
             imageData = imageInfo.imageUrl,
+            kingdomType = destination.kingdomType
         )
         savePointDao.insertSavePoint(savePoint.toSavePointEntity())
     }

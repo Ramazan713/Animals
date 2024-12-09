@@ -8,7 +8,6 @@ import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.IMenuItemEnum
 import com.masterplus.animals.core.domain.models.IconInfo
 import com.masterplus.animals.core.domain.utils.UiText
-import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestinationType
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.ShowSavePointsRoute
@@ -88,10 +87,11 @@ class ShowSavePointsViewModel(
             selectedDropdownItem = allFilter
         ) }
 
-        val requestedDataFlow =  savePointRepo
+        val requestedDataFlow = savePointRepo
             .getAllSavePointsByContentType(
                 contentType = args.contentType,
-                filteredDestinationTypeIds = null
+                filteredDestinationTypeIds = null,
+                kingdomType = args.kingdomType
             )
 
         combine(

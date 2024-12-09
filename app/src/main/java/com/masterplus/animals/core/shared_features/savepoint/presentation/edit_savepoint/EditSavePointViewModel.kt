@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.utils.UiText
-import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.use_cases.SavePointSuggestedTitleUseCase
 import kotlinx.coroutines.Job
@@ -90,7 +89,8 @@ class EditSavePointViewModel @Inject constructor(
                     val suggestedData = suggestedTitleUseCase(
                         destinationId = param.destinationId,
                         destinationTypeId = param.destinationTypeId,
-                        savePointContentType = param.contentType
+                        savePointContentType = param.contentType,
+                        kingdomType = param.kingdomType
                     )
                     _state.update { it.copy(
                         dialogEvent = EditSavePointDialogEvent.AddSavePointTitle(
@@ -113,7 +113,8 @@ class EditSavePointViewModel @Inject constructor(
         loadDataJob = savePointRepo
             .getAllSavePointsByContentType(
                 contentType = action.loadPram.contentType,
-                filteredDestinationTypeIds = action.loadPram.filteredDestinationTypeIds
+                filteredDestinationTypeIds = action.loadPram.filteredDestinationTypeIds,
+                kingdomType = action.loadPram.kingdomType
             )
             .onEach { savePoints ->
                 _state.update { it.copy(savePoints = savePoints)}

@@ -241,7 +241,7 @@ object SampleDatas {
         savePointDestination: SavePointDestination = SavePointDestination.ListType(1),
         modifiedDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
     ): SavePoint {
-        return SavePoint(id, title, SavePointContentType.Content,savePointDestination, itemPosIndex, modifiedDate,
+        return SavePoint(id, title, SavePointContentType.Content,savePointDestination, KingdomType.Animals,itemPosIndex, modifiedDate,
             imageUrl,null)
     }
 

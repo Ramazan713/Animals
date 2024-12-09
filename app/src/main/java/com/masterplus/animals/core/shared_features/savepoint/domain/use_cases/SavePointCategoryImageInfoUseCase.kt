@@ -12,7 +12,7 @@ class SavePointCategoryImageInfoUseCase(
         val destinationId = destination.destinationId ?: return nullableResult
 
         when(destination){
-            SavePointDestination.All -> return nullableResult
+            is SavePointDestination.All -> return nullableResult
             is SavePointDestination.ListType -> return nullableResult
             is SavePointDestination.Habitat -> return nullableResult
             is SavePointDestination.ClassType -> {

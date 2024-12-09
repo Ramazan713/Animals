@@ -13,16 +13,19 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ShowSavePointsRoute(
     val contentTypeId: Int,
+    val kingdomId: Int,
     val filteredDestinationTypeIds: List<Int>?
 ){
     val contentType get() = SavePointContentType.from(contentTypeId) ?: SavePointContentType.Content
+    val kingdomType get() = KingdomType.fromKingdomId(kingdomId)
 }
 
 fun NavController.navigateToShowSavePoints(
     contentType: SavePointContentType = SavePointContentType.Content,
-    filteredDestinationTypeIds: List<Int>?
+    filteredDestinationTypeIds: List<Int>?,
+    kingdomType: KingdomType
 ){
-    navigate(ShowSavePointsRoute(contentType.contentTypeId, filteredDestinationTypeIds))
+    navigate(ShowSavePointsRoute(contentType.contentTypeId, kingdomType.kingdomId, filteredDestinationTypeIds))
 }
 
 

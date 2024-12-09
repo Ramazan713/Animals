@@ -1,6 +1,7 @@
 package com.masterplus.animals.core.shared_features.savepoint.domain.use_cases
 
 import android.content.Context
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.utils.DateTimeFormatUtils
 import com.masterplus.animals.core.domain.utils.UiText
@@ -23,7 +24,8 @@ class SavePointSuggestedTitleUseCase(
     suspend operator fun invoke(
         destinationTypeId: Int,
         destinationId: Int?,
-        savePointContentType: SavePointContentType
+        savePointContentType: SavePointContentType,
+        kingdomType: KingdomType
     ): SuggestedResult{
         val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         val formattedDateTime = currentDateTime.format(DateTimeFormatUtils.dateTimeUntilMinuteFormat)
@@ -31,7 +33,8 @@ class SavePointSuggestedTitleUseCase(
         val destinationTitle = getDestinationTitle(
             destinationId = destinationId,
             destinationTypeId = destinationTypeId,
-            savePointContentType = savePointContentType
+            savePointContentType = savePointContentType,
+            kingdomType = kingdomType
         ).asString(context)
 
         val title = UiText.Text("$destinationTitle - $formattedDateTime")
@@ -45,14 +48,16 @@ class SavePointSuggestedTitleUseCase(
     private suspend fun getDestinationTitle(
         destinationTypeId: Int,
         destinationId: Int?,
-        savePointContentType: SavePointContentType
+        savePointContentType: SavePointContentType,
+        kingdomType: KingdomType
     ): UiText{
 
-        val defaultResult = SavePointDestination.All.title
+        val defaultResult =  SavePointDestination.All(kingdomType).title
 
         val destination = SavePointDestination.from(
             destinationTypeId = destinationTypeId,
-            destinationId = destinationId
+            destinationId = destinationId,
+            kingdomType = kingdomType
         )
 
         return when(savePointContentType){

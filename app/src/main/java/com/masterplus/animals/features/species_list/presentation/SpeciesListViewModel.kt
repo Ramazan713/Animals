@@ -72,7 +72,8 @@ class SpeciesListViewModel(
                         title = "Sample",
                         destination = SavePointDestination.fromCategoryType(
                             categoryType = args.categoryType,
-                            destinationId = args.realItemId
+                            destinationId = args.realItemId,
+                            kingdomType = args.kingdomType
                         ),
                         itemPosIndex = action.posIndex
                     )

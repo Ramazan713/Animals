@@ -6,7 +6,7 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 
 fun SavePointDestination.toCategoryType(): CategoryType?{
     return when(this){
-        SavePointDestination.All -> null
+        is SavePointDestination.All -> null
         is SavePointDestination.ClassType -> CategoryType.Class
         is SavePointDestination.Family -> CategoryType.Family
         is SavePointDestination.Habitat -> CategoryType.Habitat
@@ -16,7 +16,7 @@ fun SavePointDestination.toCategoryType(): CategoryType?{
 }
 
 fun CategoryType.toSavePointDestinationTypeId(itemId: Int?): Int{
-    if(itemId == null) return SavePointDestination.All.destinationTypeId
+    if(itemId == null) return SavePointDestination.All.DESTINATION_TYPE_ID
     return when(this){
         CategoryType.Habitat -> SavePointDestination.Habitat.DESTINATION_TYPE_ID
         CategoryType.Class -> SavePointDestination.ClassType.DESTINATION_TYPE_ID

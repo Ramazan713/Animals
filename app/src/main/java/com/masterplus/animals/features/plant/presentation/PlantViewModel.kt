@@ -78,7 +78,8 @@ class PlantViewModel(
         savePointRepo
             .getAllSavePointsByContentType(
                 contentType = SavePointContentType.Content,
-                filteredDestinationTypeIds = null
+                filteredDestinationTypeIds = null,
+                kingdomType = KingdomType.Plants
             )
             .onEach { savePoints ->
                 _state.update { it.copy(
