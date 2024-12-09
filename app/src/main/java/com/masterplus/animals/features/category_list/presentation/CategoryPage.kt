@@ -4,15 +4,19 @@ package com.masterplus.animals.features.category_list.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +33,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,15 +43,16 @@ import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
-import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
+import com.masterplus.animals.core.presentation.components.SharedLoadingLazyColumn
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
-import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
+import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
+import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,78 +90,86 @@ fun CategoryListPage(
             )
         }
     ) { paddings->
-
-        SharedLoadingPageContent(
+        SharedLoadingLazyColumn(
             modifier = Modifier
                 .padding(paddings)
                 .fillMaxSize()
                 .nestedScroll(topBarScrollBehaviour.nestedScrollConnection),
+            isEmptyResult = pagingItems.itemCount == 0,
             isLoading = pagingItems.loadState.refresh is LoadState.Loading,
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .matchParentSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
-
+            stickHeaderContent = {
                 item {
-                    AnimatedVisibility(
-                        enter = fadeIn() + expandIn(),
-                        visible = imageUrl != null
-                    ) {
-                        ImageWithTitle(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 24.dp),
-                            title = "${if(state.kingdomType.isAnimals) "Hayvanlar" else "Bitkiler"} Listesi",
-                            imageData = imageUrl ?: "",
-                            onClick = onAllItemClick,
-                            useTransition = true,
-                            transitionKey = TransitionImageType.fromCategoryType(state.categoryType)
-                                ?.let {
-                                    TransitionImageKey(
-                                        id = state.itemId ?: 0,
-                                        imageType = it
-                                    )
-                                }
-                        )
-                    }
+                    HeaderImage(
+                        state = state,
+                        imageUrl = imageUrl,
+                        onAllItemClick = onAllItemClick,
+                    )
                 }
-
                 item {
                     Text(
                         text = state.collectionName,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
                     )
                 }
-
-                items(
-                    count = pagingItems.itemCount,
-                    key = { pagingItems[it]?.id ?: it }
-                ){ index ->
-                    val item = pagingItems[index]
-                    if(item != null){
-                        ImageWithTitle(
-                            modifier = Modifier.fillMaxWidth(),
-                            model = item,
-                            order = index + 1,
-                            useTransition = true,
-                            onClick = {
-                                onItemClick(item)
-                            }
-                        )
-                    }
+            }
+        ) {
+            items(
+                count = pagingItems.itemCount,
+                key = { pagingItems[it]?.id ?: it }
+            ){ index ->
+                val item = pagingItems[index]
+                if(item != null){
+                    ImageWithTitle(
+                        modifier = Modifier.fillMaxWidth(),
+                        model = item,
+                        order = index + 1,
+                        useTransition = true,
+                        onClick = {
+                            onItemClick(item)
+                        }
+                    )
                 }
-                if(pagingItems.loadState.append is LoadState.Loading){
-                    item {
-                        SharedCircularProgress(modifier = Modifier.fillMaxWidth())
-                    }
+            }
+            if(pagingItems.loadState.append is LoadState.Loading){
+                item {
+                    SharedCircularProgress(modifier = Modifier.fillMaxWidth())
                 }
             }
         }
     }
 }
+
+@Composable
+private fun HeaderImage(
+    state: CategoryState,
+    imageUrl: Any?,
+    onAllItemClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(
+        enter = fadeIn() + expandIn(),
+        visible = imageUrl != null,
+        modifier = modifier
+    ) {
+        ImageWithTitle(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+            title = "${if(state.kingdomType.isAnimals) "Hayvanlar" else "Bitkiler"} Listesi",
+            imageData = imageUrl ?: "",
+            onClick = onAllItemClick,
+            useTransition = true,
+            transitionKey = TransitionImageType.fromCategoryType(state.categoryType)
+                ?.let {
+                    TransitionImageKey(
+                        id = state.itemId ?: 0,
+                        imageType = it
+                    )
+                }
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -202,7 +216,7 @@ private fun CategoryListPagePreview1() {
     CategoryListPage(
         state = CategoryState(kingdomType = KingdomType.Animals, itemId = 1, categoryType = CategoryType.Class),
         onAction = {},
-        pagingItems = getPreviewLazyPagingData(
+        pagingItems = getPreviewLazyPagingData<CategoryData>(
             items = listOf(
                 SampleDatas.categoryData
             ),
