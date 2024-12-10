@@ -30,24 +30,13 @@ class SavePointUpsertAutoModeUseCase(
                 kingdomType = destination.kingdomType,
                 saveMode = saveMode
             ).titleText
-            when(contentType){
-                SavePointContentType.Category -> {
-                    savePointRepo.insertCategorySavePoint(
-                        title = title,
-                        destination = destination,
-                        itemPosIndex = itemPosIndex,
-                        saveMode = saveMode,
-                    )
-                }
-                SavePointContentType.Content -> {
-                    savePointRepo.insertContentSavePoint(
-                        title = title,
-                        destination = destination,
-                        itemPosIndex = itemPosIndex,
-                        saveMode = saveMode,
-                    )
-                }
-            }
+            savePointRepo.insertSavePoint(
+                title = title,
+                destination = destination,
+                itemPosIndex = itemPosIndex,
+                saveMode = saveMode,
+                contentType = contentType
+            )
         }
     }
 }

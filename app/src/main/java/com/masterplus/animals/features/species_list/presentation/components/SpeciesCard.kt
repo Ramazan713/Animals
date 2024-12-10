@@ -266,7 +266,9 @@ private fun GetContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.titleMedium,

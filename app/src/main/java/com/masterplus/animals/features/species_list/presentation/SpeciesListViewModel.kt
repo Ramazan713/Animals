@@ -9,6 +9,7 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
@@ -69,7 +70,7 @@ class SpeciesListViewModel(
             }
             is SpeciesListAction.SavePosition -> {
                 viewModelScope.launch {
-                    savePointRepo.insertContentSavePoint(
+                    savePointRepo.insertSavePoint(
                         title = "Sample",
                         destination = SavePointDestination.fromCategoryType(
                             categoryType = args.categoryType,
@@ -77,7 +78,8 @@ class SpeciesListViewModel(
                             kingdomType = args.kingdomType
                         ),
                         itemPosIndex = action.posIndex,
-                        saveMode = SavePointSaveMode.Manuel
+                        saveMode = SavePointSaveMode.Manuel,
+                        contentType = SavePointContentType.Content
                     )
                 }
             }

@@ -40,6 +40,7 @@ import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
@@ -57,7 +58,7 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_s
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointState
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointViewModel
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
-import com.masterplus.animals.features.species_list.domain.enums.SpeciesListItemMenu
+import com.masterplus.animals.features.species_list.domain.enums.SpeciesListBottomItemMenu
 import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
 import com.masterplus.animals.features.species_list.presentation.navigation.SpeciesListRoute
 import kotlinx.coroutines.launch
@@ -118,6 +119,8 @@ fun SpeciesListPage(
         initialFirstVisibleItemIndex = args.initPosIndex
     )
     val scope = rememberCoroutineScope()
+    val middlePos = lazyListState.visibleMiddlePosition()
+
 
     AutoSavePointHandler(
         contentType = SavePointContentType.Content,
@@ -153,6 +156,20 @@ fun SpeciesListPage(
                     IconButton(onClick = onNavigateToCategorySearch) {
                         Icon(imageVector = Icons.Default.Search, contentDescription = null)
                     }
+                    CustomDropdownBarMenu(
+                        items = SpeciesListBottomItemMenu.entries,
+                        onItemChange = { menuItem ->
+                            when(menuItem){
+                                SpeciesListBottomItemMenu.Savepoint -> {
+                                    onAction(
+                                        SpeciesListAction.ShowDialog(
+                                            SpeciesListDialogEvent.ShowEditSavePoint(
+                                        posIndex = middlePos
+                                    )))
+                                }
+                            }
+                        }
+                    )
                 },
                 modifier = Modifier
                     .renderInSharedTransitionScopeOverlayDefault()
@@ -189,10 +206,10 @@ fun SpeciesListPage(
                                 onNavigateToSpeciesDetail(item.id ?: 0)
                             },
                             onFavoriteClick = {
-                                onAddSpeciesAction(AddSpeciesToListAction.AddToFavorite(item.id ?: 0))
+                                onAddSpeciesAction(AddSpeciesToListAction.AddToFavorite(item.id))
                             },
                             onUnFavoriteClick = {
-                                onAddSpeciesAction(AddSpeciesToListAction.AddOrAskFavorite(item.id ?: 0))
+                                onAddSpeciesAction(AddSpeciesToListAction.AddOrAskFavorite(item.id))
                             },
                             onMenuButtonClick = {
                                 onAddSpeciesAction(AddSpeciesToListAction.ShowDialog(AddSpeciesToListDialogEvent.ShowItemBottomMenu(item,index)))
@@ -213,11 +230,11 @@ fun SpeciesListPage(
         state = addSpeciesState,
         onAction = onAddSpeciesAction,
         listIdControl = state.listIdControl,
-        bottomMenuItems = SpeciesListItemMenu.entries,
+        bottomMenuItems = SpeciesListBottomItemMenu.entries,
         onBottomMenuItemClick = { menuItem, item, pos ->
             when(menuItem){
-                SpeciesListItemMenu.Savepoint -> {
-                    onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(item, pos)))
+                SpeciesListBottomItemMenu.Savepoint -> {
+                    onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(pos)))
                 }
             }
         }

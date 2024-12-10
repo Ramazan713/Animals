@@ -12,5 +12,6 @@ data class CategoryState(
     val parentImageData: Any? = R.drawable.animals_plants,
     val kingdomType: KingdomType,
     val categoryType: CategoryType,
-    val itemId: Int?
+    val itemId: Int?,
+    val dialogEvent: CategoryListDialogEvent? = null,
 )

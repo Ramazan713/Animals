@@ -67,6 +67,12 @@ class CategoryListViewModel(
     }
 
     fun onAction(action: CategoryAction){
-
+        when(action){
+            is CategoryAction.ShowDialog -> {
+                _state.update { it.copy(
+                    dialogEvent = action.dialogEvent
+                ) }
+            }
+        }
     }
 }

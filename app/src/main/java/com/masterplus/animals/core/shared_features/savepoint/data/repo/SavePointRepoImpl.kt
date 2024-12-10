@@ -23,38 +23,27 @@ class SavePointRepoImpl(
     private val categoryImageInfoUseCase: SavePointCategoryImageInfoUseCase
 ): SavePointRepo {
 
-    override suspend fun insertContentSavePoint(
+    override suspend fun insertSavePoint(
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
+        contentType: SavePointContentType,
         saveMode: SavePointSaveMode,
         dateTime: LocalDateTime?
-    ) {
-        insertSavePoint(
+    ){
+        val imageInfo = categoryImageInfoUseCase(destination)
+        val savePoint = SavePoint(
             title = title,
-            destination = destination,
+            contentType = contentType,
             itemPosIndex = itemPosIndex,
-            contentType = SavePointContentType.Content,
-            dateTime = dateTime,
+            destination = destination,
+            modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+            imagePath = imageInfo.imagePath,
+            imageData = imageInfo.imageUrl,
+            kingdomType = destination.kingdomType,
             saveMode = saveMode
         )
-    }
-
-    override suspend fun insertCategorySavePoint(
-        title: String,
-        destination: SavePointDestination,
-        itemPosIndex: Int,
-        saveMode: SavePointSaveMode,
-        dateTime: LocalDateTime?
-    ) {
-        insertSavePoint(
-            title = title,
-            destination = destination,
-            itemPosIndex = itemPosIndex,
-            contentType = SavePointContentType.Category,
-            dateTime = dateTime,
-            saveMode = saveMode
-        )
+        savePointDao.insertSavePoint(savePoint.toSavePointEntity())
     }
 
     override suspend fun updateSavePointPos(id: Int, posIndex: Int) {
@@ -185,27 +174,6 @@ class SavePointRepoImpl(
     }
 
 
-    private suspend fun insertSavePoint(
-        title: String,
-        destination: SavePointDestination,
-        itemPosIndex: Int,
-        contentType: SavePointContentType,
-        saveMode: SavePointSaveMode,
-        dateTime: LocalDateTime?
-    ){
-        val imageInfo = categoryImageInfoUseCase(destination)
-        val savePoint = SavePoint(
-            title = title,
-            contentType = contentType,
-            itemPosIndex = itemPosIndex,
-            destination = destination,
-            modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-            imagePath = imageInfo.imagePath,
-            imageData = imageInfo.imageUrl,
-            kingdomType = destination.kingdomType,
-            saveMode = saveMode
-        )
-        savePointDao.insertSavePoint(savePoint.toSavePointEntity())
-    }
+
 
 }

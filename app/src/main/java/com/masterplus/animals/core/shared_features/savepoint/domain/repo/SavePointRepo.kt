@@ -10,18 +10,11 @@ import kotlinx.datetime.LocalDateTime
 
 interface SavePointRepo {
 
-    suspend fun insertContentSavePoint(
+    suspend fun insertSavePoint(
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
-        saveMode: SavePointSaveMode,
-        dateTime: LocalDateTime? = null
-    )
-
-    suspend fun insertCategorySavePoint(
-        title: String,
-        destination: SavePointDestination,
-        itemPosIndex: Int,
+        contentType: SavePointContentType,
         saveMode: SavePointSaveMode,
         dateTime: LocalDateTime? = null
     )

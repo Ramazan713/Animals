@@ -3,8 +3,10 @@ package com.masterplus.animals.core.presentation.components.image
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +49,7 @@ fun ImageWithTitle(
     model: CategoryData,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
     contentScale: ContentScale = ContentScale.Crop,
@@ -59,6 +62,7 @@ fun ImageWithTitle(
         modifier = modifier,
         subTitle = model.secondaryTitle,
         onClick = onClick,
+        onLongClick = onLongClick,
         contentDescription = model.title,
         size = size,
         shape = shape,
@@ -79,6 +83,7 @@ fun ImageWithTitle(
     model: ImageWithTitleModel,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
     contentScale: ContentScale = ContentScale.Crop,
@@ -90,6 +95,7 @@ fun ImageWithTitle(
         modifier = modifier,
         subTitle = model.subTitle,
         onClick = onClick,
+        onLongClick = onLongClick,
         contentDescription = model.contentDescription,
         size = size,
         shape = shape,
@@ -101,7 +107,7 @@ fun ImageWithTitle(
 }
 
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ImageWithTitle(
     imageData: Any,
@@ -109,6 +115,7 @@ fun ImageWithTitle(
     modifier: Modifier = Modifier,
     subTitle: String? = null,
     onClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
     contentDescription: String? = null,
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
@@ -122,8 +129,9 @@ fun ImageWithTitle(
             .clip(shape)
             .size(size)
             .background(Color.White)
-            .clickable(
+            .combinedClickable(
                 enabled = onClick != null,
+                onLongClick = onLongClick
             ) {
                 onClick?.invoke()
             }

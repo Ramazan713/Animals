@@ -1,4 +1,4 @@
-package com.masterplus.animals.features.species_list.domain.enums
+package com.masterplus.animals.features.category_list.domain.enums
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
@@ -7,7 +7,7 @@ import com.masterplus.animals.core.domain.models.IMenuItemEnum
 import com.masterplus.animals.core.domain.models.IconInfo
 import com.masterplus.animals.core.domain.utils.UiText
 
-enum class SpeciesListItemMenu: IMenuItemEnum {
+enum class CategoryListBottomItemMenu: IMenuItemEnum {
     Savepoint {
         override val title: UiText
             get() = UiText.Resource(R.string.save_point)

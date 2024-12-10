@@ -4,7 +4,9 @@ package com.masterplus.animals.features.category_list.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,8 +29,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -42,19 +46,28 @@ import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingLazyColumn
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
+import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
+import com.masterplus.animals.core.presentation.selections.ShowSelectBottomMenuItems
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
+import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.models.EditSavePointLoadParam
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointAction
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointHandler
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointState
+import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
+import com.masterplus.animals.features.category_list.domain.enums.CategoryListBottomItemMenu
+import com.masterplus.animals.features.category_list.domain.enums.CategoryListTopBarItemMenu
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun CategoryListPage(
     state: CategoryState,
@@ -83,6 +96,7 @@ fun CategoryListPage(
     }
 
     val lazyListState = rememberLazyListState()
+    val middlePos = lazyListState.visibleMiddlePosition()
     val scope = rememberCoroutineScope()
 
     AutoSavePointHandler(
@@ -106,7 +120,9 @@ fun CategoryListPage(
                 onNavigateBack = onNavigateBack,
                 title = state.title,
                 subTitle = state.subTitle,
-                onNavigateToCategorySearch = onNavigateToCategorySearch
+                onNavigateToCategorySearch = onNavigateToCategorySearch,
+                onAction = onAction,
+                listMiddlePos = { middlePos }
             )
         }
     ) { paddings->
@@ -116,6 +132,7 @@ fun CategoryListPage(
                 .fillMaxSize()
                 .nestedScroll(topBarScrollBehaviour.nestedScrollConnection),
             isEmptyResult = pagingItems.itemCount == 0,
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp),
             state = lazyListState,
             isLoading = pagingItems.loadState.refresh is LoadState.Loading || autoSavePointState.loadingSavePointPos,
             stickHeaderContent = {
@@ -141,12 +158,22 @@ fun CategoryListPage(
                 val item = pagingItems[index]
                 if(item != null){
                     ImageWithTitle(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                        ,
                         model = item,
                         order = index + 1,
                         useTransition = true,
                         onClick = {
                             onItemClick(item)
+                        },
+                        onLongClick = {
+                            onAction(CategoryAction.ShowDialog(
+                                dialogEvent = CategoryListDialogEvent.ShowBottomSheet(
+                                    posIndex = index,
+                                    item = item
+                                )
+                            ))
                         }
                     )
                 }
@@ -158,6 +185,49 @@ fun CategoryListPage(
             }
         }
     }
+
+    state.dialogEvent?.let { dialogEvent ->
+        val close = remember {{
+            onAction(CategoryAction.ShowDialog(null))
+        }}
+        when(dialogEvent){
+            is CategoryListDialogEvent.ShowEditSavePoint -> {
+                EditSavePointDialog(
+                    loadParam = EditSavePointLoadParam(
+                        destinationTypeId = state.categoryType.toSavePointDestinationTypeId(state.itemId),
+                        destinationId = state.itemId,
+                        kingdomType = state.kingdomType,
+                        contentType = SavePointContentType.Category,
+                    ),
+                    posIndex = dialogEvent.posIndex,
+                    onClosed = close,
+                    onNavigateLoad = {
+                        scope.launch {
+                            lazyListState.animateScrollToItem(it.itemPosIndex)
+                        }
+                    }
+                )
+            }
+
+            is CategoryListDialogEvent.ShowBottomSheet -> {
+                ShowSelectBottomMenuItems(
+                    items = CategoryListBottomItemMenu.entries,
+                    title = stringResource(R.string.n_for_number_word, dialogEvent.posIndex + 1, dialogEvent.item.title),
+                    onClose = close,
+                    onClickItem = { menuItem ->
+                        when(menuItem){
+                            CategoryListBottomItemMenu.Savepoint -> {
+                                onAction(CategoryAction.ShowDialog(CategoryListDialogEvent.ShowEditSavePoint(
+                                    posIndex = dialogEvent.posIndex
+                                )))
+                            }
+                        }
+                    }
+                )
+            }
+        }
+    }
+
 }
 
 @Composable
@@ -196,10 +266,12 @@ private fun HeaderImage(
 @Composable
 private fun GetTopBar(
     topBarScrollBehaviour: TopAppBarScrollBehavior,
+    onAction: (CategoryAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToCategorySearch: () -> Unit,
     title: String,
-    subTitle: String?
+    subTitle: String?,
+    listMiddlePos: () -> Int
 ) {
     LargeTopAppBar(
         title = {
@@ -225,6 +297,18 @@ private fun GetTopBar(
             IconButton(onClick = onNavigateToCategorySearch) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = null)
             }
+            CustomDropdownBarMenu(
+                items = CategoryListTopBarItemMenu.entries,
+                onItemChange = { menuItem ->
+                    when(menuItem){
+                        CategoryListTopBarItemMenu.Savepoint -> {
+                            onAction(CategoryAction.ShowDialog(CategoryListDialogEvent.ShowEditSavePoint(
+                                posIndex = listMiddlePos()
+                            )))
+                        }
+                    }
+                }
+            )
         }
     )
 }

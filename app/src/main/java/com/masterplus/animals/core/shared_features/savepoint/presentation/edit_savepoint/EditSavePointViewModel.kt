@@ -58,11 +58,13 @@ class EditSavePointViewModel @Inject constructor(
             }
             is EditSavePointAction.AddSavePoint -> {
                 viewModelScope.launch {
-                    savePointRepo.insertContentSavePoint(
+                    val loadParam = state.value.loadParam ?: return@launch
+                    savePointRepo.insertSavePoint(
                         title = action.title,
                         itemPosIndex = action.posIndex,
                         destination = state.value.loadParam?.destination ?: return@launch,
                         dateTime = action.currentDateTime,
+                        contentType = loadParam.contentType,
                         saveMode = SavePointSaveMode.Manuel
                     )
                     _state.update { it.copy(message = UiText.Resource(R.string.successfully_added))}
