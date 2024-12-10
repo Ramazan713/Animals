@@ -40,6 +40,7 @@ class SavePointSuggestedTitleUseCase(
         val title = UiText.Text("$destinationTitle - $formattedDateTime")
         return SuggestedResult(
             title = title,
+            titleText = title.asString(context),
             currentDateTime = currentDateTime
         )
     }
@@ -81,6 +82,7 @@ class SavePointSuggestedTitleUseCase(
     companion object {
         data class SuggestedResult(
             val title: UiText,
+            val titleText: String,
             val currentDateTime: LocalDateTime
         )
     }

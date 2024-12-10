@@ -3,6 +3,7 @@ package com.masterplus.animals.core.shared_features.savepoint.domain.repo
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
@@ -27,11 +28,17 @@ interface SavePointRepo {
         destinationId: Int? = null
     ): Flow<List<SavePoint>>
 
+    suspend fun getSavePointByQuery(
+        destination: SavePointDestination,
+        saveMode: SavePointSaveMode,
+        contentType: SavePointContentType
+    ): SavePoint?
 
     suspend fun insertContentSavePoint(
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
+        saveMode: SavePointSaveMode,
         dateTime: LocalDateTime? = null
     )
 
@@ -39,6 +46,7 @@ interface SavePointRepo {
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
+        saveMode: SavePointSaveMode,
         dateTime: LocalDateTime? = null
     )
 

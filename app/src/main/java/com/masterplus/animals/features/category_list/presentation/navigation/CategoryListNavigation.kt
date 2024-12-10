@@ -11,6 +11,8 @@ import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler
 import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointViewModel
 import com.masterplus.animals.features.category_list.presentation.CategoryListPage
 import com.masterplus.animals.features.category_list.presentation.CategoryListViewModel
 import kotlinx.serialization.Serializable
@@ -40,9 +42,14 @@ fun NavGraphBuilder.categoryList(
 ){
     composable<CategoryListRoute> {
         val viewModel: CategoryListViewModel = koinViewModel()
+        val autoSavePointViewModel: AutoSavePointViewModel = koinViewModel()
+
         val args = viewModel.args
         val state by viewModel.state.collectAsStateWithLifecycle()
         val items = viewModel.pagingItems.collectAsLazyPagingItems()
+
+        val autoSavePointState by autoSavePointViewModel.state.collectAsStateWithLifecycle()
+
         NavAnimatedVisibilityProvider(
             scope = this
         ){
@@ -65,6 +72,15 @@ fun NavGraphBuilder.categoryList(
                 },
                 onNavigateToCategorySearch = {
                     onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.kingdomType)
+                },
+                autoSavePointState = autoSavePointState,
+                onAutoSavePointAction = autoSavePointViewModel::onAction,
+                onDestination = {
+                    SavePointDestination.fromCategoryType(
+                        categoryType = args.categoryType,
+                        kingdomType = args.kingdomType,
+                        destinationId = null
+                    )
                 }
             )
         }

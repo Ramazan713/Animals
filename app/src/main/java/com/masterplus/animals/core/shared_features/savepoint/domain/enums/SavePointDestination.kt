@@ -134,7 +134,7 @@ sealed class SavePointDestination(
             kingdomType: KingdomType,
         ): SavePointDestination {
             val destinationTypeId = when {
-                destinationId != null -> SavePointDestinationType.All.destinationTypeId
+                destinationId == null -> SavePointDestinationType.All.destinationTypeId
                 else -> categoryType.toSavePointDestinationTypeId(1)
             }
             return from(

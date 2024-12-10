@@ -11,7 +11,9 @@ import javax.inject.Singleton
 data class SettingsData(
     val useThemeDynamic: Boolean = false,
     val themeEnum: ThemeEnum = ThemeEnum.defaultValue,
-    val languageEnum: LanguageEnum = LanguageEnum.defaultValue
+    val languageEnum: LanguageEnum = LanguageEnum.defaultValue,
+    val loadAutoSavePoint: Boolean = true,
+    val saveAutoSavePoint: Boolean = true
 )
 
 

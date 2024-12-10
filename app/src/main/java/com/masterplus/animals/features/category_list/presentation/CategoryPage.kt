@@ -4,19 +4,13 @@ package com.masterplus.animals.features.category_list.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,8 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,16 +37,21 @@ import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingLazyColumn
-import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
-import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointAction
+import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointHandler
+import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointState
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,10 +60,14 @@ fun CategoryListPage(
     state: CategoryState,
     pagingItems: LazyPagingItems<CategoryData>,
     onAction: (CategoryAction) -> Unit,
+    onAutoSavePointAction: (AutoSavePointAction) -> Unit,
+    autoSavePointState: AutoSavePointState,
+    onDestination: () -> SavePointDestination,
     onNavigateBack: () -> Unit,
     onAllItemClick: () -> Unit,
     onItemClick: (CategoryData) -> Unit,
-    onNavigateToCategorySearch: () -> Unit
+    onNavigateToCategorySearch: () -> Unit,
+    initPos: Int = 0
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -78,6 +81,23 @@ fun CategoryListPage(
             }
         }
     }
+
+    val lazyListState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+
+    AutoSavePointHandler(
+        contentType = SavePointContentType.Category,
+        onDestination = onDestination,
+        onAction = onAutoSavePointAction,
+        itemPosIndex = lazyListState.visibleMiddlePosition(),
+        state = autoSavePointState,
+        itemInitPos = initPos,
+        onInitPosResponse = {pos ->
+            scope.launch {
+                lazyListState.scrollToItem(pos)
+            }
+        }
+    )
 
     Scaffold(
         topBar = {
@@ -96,7 +116,8 @@ fun CategoryListPage(
                 .fillMaxSize()
                 .nestedScroll(topBarScrollBehaviour.nestedScrollConnection),
             isEmptyResult = pagingItems.itemCount == 0,
-            isLoading = pagingItems.loadState.refresh is LoadState.Loading,
+            state = lazyListState,
+            isLoading = pagingItems.loadState.refresh is LoadState.Loading || autoSavePointState.loadingSavePointPos,
             stickHeaderContent = {
                 item {
                     HeaderImage(
@@ -227,7 +248,10 @@ private fun CategoryListPagePreview1() {
         },
         onItemClick = {},
         onAllItemClick = {},
-        onNavigateToCategorySearch = {}
+        onNavigateToCategorySearch = {},
+        autoSavePointState = AutoSavePointState(),
+        onAutoSavePointAction = {},
+        onDestination = {SampleDatas.sampleDestination}
     )
 }
 

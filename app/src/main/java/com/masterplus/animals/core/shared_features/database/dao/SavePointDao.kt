@@ -17,6 +17,27 @@ interface SavePointDao {
     suspend fun getSavePointById(id: Int): SavePointEntity?
 
     @Query("""
+        select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId and
+        destinationTypeId = :destinationTypeId and saveModeId = :saveModeId
+        order by id desc limit 1
+    """)
+    suspend fun getSavePointByQuery(
+        destinationTypeId: Int, contentTypeId: Int, kingdomId: Int,
+        saveModeId: Int
+    ): SavePointEntity?
+
+    @Query("""
+        select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId and
+        destinationTypeId = :destinationTypeId and saveModeId = :saveModeId and destinationId = :destinationId
+        order by id desc limit 1
+    """)
+    suspend fun getSavePointByQuery(
+        destinationTypeId: Int, contentTypeId: Int, kingdomId: Int,
+        saveModeId: Int, destinationId: Int
+    ): SavePointEntity?
+
+
+    @Query("""
         select * from savepoints where destinationTypeId = :destinationTypeId and
         contentTypeId = :contentTypeId and kingdomId = :kingdomId order by modifiedTime desc
     """)

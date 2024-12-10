@@ -22,6 +22,7 @@ import com.masterplus.animals.core.shared_features.list.domain.models.ListView
 import com.masterplus.animals.core.shared_features.list.domain.models.SelectableListView
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.features.settings.presentation.link_accounts.models.LinkAccountModel
 import com.masterplus.animals.features.species_detail.presentation.models.TitleContentModel
@@ -65,6 +66,8 @@ object SampleDatas {
         imageUrl = imageUrl,
         categoryType = CategoryType.Class
     )
+
+    val sampleDestination = SavePointDestination.All(KingdomType.Animals)
 
     val phylum = PhylumModel(
         id = 2,
@@ -241,7 +244,7 @@ object SampleDatas {
         savePointDestination: SavePointDestination = SavePointDestination.ListType(1),
         modifiedDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
     ): SavePoint {
-        return SavePoint(id, title, SavePointContentType.Content,savePointDestination, KingdomType.Animals,itemPosIndex, modifiedDate,
+        return SavePoint(id, title, SavePointContentType.Content,savePointDestination, KingdomType.Animals, SavePointSaveMode.Manuel, itemPosIndex, modifiedDate,
             imageUrl,null)
     }
 

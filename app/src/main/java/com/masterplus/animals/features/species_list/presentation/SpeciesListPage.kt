@@ -36,6 +36,7 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.extentions.animateEnterExitForTransition
 import com.masterplus.animals.core.extentions.renderInSharedTransitionScopeOverlayDefault
+import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
@@ -48,7 +49,13 @@ import com.masterplus.animals.core.shared_features.add_species_to_list.presentat
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListState
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListViewModel
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.EditSavePointLoadParam
+import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointAction
+import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointHandler
+import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointState
+import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointViewModel
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListItemMenu
 import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
@@ -60,6 +67,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SpeciesListPageRoot(
     viewModel: SpeciesListViewModel = koinViewModel(),
     addSpeciesToListViewModel: AddSpeciesToListViewModel = koinViewModel(),
+    autoSavePointViewModel: AutoSavePointViewModel = koinViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit
@@ -69,6 +77,8 @@ fun SpeciesListPageRoot(
     val pagingItems = viewModel.pagingItems.collectAsLazyPagingItems()
 
     val addSpeciesState by addSpeciesToListViewModel.state.collectAsStateWithLifecycle()
+    val autoSavePointState by autoSavePointViewModel.state.collectAsStateWithLifecycle()
+
     SpeciesListPage(
         state = state,
         onAction = viewModel::onAction,
@@ -78,9 +88,11 @@ fun SpeciesListPageRoot(
         onNavigateBack = onNavigateBack,
         onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
         pagingItems = pagingItems,
+        onAutoSavePointAction = autoSavePointViewModel::onAction,
         onNavigateToCategorySearch = {
             onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.realItemId)
-        }
+        },
+        autoSavePointState = autoSavePointState
     )
 }
 
@@ -93,6 +105,8 @@ fun SpeciesListPage(
     pagingItems: LazyPagingItems<SpeciesListDetail>,
     state: SpeciesListState,
     onAction: (SpeciesListAction) -> Unit,
+    onAutoSavePointAction: (AutoSavePointAction) -> Unit,
+    autoSavePointState: AutoSavePointState,
     addSpeciesState: AddSpeciesToListState,
     onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
     args: SpeciesListRoute,
@@ -104,6 +118,25 @@ fun SpeciesListPage(
         initialFirstVisibleItemIndex = args.initPosIndex
     )
     val scope = rememberCoroutineScope()
+
+    AutoSavePointHandler(
+        contentType = SavePointContentType.Content,
+        onDestination = {SavePointDestination.fromCategoryType(
+            args.categoryType,
+            args.realItemId,
+            kingdomType = args.kingdomType
+        )},
+        onAction = onAutoSavePointAction,
+        itemPosIndex = lazyListState.visibleMiddlePosition(),
+        state = autoSavePointState,
+        itemInitPos = args.initPosIndex,
+        onInitPosResponse = {initPos ->
+            scope.launch {
+                lazyListState.scrollToItem(initPos)
+            }
+        }
+    )
+
 
     Scaffold(
         topBar = {
@@ -131,7 +164,7 @@ fun SpeciesListPage(
             modifier = Modifier
                 .padding(paddings)
                 .fillMaxSize(),
-            isLoading = pagingItems.loadState.refresh is LoadState.Loading,
+            isLoading = pagingItems.loadState.refresh is LoadState.Loading || autoSavePointState.loadingSavePointPos,
             isEmptyResult = pagingItems.itemCount == 0,
             overlayLoading = true
         ) {
@@ -235,6 +268,8 @@ fun SpeciesListPagePreview() {
             items = listOf(SampleDatas.generateSpeciesDetail(id = 1), SampleDatas.generateSpeciesDetail(id = 2), SampleDatas.generateSpeciesDetail(id = 3)),
             sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading, append = LoadState.Loading),
         ),
-        onNavigateToCategorySearch = {}
+        onNavigateToCategorySearch = {},
+        onAutoSavePointAction = {},
+        autoSavePointState = AutoSavePointState()
     )
 }

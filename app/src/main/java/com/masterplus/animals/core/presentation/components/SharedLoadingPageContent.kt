@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,6 +46,7 @@ fun SharedCircularProgress(
 
 @Composable
 fun SharedLoadingLazyColumn(
+    state: LazyListState = rememberLazyListState(),
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
@@ -55,6 +58,7 @@ fun SharedLoadingLazyColumn(
     content:  LazyListScope.() -> Unit,
 ) {
     LazyColumn(
+        state = state,
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(verticalSpaceBy),
         contentPadding = contentPadding

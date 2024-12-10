@@ -10,6 +10,7 @@ import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
@@ -75,7 +76,8 @@ class SpeciesListViewModel(
                             destinationId = args.realItemId,
                             kingdomType = args.kingdomType
                         ),
-                        itemPosIndex = action.posIndex
+                        itemPosIndex = action.posIndex,
+                        saveMode = SavePointSaveMode.Manuel
                     )
                 }
             }

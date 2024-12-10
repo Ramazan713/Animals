@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.use_cases.SavePointSuggestedTitleUseCase
 import kotlinx.coroutines.Job
@@ -61,7 +62,8 @@ class EditSavePointViewModel @Inject constructor(
                         title = action.title,
                         itemPosIndex = action.posIndex,
                         destination = state.value.loadParam?.destination ?: return@launch,
-                        dateTime = action.currentDateTime
+                        dateTime = action.currentDateTime,
+                        saveMode = SavePointSaveMode.Manuel
                     )
                     _state.update { it.copy(message = UiText.Resource(R.string.successfully_added))}
                 }

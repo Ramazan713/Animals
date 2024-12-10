@@ -6,6 +6,7 @@ import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSaveP
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointEntity
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.use_cases.SavePointCategoryImageInfoUseCase
@@ -58,10 +59,34 @@ class SavePointRepoImpl(
         )
     }
 
+    override suspend fun getSavePointByQuery(
+        destination: SavePointDestination,
+        saveMode: SavePointSaveMode,
+        contentType: SavePointContentType
+    ): SavePoint? {
+        val savePointEntity = with(destination){
+            if(destinationId != null) savePointDao.getSavePointByQuery(
+                destinationTypeId = destinationTypeId,
+                destinationId = destinationId,
+                contentTypeId = contentType.contentTypeId,
+                kingdomId = kingdomType.kingdomId,
+                saveModeId = saveMode.modeId
+            )
+            else savePointDao.getSavePointByQuery(
+                destinationTypeId = destinationTypeId,
+                contentTypeId = contentType.contentTypeId,
+                kingdomId = kingdomType.kingdomId,
+                saveModeId = saveMode.modeId
+            )
+        }
+        return savePointEntity?.toSavePoint()
+    }
+
     override suspend fun insertContentSavePoint(
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
+        saveMode: SavePointSaveMode,
         dateTime: LocalDateTime?
     ) {
         insertSavePoint(
@@ -69,7 +94,8 @@ class SavePointRepoImpl(
             destination = destination,
             itemPosIndex = itemPosIndex,
             contentType = SavePointContentType.Content,
-            dateTime = dateTime
+            dateTime = dateTime,
+            saveMode = saveMode
         )
     }
 
@@ -77,6 +103,7 @@ class SavePointRepoImpl(
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
+        saveMode: SavePointSaveMode,
         dateTime: LocalDateTime?
     ) {
         insertSavePoint(
@@ -84,7 +111,8 @@ class SavePointRepoImpl(
             destination = destination,
             itemPosIndex = itemPosIndex,
             contentType = SavePointContentType.Category,
-            dateTime = dateTime
+            dateTime = dateTime,
+            saveMode = saveMode
         )
     }
 
@@ -121,6 +149,7 @@ class SavePointRepoImpl(
         destination: SavePointDestination,
         itemPosIndex: Int,
         contentType: SavePointContentType,
+        saveMode: SavePointSaveMode,
         dateTime: LocalDateTime?
     ){
         val imageInfo = categoryImageInfoUseCase(destination)
@@ -132,7 +161,8 @@ class SavePointRepoImpl(
             modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
             imagePath = imageInfo.imagePath,
             imageData = imageInfo.imageUrl,
-            kingdomType = destination.kingdomType
+            kingdomType = destination.kingdomType,
+            saveMode = saveMode
         )
         savePointDao.insertSavePoint(savePoint.toSavePointEntity())
     }

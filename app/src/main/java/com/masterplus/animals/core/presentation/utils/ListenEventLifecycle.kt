@@ -10,6 +10,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
 fun ListenEventLifecycle(
+    vararg keys: Any?,
     onCreate: (() -> Unit)? = null,
     onStart: (() -> Unit)? = null,
     onResume: (() -> Unit)? = null,
@@ -29,7 +30,7 @@ fun ListenEventLifecycle(
     val currentOnAny by rememberUpdatedState(newValue = onAny)
 
 
-    DisposableEffect(lifecycleOwner.lifecycle){
+    DisposableEffect(*keys, lifecycleOwner.lifecycle){
 
         val listener = LifecycleEventObserver { _, event ->
             when(event){
@@ -58,7 +59,7 @@ fun ListenEventLifecycle(
         }
 
         lifecycleOwner.lifecycle.addObserver(listener)
-
+        println("AppXXX: dispose")
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(listener)
         }

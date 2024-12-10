@@ -4,6 +4,7 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.database.entity.SavePointEntity
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import kotlinx.datetime.LocalDateTime
 
@@ -23,7 +24,8 @@ fun SavePointEntity.toSavePoint(): SavePoint?{
         modifiedTime = LocalDateTime.parse(modifiedTime),
         imageData = imageUrl,
         imagePath = imagePath,
-        kingdomType = KingdomType.fromKingdomId(kingdomId)
+        kingdomType = KingdomType.fromKingdomId(kingdomId),
+        saveMode = SavePointSaveMode.fromModeId(saveModeId)
     );
 }
 
@@ -40,6 +42,7 @@ fun SavePoint.toSavePointEntity(): SavePointEntity{
         modifiedTime = modifiedTime.toString(),
         imageUrl = imageData?.toString(),
         imagePath = imagePath,
-        kingdomId = kingdomType.kingdomId
+        kingdomId = kingdomType.kingdomId,
+        saveModeId = saveMode.modeId
     );
 }
