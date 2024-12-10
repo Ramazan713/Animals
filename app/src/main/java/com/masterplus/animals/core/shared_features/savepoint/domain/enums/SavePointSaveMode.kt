@@ -10,6 +10,9 @@ enum class SavePointSaveMode(
         modeId = 2
     );
 
+    val isManuel get() = this == Manuel
+    val isAuto get() = this == Auto
+
     companion object {
         val DEFAULT = Manuel
 

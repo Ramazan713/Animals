@@ -8,6 +8,7 @@ import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -25,7 +26,8 @@ class SavePointSuggestedTitleUseCase(
         destinationTypeId: Int,
         destinationId: Int?,
         savePointContentType: SavePointContentType,
-        kingdomType: KingdomType
+        kingdomType: KingdomType,
+        saveMode: SavePointSaveMode
     ): SuggestedResult{
         val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         val formattedDateTime = currentDateTime.format(DateTimeFormatUtils.dateTimeUntilMinuteFormat)
@@ -37,10 +39,15 @@ class SavePointSuggestedTitleUseCase(
             kingdomType = kingdomType
         ).asString(context)
 
-        val title = UiText.Text("$destinationTitle - $formattedDateTime")
+        var title: String = ""
+        if(saveMode.isAuto){
+            title += "Auto - "
+        }
+        title += "$destinationTitle - $formattedDateTime"
+        val uiTitle = UiText.Text(title)
         return SuggestedResult(
-            title = title,
-            titleText = title.asString(context),
+            title = uiTitle,
+            titleText = title,
             currentDateTime = currentDateTime
         )
     }

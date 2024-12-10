@@ -10,30 +10,6 @@ import kotlinx.datetime.LocalDateTime
 
 interface SavePointRepo {
 
-    fun getAllSavePointsByContentType(
-        contentType: SavePointContentType,
-        filteredDestinationTypeIds: List<Int>? = null,
-        kingdomType: KingdomType
-    ): Flow<List<SavePoint>>
-
-    fun getContentSavePointsByDestination(
-        destinationTypeId: Int,
-        kingdomType: KingdomType,
-        destinationId: Int? = null
-    ): Flow<List<SavePoint>>
-
-    fun getCategorySavePointsByDestination(
-        destinationTypeId: Int,
-        kingdomType: KingdomType,
-        destinationId: Int? = null
-    ): Flow<List<SavePoint>>
-
-    suspend fun getSavePointByQuery(
-        destination: SavePointDestination,
-        saveMode: SavePointSaveMode,
-        contentType: SavePointContentType
-    ): SavePoint?
-
     suspend fun insertContentSavePoint(
         title: String,
         destination: SavePointDestination,
@@ -55,4 +31,28 @@ interface SavePointRepo {
     suspend fun updateSavePointTitle(id: Int, title: String)
 
     suspend fun deleteSavePoint(id: Int)
+
+    suspend fun getSavePointByQuery(
+        destination: SavePointDestination,
+        saveMode: SavePointSaveMode,
+        contentType: SavePointContentType
+    ): SavePoint?
+
+    fun getAllSavePoints(
+        contentType: SavePointContentType,
+        kingdomType: KingdomType,
+        filteredDestinationTypeIds: List<Int>? = null,
+        filterBySaveMode: SavePointSaveMode? = null
+    ): Flow<List<SavePoint>>
+
+    fun getSavePointsByDestination(
+        destinationTypeId: Int,
+        contentType: SavePointContentType,
+        kingdomType: KingdomType,
+        destinationId: Int? = null,
+        filterBySaveMode: SavePointSaveMode? = null
+    ): Flow<List<SavePoint>>
+
+
+
 }

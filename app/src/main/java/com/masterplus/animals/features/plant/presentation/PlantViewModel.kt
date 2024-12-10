@@ -8,6 +8,7 @@ import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
 import com.masterplus.animals.core.presentation.models.CategoryRowModel
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.plant.domain.repo.DailyPlantRepo
@@ -76,10 +77,11 @@ class PlantViewModel(
 
     private fun loadSavePoints(){
         savePointRepo
-            .getAllSavePointsByContentType(
+            .getAllSavePoints(
                 contentType = SavePointContentType.Content,
                 filteredDestinationTypeIds = null,
-                kingdomType = KingdomType.Plants
+                kingdomType = KingdomType.Plants,
+                filterBySaveMode = SavePointSaveMode.Manuel
             )
             .onEach { savePoints ->
                 _state.update { it.copy(

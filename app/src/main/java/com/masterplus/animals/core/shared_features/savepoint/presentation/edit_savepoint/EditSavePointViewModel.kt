@@ -92,7 +92,8 @@ class EditSavePointViewModel @Inject constructor(
                         destinationId = param.destinationId,
                         destinationTypeId = param.destinationTypeId,
                         savePointContentType = param.contentType,
-                        kingdomType = param.kingdomType
+                        kingdomType = param.kingdomType,
+                        saveMode = SavePointSaveMode.Manuel
                     )
                     _state.update { it.copy(
                         dialogEvent = EditSavePointDialogEvent.AddSavePointTitle(
@@ -113,7 +114,7 @@ class EditSavePointViewModel @Inject constructor(
         ) }
         loadDataJob?.cancel()
         loadDataJob = savePointRepo
-            .getAllSavePointsByContentType(
+            .getAllSavePoints(
                 contentType = action.loadPram.contentType,
                 filteredDestinationTypeIds = action.loadPram.filteredDestinationTypeIds,
                 kingdomType = action.loadPram.kingdomType

@@ -88,7 +88,7 @@ class ShowSavePointsViewModel(
         ) }
 
         val requestedDataFlow = savePointRepo
-            .getAllSavePointsByContentType(
+            .getAllSavePoints(
                 contentType = args.contentType,
                 filteredDestinationTypeIds = null,
                 kingdomType = args.kingdomType

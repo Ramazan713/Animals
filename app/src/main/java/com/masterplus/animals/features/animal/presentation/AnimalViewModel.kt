@@ -13,6 +13,7 @@ import com.masterplus.animals.features.animal.presentation.AnimalAction
 import com.masterplus.animals.features.animal.presentation.AnimalState
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
 import com.masterplus.animals.core.presentation.models.CategoryRowModel
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -76,10 +77,11 @@ class AnimalViewModel(
 
     private fun loadSavePoints(){
         savePointRepo
-            .getAllSavePointsByContentType(
+            .getAllSavePoints(
                 contentType = SavePointContentType.Content,
                 filteredDestinationTypeIds = null,
-                kingdomType = KingdomType.Animals
+                kingdomType = KingdomType.Animals,
+                filterBySaveMode = SavePointSaveMode.Manuel
             )
             .onEach { savePoints ->
                 _state.update { it.copy(

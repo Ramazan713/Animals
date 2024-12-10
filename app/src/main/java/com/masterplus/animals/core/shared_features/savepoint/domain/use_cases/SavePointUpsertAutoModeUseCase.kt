@@ -28,7 +28,8 @@ class SavePointUpsertAutoModeUseCase(
                 destinationTypeId = destination.destinationTypeId,
                 destinationId = destination.destinationId,
                 savePointContentType = contentType,
-                kingdomType = destination.kingdomType
+                kingdomType = destination.kingdomType,
+                saveMode = saveMode
             ).titleText
             when(contentType){
                 SavePointContentType.Category -> {

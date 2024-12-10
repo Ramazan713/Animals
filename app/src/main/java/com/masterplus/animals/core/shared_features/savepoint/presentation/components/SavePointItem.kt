@@ -3,10 +3,14 @@ package com.masterplus.animals.core.shared_features.savepoint.presentation.compo
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.FlowRowOverflow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,6 +37,7 @@ import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShapeUtils
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointItemMenu
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.core.shared_features.savepoint.presentation.extensions.asReadableModifiedData
 
@@ -194,26 +199,38 @@ private fun GetContentSection(
 }
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SavePointInfoItem(
     compactContent: Boolean,
     savePoint: SavePoint
 ) {
+
+
+
     if(compactContent){
-        Row(
+        FlowRow(
+            maxItemsInEachRow = 2,
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 text = "pos: ${savePoint.itemPosIndex + 1}",
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Spacer(modifier = Modifier.width(8.dp))
 
             Text(
                 text = "type: ${savePoint.destination.title.asString()}",
                 style = MaterialTheme.typography.bodyMedium
             )
+
+            if(savePoint.saveMode.isAuto){
+                Text(
+                    text = "Auto",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
     }else{
         Text(
@@ -225,6 +242,14 @@ private fun SavePointInfoItem(
             text = "type: ${savePoint.destination.title.asString()}",
             style = MaterialTheme.typography.bodyMedium
         )
+
+        if(savePoint.saveMode.isAuto){
+            Text(
+                text = "Auto",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
     }
 }
 
@@ -232,72 +257,65 @@ private fun SavePointInfoItem(
 @Preview(showBackground = true)
 @Composable
 private fun SavePointItemPreview() {
-    val savePoint = SampleDatas.generateSavePoint().copy(imageData = R.drawable.animals_plants, title = "Title".repeat(7))
+    val savePoint = SampleDatas.generateSavePoint().copy(
+        imageData = R.drawable.animals_plants,
+        title = "Title".repeat(7),
+        saveMode = SavePointSaveMode.Auto
+    )
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .padding(4.dp)
 //            .verticalScroll(rememberScrollState())
     ) {
-//        LazyRow(
-//            modifier = Modifier
-//        ) {
-//            item {
-//                SavePointItem(
-//                    modifier = Modifier
-//                        .widthIn(min = 150.dp, max = 200.dp)
-//                        .fillParentMaxHeight(),
-//                    savePoint = savePoint,
-//                    isSelected = false,
-//                    showAsRow = false,
-//                    onMenuClick = {
-//
-//                    },
-//                    onClick = {},
-//                )
-//            }
-//
-//            item {
-//                SavePointItem(
-//                    modifier = Modifier
-//                        .widthIn(min = 150.dp, max = 200.dp)
-//                        .fillParentMaxHeight()
-//                    ,
-//                    savePoint = savePoint.copy(title = "Title"),
-//                    isSelected = false,
-//                    showAsRow = false,
-//                    showImage = true,
-//                    onMenuClick = {
-//
-//                    },
-//                    onClick = {},
-//                )
-//            }
-//        }
 
-        SavePointItem(
-            modifier = Modifier.fillMaxWidth(),
-            savePoint = savePoint,
-            isSelected = true,
-            itemDefaults = SavePointItemDefaults(
-                showImage = false,
-                compactContent = false,
-                titleMaxLineLimit = 1,
-            ),
-
+//        SavePointItem(
+//            modifier = Modifier.fillMaxWidth(),
+//            savePoint = savePoint,
+//            isSelected = true,
+//            itemDefaults = SavePointItemDefaults(
+//                showImage = false,
+//                compactContent = false,
+//                titleMaxLineLimit = 1,
+//            ),
+//
 //            onMenuClick = {},
-            onClick = {},
-        )
+//            onClick = {},
+//        )
+//
+//        SavePointItem(
+//            savePoint = savePoint,
+//            isSelected = false,
+//            itemDefaults = SavePointItemDefaults(
+//                showAsRow = false,
+//                compactContent = false,
+//                titleMaxLineLimit = 1,
+//            ),
+//            onMenuClick = {},
+//            onClick = {},
+//        )
+//
+//        SavePointItem(
+//            savePoint = savePoint,
+//            isSelected = false,
+//            itemDefaults = SavePointItemDefaults(
+//                showAsRow = true,
+//                compactContent = false,
+//                titleMaxLineLimit = 1,
+//            ),
+//            onMenuClick = {},
+//            onClick = {},
+//        )
 
         SavePointItem(
             savePoint = savePoint,
             isSelected = false,
             itemDefaults = SavePointItemDefaults(
                 showAsRow = false,
-                compactContent = false,
+                compactContent = true,
                 titleMaxLineLimit = 1,
             ),
-//            onMenuClick = {},
+            onMenuClick = {},
             onClick = {},
         )
     }

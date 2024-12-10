@@ -2,6 +2,7 @@ package com.masterplus.animals.core.shared_features.savepoint.data.repo
 
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.database.dao.SavePointDao
+import com.masterplus.animals.core.shared_features.database.entity.SavePointEntity
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePoint
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointEntity
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
@@ -21,66 +22,6 @@ class SavePointRepoImpl(
     private val savePointDao: SavePointDao,
     private val categoryImageInfoUseCase: SavePointCategoryImageInfoUseCase
 ): SavePointRepo {
-
-    override fun getAllSavePointsByContentType(
-        contentType: SavePointContentType,
-        filteredDestinationTypeIds: List<Int>?,
-        kingdomType: KingdomType
-    ): Flow<List<SavePoint>> {
-        val savePointsFlow = if(filteredDestinationTypeIds != null)
-            savePointDao.getAllFlowSavePointsByFilteredDestinations(contentType.contentTypeId, filteredDestinationTypeIds, kingdomType.kingdomId) else
-                savePointDao.getAllFlowSavePointsByContentType(contentType.contentTypeId, kingdomType.kingdomId)
-        return savePointsFlow.map { items -> items.mapNotNull { it.toSavePoint() } }
-    }
-
-    override fun getContentSavePointsByDestination(
-        destinationTypeId: Int,
-        kingdomType: KingdomType,
-        destinationId: Int?
-    ): Flow<List<SavePoint>> {
-        return getSavePointsByDestination(
-            contentType = SavePointContentType.Content,
-            destinationTypeId = destinationTypeId,
-            destinationId = destinationId,
-            kingdomType = kingdomType
-        )
-    }
-
-    override fun getCategorySavePointsByDestination(
-        destinationTypeId: Int,
-        kingdomType: KingdomType,
-        destinationId: Int?,
-    ): Flow<List<SavePoint>> {
-        return getSavePointsByDestination(
-            contentType = SavePointContentType.Category,
-            destinationTypeId = destinationTypeId,
-            destinationId = destinationId,
-            kingdomType = kingdomType
-        )
-    }
-
-    override suspend fun getSavePointByQuery(
-        destination: SavePointDestination,
-        saveMode: SavePointSaveMode,
-        contentType: SavePointContentType
-    ): SavePoint? {
-        val savePointEntity = with(destination){
-            if(destinationId != null) savePointDao.getSavePointByQuery(
-                destinationTypeId = destinationTypeId,
-                destinationId = destinationId,
-                contentTypeId = contentType.contentTypeId,
-                kingdomId = kingdomType.kingdomId,
-                saveModeId = saveMode.modeId
-            )
-            else savePointDao.getSavePointByQuery(
-                destinationTypeId = destinationTypeId,
-                contentTypeId = contentType.contentTypeId,
-                kingdomId = kingdomType.kingdomId,
-                saveModeId = saveMode.modeId
-            )
-        }
-        return savePointEntity?.toSavePoint()
-    }
 
     override suspend fun insertContentSavePoint(
         title: String,
@@ -128,21 +69,121 @@ class SavePointRepoImpl(
         savePointDao.deleteSavePointById(id)
     }
 
-
-    private fun getSavePointsByDestination(
-        contentType: SavePointContentType,
-        destinationTypeId: Int,
-        destinationId: Int?,
-        kingdomType: KingdomType
-    ): Flow<List<SavePoint>> {
-        return if(destinationId != null){
-            savePointDao
-                .getFlowSavePointsDestinationByDestId(destinationTypeId, destinationId, contentType.contentTypeId, kingdomType.kingdomId)
-        }else{
-            savePointDao
-                .getFlowSavePointsDestinations(destinationTypeId, contentType.contentTypeId, kingdomType.kingdomId)
-        }.map { items -> items.mapNotNull { it.toSavePoint() } }
+    override suspend fun getSavePointByQuery(
+        destination: SavePointDestination,
+        saveMode: SavePointSaveMode,
+        contentType: SavePointContentType
+    ): SavePoint? {
+        val savePointEntity = with(destination){
+            if(destinationId != null) savePointDao.getSavePointByQuery(
+                destinationTypeId = destinationTypeId,
+                destinationId = destinationId,
+                contentTypeId = contentType.contentTypeId,
+                kingdomId = kingdomType.kingdomId,
+                saveModeId = saveMode.modeId
+            )
+            else savePointDao.getSavePointByQuery(
+                destinationTypeId = destinationTypeId,
+                contentTypeId = contentType.contentTypeId,
+                kingdomId = kingdomType.kingdomId,
+                saveModeId = saveMode.modeId
+            )
+        }
+        return savePointEntity?.toSavePoint()
     }
+
+
+    override fun getAllSavePoints(
+        contentType: SavePointContentType,
+        kingdomType: KingdomType,
+        filteredDestinationTypeIds: List<Int>?,
+        filterBySaveMode: SavePointSaveMode?
+    ): Flow<List<SavePoint>> {
+        val kingdomId = kingdomType.kingdomId
+        val saveModeId = filterBySaveMode?.modeId
+        val savePointsFlow: Flow<List<SavePointEntity>>
+
+        if(filteredDestinationTypeIds != null){
+            savePointsFlow = if(saveModeId != null){
+                savePointDao.getAllFlowSavePointsByFilteredDestinations(
+                    contentTypeId = contentType.contentTypeId,
+                    destinationTypeIds = filteredDestinationTypeIds,
+                    kingdomId = kingdomId,
+                    saveModeId = saveModeId
+                )
+            }else{
+                savePointDao.getAllFlowSavePointsByFilteredDestinations(
+                    contentTypeId = contentType.contentTypeId,
+                    destinationTypeIds = filteredDestinationTypeIds,
+                    kingdomId = kingdomId,
+                )
+            }
+        }else{
+            savePointsFlow = if(saveModeId != null){
+                savePointDao.getAllFlowSavePointsByContentType(
+                    contentTypeId = contentType.contentTypeId,
+                    kingdomId = kingdomId,
+                    saveModeId = saveModeId
+                )
+            }else{
+                savePointDao.getAllFlowSavePointsByContentType(
+                    contentTypeId = contentType.contentTypeId,
+                    kingdomId = kingdomId,
+                )
+            }
+        }
+        return savePointsFlow.map { items -> items.mapNotNull { it.toSavePoint() } }
+    }
+
+    override fun getSavePointsByDestination(
+        destinationTypeId: Int,
+        contentType: SavePointContentType,
+        kingdomType: KingdomType,
+        destinationId: Int?,
+        filterBySaveMode: SavePointSaveMode?
+    ): Flow<List<SavePoint>> {
+        val kingdomId = kingdomType.kingdomId
+        val saveModeId = filterBySaveMode?.modeId
+        val contentTypeId = contentType.contentTypeId
+        val savePointsFlow: Flow<List<SavePointEntity>>
+
+        if(destinationId != null){
+            if(saveModeId != null){
+                savePointsFlow = savePointDao.getFlowSavePointsDestinationByDestId(
+                    destinationTypeId = destinationTypeId,
+                    destinationId = destinationId,
+                    contentTypeId = contentTypeId,
+                    kingdomId = kingdomId,
+                    saveModeId = saveModeId
+                )
+            }else{
+                savePointsFlow = savePointDao.getFlowSavePointsDestinationByDestId(
+                    destinationTypeId = destinationTypeId,
+                    destinationId = destinationId,
+                    contentTypeId = contentTypeId,
+                    kingdomId = kingdomId
+                )
+            }
+        }else{
+            savePointsFlow = if(saveModeId != null){
+                savePointDao.getFlowSavePointsDestinations(
+                    destinationTypeId = destinationTypeId,
+                    contentTypeId = contentTypeId,
+                    kingdomId = kingdomId,
+                    saveModeId = saveModeId
+                )
+            }else{
+                savePointDao.getFlowSavePointsDestinations(
+                    destinationTypeId = destinationTypeId,
+                    contentTypeId = contentTypeId,
+                    kingdomId = kingdomId,
+                )
+            }
+        }
+
+        return savePointsFlow.map { items -> items.mapNotNull { it.toSavePoint() } }
+    }
+
 
     private suspend fun insertSavePoint(
         title: String,
