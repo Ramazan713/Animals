@@ -91,7 +91,6 @@ class EditSavePointViewModel @Inject constructor(
                     val suggestedData = suggestedTitleUseCase(
                         destinationId = param.destinationId,
                         destinationTypeId = param.destinationTypeId,
-                        savePointContentType = param.contentType,
                         kingdomType = param.kingdomType,
                         saveMode = SavePointSaveMode.Manuel
                     )

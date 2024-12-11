@@ -27,7 +27,6 @@ class SavePointUpsertAutoModeUseCase(
             val title = suggestedTitleUseCase(
                 destinationTypeId = destination.destinationTypeId,
                 destinationId = destination.destinationId,
-                savePointContentType = contentType,
                 kingdomType = destination.kingdomType,
                 saveMode = saveMode
             ).titleText

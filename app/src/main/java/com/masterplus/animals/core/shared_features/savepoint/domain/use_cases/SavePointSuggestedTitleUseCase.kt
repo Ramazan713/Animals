@@ -25,7 +25,6 @@ class SavePointSuggestedTitleUseCase(
     suspend operator fun invoke(
         destinationTypeId: Int,
         destinationId: Int?,
-        savePointContentType: SavePointContentType,
         kingdomType: KingdomType,
         saveMode: SavePointSaveMode
     ): SuggestedResult{

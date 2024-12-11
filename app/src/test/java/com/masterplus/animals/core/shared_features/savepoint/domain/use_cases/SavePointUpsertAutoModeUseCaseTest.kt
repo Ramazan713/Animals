@@ -11,10 +11,7 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.translation.data.repo.TranslationRepoFake
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
-
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -62,7 +59,6 @@ class SavePointUpsertAutoModeUseCaseTest {
         val suggestedTitle = suggestedTitleUseCase.invoke(
             destinationTypeId = destination.destinationTypeId,
             saveMode = SavePointSaveMode.Auto,
-            savePointContentType = contentType,
             kingdomType = kingdomType,
             destinationId = destination.destinationId
         ).titleText
