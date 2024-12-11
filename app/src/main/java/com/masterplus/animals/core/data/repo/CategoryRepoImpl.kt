@@ -64,6 +64,10 @@ class CategoryRepoImpl constructor(
         return categoryDao.getOrderWithId(orderId)?.toOrder(language)
     }
 
+    override suspend fun getFamilyWithId(familyId: Int, language: LanguageEnum): FamilyModel? {
+        return categoryDao.getFamilyWithId(familyId)?.toFamily(language)
+    }
+
 
     override fun getPagingOrdersWithClassId(
         classId: Int,

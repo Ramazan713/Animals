@@ -23,6 +23,9 @@ interface CategoryRepo {
 
     suspend fun getOrderWithId(orderId: Int, language: LanguageEnum): OrderModel?
 
+    suspend fun getFamilyWithId(familyId: Int, language: LanguageEnum): FamilyModel?
+
+
     fun getPagingOrdersWithClassId(classId: Int, pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>>
 
     fun getPagingFamiliesWithOrderId(orderId: Int, pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>>

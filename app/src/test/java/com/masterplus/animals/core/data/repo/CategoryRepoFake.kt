@@ -43,6 +43,10 @@ class CategoryRepoFake: CategoryRepo{
         return fakeOrders.firstOrNull { it.id == orderId }
     }
 
+    override suspend fun getFamilyWithId(familyId: Int, language: LanguageEnum): FamilyModel? {
+        return fakeFamilies.firstOrNull { it.id == familyId }
+    }
+
     override fun getPagingOrdersWithClassId(
         classId: Int,
         pageSize: Int,

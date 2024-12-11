@@ -9,4 +9,8 @@ class StringProviderImpl(
     override fun getString(resId: Int, vararg args: Any): String {
         return context.getString(resId, *args)
     }
+
+    override fun getString(text: String): String {
+        return text
+    }
 }

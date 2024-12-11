@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.shared_features.savepoint.domain.use_cases
 
-import android.content.Context
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.StringProvider
@@ -36,7 +35,6 @@ class SavePointSuggestedTitleUseCase(
         val destinationTitle = getDestinationTitle(
             destinationId = destinationId,
             destinationTypeId = destinationTypeId,
-            savePointContentType = savePointContentType,
             kingdomType = kingdomType
         ).asString(stringProvider)
 
@@ -45,6 +43,7 @@ class SavePointSuggestedTitleUseCase(
             title += "Auto - "
         }
         title += "$destinationTitle - $formattedDateTime"
+
         val uiTitle = UiText.Text(title)
         return SuggestedResult(
             title = uiTitle,
@@ -57,10 +56,8 @@ class SavePointSuggestedTitleUseCase(
     private suspend fun getDestinationTitle(
         destinationTypeId: Int,
         destinationId: Int?,
-        savePointContentType: SavePointContentType,
         kingdomType: KingdomType
     ): UiText{
-
         val defaultResult =  SavePointDestination.All(kingdomType).title
 
         val destination = SavePointDestination.from(
@@ -68,26 +65,20 @@ class SavePointSuggestedTitleUseCase(
             destinationId = destinationId,
             kingdomType = kingdomType
         )
+        val categoryType = destination?.toCategoryType()
 
-        return when(savePointContentType){
-            SavePointContentType.Category -> {
-                destination?.title
-            }
-            SavePointContentType.Content -> {
-                val categoryType = destination?.toCategoryType()
-                if(destinationId == null || categoryType == null) null
-                else{
-                    val catName = categoryRepo.getCategoryName(
-                        categoryType = categoryType,
-                        itemId = destinationId,
-                        language = translationRepo.getLanguage()
-                    )
-                    if (catName != null) {
-                        UiText.Text(catName)
-                    } else null
-                }
-            }
-        } ?: defaultResult
+        if(destinationId == null || categoryType == null)
+            return destination?.title ?: defaultResult
+
+        val catName = categoryRepo.getCategoryName(
+            categoryType = categoryType,
+            itemId = destinationId,
+            language = translationRepo.getLanguage()
+        )
+        if(catName != null){
+            return UiText.Text(catName)
+        }
+        return destination.title
     }
 
 

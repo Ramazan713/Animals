@@ -26,7 +26,7 @@ sealed class UiText{
     fun asString(stringProvider: StringProvider): String{
         return when(this){
             is Resource -> stringProvider.getString(resId,*formatArgs.toTypedArray())
-            is Text -> content
+            is Text -> stringProvider.getString(content)
         }
     }
 

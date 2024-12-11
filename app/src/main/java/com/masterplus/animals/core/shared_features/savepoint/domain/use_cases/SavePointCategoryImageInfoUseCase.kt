@@ -1,31 +1,36 @@
 package com.masterplus.animals.core.shared_features.savepoint.domain.use_cases
 
+import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 
 class SavePointCategoryImageInfoUseCase(
-    private val categoryDao: CategoryDao
+    private val translationRepo: TranslationRepo,
+    private val categoryRepo: CategoryRepo
 ) {
 
     suspend operator fun invoke(destination: SavePointDestination): InfoResult{
         val nullableResult = InfoResult(null,null)
         val destinationId = destination.destinationId ?: return nullableResult
 
+        val lang = translationRepo.getLanguage()
+
         when(destination){
             is SavePointDestination.All -> return nullableResult
             is SavePointDestination.ListType -> return nullableResult
             is SavePointDestination.Habitat -> return nullableResult
             is SavePointDestination.ClassType -> {
-                val classEntity = categoryDao.getClassWithId(destinationId) ?: return nullableResult
-                return InfoResult(classEntity.image_path, classEntity.image_url)
+                val classEntity = categoryRepo.getClassWithId(destinationId, lang) ?: return nullableResult
+                return InfoResult(classEntity.imagePath, classEntity.imageUrl)
             }
             is SavePointDestination.Family -> {
-                val family = categoryDao.getFamilyWithId(destinationId) ?: return nullableResult
-                return InfoResult(family.image_path, family.image_url)
+                val family = categoryRepo.getFamilyWithId(destinationId, lang) ?: return nullableResult
+                return InfoResult(family.imagePath, family.imageUrl)
             }
             is SavePointDestination.Order -> {
-                val order = categoryDao.getOrderWithId(destinationId) ?: return nullableResult
-                return InfoResult(order.image_path, order.image_url)
+                val order = categoryRepo.getOrderWithId(destinationId, lang) ?: return nullableResult
+                return InfoResult(order.imagePath, order.imageUrl)
             }
         }
     }

@@ -9,4 +9,8 @@ class StringProviderFake: StringProvider{
     override fun getString(resId: Int, vararg args: Any): String {
         return returnedValue
     }
+
+    override fun getString(text: String): String {
+        return returnedValue
+    }
 }
