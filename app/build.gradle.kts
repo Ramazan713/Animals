@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.firebase.crashlytics.gradle)
     alias(libs.plugins.firebase.perf.plugin)
     alias(libs.plugins.room)
+    alias(libs.plugins.android.junit5)
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -89,6 +90,18 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    androidTestImplementation(libs.assertk)
+    androidTestImplementation(libs.mockk.android)
+
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.junit)
+    testImplementation(libs.assertk)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 
     implementation(libs.bundles.room)
     ksp(libs.room.compiler)

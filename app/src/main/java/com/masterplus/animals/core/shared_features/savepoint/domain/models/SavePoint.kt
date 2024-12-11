@@ -8,12 +8,12 @@ import kotlinx.datetime.LocalDateTime
 
 data class SavePoint(
     val id: Int? = null,
-    val title: String,
+    var title: String,
     val contentType: SavePointContentType,
     val destination: SavePointDestination,
     val kingdomType: KingdomType,
     val saveMode: SavePointSaveMode,
-    val itemPosIndex: Int,
+    var itemPosIndex: Int,
     val modifiedTime: LocalDateTime,
     val imageData: Any?,
     val imagePath: String?

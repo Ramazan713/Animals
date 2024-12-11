@@ -60,6 +60,7 @@ class SearchCategoryViewModel(
                 }
                 else {
                     categoryRepo.getCategoryName(args.categoryType, args.itemId, language)
+                        ?.let { UiText.Text(it) }
                 }
                 _state.update { it.copy(
                     titleForPlaceHolder = titleForPlaceholder

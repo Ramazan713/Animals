@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.masterplus.animals.core.domain.repo.StringProvider
 
 
 sealed class UiText{
@@ -21,6 +22,14 @@ sealed class UiText{
             is Text -> content
         }
     }
+
+    fun asString(stringProvider: StringProvider): String{
+        return when(this){
+            is Resource -> stringProvider.getString(resId,*formatArgs.toTypedArray())
+            is Text -> content
+        }
+    }
+
 
     @Composable
     fun asString(): String{

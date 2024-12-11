@@ -16,7 +16,7 @@ interface CategoryRepo {
 
     suspend fun getCategoryData(categoryType: CategoryType, limit: Int, language: LanguageEnum, kingdomType: KingdomType): List<CategoryData>
 
-    suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): UiText?
+    suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): String?
 
 
     suspend fun getClassWithId(classId: Int, language: LanguageEnum): ClassModel?

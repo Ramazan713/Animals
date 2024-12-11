@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import com.masterplus.animals.core.domain.repo.CategoryRepo
+import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
 import com.masterplus.animals.features.search.domain.repo.HistoryRepo
@@ -60,7 +61,9 @@ class SearchSpeciesViewModel(
         translationRepo
             .getFlowLanguage()
             .onEach { language ->
-                val titleForPlaceholder = categoryRepo.getCategoryName(args.categoryType, args.itemId, language)
+                val titleForPlaceholder =
+                    categoryRepo.getCategoryName(args.categoryType, args.itemId, language)
+                        ?.let { UiText.Text(it) }
                 _state.update { it.copy(
                     titleForPlaceHolder = titleForPlaceholder
                 ) }

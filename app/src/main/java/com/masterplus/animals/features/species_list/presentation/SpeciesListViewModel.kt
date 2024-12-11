@@ -90,7 +90,9 @@ class SpeciesListViewModel(
         var title: UiText = UiText.Text(kingdomTitle)
 
         if(itemId != null){
-            title = categoryRepo.getCategoryName(args.categoryType, itemId, language) ?: title
+            title = categoryRepo.getCategoryName(args.categoryType, itemId, language)
+                ?.let { UiText.Text(it) }
+                ?: title
         }
         _state.update { it.copy(
             title = title

@@ -43,7 +43,7 @@ class CategoryRepoImpl constructor(
         }
     }
 
-    override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): UiText? {
+    override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): String? {
         val title = when(categoryType){
             CategoryType.Habitat -> categoryDao.getHabitatCategoryWithId(itemId)?.let { if(language.isEn) it.habitat_category_en else it.habitat_category_tr }
             CategoryType.Class -> categoryDao.getClassWithId(itemId)?.scientific_name
@@ -51,7 +51,7 @@ class CategoryRepoImpl constructor(
             CategoryType.Family -> categoryDao.getFamilyWithId(itemId)?.scientific_name
             CategoryType.List -> listDao.getListById(itemId)?.name
         }
-        return if(title != null) UiText.Text(title) else null
+        return title
     }
 
 
