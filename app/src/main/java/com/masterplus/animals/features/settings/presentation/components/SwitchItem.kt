@@ -1,6 +1,9 @@
 package com.masterplus.animals.features.settings.presentation.components
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
@@ -12,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 
@@ -19,25 +23,46 @@ import androidx.compose.ui.unit.dp
 fun SwitchItem(
     title: String,
     value: Boolean,
-    onValueChange: (Boolean)->Unit
+    onValueChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    subTitle: String? = null,
+    contentPaddingValues: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
 ){
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(
-                horizontal = 1.dp, vertical = 3.dp
+                horizontal = 1.dp, vertical = 4.dp
             )
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .toggleable(value = value, onValueChange = onValueChange, role = Role.Switch)
-            .padding(horizontal = 8.dp, vertical = 12.dp)
+            .padding(contentPaddingValues)
         ,
         verticalAlignment = Alignment.CenterVertically
     ){
-        Text(
-            title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f)
-        )
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 5.dp)
+                .padding(end = 8.dp)
+        ) {
+            Text(
+                title,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.W500
+                )
+            )
+            if(subTitle != null){
+                Spacer(Modifier.padding(top = 2.dp))
+                Text(
+                    subTitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+
+        }
+
         Switch(checked = value, onCheckedChange = null)
     }
 }

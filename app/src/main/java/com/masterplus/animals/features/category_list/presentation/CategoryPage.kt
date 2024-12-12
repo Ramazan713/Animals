@@ -80,6 +80,7 @@ fun CategoryListPage(
     onAllItemClick: () -> Unit,
     onItemClick: (CategoryData) -> Unit,
     onNavigateToCategorySearch: () -> Unit,
+    onNavigateToSavePointCategorySettings: () -> Unit,
     initPos: Int = 0
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -122,7 +123,8 @@ fun CategoryListPage(
                 subTitle = state.subTitle,
                 onNavigateToCategorySearch = onNavigateToCategorySearch,
                 onAction = onAction,
-                listMiddlePos = { middlePos }
+                listMiddlePos = { middlePos },
+                onNavigateToSavePointCategorySettings = onNavigateToSavePointCategorySettings
             )
         }
     ) { paddings->
@@ -269,6 +271,7 @@ private fun GetTopBar(
     onAction: (CategoryAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToCategorySearch: () -> Unit,
+    onNavigateToSavePointCategorySettings: () -> Unit,
     title: String,
     subTitle: String?,
     listMiddlePos: () -> Int
@@ -306,6 +309,7 @@ private fun GetTopBar(
                                 posIndex = listMiddlePos()
                             )))
                         }
+                        CategoryListTopBarItemMenu.SavePointSettings -> onNavigateToSavePointCategorySettings()
                     }
                 }
             )
@@ -335,7 +339,8 @@ private fun CategoryListPagePreview1() {
         onNavigateToCategorySearch = {},
         autoSavePointState = AutoSavePointState(),
         onAutoSavePointAction = {},
-        onDestination = {SampleDatas.sampleDestination}
+        onDestination = {SampleDatas.sampleDestination},
+        onNavigateToSavePointCategorySettings = {}
     )
 }
 

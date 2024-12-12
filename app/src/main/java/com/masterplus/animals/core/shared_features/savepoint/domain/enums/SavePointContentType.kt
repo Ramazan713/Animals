@@ -10,6 +10,9 @@ enum class SavePointContentType(
         contentTypeId = 2
     );
 
+    val isCategory get() = Category == this
+    val isContent get() = Content == this
+
     companion object {
         fun from(contentTypeId: Int): SavePointContentType? {
             for(type in SavePointContentType.entries){

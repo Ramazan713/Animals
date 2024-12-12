@@ -2,6 +2,7 @@ package com.masterplus.animals.features.settings.presentation
 
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SettingsPageRoot(
     onNavigateBack: () -> Unit,
     onNavigateToLinkedAccounts: () -> Unit,
+    onNavigateToSavePointSettings: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(),
     authViewModel: AuthViewModel = koinViewModel()
 ) {
@@ -51,7 +53,8 @@ fun SettingsPageRoot(
         authState = authState,
         onAuthAction = authViewModel::onAction,
         onNavigateBack = onNavigateBack,
-        onNavigateToLinkedAccounts = onNavigateToLinkedAccounts
+        onNavigateToLinkedAccounts = onNavigateToLinkedAccounts,
+        onNavigateToSavePointSettings = onNavigateToSavePointSettings
     )
 }
 
@@ -64,7 +67,8 @@ fun SettingsPage(
     authState: AuthState,
     onAuthAction: (AuthAction) -> Unit,
     onNavigateBack: () -> Unit,
-    onNavigateToLinkedAccounts: () -> Unit
+    onNavigateToLinkedAccounts: () -> Unit,
+    onNavigateToSavePointSettings: () -> Unit
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -89,7 +93,8 @@ fun SettingsPage(
                 .padding(paddings)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             item() {
                 ProfileSettingSection(
@@ -110,7 +115,8 @@ fun SettingsPage(
                     state = state,
                     onEvent = onAction,
                     user = authState.user,
-                    onNavigateToLinkedAccounts = onNavigateToLinkedAccounts
+                    onNavigateToLinkedAccounts = onNavigateToLinkedAccounts,
+                    onNavigateToSavePointSettings = onNavigateToSavePointSettings
                 )
             }
 

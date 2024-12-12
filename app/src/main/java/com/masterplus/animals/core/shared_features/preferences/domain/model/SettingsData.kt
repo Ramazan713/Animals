@@ -12,8 +12,15 @@ data class SettingsData(
     val useThemeDynamic: Boolean = false,
     val themeEnum: ThemeEnum = ThemeEnum.defaultValue,
     val languageEnum: LanguageEnum = LanguageEnum.defaultValue,
-    val loadAutoSavePoint: Boolean = true,
-    val saveAutoSavePoint: Boolean = true
+    val savePointsSettingsData: SavePointSettingsData = SavePointSettingsData()
+)
+
+@Serializable
+data class SavePointSettingsData(
+    val loadAutoSavePointForCategory: Boolean = true,
+    val saveAutoSavePointForCategory: Boolean = true,
+    val loadAutoSavePointForSpecies: Boolean = true,
+    val saveAutoSavePointForSpecies: Boolean = true
 )
 
 

@@ -15,12 +15,14 @@ fun NavController.navigateToSettings(){
 
 fun NavGraphBuilder.settings(
     onNavigateBack: () -> Unit,
-    onNavigateToLinkedAccounts: () -> Unit
+    onNavigateToLinkedAccounts: () -> Unit,
+    onNavigateToSavePointSettings: () -> Unit
 ){
     composable<SettingsRoute> {
         SettingsPageRoot(
             onNavigateBack = onNavigateBack,
-            onNavigateToLinkedAccounts = onNavigateToLinkedAccounts
+            onNavigateToLinkedAccounts = onNavigateToLinkedAccounts,
+            onNavigateToSavePointSettings = onNavigateToSavePointSettings
         )
     }
 }

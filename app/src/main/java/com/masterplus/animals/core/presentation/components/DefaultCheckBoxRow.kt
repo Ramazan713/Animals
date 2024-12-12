@@ -19,18 +19,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 
 @Composable
 fun DefaultCheckBoxRow(
-    value: Boolean,
     title: String,
+    value: Boolean,
+    onValueChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     subTitle: String? = null,
     selectedRow: Boolean = value,
-    onValueChange: (Boolean) -> Unit,
     shape: Shape = MaterialTheme.shapes.medium,
     selectedColor: Color = MaterialTheme.colorScheme.primaryContainer,
     defaultColor: Color = MaterialTheme.colorScheme.secondaryContainer,
@@ -87,5 +88,15 @@ fun DefaultCheckBoxRow(
             }
         }
     }
+}
 
+@Preview(showBackground = true)
+@Composable
+private fun DefaultCheckBoxRowPreview() {
+    DefaultCheckBoxRow(
+        value = true,
+        title = "Title x",
+        subTitle = "Sub title",
+        onValueChange = {}
+    )
 }

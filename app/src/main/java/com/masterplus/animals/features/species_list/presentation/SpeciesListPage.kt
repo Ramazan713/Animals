@@ -59,6 +59,7 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_s
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointViewModel
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListBottomItemMenu
+import com.masterplus.animals.features.species_list.domain.enums.SpeciesListTopItemMenu
 import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
 import com.masterplus.animals.features.species_list.presentation.navigation.SpeciesListRoute
 import kotlinx.coroutines.launch
@@ -71,7 +72,8 @@ fun SpeciesListPageRoot(
     autoSavePointViewModel: AutoSavePointViewModel = koinViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
-    onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit
+    onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
+    onNavigateToSavePointSpeciesSettings: () -> Unit
 ) {
     val args = viewModel.args
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -93,7 +95,8 @@ fun SpeciesListPageRoot(
         onNavigateToCategorySearch = {
             onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.realItemId)
         },
-        autoSavePointState = autoSavePointState
+        autoSavePointState = autoSavePointState,
+        onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings
     )
 }
 
@@ -113,7 +116,8 @@ fun SpeciesListPage(
     args: SpeciesListRoute,
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
-    onNavigateToCategorySearch: () -> Unit
+    onNavigateToCategorySearch: () -> Unit,
+    onNavigateToSavePointSpeciesSettings: () -> Unit
 ) {
     val lazyListState = rememberLazyListState(
         initialFirstVisibleItemIndex = args.initPosIndex
@@ -157,16 +161,17 @@ fun SpeciesListPage(
                         Icon(imageVector = Icons.Default.Search, contentDescription = null)
                     }
                     CustomDropdownBarMenu(
-                        items = SpeciesListBottomItemMenu.entries,
+                        items = SpeciesListTopItemMenu.entries,
                         onItemChange = { menuItem ->
                             when(menuItem){
-                                SpeciesListBottomItemMenu.Savepoint -> {
+                                SpeciesListTopItemMenu.Savepoint -> {
                                     onAction(
                                         SpeciesListAction.ShowDialog(
                                             SpeciesListDialogEvent.ShowEditSavePoint(
                                         posIndex = middlePos
                                     )))
                                 }
+                                SpeciesListTopItemMenu.SavePointSettings -> onNavigateToSavePointSpeciesSettings()
                             }
                         }
                     )
@@ -287,6 +292,7 @@ fun SpeciesListPagePreview() {
         ),
         onNavigateToCategorySearch = {},
         onAutoSavePointAction = {},
-        autoSavePointState = AutoSavePointState()
+        autoSavePointState = AutoSavePointState(),
+        onNavigateToSavePointSpeciesSettings = {}
     )
 }

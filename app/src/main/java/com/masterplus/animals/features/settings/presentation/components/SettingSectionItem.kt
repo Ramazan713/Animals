@@ -2,6 +2,7 @@ package com.masterplus.animals.features.settings.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -15,19 +16,22 @@ import androidx.compose.ui.unit.dp
 fun SettingSectionItem(
     title: String,
     modifier: Modifier = Modifier,
+    titleContentPaddingValues: PaddingValues = PaddingValues(),
     content:  @Composable (ColumnScope.() -> Unit)
 ){
 
     Column(
         modifier = modifier
-            .padding(vertical = 7.dp, horizontal = 7.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth()
     ) {
         Text(
             title,
             style = MaterialTheme.typography.titleMedium
                 .copy(color = MaterialTheme.colorScheme.primary),
-            modifier = Modifier.padding(vertical = 3.dp, horizontal = 5.dp)
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .padding(titleContentPaddingValues)
         )
         content()
     }

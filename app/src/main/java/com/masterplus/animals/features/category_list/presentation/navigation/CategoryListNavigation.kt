@@ -38,7 +38,8 @@ fun NavGraphBuilder.categoryList(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, KingdomType) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
-    onNavigateToCategorySearch: (CategoryType, ContentType, KingdomType) -> Unit
+    onNavigateToCategorySearch: (CategoryType, ContentType, KingdomType) -> Unit,
+    onNavigateToSavePointCategorySettings: () -> Unit,
 ){
     composable<CategoryListRoute> {
         val viewModel: CategoryListViewModel = koinViewModel()
@@ -81,7 +82,8 @@ fun NavGraphBuilder.categoryList(
                         kingdomType = args.kingdomType,
                         destinationId = null
                     )
-                }
+                },
+                onNavigateToSavePointCategorySettings = onNavigateToSavePointCategorySettings
             )
         }
 

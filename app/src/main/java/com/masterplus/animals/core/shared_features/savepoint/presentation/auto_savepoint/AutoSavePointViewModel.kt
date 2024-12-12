@@ -3,6 +3,7 @@ package com.masterplus.animals.core.shared_features.savepoint.presentation.auto_
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.core.shared_features.preferences.domain.SettingsPreferences
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.use_cases.SavePointUpsertAutoModeUseCase
@@ -24,7 +25,7 @@ class AutoSavePointViewModel(
         when(action){
             is AutoSavePointAction.UpsertSavePoint -> {
                 viewModelScope.launch {
-                    if(!settingsPreferences.getData().saveAutoSavePoint) return@launch
+                    if(!checkSaveSavePoint(action.contentType)) return@launch
                     upsertAutoMode(
                         destination = action.destination,
                         itemPosIndex = action.itemPosIndex,
@@ -34,7 +35,7 @@ class AutoSavePointViewModel(
             }
             is AutoSavePointAction.LoadSavePoint -> {
                 viewModelScope.launch {
-                    if(!settingsPreferences.getData().loadAutoSavePoint) return@launch
+                    if(!checkLoadSavePoint(action.contentType)) return@launch
 
                     if(action.initItemPos != 0){
                         _state.update { it.copy(initPos = action.initItemPos) }
@@ -72,6 +73,18 @@ class AutoSavePointViewModel(
                 _state.update { it.copy(uiEvent = null) }
             }
         }
+    }
+
+    private suspend fun checkLoadSavePoint(contentType: SavePointContentType): Boolean{
+        val settingsData = settingsPreferences.getData().savePointsSettingsData
+        if(contentType.isContent) return settingsData.loadAutoSavePointForSpecies
+        return settingsData.loadAutoSavePointForCategory
+    }
+
+    private suspend fun checkSaveSavePoint(contentType: SavePointContentType): Boolean{
+        val settingsData = settingsPreferences.getData().savePointsSettingsData
+        if(contentType.isContent) return settingsData.saveAutoSavePointForSpecies
+        return settingsData.saveAutoSavePointForCategory
     }
 
 }

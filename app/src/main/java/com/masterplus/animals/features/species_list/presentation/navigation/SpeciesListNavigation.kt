@@ -36,7 +36,8 @@ fun NavController.navigateToSpeciesList(categoryId: Int, itemId: Int?, kingdomTy
 fun NavGraphBuilder.speciesList(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
-    onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit
+    onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
+    onNavigateToSavePointSpeciesSettings: () -> Unit
 ){
     composable<SpeciesListRoute> {
         NavAnimatedVisibilityProvider(
@@ -45,7 +46,8 @@ fun NavGraphBuilder.speciesList(
             SpeciesListPageRoot(
                 onNavigateBack = onNavigateBack,
                 onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
-                onNavigateToCategorySearch = onNavigateToCategorySearch
+                onNavigateToCategorySearch = onNavigateToCategorySearch,
+                onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings
             )
         }
     }

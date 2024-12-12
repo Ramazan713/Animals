@@ -1,7 +1,6 @@
 package com.masterplus.animals.features.app.presentation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -28,7 +27,13 @@ import com.masterplus.animals.features.search.presentation.navigation.searchCate
 import com.masterplus.animals.features.search.presentation.navigation.searchSpecies
 import com.masterplus.animals.features.settings.presentation.navigation.linkAccounts
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToLinkAccounts
+import com.masterplus.animals.features.settings.presentation.navigation.navigateToSavePointCategorySettings
+import com.masterplus.animals.features.settings.presentation.navigation.navigateToSavePointSettings
+import com.masterplus.animals.features.settings.presentation.navigation.navigateToSavePointSpeciesSettings
 import com.masterplus.animals.features.settings.presentation.navigation.navigateToSettings
+import com.masterplus.animals.features.settings.presentation.navigation.savePointCategorySettings
+import com.masterplus.animals.features.settings.presentation.navigation.savePointSettings
+import com.masterplus.animals.features.settings.presentation.navigation.savePointSpeciesSettings
 import com.masterplus.animals.features.settings.presentation.navigation.settings
 import com.masterplus.animals.features.species_detail.presentation.navigation.navigateToSpeciesDetail
 import com.masterplus.animals.features.species_detail.presentation.navigation.speciesDetail
@@ -97,8 +102,15 @@ fun AppNavHost(
             },
             onNavigateToLinkedAccounts = {
                 navHostController.navigateToLinkAccounts()
+            },
+            onNavigateToSavePointSettings = {
+                navHostController.navigateToSavePointSettings()
             }
         )
+        savePointSettings(onNavigateBack = { navHostController.navigateUp() })
+        savePointSpeciesSettings(onNavigateBack = { navHostController.navigateUp() })
+        savePointCategorySettings(onNavigateBack = { navHostController.navigateUp() })
+
 
         linkAccounts(
             onNavigateBack = {
@@ -136,6 +148,9 @@ fun AppNavHost(
             },
             onNavigateToCategorySearch = { catType, contentType, kingdomType ->
                 navHostController.navigateToSearchCategory(catType,contentType,null, kingdomType)
+            },
+            onNavigateToSavePointCategorySettings = {
+                navHostController.navigateToSavePointCategorySettings()
             }
         )
 
@@ -151,6 +166,9 @@ fun AppNavHost(
             },
             onNavigateToCategorySearch = { catType, contentType, itemId, kingdomType ->
                 navHostController.navigateToSearchCategory(catType,contentType, itemId, kingdomType)
+            },
+            onNavigateToSavePointCategorySettings = {
+                navHostController.navigateToSavePointCategorySettings()
             }
         )
 
@@ -163,6 +181,9 @@ fun AppNavHost(
             },
             onNavigateToCategorySearch = {catType, contentType, itemId ->
                 navHostController.navigateToSearchSpecies(catType,contentType, itemId)
+            },
+            onNavigateToSavePointSpeciesSettings = {
+                navHostController.navigateToSavePointSpeciesSettings()
             }
         )
 

@@ -4,7 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Login
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -22,7 +24,8 @@ fun AdvancedSettingSection(
     state: SettingsState,
     onEvent: (SettingsAction)->Unit,
     user: User?,
-    onNavigateToLinkedAccounts: () -> Unit
+    onNavigateToLinkedAccounts: () -> Unit,
+    onNavigateToSavePointSettings: () -> Unit
 ){
     SettingSectionItem(
         title = stringResource(R.string.advanced_setting),
@@ -35,6 +38,12 @@ fun AdvancedSettingSection(
                 onClick = onNavigateToLinkedAccounts
             )
         }
+
+        SettingItem(
+            title = "Kayıt Noktası Ayarları",
+            onClick = onNavigateToSavePointSettings,
+            imageVector = Icons.Default.Save,
+        )
 
         AnimatedVisibility(visible = user != null) {
             SettingItem(

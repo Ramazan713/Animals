@@ -19,17 +19,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 
 @Composable
 fun DefaultRadioRow(
-    modifier: Modifier = Modifier,
-    value: Boolean,
-    selectedRow: Boolean = value,
-    onValueChange: (Boolean) -> Unit,
     title: String,
+    value: Boolean,
+    onValueChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    selectedRow: Boolean = value,
     subTitle: String? = null,
     shape: Shape = MaterialTheme.shapes.medium,
     selectedColor: Color = MaterialTheme.colorScheme.primaryContainer,
@@ -87,4 +88,17 @@ fun DefaultRadioRow(
             }
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun DefaultRadioRowPreview() {
+    DefaultRadioRow(
+        value = true,
+        title = "Title",
+        onValueChange = {
+
+        }
+    )
 }
