@@ -29,5 +29,5 @@ interface ISpeciesType {
     val id: Int?
     val species: SpeciesModel
     val images: List<SpeciesImageModel>
-    val imageUrls get() = images.mapNotNull { it.imageUrl }
+    val imageUrls get() = images.map { it.image.imageUrl }
 }

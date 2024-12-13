@@ -9,11 +9,14 @@ import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.GenusModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
+import com.masterplus.animals.core.domain.models.ImageData
+import com.masterplus.animals.core.domain.models.ImageMetadata
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.models.PhylumModel
 import com.masterplus.animals.core.domain.models.Plant
-import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.models.SpeciesImageModel
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
@@ -35,16 +38,35 @@ import kotlinx.datetime.toLocalDateTime
 object SampleDatas {
     const val imageUrl = "https://storage.googleapis.com/animals-ce701.appspot.com/public/images/class/mammalia.jpg?Expires=1724517659&GoogleAccessId=firebase-adminsdk-hprer%40animals-ce701.iam.gserviceaccount.com&Signature=N27yfyDPC7RZzh0Cirowi0Ki%2FisODA%2Bnp9i2dAjR5OEDZV8Cuji0CwMOqhZoQYE9QnD8LOcNI2vR6uJ9ChzUhFrOJ9BmKzroiwzqhRsU1OgFYQwCpE5yi9WFPwpw3Pmlaz%2B1dIr6I3%2BQAfM91y6kMPpFFPwKFwT4H7uS%2FYWEu91x0VLvWH%2FMPXGiYmIcNEQnhigPRT%2BPsjxJyAwoajEOSGgHrXai43%2FtiXoZYYVMbLOOR03BKNcMC4dGC56S6zA05JnjplmZ%2Bn2veofgUGocGOeQ0kL9BngIDjlbv6wS7gxZlHbp4gJEG3UF3HdGi3thfImt3W%2FUthn0dJlpPPcz1g%3D%3D"
 
-
-    val speciesImageModel = SpeciesImageModel(
+    val image = ImageData(
         id = 1,
-        speciesId = 2,
-        name = null,
         imageUrl = imageUrl,
-        imagePath = "",
-        imageOrder = 1,
+        imagePath = "image_path",
         createdAt = "",
         updatedAt = ""
+    )
+
+    val imageWithMetadata = ImageWithMetadata(
+        id = 1,
+        imagePath = "image_path",
+        imageUrl = imageUrl,
+        metadata = ImageMetadata(
+            id = 1,
+            imageId = 1,
+            imageDescription = "image_description",
+            artistName = "Artist X",
+            licenseUrl = "www.google.com",
+            usageTerms = "Creative Commons Attribution-Share Alike 2.5",
+            dateTimeOriginal = "2007-06-03 20:19:06",
+            licenseShortName = "CC BY-SA 2.5",
+            descriptionUrl = "www.google.com",
+        )
+    )
+
+    val speciesImageModel = SpeciesImageModel(
+        speciesId = 2,
+        image = imageWithMetadata,
+        imageOrder = 1,
     )
 
     val imageWithTitleModel1 = ImageWithTitleModel(
@@ -63,7 +85,7 @@ object SampleDatas {
         title = "Kartal",
         secondaryTitle = "Sub Title",
         id = 2,
-        imageUrl = imageUrl,
+        image = imageWithMetadata,
         categoryType = CategoryType.Class
     )
 
@@ -74,16 +96,14 @@ object SampleDatas {
         scientificName = "Arthropoda",
         phylum = "Arthropoda",
         kingdomType = KingdomType.Animals,
-        imageUrl = "",
-        imagePath = ""
+        image = imageWithMetadata,
     )
     val classModel = ClassModel(
         id = 2,
         scientificName = "Insecta",
         className = "",
         phylumId = 2,
-        imageUrl = "",
-        imagePath = "",
+        image = imageWithMetadata,
         kingdomType = KingdomType.Animals,
     )
     val order = OrderModel(
@@ -91,8 +111,7 @@ object SampleDatas {
         scientificName = "Hymenoptera",
         order = "",
         classId = 2,
-        imageUrl = "",
-        imagePath = "",
+        image = imageWithMetadata,
         kingdomType = KingdomType.Animals,
     )
 
@@ -101,8 +120,7 @@ object SampleDatas {
         scientificName = "Apidae",
         family = "",
         orderId = 2,
-        imageUrl = "",
-        imagePath = "",
+        image = imageWithMetadata,
         kingdomType = KingdomType.Animals,
     )
 
@@ -130,14 +148,9 @@ object SampleDatas {
     )
 
     val animalImage = SpeciesImageModel(
-        id = 1,
-        imagePath = "",
-        imageUrl = "",
+        image = imageWithMetadata,
         speciesId = 2,
         imageOrder = 1,
-        name = null,
-        updatedAt = "",
-        createdAt = ""
     )
 
 
@@ -244,8 +257,10 @@ object SampleDatas {
         savePointDestination: SavePointDestination = SavePointDestination.ListType(1),
         modifiedDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
     ): SavePoint {
-        return SavePoint(id, title, SavePointContentType.Content,savePointDestination, KingdomType.Animals, SavePointSaveMode.Manuel, itemPosIndex, modifiedDate,
-            imageUrl,null)
+        return SavePoint(
+            id, title, SavePointContentType.Content,savePointDestination,
+            KingdomType.Animals, SavePointSaveMode.Manuel, itemPosIndex, modifiedDate,
+            image = imageWithMetadata)
     }
 
     fun generateLinkAccountModel(

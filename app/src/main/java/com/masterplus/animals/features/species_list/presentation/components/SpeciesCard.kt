@@ -75,10 +75,11 @@ fun SpeciesCard(
         cornerRadiusDp = cornerRadiusDp,
         contentScale = contentScale,
         onClick = onClick,
-        transitionKey = if(useTransition) species.images.firstOrNull()?.id?.let {
+        transitionKey = if(useTransition) species.images.firstOrNull()?.let {
             TransitionImageKey(
-                id = it,
-                TransitionImageType.SpeciesImages
+                id = it.speciesId,
+                extra = it.image.id?.toString(),
+                imageType = TransitionImageType.SpeciesImages
             )
         } else null
     )

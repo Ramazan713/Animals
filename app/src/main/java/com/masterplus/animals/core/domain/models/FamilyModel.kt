@@ -8,6 +8,5 @@ data class FamilyModel(
     val family: String,
     val orderId: Int,
     val kingdomType: KingdomType,
-    val imagePath: String?,
-    val imageUrl: String?
+    val image: ImageWithMetadata?
 )

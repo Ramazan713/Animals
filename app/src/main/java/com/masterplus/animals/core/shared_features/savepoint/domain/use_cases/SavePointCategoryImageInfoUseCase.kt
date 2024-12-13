@@ -1,5 +1,6 @@
 package com.masterplus.animals.core.shared_features.savepoint.domain.use_cases
 
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
@@ -11,7 +12,7 @@ class SavePointCategoryImageInfoUseCase(
 ) {
 
     suspend operator fun invoke(destination: SavePointDestination): InfoResult{
-        val nullableResult = InfoResult(null,null)
+        val nullableResult = InfoResult(null)
         val destinationId = destination.destinationId ?: return nullableResult
 
         val lang = translationRepo.getLanguage()
@@ -22,23 +23,22 @@ class SavePointCategoryImageInfoUseCase(
             is SavePointDestination.Habitat -> return nullableResult
             is SavePointDestination.ClassType -> {
                 val classEntity = categoryRepo.getClassWithId(destinationId, lang) ?: return nullableResult
-                return InfoResult(classEntity.imagePath, classEntity.imageUrl)
+                return InfoResult(classEntity.image)
             }
             is SavePointDestination.Family -> {
                 val family = categoryRepo.getFamilyWithId(destinationId, lang) ?: return nullableResult
-                return InfoResult(family.imagePath, family.imageUrl)
+                return InfoResult(family.image)
             }
             is SavePointDestination.Order -> {
                 val order = categoryRepo.getOrderWithId(destinationId, lang) ?: return nullableResult
-                return InfoResult(order.imagePath, order.imageUrl)
+                return InfoResult(order.image)
             }
         }
     }
 
     companion object {
         data class InfoResult(
-            val imagePath: String?,
-            val imageUrl: String?
+            val image: ImageWithMetadata?
         )
     }
 }

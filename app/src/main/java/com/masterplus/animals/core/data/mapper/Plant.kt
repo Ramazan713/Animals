@@ -1,12 +1,12 @@
 package com.masterplus.animals.core.data.mapper
 
-import com.masterplus.animals.core.domain.models.PlantDetail
 import com.masterplus.animals.core.domain.models.Plant
+import com.masterplus.animals.core.domain.models.PlantDetail
 import com.masterplus.animals.core.shared_features.database.entity.PlantEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
-import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
-import com.masterplus.animals.core.shared_features.database.entity_helper.PlantDetailEmbedded
 import com.masterplus.animals.core.shared_features.database.entity_helper.PlantDataEmbedded
+import com.masterplus.animals.core.shared_features.database.entity_helper.PlantDetailEmbedded
+import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesImageWithMetadataEmbedded
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
 fun PlantDataEmbedded.toPlant(language: LanguageEnum): Plant {
@@ -20,13 +20,13 @@ fun PlantDataEmbedded.toPlant(language: LanguageEnum): Plant {
 fun PlantEntity.toPlant(
     language: LanguageEnum,
     species: SpeciesEntity,
-    images: List<SpeciesImageEntity>
+    images: List<SpeciesImageWithMetadataEmbedded>
 ): Plant {
     val isEn = language.isEn
     return Plant(
         id = id,
         species = species.toSpecies(language = language),
-        images = images.map { it.toSpeciesImage() },
+        images = images.map { it.toSpeciesImageModel() },
         size = if (isEn) size_c_en else size_c_tr,
         color = if (isEn) color_c_en else color_c_tr,
         floweringTime = if (isEn) flowering_time_c_en else flowering_time_c_tr,
@@ -74,6 +74,6 @@ fun PlantDetailEmbedded.toPlantDetail(
         genus = genus.toGenus(language),
         species = species.toSpecies(language),
         habitatCategories = habitatCategories.map { it.toHabitatCategory(language) },
-        images = images.map { it.toSpeciesImage() }
+        images = images.map { it.toSpeciesImageModel() }
     )
 }

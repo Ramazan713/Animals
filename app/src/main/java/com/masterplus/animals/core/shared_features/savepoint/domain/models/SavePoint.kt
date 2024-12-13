@@ -1,6 +1,7 @@
 package com.masterplus.animals.core.shared_features.savepoint.domain.models
 
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
@@ -15,6 +16,5 @@ data class SavePoint(
     val saveMode: SavePointSaveMode,
     var itemPosIndex: Int,
     val modifiedTime: LocalDateTime,
-    val imageData: Any?,
-    val imagePath: String?
+    val image: ImageWithMetadata?
 )

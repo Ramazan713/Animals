@@ -30,7 +30,7 @@ fun ListModel.toListEntity(): ListEntity {
 fun ListModel.toCategoryData(): CategoryData {
     return CategoryData(
         id = id,
-        imageUrl = "",
+        image = null,
         title = name,
         categoryType = CategoryType.List
     )

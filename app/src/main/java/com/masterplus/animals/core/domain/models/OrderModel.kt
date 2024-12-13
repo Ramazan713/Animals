@@ -8,6 +8,5 @@ data class OrderModel(
     val order: String,
     val classId: Int,
     val kingdomType: KingdomType,
-    val imagePath: String?,
-    val imageUrl: String?
+    val image: ImageWithMetadata?
 )

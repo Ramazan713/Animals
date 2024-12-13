@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.masterplus.animals.core.shared_features.database.entity.SavePointEntity
+import com.masterplus.animals.core.shared_features.database.entity_helper.SavePointWithImageEmbedded
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -14,7 +15,7 @@ interface SavePointDao {
     @Query("""
         select * from savepoints where id = :id
     """)
-    suspend fun getSavePointById(id: Int): SavePointEntity?
+    suspend fun getSavePointById(id: Int): SavePointWithImageEmbedded?
 
     @Query("""
         select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId and
@@ -24,7 +25,7 @@ interface SavePointDao {
     suspend fun getSavePointByQuery(
         destinationTypeId: Int, contentTypeId: Int, kingdomId: Int,
         saveModeId: Int
-    ): SavePointEntity?
+    ): SavePointWithImageEmbedded?
 
     @Query("""
         select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId and
@@ -34,7 +35,7 @@ interface SavePointDao {
     suspend fun getSavePointByQuery(
         destinationTypeId: Int, contentTypeId: Int, kingdomId: Int,
         saveModeId: Int, destinationId: Int
-    ): SavePointEntity?
+    ): SavePointWithImageEmbedded?
 
 
 
@@ -46,7 +47,7 @@ interface SavePointDao {
         destinationTypeId: Int,
         contentTypeId: Int,
         kingdomId: Int
-    ): Flow<List<SavePointEntity>>
+    ): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
         select * from savepoints where destinationTypeId = :destinationTypeId and
@@ -57,7 +58,7 @@ interface SavePointDao {
         contentTypeId: Int,
         kingdomId: Int,
         saveModeId: Int
-    ): Flow<List<SavePointEntity>>
+    ): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
         select * from savepoints where destinationTypeId = :destinationTypeId and
@@ -69,7 +70,7 @@ interface SavePointDao {
         destinationId: Int,
         contentTypeId: Int,
         kingdomId: Int
-    ): Flow<List<SavePointEntity>>
+    ): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
         select * from savepoints where destinationTypeId = :destinationTypeId and
@@ -82,7 +83,7 @@ interface SavePointDao {
         contentTypeId: Int,
         kingdomId: Int,
         saveModeId: Int
-    ): Flow<List<SavePointEntity>>
+    ): Flow<List<SavePointWithImageEmbedded>>
 
 
 
@@ -92,14 +93,14 @@ interface SavePointDao {
         select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId 
         order by modifiedTime desc
     """)
-    fun getAllFlowSavePointsByContentType(contentTypeId: Int, kingdomId: Int): Flow<List<SavePointEntity>>
+    fun getAllFlowSavePointsByContentType(contentTypeId: Int, kingdomId: Int): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
         select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId 
         and saveModeId = :saveModeId
         order by modifiedTime desc
     """)
-    fun getAllFlowSavePointsByContentType(contentTypeId: Int, kingdomId: Int, saveModeId: Int): Flow<List<SavePointEntity>>
+    fun getAllFlowSavePointsByContentType(contentTypeId: Int, kingdomId: Int, saveModeId: Int): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
         select * from savepoints where contentTypeId = :contentTypeId and destinationTypeId in (:destinationTypeIds)
@@ -110,7 +111,7 @@ interface SavePointDao {
         contentTypeId: Int,
         destinationTypeIds: List<Int>,
         kingdomId: Int
-    ): Flow<List<SavePointEntity>>
+    ): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
         select * from savepoints where contentTypeId = :contentTypeId and destinationTypeId in (:destinationTypeIds)
@@ -122,7 +123,7 @@ interface SavePointDao {
         destinationTypeIds: List<Int>,
         kingdomId: Int,
         saveModeId: Int
-    ): Flow<List<SavePointEntity>>
+    ): Flow<List<SavePointWithImageEmbedded>>
 
 
 

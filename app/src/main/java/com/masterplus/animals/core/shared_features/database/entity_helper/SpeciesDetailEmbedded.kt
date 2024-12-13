@@ -15,9 +15,10 @@ data class SpeciesDetailEmbedded(
     val species: SpeciesEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "species_id"
+        entityColumn = "species_id",
+        entity = SpeciesImageEntity::class
     )
-    val images: List<SpeciesImageEntity>,
+    val images: List<SpeciesImageWithMetadataEmbedded>,
 
     @Relation(
         parentColumn = "id",

@@ -20,7 +20,7 @@ fun SpeciesDetailEmbedded.toSpeciesListDetail(
             habitatCategoryIds = habitatCategories.mapNotNull { it.id },
             isFavorited = listsIsRemovable.any { !it },
             isListSelected = listsIsRemovable.any { it },
-            images = images.map { it.toSpeciesImage() }
+            images = images.map { it.toSpeciesImageModel() }
         )
     }
 }

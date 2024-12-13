@@ -2,7 +2,7 @@ package com.masterplus.animals.core.shared_features.savepoint.data.repo
 
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.database.dao.SavePointDao
-import com.masterplus.animals.core.shared_features.database.entity.SavePointEntity
+import com.masterplus.animals.core.shared_features.database.entity_helper.SavePointWithImageEmbedded
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePoint
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointEntity
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
@@ -38,8 +38,7 @@ class SavePointRepoImpl(
             itemPosIndex = itemPosIndex,
             destination = destination,
             modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-            imagePath = imageInfo.imagePath,
-            imageData = imageInfo.imageUrl,
+            image = imageInfo.image,
             kingdomType = destination.kingdomType,
             saveMode = saveMode
         )
@@ -90,7 +89,7 @@ class SavePointRepoImpl(
     ): Flow<List<SavePoint>> {
         val kingdomId = kingdomType.kingdomId
         val saveModeId = filterBySaveMode?.modeId
-        val savePointsFlow: Flow<List<SavePointEntity>>
+        val savePointsFlow: Flow<List<SavePointWithImageEmbedded>>
 
         if(filteredDestinationTypeIds != null){
             savePointsFlow = if(saveModeId != null){
@@ -134,7 +133,7 @@ class SavePointRepoImpl(
         val kingdomId = kingdomType.kingdomId
         val saveModeId = filterBySaveMode?.modeId
         val contentTypeId = contentType.contentTypeId
-        val savePointsFlow: Flow<List<SavePointEntity>>
+        val savePointsFlow: Flow<List<SavePointWithImageEmbedded>>
 
         if(destinationId != null){
             if(saveModeId != null){

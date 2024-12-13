@@ -11,17 +11,19 @@ import androidx.room.PrimaryKey
             entity = SpeciesEntity::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("species_id"),
-        )
-    ]
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = ImageEntity::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("image_id"),
+            onDelete = ForeignKey.CASCADE
+        ),
+    ],
+    primaryKeys = ["species_id", "image_id"]
 )
 data class SpeciesImageEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
     val species_id: Int,
-    val name: String?,
-    val image_path: String,
-    val image_url: String?,
-    val image_order: Int,
-    val created_at: String,
-    val updated_at: String
+    val image_id: Int,
+    val image_order: Int = 1
 )

@@ -19,7 +19,7 @@ fun HabitatCategoryEntity.toHabitatCategory(
 fun HabitatCategoryModel.toCategoryData(): CategoryData {
     return CategoryData(
         id = id,
-        imageUrl = null,
+        image = null,
         title = habitatCategory,
         categoryType = CategoryType.Habitat
     )

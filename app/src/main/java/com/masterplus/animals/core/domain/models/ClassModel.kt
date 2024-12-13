@@ -8,6 +8,5 @@ data class ClassModel(
     val className: String,
     val phylumId: Int,
     val kingdomType: KingdomType,
-    val imagePath: String?,
-    val imageUrl: String?
+    val image: ImageWithMetadata?
 )

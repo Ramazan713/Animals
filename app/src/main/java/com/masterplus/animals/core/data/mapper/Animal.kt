@@ -7,6 +7,7 @@ import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDataEmbedded
 import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDetailEmbedded
+import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesImageWithMetadataEmbedded
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
 
@@ -21,13 +22,13 @@ fun AnimalDataEmbedded.toAnimal(language: LanguageEnum): Animal{
 fun AnimalEntity.toAnimal(
     language: LanguageEnum,
     species: SpeciesEntity,
-    images: List<SpeciesImageEntity>
+    images: List<SpeciesImageWithMetadataEmbedded>
 ): Animal{
     val isEn = language.isEn
     return Animal(
         id = id,
         species = species.toSpecies(language = language),
-        images = images.map { it.toSpeciesImage() },
+        images = images.map { it.toSpeciesImageModel() },
         size = if (isEn) size_c_en else size_c_tr,
         weight = if (isEn) weight_c_en else weight_c_tr,
         color = if (isEn) color_c_en else color_c_tr,
@@ -76,6 +77,6 @@ fun AnimalDetailEmbedded.toAnimalDetail(
         genus = genus.toGenus(language),
         species = species.toSpecies(language),
         habitatCategories = habitatCategories.map { it.toHabitatCategory(language) },
-        images = images.map { it.toSpeciesImage() }
+        images = images.map { it.toSpeciesImageModel() }
     )
 }

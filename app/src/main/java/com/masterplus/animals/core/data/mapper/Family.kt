@@ -5,7 +5,25 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
+import com.masterplus.animals.core.shared_features.database.entity_helper.FamilyWithImageEmbedded
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
+
+
+fun FamilyWithImageEmbedded.toFamily(
+    language: LanguageEnum
+): FamilyModel {
+    return with(family){
+        FamilyModel(
+            id = id,
+            scientificName = scientific_name,
+            family = if(language.isEn) family_en else family_tr,
+            orderId = order_id,
+            image = image?.toImageWithMetadata(),
+            kingdomType = KingdomType.fromKingdomId(kingdom_id)
+        )
+    }
+}
+
 
 fun FamilyEntity.toFamily(
     language: LanguageEnum
@@ -15,8 +33,7 @@ fun FamilyEntity.toFamily(
         scientificName = scientific_name,
         family = if(language.isEn) family_en else family_tr,
         orderId = order_id,
-        imagePath = image_path,
-        imageUrl = image_url,
+        image = null,
         kingdomType = KingdomType.fromKingdomId(kingdom_id)
     )
 }
@@ -25,7 +42,7 @@ fun FamilyEntity.toFamily(
 fun FamilyModel.toCategoryData(): CategoryData {
     return CategoryData(
         id = id,
-        imageUrl = imageUrl,
+        image = image,
         title = scientificName,
         secondaryTitle = family,
         categoryType = CategoryType.Family

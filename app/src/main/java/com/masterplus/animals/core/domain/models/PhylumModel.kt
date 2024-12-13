@@ -7,6 +7,5 @@ data class PhylumModel(
     val scientificName: String,
     val phylum: String,
     val kingdomType: KingdomType,
-    val imagePath: String?,
-    val imageUrl: String?
+    val image: ImageWithMetadata?
 )

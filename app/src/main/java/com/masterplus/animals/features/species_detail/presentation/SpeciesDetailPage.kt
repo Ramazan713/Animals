@@ -245,9 +245,10 @@ private fun TopBarImage(
                     ,
                     imageData = imageUrls[index],
                     shape = RoundedCornerShape(16.dp),
-                    transitionKey = state.speciesDetail?.images?.get(index)?.id?.let {
+                    transitionKey = state.speciesDetail?.images?.get(index)?.let {
                         TransitionImageKey(
-                            id = it,
+                            id = it.speciesId,
+                            extra = it.image.id?.toString(),
                             imageType = TransitionImageType.SpeciesImages
                         )
                     }

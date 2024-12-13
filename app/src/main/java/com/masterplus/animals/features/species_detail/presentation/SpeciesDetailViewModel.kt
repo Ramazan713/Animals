@@ -61,7 +61,7 @@ class SpeciesDetailViewModel(
     }
 
     private fun getTitleSectionImages(images: List<SpeciesImageModel>): List<String>{
-        return images.mapNotNull { it.imageUrl }
+        return images.map { it.image.imageUrl }
     }
 
     private suspend fun loadSpeciesData(language: LanguageEnum){

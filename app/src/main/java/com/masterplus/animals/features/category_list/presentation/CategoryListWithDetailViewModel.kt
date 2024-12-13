@@ -75,7 +75,7 @@ class CategoryListWithDetailViewModel(
                         _state.update { it.copy(
                             title = classModel.scientificName,
                             subTitle = classModel.className,
-                            parentImageData = classModel.imageUrl,
+                            parentImageData = classModel.image?.imageUrl,
                             collectionName = "Takımlar",
                             isLoading = false
                         ) }
@@ -85,7 +85,7 @@ class CategoryListWithDetailViewModel(
                         _state.update { it.copy(
                             title = orderModel.scientificName,
                             subTitle = orderModel.order,
-                            parentImageData = orderModel.imageUrl,
+                            parentImageData = orderModel.image?.imageUrl,
                             collectionName = "Familyalar",
                             isLoading = false
                         ) }

@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.FlowRowOverflow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -66,7 +64,7 @@ fun SavePointItem(
         CardDefaults.cardColors().containerColor
 
     val currentImageUrl = remember(itemDefaults.showImage, savePoint) {
-        if(itemDefaults.showImage) savePoint.imageData ?: R.drawable.animals_plants else null
+        if(itemDefaults.showImage) savePoint.image ?: R.drawable.animals_plants else null
     }
 
     Card(
@@ -258,7 +256,6 @@ private fun SavePointInfoItem(
 @Composable
 private fun SavePointItemPreview() {
     val savePoint = SampleDatas.generateSavePoint().copy(
-        imageData = R.drawable.animals_plants,
         title = "Title".repeat(7),
         saveMode = SavePointSaveMode.Auto
     )

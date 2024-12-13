@@ -12,5 +12,5 @@ data class SpeciesListDetail(
     val isFavorited: Boolean,
     val isListSelected: Boolean,
 ){
-    val imageUrls get() = images.map { it.imageUrl }
+    val imageUrls get() = images.map { it.image.imageUrl }
 }

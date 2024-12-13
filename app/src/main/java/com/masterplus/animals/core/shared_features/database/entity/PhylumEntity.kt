@@ -11,6 +11,11 @@ import androidx.room.PrimaryKey
             entity = KingdomEntity::class,
             parentColumns = ["id"],
             childColumns = ["kingdom_id"]
+        ),
+        ForeignKey(
+            entity = ImageEntity::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("image_id"),
         )
     ]
 )
@@ -21,6 +26,5 @@ data class PhylumEntity(
     val phylum_en: String,
     val phylum_tr: String,
     val kingdom_id: Int,
-    val image_path: String?,
-    val image_url: String?,
+    val image_id: Int?
 )
