@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
@@ -32,6 +33,7 @@ fun TransitionImage(
     showErrorIcon: Boolean = true,
     enabled: Boolean = transitionKey != null,
     fallbackImageData: Any? = null,
+    metadataIconAlignment: Alignment = Alignment.TopEnd
 ) {
     val currentAnimatedScope = sharedAnimatedVisibilityScope ?: LocalNavAnimatedVisibilityScope.current
 
@@ -40,6 +42,7 @@ fun TransitionImage(
         DefaultImageMetadata(
             image = image,
             fallbackImageData = fallbackImageData,
+            metadataIconAlignment = metadataIconAlignment,
             modifier = modifier
                 .then(
                     if(transitionKey != null && this != null && currentAnimatedScope != null && enabled) Modifier

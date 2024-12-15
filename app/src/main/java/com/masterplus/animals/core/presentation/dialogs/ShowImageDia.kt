@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -45,6 +46,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.extentions.clickableWithoutRipple
+import com.masterplus.animals.core.presentation.components.icon.IconButtonForImage
 import com.masterplus.animals.core.presentation.components.image.DefaultImageMetadata
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import kotlinx.coroutines.launch
@@ -101,12 +103,12 @@ fun ShowImageDia(
         ) {
             HorizontalPager(
                 modifier = Modifier
-                    .matchParentSize(),
+                    .fillMaxSize(),
                 state = pagerState,
             ) { pageIndex ->
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .matchParentSize()
                         .zoomable(zoomState = zoomState)
                     ,
                     contentAlignment = Alignment.Center
@@ -114,12 +116,10 @@ fun ShowImageDia(
                     DefaultImageMetadata(
                         image = imageDataList[pageIndex],
                         modifier = Modifier
-                            .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
                             .clickableWithoutRipple {
                                 showButtons = !showButtons
                             },
-                        metadataIconAlignment = Alignment.TopStart,
                         contentScale = ContentScale.Fit
                     )
                 }
@@ -184,27 +184,6 @@ fun ShowImageDia(
 }
 
 
-@Composable
-private fun IconButtonForImage(
-    imageVector: ImageVector,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    contentDescription: String? = null
-) {
-    FilledTonalIconButton(
-        modifier = modifier
-            .padding(4.dp),
-        colors = IconButtonDefaults.filledTonalIconButtonColors(
-            containerColor = IconButtonDefaults.filledTonalIconButtonColors()
-                .containerColor.copy(alpha = 0.5f)
-        ),
-        onClick = onClick,
-        enabled = enabled
-    ) {
-        Icon(imageVector = imageVector, contentDescription = contentDescription)
-    }
-}
 
 @Composable
 private fun Dot(

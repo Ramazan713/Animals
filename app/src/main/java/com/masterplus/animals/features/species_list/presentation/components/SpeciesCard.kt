@@ -216,16 +216,17 @@ private fun GetImage(
             contentScale = contentScale,
             contentDescription = contentDescription,
             showErrorIcon = false,
-            transitionKey = transitionKey
+            transitionKey = transitionKey,
+            metadataIconAlignment = Alignment.BottomEnd
         )
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
-                .padding(8.dp),
+                .padding(horizontal = 8.dp, vertical = 1.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.CenterVertically
         ) {
             OrderText(
                 order = orderNum

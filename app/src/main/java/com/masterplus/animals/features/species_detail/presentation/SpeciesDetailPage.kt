@@ -400,8 +400,8 @@ private fun SpeciesDetailPagePreview() {
     SpeciesDetailPage(
         state = SpeciesDetailState(
             speciesDetail = SampleDatas.animalDetail,
-            selectedPage = SpeciesInfoPageEnum.Features,
-            titleSectionModels = SampleDatas.animal.toTitleSections(),
+            selectedPage = SpeciesInfoPageEnum.Info,
+            titleSectionModels = SampleDatas.animal.toTitleSections(images = listOf(SampleDatas.imageWithMetadata, SampleDatas.imageWithMetadata)),
             scientificNomenclatureSection = SampleDatas.animalDetail.toScientificNomenclatureSection(),
             featureSection2 = SampleDatas.animalDetail.toFeatureSection2(),
             featureSection3 = SampleDatas.animal.toFeatureSection3()

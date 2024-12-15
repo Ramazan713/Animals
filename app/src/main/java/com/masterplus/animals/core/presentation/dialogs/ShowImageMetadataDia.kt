@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +28,7 @@ import androidx.compose.ui.zIndex
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.ImageMetadata
 import com.masterplus.animals.core.presentation.components.SharedHeader
+import com.masterplus.animals.core.presentation.components.icon.IconButtonForImage
 import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 
@@ -39,13 +42,13 @@ fun ShowImageMetadataDia(
         onClosed = onDismiss
     ) {
         Box {
-            SharedHeader(
+            IconButtonForImage(
+                imageVector = Icons.Default.Close,
+                onClick = onDismiss,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .zIndex(2f)
                     .padding(8.dp),
-                onIconClick = onDismiss,
-                title = ""
             )
 
             Column(

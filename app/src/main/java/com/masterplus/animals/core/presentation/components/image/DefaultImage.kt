@@ -49,6 +49,7 @@ fun DefaultImage(
     contentScale: ContentScale? = null,
     error: @Composable() (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Error) -> Unit)? = null,
     success: @Composable (SubcomposeAsyncImageScope.(State.Success) -> Unit)? = null,
+    onSuccess: ((AsyncImagePainter. State. Success) -> Unit)? = null,
     @DrawableRes errorImageResource: Int? = null,
     cacheKey: String? = null,
     showErrorIcon: Boolean = true,
@@ -64,6 +65,7 @@ fun DefaultImage(
             .build(),
         contentScale = currentContentScale,
         contentDescription = contentDescription,
+        onSuccess = onSuccess,
         success = success,
         loading = {
             SharedCircularProgress()
