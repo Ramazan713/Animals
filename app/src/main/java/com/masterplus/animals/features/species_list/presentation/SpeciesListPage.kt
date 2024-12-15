@@ -134,14 +134,9 @@ fun SpeciesListPage(
             kingdomType = args.kingdomType
         )},
         onAction = onAutoSavePointAction,
-        itemPosIndex = lazyListState.visibleMiddlePosition(),
         state = autoSavePointState,
         itemInitPos = args.initPosIndex,
-        onInitPosResponse = {initPos ->
-            scope.launch {
-                lazyListState.scrollToItem(initPos)
-            }
-        }
+        lazyListState = lazyListState
     )
 
 

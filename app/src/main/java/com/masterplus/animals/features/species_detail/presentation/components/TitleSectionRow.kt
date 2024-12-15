@@ -57,9 +57,7 @@ fun TitleSectionRow(
                 image = image,
                 modifier = Modifier
                     .height(250.dp)
-
                     .clip(RoundedCornerShape(8.dp))
-//                    .background(Color.Red)
                     .clickable {
                         onImageClick?.invoke(image)
                     }

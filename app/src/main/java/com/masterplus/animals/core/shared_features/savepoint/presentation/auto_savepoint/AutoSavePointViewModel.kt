@@ -35,12 +35,14 @@ class AutoSavePointViewModel(
             }
             is AutoSavePointAction.LoadSavePoint -> {
                 viewModelScope.launch {
+                    if(state.value.isInitLoaded) return@launch
                     if(!checkLoadSavePoint(action.contentType)) return@launch
 
                     if(action.initItemPos != 0){
                         _state.update { it.copy(initPos = action.initItemPos) }
                         return@launch
                     }
+
 
                     _state.update { it.copy(
                         loadingSavePointPos = true
@@ -51,19 +53,14 @@ class AutoSavePointViewModel(
                         saveMode = SavePointSaveMode.Auto,
                         contentType = action.contentType
                     )
-                    if(savePoint == null){
-                        _state.update { it.copy(
-                            loadingSavePointPos = false
-                        ) }
-                        return@launch
-                    }
 
                     _state.update { state ->
                         state.copy(
-                            uiEvent = AutoSavePointEvent.LoadItemPos(
+                            uiEvent = if(savePoint == null) null else AutoSavePointEvent.LoadItemPos(
                                 pos = savePoint.itemPosIndex
                             ),
-                            loadingSavePointPos = false
+                            loadingSavePointPos = false,
+                            isInitLoaded = true
                         )
                     }
                 }

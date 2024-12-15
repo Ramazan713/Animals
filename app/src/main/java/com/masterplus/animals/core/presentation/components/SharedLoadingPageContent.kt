@@ -21,6 +21,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -44,6 +48,8 @@ fun SharedCircularProgress(
     }
 }
 
+
+
 @Composable
 fun SharedLoadingLazyColumn(
     state: LazyListState = rememberLazyListState(),
@@ -52,65 +58,57 @@ fun SharedLoadingLazyColumn(
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     verticalSpaceBy: Dp = 16.dp,
     isEmptyResult: Boolean = false,
-    overlayLoading: Boolean = false,
     emptyMessage: String = stringResource(id = R.string.not_fount_any_result),
     stickHeaderContent:  (LazyListScope.() -> Unit)? = null,
     content:  LazyListScope.() -> Unit,
 ) {
-    LazyColumn(
-        state = state,
+    val showEmptyResult by remember(isEmptyResult, isLoading) {
+        derivedStateOf {
+            !isLoading && isEmptyResult
+        }
+    }
+
+    Box(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(verticalSpaceBy),
-        contentPadding = contentPadding
     ) {
-        stickHeaderContent?.invoke(this)
+        if (isLoading) {
+            SharedCircularProgress(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(2f)
+                    .clickable(enabled = false, onClick = {})
+            )
+        }
+        LazyColumn(
+            state = state,
+            verticalArrangement = Arrangement.spacedBy(verticalSpaceBy),
+            contentPadding = contentPadding
+        ) {
+            stickHeaderContent?.invoke(this)
 
-        val showContent = (overlayLoading || !isLoading) && !isEmptyResult
-        val showEmptyResult = !isLoading && isEmptyResult
-
-        if(showEmptyResult || isLoading){
-            item {
-                Box(
-                    modifier = modifier,
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (isLoading) {
-                        SharedCircularProgress(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .fillMaxWidth()
-                                .zIndex(2f)
-                                .clickable(enabled = false, onClick = {})
+            if (showEmptyResult) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxSize()
+                            .zIndex(2f)
+                            .align(Alignment.Center),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            emptyMessage,
+                            style = MaterialTheme.typography.bodyLarge,
+                            textAlign = TextAlign.Center
                         )
-                    }
-
-                    if (showEmptyResult) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxSize()
-                                .zIndex(2f)
-                                .align(Alignment.Center),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                emptyMessage,
-                                style = MaterialTheme.typography.bodyLarge,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-
                     }
                 }
             }
-        }
-
-
-        if (showContent) {
             content()
         }
     }
 }
+
 
 
 @Composable
@@ -160,6 +158,8 @@ fun SharedLoadingPageContent(
 }
 
 
+
+
 @Preview(showBackground = true)
 @Composable
 private fun SharedPageContentPreview() {
@@ -199,24 +199,59 @@ private fun GetPreviewContent(
     overlayLoading: Boolean = false,
 ) {
 
-    Column {
+    Column(
+        modifier = Modifier.height(300.dp)
+    ) {
         Text(text = title)
-        SharedLoadingPageContent(
+//        SharedLoadingPageContent(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .background(MaterialTheme.colorScheme.primaryContainer),
+//            isLoading = isLoading,
+//            isEmptyResult = isEmptyResult,
+//            overlayLoading = overlayLoading,
+//            content = {
+//                Box(
+//                    modifier = Modifier.height(100.dp),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = "Hello world",
+//                        textAlign = TextAlign.Center
+//                    )
+//                }
+//            }
+//        )
+        SharedLoadingLazyColumn (
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer),
             isLoading = isLoading,
             isEmptyResult = isEmptyResult,
-            overlayLoading = overlayLoading,
+            stickHeaderContent = {
+                item {
+                    Box(
+                        modifier = Modifier.height(100.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Sticky World",
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            },
             content = {
-                Box(
-                    modifier = Modifier.height(100.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Hello world",
-                        textAlign = TextAlign.Center
-                    )
+                item {
+                    Box(
+                        modifier = Modifier.height(100.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Hello world",
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         )

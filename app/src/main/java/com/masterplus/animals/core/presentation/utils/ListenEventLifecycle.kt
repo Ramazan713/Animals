@@ -57,9 +57,7 @@ fun ListenEventLifecycle(
                 }
             }
         }
-
         lifecycleOwner.lifecycle.addObserver(listener)
-        println("AppXXX: dispose")
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(listener)
         }

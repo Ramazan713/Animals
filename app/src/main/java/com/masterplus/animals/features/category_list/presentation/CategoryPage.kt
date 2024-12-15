@@ -105,14 +105,10 @@ fun CategoryListPage(
         contentType = SavePointContentType.Category,
         onDestination = onDestination,
         onAction = onAutoSavePointAction,
-        itemPosIndex = lazyListState.visibleMiddlePosition(),
         state = autoSavePointState,
         itemInitPos = initPos,
-        onInitPosResponse = {pos ->
-            scope.launch {
-                lazyListState.scrollToItem(pos)
-            }
-        }
+        lazyListState = lazyListState,
+        topBarScrollBehaviour = topBarScrollBehaviour
     )
 
     Scaffold(
@@ -137,7 +133,7 @@ fun CategoryListPage(
             isEmptyResult = pagingItems.itemCount == 0,
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp),
             state = lazyListState,
-            isLoading = pagingItems.loadState.refresh is LoadState.Loading || autoSavePointState.loadingSavePointPos,
+            isLoading = pagingItems.loadState.refresh is LoadState.Loading,
             stickHeaderContent = {
                 item {
                     HeaderImage(
