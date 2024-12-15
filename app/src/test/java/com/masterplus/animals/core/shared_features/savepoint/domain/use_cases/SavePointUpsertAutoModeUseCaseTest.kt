@@ -77,11 +77,12 @@ class SavePointUpsertAutoModeUseCaseTest {
         val contentType = SavePointContentType.Content
         val itemPosIndex = 10
 
-        savePointRepo.insertContentSavePoint(
+        savePointRepo.insertSavePoint(
             destination = destination,
             itemPosIndex = itemPosIndex,
             saveMode = SavePointSaveMode.Auto,
-            title = "fake title"
+            title = "fake title",
+            contentType = contentType
         )
 
         val updatedItemPosIndex = 20

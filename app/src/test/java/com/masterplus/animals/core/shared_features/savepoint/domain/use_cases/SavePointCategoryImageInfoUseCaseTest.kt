@@ -6,6 +6,7 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.masterplus.animals.core.data.repo.CategoryRepoFake
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestinationType
 import com.masterplus.animals.core.shared_features.translation.data.repo.TranslationRepoFake
@@ -24,6 +25,7 @@ class SavePointCategoryImageInfoUseCaseTest{
 
     private val kingdomType = KingdomType.Animals
     private val imageData = "imageData"
+    private val image = SampleDatas.imageWithMetadata
 
 
     @BeforeEach
@@ -31,25 +33,22 @@ class SavePointCategoryImageInfoUseCaseTest{
         categoryRepo = CategoryRepoFake()
 
         categoryRepo.fakeOrders.add(orderModel(
-            imageUrl = imageData,
-            imagePath = imageData,
+            image = image,
             kingdomType = kingdomType
         ))
 
         categoryRepo.fakeClasses.add(classModel(
-            imageUrl = imageData,
-            imagePath = imageData,
+            image = image,
             kingdomType = kingdomType
         ))
 
         categoryRepo.fakeFamilies.add(familyModel(
-            imageUrl = imageData,
-            imagePath = imageData,
+            image = image,
             kingdomType = kingdomType
         ))
 
         categoryRepo.fakeCategories.add(categoryData(
-            imageUrl = "categoryData",
+            image = image,
         ))
 
         useCase = SavePointCategoryImageInfoUseCase(
@@ -77,8 +76,7 @@ class SavePointCategoryImageInfoUseCaseTest{
             destination = destination!!,
         )
 
-        assertThat(response.imageUrl).isNull()
-        assertThat(response.imagePath).isNull()
+        assertThat(response.image).isNull()
     }
 
     @EnumSource(
@@ -100,8 +98,7 @@ class SavePointCategoryImageInfoUseCaseTest{
             destination = destination!!,
         )
 
-        assertThat(response.imagePath).isEqualTo(imageData)
-        assertThat(response.imageUrl).isEqualTo(imageData)
+        assertThat(response.image).isEqualTo(image)
     }
 
 }

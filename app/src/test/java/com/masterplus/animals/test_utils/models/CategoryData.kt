@@ -2,15 +2,17 @@ package com.masterplus.animals.test_utils.models
 
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
+import com.masterplus.animals.core.presentation.utils.SampleDatas
 
 fun categoryData(
     id: Int? = 1,
-    imageUrl: String? = "https://example.com/image.jpg",
+    image: ImageWithMetadata? = SampleDatas.imageWithMetadata,
     title: String = "Category $id",
     categoryType: CategoryType = CategoryType.Class,
     secondaryTitle: String? = null
 ): CategoryData {
     return CategoryData(
-        id, imageUrl, title, categoryType, secondaryTitle
+        id, image, title, categoryType, secondaryTitle
     )
 }

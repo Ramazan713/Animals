@@ -18,46 +18,24 @@ class FakeSavePointRepo : SavePointRepo {
     private var savePointsMutable = mutableListOf<SavePoint>()
     val savePoints get() = savePointsMutable.toMutableList()
 
-    override suspend fun insertContentSavePoint(
+    override suspend fun insertSavePoint(
         title: String,
         destination: SavePointDestination,
         itemPosIndex: Int,
+        contentType: SavePointContentType,
         saveMode: SavePointSaveMode,
         dateTime: LocalDateTime?
     ) {
         val savePoint = SavePoint(
             id = savePointsMutable.size + 1,
             title = title,
-            contentType = SavePointContentType.Content,
+            contentType = contentType,
             itemPosIndex = itemPosIndex,
             destination = destination,
             modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-            imagePath = null,
-            imageData = null,
             kingdomType = destination.kingdomType,
-            saveMode = saveMode
-        )
-        savePointsMutable.add(savePoint)
-    }
-
-    override suspend fun insertCategorySavePoint(
-        title: String,
-        destination: SavePointDestination,
-        itemPosIndex: Int,
-        saveMode: SavePointSaveMode,
-        dateTime: LocalDateTime?
-    ) {
-        val savePoint = SavePoint(
-            id = savePointsMutable.size + 1,
-            title = title,
-            contentType = SavePointContentType.Category,
-            itemPosIndex = itemPosIndex,
-            destination = destination,
-            modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-            imagePath = null,
-            imageData = null,
-            kingdomType = destination.kingdomType,
-            saveMode = saveMode
+            saveMode = saveMode,
+            image = null
         )
         savePointsMutable.add(savePoint)
     }

@@ -1,7 +1,9 @@
 package com.masterplus.animals.test_utils.models
 
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.OrderModel
+import com.masterplus.animals.core.presentation.utils.SampleDatas
 
 fun orderModel(
     id: Int = 1,
@@ -9,10 +11,9 @@ fun orderModel(
     order: String = "Order $id",
     classId: Int = 1,
     kingdomType: KingdomType = KingdomType.DEFAULT,
-    imagePath: String? = "imagePathOrder",
-    imageUrl: String? = "https://example.com/order_image.jpg"
+    image: ImageWithMetadata? = SampleDatas.imageWithMetadata,
 ): OrderModel {
     return OrderModel(
-        id, scientificName, order, classId, kingdomType, imagePath, imageUrl
+        id, scientificName, order, classId, kingdomType, image
     )
 }
