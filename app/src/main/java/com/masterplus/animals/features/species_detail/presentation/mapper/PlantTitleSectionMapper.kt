@@ -1,12 +1,13 @@
 package com.masterplus.animals.features.species_detail.presentation.mapper
 
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.Plant
 import com.masterplus.animals.core.domain.models.PlantDetail
 import com.masterplus.animals.features.species_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.species_detail.presentation.models.TitleSectionModel
 
 
-fun Plant.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSectionModel>{
+fun Plant.toTitleSections(images: List<ImageWithMetadata> = emptyList()): List<TitleSectionModel>{
     val titleSections = mutableListOf<TitleSectionModel>()
 
     titleSections.add(
@@ -26,7 +27,7 @@ fun Plant.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSect
                     content = environmentalAdaptations
                 ),
             ),
-            imageUrl = imageUrls.getOrNull(0)
+            image = images.getOrNull(0)
         )
     )
 
@@ -49,7 +50,7 @@ fun Plant.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSect
                     content = noteworthyCharacteristics
                 )
             ),
-            imageUrl = imageUrls.getOrNull(3)
+            image = images.getOrNull(3)
         )
     )
 
@@ -71,7 +72,7 @@ fun Plant.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSect
                     content = developmentProcess
                 )
             ),
-            imageUrl = imageUrls.getOrNull(1)
+            image = images.getOrNull(1)
         )
     )
 
@@ -92,7 +93,7 @@ fun Plant.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSect
                     content = threatsAndDangers
                 )
             ),
-            imageUrl = imageUrls.getOrNull(4)
+            image = images.getOrNull(4)
         )
     )
 
@@ -105,7 +106,7 @@ fun Plant.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSect
                     content = conservationEfforts
                 )
             ),
-            imageUrl = imageUrls.getOrNull(2)
+            image = images.getOrNull(2)
         )
     )
 
@@ -126,7 +127,7 @@ fun Plant.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSect
                     content = economicValue
                 )
             ),
-            imageUrl = imageUrls.getOrNull(5)
+            image = images.getOrNull(5)
         )
     )
 
@@ -143,7 +144,7 @@ fun Plant.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSect
                     content = historicalUsage
                 )
             ),
-            imageUrl = imageUrls.getOrNull(6)
+            image = images.getOrNull(6)
         )
     )
 

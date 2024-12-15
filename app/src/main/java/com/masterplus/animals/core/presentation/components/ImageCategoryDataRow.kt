@@ -79,53 +79,53 @@ fun ImageCategoryDataRow(
     }
 }
 
-
-@Composable
-fun ImageCategoryRow(
-    title: String,
-    items: List<ImageWithTitleModel>,
-    modifier: Modifier = Modifier,
-    showMore: Boolean = false,
-    onClickMore: (() -> Unit)? = null,
-    onClickItem: (ImageWithTitleModel) -> Unit,
-    imageSize: DpSize = DpSize(150.dp, 180.dp),
-    contentPaddings: PaddingValues = PaddingValues()
-) {
-    ImageCategoryDataRow(
-        title = title,
-        modifier = modifier,
-        showMore = showMore,
-        onClickMore = onClickMore,
-        contentPaddings = contentPaddings
-    ){ showMoreBtn ->
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = contentPaddings
-        ) {
-            items(
-                items = items,
-                key = { it.id ?: it.title }
-            ){ item ->
-                ImageWithTitle(
-                    model = item,
-                    onClick = {
-                        onClickItem(item)
-                    }
-                )
-            }
-
-            item {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.height(imageSize.height)
-                ) {
-                    showMoreBtn()
-                }
-            }
-        }
-
-    }
-}
+//
+//@Composable
+//fun ImageCategoryRow(
+//    title: String,
+//    items: List<ImageWithTitleModel>,
+//    modifier: Modifier = Modifier,
+//    showMore: Boolean = false,
+//    onClickMore: (() -> Unit)? = null,
+//    onClickItem: (ImageWithTitleModel) -> Unit,
+//    imageSize: DpSize = DpSize(150.dp, 180.dp),
+//    contentPaddings: PaddingValues = PaddingValues()
+//) {
+//    ImageCategoryDataRow(
+//        title = title,
+//        modifier = modifier,
+//        showMore = showMore,
+//        onClickMore = onClickMore,
+//        contentPaddings = contentPaddings
+//    ){ showMoreBtn ->
+//        LazyRow(
+//            horizontalArrangement = Arrangement.spacedBy(8.dp),
+//            contentPadding = contentPaddings
+//        ) {
+//            items(
+//                items = items,
+//                key = { it.id ?: it.title }
+//            ){ item ->
+//                ImageWithTitle(
+//                    model = item,
+//                    onClick = {
+//                        onClickItem(item)
+//                    }
+//                )
+//            }
+//
+//            item {
+//                Box(
+//                    contentAlignment = Alignment.Center,
+//                    modifier = Modifier.height(imageSize.height)
+//                ) {
+//                    showMoreBtn()
+//                }
+//            }
+//        }
+//
+//    }
+//}
 
 @Composable
 fun ImageCategoryDataRow(
@@ -186,12 +186,11 @@ fun ImageCategoryDataRow(
 private fun ImageCategoryRowPreview() {
     LazyColumn {
         item {
-            ImageCategoryRow(
+            ImageCategoryDataRow(
                 title = "Sınıflar",
-                items = listOf(SampleDatas.imageWithTitleModel1, SampleDatas.imageWithTitleModel2),
-                onClickItem = {},
-                onClickMore = {},
-                showMore = true
+                items = listOf(SampleDatas.categoryData, SampleDatas.categoryData),
+                useTransition = true,
+                onClickItem = {}
             )
         }
     }

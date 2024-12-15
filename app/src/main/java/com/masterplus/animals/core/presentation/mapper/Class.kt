@@ -6,7 +6,7 @@ import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 fun ClassModel.toImageWithTitleModel(): ImageWithTitleModel {
     return ImageWithTitleModel(
         id = id,
-        imageUrl = image?.imageUrl,
+        image = image,
         title = scientificName,
         subTitle = className,
         contentDescription = className,

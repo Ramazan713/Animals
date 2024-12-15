@@ -6,7 +6,7 @@ import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 fun Plant.toImageWithTitleModel(): ImageWithTitleModel? {
     return ImageWithTitleModel(
         id = species.id,
-        imageUrl = imageUrls.firstOrNull() ?: "",
+        image = images.firstOrNull()?.image,
         title = species.name,
         subTitle = species.scientificName,
         contentDescription = species.name,

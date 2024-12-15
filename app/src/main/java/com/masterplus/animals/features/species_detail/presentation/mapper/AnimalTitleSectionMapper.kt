@@ -2,11 +2,12 @@ package com.masterplus.animals.features.species_detail.presentation.mapper
 
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.domain.models.AnimalDetail
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.features.species_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.species_detail.presentation.models.TitleSectionModel
 
 
-fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSectionModel>{
+fun Animal.toTitleSections(images: List<ImageWithMetadata> = emptyList()): List<TitleSectionModel>{
     val titleSections = mutableListOf<TitleSectionModel>()
 
     titleSections.add(
@@ -30,7 +31,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = environmentalAdaptations
                 )
             ),
-            imageUrl = imageUrls.getOrNull(0)
+            image = images.getOrNull(0)
         )
     )
 
@@ -51,7 +52,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = ethologicalInsights
                 )
             ),
-            imageUrl = imageUrls.getOrNull(3)
+            image = images.getOrNull(3)
         )
     )
 
@@ -82,7 +83,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = communicationMethods
                 )
             ),
-            imageUrl = imageUrls.getOrNull(1)
+            image = images.getOrNull(1)
         )
     )
 
@@ -103,7 +104,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = threatsAndDangers
                 )
             ),
-            imageUrl = imageUrls.getOrNull(4)
+            image = images.getOrNull(4)
         )
     )
 
@@ -120,7 +121,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = conservationChallenges
                 )
             ),
-            imageUrl = imageUrls.getOrNull(2)
+            image = images.getOrNull(2)
         )
     )
 
@@ -141,7 +142,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = modernDayPerception
                 )
             ),
-            imageUrl = imageUrls.getOrNull(5)
+            image = images.getOrNull(5)
         ),
 
     )
@@ -159,7 +160,7 @@ fun Animal.toTitleSections(imageUrls: List<String> = emptyList()): List<TitleSec
                     content = comparativeAnalysis
                 )
             ),
-            imageUrl = imageUrls.getOrNull(6)
+            image = images.getOrNull(6)
         )
     )
 

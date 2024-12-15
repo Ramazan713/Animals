@@ -14,7 +14,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.masterplus.animals.core.presentation.components.image.DefaultImage
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
+import com.masterplus.animals.core.presentation.components.image.DefaultImageMetadata
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.features.species_detail.presentation.models.TitleSectionModel
 
@@ -23,7 +24,7 @@ fun TitleSectionRow(
     titleSectionModel: TitleSectionModel,
     modifier: Modifier = Modifier,
     spaceBy: Dp = 12.dp,
-    onImageClick: ((String) -> Unit)? = null,
+    onImageClick: ((ImageWithMetadata) -> Unit)? = null,
 ) {
     Column(
         modifier = modifier
@@ -51,16 +52,16 @@ fun TitleSectionRow(
             }
             Spacer(modifier = Modifier.height(spaceBy))
         }
-        titleSectionModel.imageUrl?.let {imageUrl ->
-            DefaultImage(
-                imageData = imageUrl,
+        titleSectionModel.image?.let { image ->
+            DefaultImageMetadata(
+                image = image,
                 modifier = Modifier
                     .height(250.dp)
 
                     .clip(RoundedCornerShape(8.dp))
 //                    .background(Color.Red)
                     .clickable {
-                        onImageClick?.invoke(imageUrl)
+                        onImageClick?.invoke(image)
                     }
             )
         }

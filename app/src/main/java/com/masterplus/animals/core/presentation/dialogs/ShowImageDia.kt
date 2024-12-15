@@ -43,9 +43,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.masterplus.animals.R
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.extentions.clickableWithoutRipple
-import com.masterplus.animals.core.presentation.components.image.DefaultImage
+import com.masterplus.animals.core.presentation.components.image.DefaultImageMetadata
+import com.masterplus.animals.core.presentation.utils.SampleDatas
 import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
@@ -53,7 +54,7 @@ import net.engawapg.lib.zoomable.zoomable
 
 @Composable
 fun ShowImageDia(
-    imageDataList: List<Any>,
+    imageDataList: List<ImageWithMetadata>,
     onDismiss: () -> Unit,
     currentPageIndex: Int = 0,
     fullPage: Boolean = true,
@@ -110,15 +111,16 @@ fun ShowImageDia(
                     ,
                     contentAlignment = Alignment.Center
                 ) {
-                    DefaultImage(
-                        imageData = imageDataList[pageIndex],
+                    DefaultImageMetadata(
+                        image = imageDataList[pageIndex],
                         modifier = Modifier
+                            .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
                             .clickableWithoutRipple {
                                 showButtons = !showButtons
-                            }
-                        ,
-                        contentScale = ContentScale.Crop
+                            },
+                        metadataIconAlignment = Alignment.TopStart,
+                        contentScale = ContentScale.Fit
                     )
                 }
             }
@@ -227,8 +229,8 @@ private fun Dot(
 private fun SamplePreview() {
     ShowImageDia(
         imageDataList = listOf(
-            R.drawable.animals_plants,
-            R.drawable.animals_plants,
+            SampleDatas.imageWithMetadata,
+            SampleDatas.imageWithMetadata
         ),
         currentPageIndex = 0,
         onDismiss = {},
@@ -244,8 +246,7 @@ private fun SamplePreview() {
 private fun SamplePreview2() {
     ShowImageDia(
         imageDataList = listOf(
-            R.drawable.animals_plants,
-            R.drawable.animals_plants,
+            SampleDatas.imageWithMetadata
         ),
         currentPageIndex = 0,
         onDismiss = {},

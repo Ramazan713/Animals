@@ -221,7 +221,7 @@ private fun DailyPlantsSection(
             ) { index ->
                 val plantData = dailyPlantTitleModels[index]
                 ImageWithTitle(
-                    imageData = plantData.imageUrl ?: "",
+                    image = plantData.image,
                     onClick = {
                         onNavigateToSpeciesDetail(plantData.id ?: return@ImageWithTitle)
                     },

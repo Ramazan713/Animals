@@ -46,16 +46,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.extentions.sharedBoundsText
-import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import com.masterplus.animals.core.presentation.components.image.TransitionImage
 import com.masterplus.animals.core.presentation.dialogs.ShowImageDia
-import com.masterplus.animals.core.presentation.utils.EventHandler
-import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
+import com.masterplus.animals.core.presentation.utils.EventHandler
+import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.features.species_detail.domain.enums.SpeciesInfoPageEnum
 import com.masterplus.animals.features.species_detail.presentation.components.TitleContentInfo
 import com.masterplus.animals.features.species_detail.presentation.components.TitleSectionRow
@@ -132,7 +133,7 @@ fun SpeciesDetailPage(
                     onNavigateBack = onNavigateBack,
                     onShowImageClick = {
                         onAction(SpeciesDetailAction.ShowDialog(SpeciesDetailDialogEvent.ShowImages(
-                            imageUrls = state.speciesDetail.detail.imageUrls ?: emptyList(),
+                            images = state.speciesDetail.detail.images.map { it.image },
                             index = it
                         )))
                     }
@@ -152,9 +153,9 @@ fun SpeciesDetailPage(
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 state = state,
                                 species = species,
-                                onShowImageClick = { imageUrl ->
+                                onShowImageClick = { image ->
                                     onAction(SpeciesDetailAction.ShowDialog(SpeciesDetailDialogEvent.ShowImages(
-                                        imageUrls = listOf(imageUrl),
+                                        images = listOf(image),
                                     )))
                                 }
                             )
@@ -179,7 +180,7 @@ fun SpeciesDetailPage(
         when(dialogEvent){
             is SpeciesDetailDialogEvent.ShowImages -> {
                 ShowImageDia(
-                    imageDataList = dialogEvent.imageUrls,
+                    imageDataList = dialogEvent.images,
                     onDismiss = closeDialog,
                     currentPageIndex = dialogEvent.index
                 )
@@ -199,9 +200,9 @@ private fun TopBarImage(
     onShowImageClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val imageUrls = state.speciesDetail?.detail?.imageUrls ?: emptyList()
+    val images = state.speciesDetail?.detail?.images ?: emptyList()
     val carouselState = rememberCarouselState {
-        imageUrls.size
+        images.size
     }
     Box(
         modifier = modifier
@@ -223,7 +224,7 @@ private fun TopBarImage(
             )
         }
 
-        if(imageUrls.isEmpty()){
+        if(images.isEmpty()){
             DefaultImage(
                 imageData = "",
             )
@@ -243,7 +244,7 @@ private fun TopBarImage(
                             onShowImageClick(index)
                         }
                     ,
-                    imageData = imageUrls[index],
+                    image = images[index].image,
                     shape = RoundedCornerShape(16.dp),
                     transitionKey = state.speciesDetail?.images?.get(index)?.let {
                         TransitionImageKey(
@@ -287,7 +288,7 @@ private fun SegmentedButtonInPage(
 private fun InfoPageContent(
     state: SpeciesDetailState,
     species: SpeciesModel,
-    onShowImageClick: (String) -> Unit,
+    onShowImageClick: (ImageWithMetadata) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(

@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImageScope
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.presentation.transition.LocalNavAnimatedVisibilityScope
 import com.masterplus.animals.core.presentation.transition.LocalSharedTransitionScope
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
@@ -18,28 +19,30 @@ import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TransitionImage(
-    imageData: Any,
+    image: ImageWithMetadata?,
     transitionKey: TransitionImageKey?,
     modifier: Modifier = Modifier,
     shape: Shape? = null,
     contentDescription: String? = null,
-    contentScale: ContentScale? = ContentScale.Crop,
+    contentScale: ContentScale? = null,
     error: @Composable() (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Error) -> Unit)? = null,
     @DrawableRes errorImageResource: Int? = null,
     sharedAnimatedVisibilityScope: AnimatedVisibilityScope? = null,
     sharedTransitionScope: SharedTransitionScope? = null,
     showErrorIcon: Boolean = true,
-    enabled: Boolean = transitionKey != null
+    enabled: Boolean = transitionKey != null,
+    fallbackImageData: Any? = null,
 ) {
     val currentAnimatedScope = sharedAnimatedVisibilityScope ?: LocalNavAnimatedVisibilityScope.current
 
     with(sharedTransitionScope ?: LocalSharedTransitionScope.current){
         val cacheKey = transitionKey?.toString()
-        DefaultImage(
-            imageData = imageData,
+        DefaultImageMetadata(
+            image = image,
+            fallbackImageData = fallbackImageData,
             modifier = modifier
                 .then(
-                    if(transitionKey != null && this != null && currentAnimatedScope != null && imageData != "" && enabled) Modifier
+                    if(transitionKey != null && this != null && currentAnimatedScope != null && enabled) Modifier
                         .sharedElement(
                             rememberSharedContentState(cacheKey ?: ""),
                             animatedVisibilityScope = currentAnimatedScope,

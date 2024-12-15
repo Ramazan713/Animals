@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImagePainter
+import coil.compose.AsyncImagePainter.State
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageScope
 import coil.request.ImageRequest
@@ -45,8 +46,9 @@ fun DefaultImage(
     imageData: Any,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    contentScale: ContentScale? = ContentScale.Crop,
+    contentScale: ContentScale? = null,
     error: @Composable() (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Error) -> Unit)? = null,
+    success: @Composable (SubcomposeAsyncImageScope.(State.Success) -> Unit)? = null,
     @DrawableRes errorImageResource: Int? = null,
     cacheKey: String? = null,
     showErrorIcon: Boolean = true,
@@ -62,6 +64,7 @@ fun DefaultImage(
             .build(),
         contentScale = currentContentScale,
         contentDescription = contentDescription,
+        success = success,
         loading = {
             SharedCircularProgress()
         },

@@ -6,7 +6,7 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.models.SaveP
 fun SavePoint.toImageWithTitleModel(): ImageWithTitleModel {
     return ImageWithTitleModel(
         id = id,
-        imageUrl = image?.imageUrl,
+        image = image,
         title = title,
     )
 }

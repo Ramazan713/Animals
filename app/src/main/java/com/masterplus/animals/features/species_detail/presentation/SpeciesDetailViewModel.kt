@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesImageModel
 import com.masterplus.animals.core.domain.repo.AnimalRepo
 import com.masterplus.animals.core.domain.repo.PlantRepo
@@ -60,8 +61,8 @@ class SpeciesDetailViewModel(
         }
     }
 
-    private fun getTitleSectionImages(images: List<SpeciesImageModel>): List<String>{
-        return images.map { it.image.imageUrl }
+    private fun getTitleSectionImages(images: List<SpeciesImageModel>): List<ImageWithMetadata>{
+        return images.map { it.image }
     }
 
     private suspend fun loadSpeciesData(language: LanguageEnum){
@@ -74,7 +75,7 @@ class SpeciesDetailViewModel(
                         val titleSectionImages = getTitleSectionImages(animalDetail.images)
                         _state.update { it.copy(
                             speciesDetail = animalDetail,
-                            titleSectionModels = animalDetail.detail.toTitleSections(imageUrls = titleSectionImages),
+                            titleSectionModels = animalDetail.detail.toTitleSections(images = titleSectionImages),
                             scientificNomenclatureSection = animalDetail.toScientificNomenclatureSection(),
                             featureSection2 = animalDetail.toFeatureSection2(),
                             featureSection3 = animalDetail.detail.toFeatureSection3()
@@ -86,7 +87,7 @@ class SpeciesDetailViewModel(
                         val titleSectionImages = getTitleSectionImages(plantDetail.images)
                         _state.update { it.copy(
                             speciesDetail = plantDetail ,
-                            titleSectionModels = plantDetail.detail.toTitleSections(imageUrls = titleSectionImages),
+                            titleSectionModels = plantDetail.detail.toTitleSections(images = titleSectionImages),
                             scientificNomenclatureSection = plantDetail.toScientificNomenclatureSection(),
                             featureSection2 = plantDetail.toFeatureSection2(),
                             featureSection3 = plantDetail.detail.toFeatureSection3()

@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.extentions.sharedBoundsText
 import com.masterplus.animals.core.presentation.components.OrderText
@@ -60,7 +61,7 @@ fun SpeciesCard(
     useTransition: Boolean = true
 ){
     SpeciesCard(
-        imageData = species.imageUrls.firstOrNull() ?: "",
+        image = species.images.firstOrNull()?.image,
         name = species.name,
         speciesDescription = species.introduction,
         onMenuButtonClick = onMenuButtonClick,
@@ -90,7 +91,7 @@ fun SpeciesCard(
 
 @Composable
 fun SpeciesCard(
-    imageData: Any,
+    image: ImageWithMetadata?,
     name: String,
     speciesDescription: String,
     onMenuButtonClick: () -> Unit,
@@ -123,7 +124,7 @@ fun SpeciesCard(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             GetImage(
-                imageData = imageData,
+                image = image,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
@@ -157,7 +158,7 @@ fun SpeciesCard(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             GetImage(
-                imageData = imageData,
+                image = image,
                 modifier = Modifier
                     .heightIn(min = 200.dp)
                 ,
@@ -188,7 +189,7 @@ fun SpeciesCard(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun GetImage(
-    imageData: Any,
+    image: ImageWithMetadata?,
     shape: Shape,
     contentDescription: String?,
     orderNum: Int?,
@@ -208,7 +209,7 @@ private fun GetImage(
     ) {
 
         TransitionImage(
-            imageData = imageData,
+            image = image,
             modifier = Modifier
                 .matchParentSize(),
             shape = shape,

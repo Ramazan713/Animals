@@ -41,6 +41,7 @@ import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.SharedCircularProgress
@@ -85,13 +86,13 @@ fun CategoryListPage(
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val imageUrl by remember(state, pagingItems.itemCount) {
+    val showImage by remember(state, pagingItems.itemCount) {
         derivedStateOf {
             when {
-                state.isLoading -> null
-                state.parentImageData != null && pagingItems.itemCount > 0 -> state.parentImageData
-                pagingItems.itemCount > 0 -> R.drawable.animals_plants
-                else -> null
+                state.isLoading -> false
+                state.parentImageData != null && pagingItems.itemCount > 0 -> true
+                pagingItems.itemCount > 0 -> true
+                else -> false
             }
         }
     }
@@ -141,8 +142,9 @@ fun CategoryListPage(
                 item {
                     HeaderImage(
                         state = state,
-                        imageUrl = imageUrl,
+                        image = state.parentImageData,
                         onAllItemClick = onAllItemClick,
+                        showImage = showImage
                     )
                 }
                 item {
@@ -235,13 +237,14 @@ fun CategoryListPage(
 @Composable
 private fun HeaderImage(
     state: CategoryState,
-    imageUrl: Any?,
+    image: ImageWithMetadata?,
+    showImage: Boolean,
     onAllItemClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
         enter = fadeIn() + expandIn(),
-        visible = imageUrl != null,
+        visible = showImage,
         modifier = modifier
     ) {
         ImageWithTitle(
@@ -249,7 +252,8 @@ private fun HeaderImage(
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
             title = "${if(state.kingdomType.isAnimals) "Hayvanlar" else "Bitkiler"} Listesi",
-            imageData = imageUrl ?: "",
+            image = image,
+            fallbackImageData = R.drawable.animals_plants,
             onClick = onAllItemClick,
             useTransition = true,
             transitionKey = TransitionImageType.fromCategoryType(state.categoryType)

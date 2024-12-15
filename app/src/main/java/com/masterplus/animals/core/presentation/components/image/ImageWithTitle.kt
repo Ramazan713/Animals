@@ -1,11 +1,8 @@
 package com.masterplus.animals.core.presentation.components.image
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,14 +30,16 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.extentions.sharedBoundsText
 import com.masterplus.animals.core.presentation.components.OrderText
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
-import com.masterplus.animals.core.presentation.utils.ColorUtils
-import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
-import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
+import com.masterplus.animals.core.presentation.utils.ColorUtils
+import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
+import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
 import com.masterplus.animals.ui.theme.AnimalsTheme
 
 
@@ -52,13 +51,15 @@ fun ImageWithTitle(
     onLongClick: (() -> Unit)? = null,
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
-    contentScale: ContentScale = ContentScale.Crop,
+    contentScale: ContentScale? = null,
     order: Int? = null,
-    useTransition: Boolean = false
+    useTransition: Boolean = false,
+    fallbackImageData: Any? = null,
 ){
     ImageWithTitle(
-        imageData = model.imageUrl ?: "",
+        image = model.image,
         title = model.title,
+        fallbackImageData = fallbackImageData,
         modifier = modifier,
         subTitle = model.secondaryTitle,
         onClick = onClick,
@@ -86,11 +87,12 @@ fun ImageWithTitle(
     onLongClick: (() -> Unit)? = null,
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
-    contentScale: ContentScale = ContentScale.Crop,
-    order: Int? = null
+    contentScale: ContentScale? = null,
+    order: Int? = null,
+    fallbackImageData: Any? = null,
 ){
     ImageWithTitle(
-        imageData = model.imageUrl ?: "",
+        image = model.image,
         title = model.title,
         modifier = modifier,
         subTitle = model.subTitle,
@@ -101,8 +103,9 @@ fun ImageWithTitle(
         shape = shape,
         contentScale = contentScale,
         order = order,
-        useTransition = model.imageUrl != null,
-        transitionKey = null
+        useTransition = model.image != null,
+        transitionKey = null,
+        fallbackImageData = fallbackImageData
     )
 }
 
@@ -110,7 +113,7 @@ fun ImageWithTitle(
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ImageWithTitle(
-    imageData: Any,
+    image: ImageWithMetadata?,
     title: String,
     modifier: Modifier = Modifier,
     subTitle: String? = null,
@@ -119,10 +122,11 @@ fun ImageWithTitle(
     contentDescription: String? = null,
     size: DpSize = DpSize(150.dp, 180.dp),
     shape: Shape = RoundedCornerShape(8.dp),
-    contentScale: ContentScale = ContentScale.Crop,
+    contentScale: ContentScale? = null,
     order: Int? = null,
     transitionKey: TransitionImageKey?,
     useTransition: Boolean = transitionKey != null,
+    fallbackImageData: Any? = null,
 ) {
     Box(
         modifier = modifier
@@ -154,8 +158,9 @@ fun ImageWithTitle(
             useTransition = useTransition
         )
         TransitionImage(
-            imageData = imageData,
+            image = image,
             shape = shape,
+            fallbackImageData = fallbackImageData,
             transitionKey = transitionKey,
             enabled = useTransition,
             modifier = Modifier
@@ -169,7 +174,6 @@ fun ImageWithTitle(
 }
 
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun GetTitleSection(
     title: String,
@@ -240,7 +244,7 @@ fun ImageWithTitlePreview() {
             ImageWithTitle(
                 title = "Kartallar",
                 subTitle = "sadsadasdasdasd",
-                imageData = "",
+                image = SampleDatas.imageWithMetadata,
                 transitionKey = TransitionImageKey(
                     id = 1,
                     TransitionImageType.Order
@@ -248,7 +252,7 @@ fun ImageWithTitlePreview() {
             )
             ImageWithTitle(
                 title = "Kartallar",
-                imageData = "",
+                image = SampleDatas.imageWithMetadata,
                 transitionKey = TransitionImageKey(
                     id = 2,
                     TransitionImageType.Order
