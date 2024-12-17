@@ -18,12 +18,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,13 +36,13 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
-import com.masterplus.animals.core.extentions.animateEnterExitForTransition
-import com.masterplus.animals.core.extentions.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
-import com.masterplus.animals.core.presentation.components.SharedCircularProgress
-import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
+import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
+import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
+import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
@@ -119,6 +121,7 @@ fun SpeciesListPage(
     onNavigateToCategorySearch: () -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit
 ) {
+    val topBarScrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val lazyListState = rememberLazyListState(
         initialFirstVisibleItemIndex = args.initPosIndex
     )
@@ -136,6 +139,7 @@ fun SpeciesListPage(
         onAction = onAutoSavePointAction,
         state = autoSavePointState,
         itemInitPos = args.initPosIndex,
+        topBarScrollBehaviour = topBarScrollBehaviour,
         lazyListState = lazyListState
     )
 
@@ -143,6 +147,7 @@ fun SpeciesListPage(
     Scaffold(
         topBar = {
             TopAppBar(
+                scrollBehavior = topBarScrollBehaviour,
                 title = {
                     state.title?.let { title ->
                         Text(text = title.asString())
@@ -180,6 +185,7 @@ fun SpeciesListPage(
         SharedLoadingPageContent(
             modifier = Modifier
                 .padding(paddings)
+                .nestedScroll(topBarScrollBehaviour.nestedScrollConnection)
                 .fillMaxSize(),
             isLoading = pagingItems.loadState.refresh is LoadState.Loading || autoSavePointState.loadingSavePointPos,
             isEmptyResult = pagingItems.itemCount == 0,

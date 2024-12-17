@@ -16,8 +16,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
-import com.masterplus.animals.core.presentation.components.SharedCircularProgress
-import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
+import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates

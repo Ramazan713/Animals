@@ -36,11 +36,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
-import com.masterplus.animals.core.extentions.sharedBoundsText
 import com.masterplus.animals.core.presentation.components.OrderText
 import com.masterplus.animals.core.presentation.components.image.TransitionImage
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
+import com.masterplus.animals.core.presentation.transition.sharedBoundsText
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShapeUtils
 

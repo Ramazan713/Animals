@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
-import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.dialogs.ShowGetTextDialog
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
 import com.masterplus.animals.core.presentation.selections.CustomDropdownMenu

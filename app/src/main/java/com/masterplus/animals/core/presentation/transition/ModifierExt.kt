@@ -13,15 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 
+
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun Modifier.sharedBoundsText(
     scope: SharedTransitionScope,
     contentStateKey: String,
-    animatedVisibilityScope: AnimatedVisibilityScope? = null
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
+    enabled: Boolean = true
 ): Modifier {
     val currentAnimatedVisibilityScope = animatedVisibilityScope ?: LocalNavAnimatedVisibilityScope.current
-    if(currentAnimatedVisibilityScope == null ||  contentStateKey == "") return Modifier
+    if(currentAnimatedVisibilityScope == null ||  contentStateKey == "" || !enabled) return Modifier
     return with(scope){
         Modifier
             .sharedBounds(
@@ -29,7 +31,6 @@ fun Modifier.sharedBoundsText(
                 animatedVisibilityScope = currentAnimatedVisibilityScope,
                 enter = fadeIn(),
                 exit = fadeOut(),
-                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
             )
             .skipToLookaheadSize()
     }
@@ -37,9 +38,25 @@ fun Modifier.sharedBoundsText(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
+fun Modifier.sharedBoundsText(
+    contentStateKey: String,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
+    enabled: Boolean = true
+): Modifier {
+    val sharedTransitionScope = LocalSharedTransitionScope.current ?: return Modifier
+    return Modifier.sharedBoundsText(
+        scope = sharedTransitionScope,
+        contentStateKey = contentStateKey,
+        animatedVisibilityScope = animatedVisibilityScope,
+        enabled = enabled
+    )
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
 fun Modifier.renderInSharedTransitionScopeOverlayDefault(
     sharedTransitionScope: SharedTransitionScope? = null
-): Modifier {
+): Modifier{
     val currentSharedTransitionScope = sharedTransitionScope ?: LocalSharedTransitionScope.current
     if(currentSharedTransitionScope == null) return Modifier
     with(currentSharedTransitionScope){
@@ -50,14 +67,13 @@ fun Modifier.renderInSharedTransitionScopeOverlayDefault(
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun Modifier.animateEnterExitForTransition(
     enter: EnterTransition? = null,
     exit: ExitTransition? = null,
     offsetY: (fullHeight: Int) -> Int = { -it },
     animatedVisibilityScope: AnimatedVisibilityScope? = null
-): Modifier {
+): Modifier{
     val currentAnimatedVisibilityScope = animatedVisibilityScope ?: LocalNavAnimatedVisibilityScope.current
     if(currentAnimatedVisibilityScope == null) return Modifier
     with(currentAnimatedVisibilityScope){

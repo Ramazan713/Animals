@@ -4,6 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -20,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -35,7 +36,7 @@ import coil.compose.SubcomposeAsyncImageScope
 import coil.request.ImageRequest
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.components.DefaultToolTip
-import com.masterplus.animals.core.presentation.components.SharedCircularProgress
+import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
 import com.masterplus.animals.ui.theme.AnimalsTheme
@@ -68,13 +69,18 @@ fun DefaultImage(
         onSuccess = onSuccess,
         success = success,
         loading = {
-            SharedCircularProgress()
+            SharedCircularProgress(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+            )
         },
         error = {
             error ?: GetErrorHolder(
                 contentScale = currentContentScale,
                 errorResource = errorImageResource,
-                showErrorIcon = showErrorIcon
+                showErrorIcon = showErrorIcon,
+                modifier = Modifier.fillMaxWidth()
             )
         },
     )
@@ -85,7 +91,8 @@ fun DefaultImage(
 private fun GetErrorHolder(
     contentScale: ContentScale,
     @DrawableRes errorResource: Int?,
-    showErrorIcon: Boolean
+    showErrorIcon: Boolean,
+    modifier: Modifier = Modifier
 ){
     val errorText = stringResource(R.string.something_went_wrong)
 
@@ -97,7 +104,7 @@ private fun GetErrorHolder(
         contentAlignment = Alignment.TopEnd
     ) {
         Image(
-            modifier = Modifier,
+            modifier = modifier,
             contentScale = contentScale,
             painter = painterResource(id = errorResource ?: R.drawable.animals_plants),
             contentDescription = null
@@ -172,7 +179,7 @@ private fun DefaultImagePreview(modifier: Modifier = Modifier) {
            modifier = Modifier
                .size(150.dp)
                .clip(RoundedCornerShape(8.dp))
-               .background(Color.Blue.copy(alpha = 0.3f)),
+               ,
        )
    }
 }

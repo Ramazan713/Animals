@@ -3,17 +3,11 @@ package com.masterplus.animals.core.presentation.components.image
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,22 +16,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImageScope
-import coil.compose.rememberAsyncImagePainter
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
+import com.masterplus.animals.core.extentions.fillMaxWithOrientation
 import com.masterplus.animals.core.presentation.components.icon.IconButtonForImage
 import com.masterplus.animals.core.presentation.dialogs.ShowImageMetadataDia
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
 import com.masterplus.animals.ui.theme.AnimalsTheme
-
 
 
 @Composable
@@ -65,8 +57,9 @@ fun DefaultImageMetadata(
         DefaultImage(
             imageData = image?.imageUrl ?: fallbackImageData ?:"",
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
+                .wrapContentSize()
+                .fillMaxWithOrientation()
+            ,
             contentDescription = contentDescription,
             contentScale = contentScale,
             error = error,

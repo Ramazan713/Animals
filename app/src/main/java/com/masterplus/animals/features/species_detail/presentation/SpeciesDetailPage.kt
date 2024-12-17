@@ -48,13 +48,15 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesModel
-import com.masterplus.animals.core.extentions.sharedBoundsText
-import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import com.masterplus.animals.core.presentation.components.image.TransitionImage
+import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.dialogs.ShowImageDia
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
+import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
+import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
+import com.masterplus.animals.core.presentation.transition.sharedBoundsText
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.features.species_detail.domain.enums.SpeciesInfoPageEnum
@@ -112,7 +114,6 @@ fun SpeciesDetailPage(
                 modifier = Modifier
                     .padding(paddings)
                     .padding(horizontal = horizontalPagePadding)
-                    .padding(bottom = 16.dp)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                 ,
@@ -138,14 +139,24 @@ fun SpeciesDetailPage(
                         )))
                     }
                 )
-                SegmentedButtonInPage(
-                    state = state,
-                    onAction = onAction
-                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .renderInSharedTransitionScopeOverlayDefault()
+                        .animateEnterExitForTransition(offsetY = { it })
+                ) {
+                    SegmentedButtonInPage(
+                        state = state,
+                        onAction = onAction,
+
+                    )
+                }
 
                 HorizontalPager(
                     state = pagerState,
-                    userScrollEnabled = false
+                    userScrollEnabled = false,
+                    contentPadding = PaddingValues(bottom = 16.dp)
                 ) { pageIndex ->
                     when(pageIndex){
                         SpeciesInfoPageEnum.Info.ordinal ->  {
@@ -229,13 +240,17 @@ private fun TopBarImage(
                 imageData = "",
             )
         }else{
+            val preferredItemWidth = 250.dp
+            val minSmallItemWidth = preferredItemWidth * 0.8f
+            val maxSmallItemWidth = preferredItemWidth * 1.5f
             HorizontalMultiBrowseCarousel(
                 state = carouselState,
-                preferredItemWidth = 250.dp,
-                minSmallItemWidth = 200.dp,
-                maxSmallItemWidth = 450.dp,
+                preferredItemWidth = preferredItemWidth,
+                minSmallItemWidth = minSmallItemWidth,
+                maxSmallItemWidth = maxSmallItemWidth,
                 itemSpacing = 4.dp,
-                contentPadding = PaddingValues(horizontal = 0.dp)
+                contentPadding = PaddingValues(horizontal = 0.dp),
+                modifier = Modifier.fillMaxWidth()
             ) { index ->
                 TransitionImage(
                     modifier = Modifier

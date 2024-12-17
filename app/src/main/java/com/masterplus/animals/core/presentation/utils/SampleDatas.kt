@@ -53,8 +53,8 @@ object SampleDatas {
         metadata = ImageMetadata(
             id = 1,
             imageId = 1,
-            imageDescription = "image_description",
-            artistName = "Artist X",
+            imageDescription = "<p>Blue Whale with Calf, Ólafsvík, Iceland\\n</p><p><i>Photo was taken using the following technique:</i>\\n</p>\\n<ul><li>Film: Kodak Elitechrome Extracolor</li>\\n<li>Lens:\\t4/70-210</li>\\n<li>Filter: none</li>\\n<li>Body: Minolta 7</li>\\n<li>Support: none</li>\\n<li>Source: <a rel=\\\"nofollow\\\" class=\\\"external free\\\" href=\\\"http://fam-tille.de/sparetime.html\\\">http://fam-tille.de/sparetime.html</a>\\n<ul><li><a rel=\\\"nofollow\\\" class=\\\"external text\\\" href=\\\"http://fam-tille.de/island/iceland/snaefellsness/2002_018.html\\\">Image with Information in English</a></li>\\n<li><a rel=\\\"nofollow\\\" class=\\\"external text\\\" href=\\\"http://fam-tille.de/island/iceland/snaefellsness/2002_018_de.html\\\">Bild mit Informationen auf Deutsch</a></li></ul></li></ul>",
+            artistName = "<a href=\\\"//commons.wikimedia.org/wiki/User:Bartiebert\\\" class=\\\"mw-redirect\\\" title=\\\"User:Bartiebert\\\">Danny Steaven</a>",
             licenseUrl = "www.google.com",
             usageTerms = "Creative Commons Attribution-Share Alike 2.5",
             dateTimeOriginal = "2007-06-03 20:19:06",

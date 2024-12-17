@@ -93,7 +93,6 @@ fun ShowImageDia(
                     if (currentFullPage) Modifier.fillMaxHeight()
                     else Modifier.height(pageMaxHeight)
                 )
-                .fillMaxWidth()
                 .clickableWithoutRipple {
                     onDismiss()
                 }
@@ -108,7 +107,7 @@ fun ShowImageDia(
             ) { pageIndex ->
                 Box(
                     modifier = Modifier
-                        .matchParentSize()
+                        .fillMaxSize()
                         .zoomable(zoomState = zoomState)
                     ,
                     contentAlignment = Alignment.Center

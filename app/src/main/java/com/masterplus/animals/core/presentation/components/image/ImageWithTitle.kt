@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
-import com.masterplus.animals.core.extentions.sharedBoundsText
 import com.masterplus.animals.core.presentation.components.OrderText
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
+import com.masterplus.animals.core.presentation.transition.sharedBoundsText
 import com.masterplus.animals.core.presentation.utils.ColorUtils
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum

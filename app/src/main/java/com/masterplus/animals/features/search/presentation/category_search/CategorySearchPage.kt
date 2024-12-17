@@ -20,7 +20,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
 import com.masterplus.animals.core.extentions.clearFocusOnTap
-import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.features.search.presentation.components.HistoryItem
 import com.masterplus.animals.features.search.presentation.components.SearchField
 

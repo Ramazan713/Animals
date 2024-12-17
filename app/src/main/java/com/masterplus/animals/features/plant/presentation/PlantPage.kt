@@ -34,10 +34,8 @@ import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
-import com.masterplus.animals.core.presentation.components.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
-import com.masterplus.animals.core.presentation.transition.TransitionImageKey
-import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem

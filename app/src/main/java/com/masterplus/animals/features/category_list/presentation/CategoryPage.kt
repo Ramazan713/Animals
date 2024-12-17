@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -44,9 +47,10 @@ import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
-import com.masterplus.animals.core.presentation.components.SharedCircularProgress
-import com.masterplus.animals.core.presentation.components.SharedLoadingLazyColumn
+import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
+import com.masterplus.animals.core.presentation.components.loading.SharedLoadingLazyColumn
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
+import com.masterplus.animals.core.presentation.components.loading.SharedLoadingLazyVerticalGrid
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.selections.ShowSelectBottomMenuItems
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
@@ -97,7 +101,7 @@ fun CategoryListPage(
         }
     }
 
-    val lazyListState = rememberLazyListState()
+    val lazyListState = rememberLazyGridState()
     val middlePos = lazyListState.visibleMiddlePosition()
     val scope = rememberCoroutineScope()
 
@@ -125,7 +129,7 @@ fun CategoryListPage(
             )
         }
     ) { paddings->
-        SharedLoadingLazyColumn(
+        SharedLoadingLazyVerticalGrid(
             modifier = Modifier
                 .padding(paddings)
                 .fillMaxSize()
@@ -135,15 +139,20 @@ fun CategoryListPage(
             state = lazyListState,
             isLoading = pagingItems.loadState.refresh is LoadState.Loading,
             stickHeaderContent = {
-                item {
+                item(
+                    span = { GridItemSpan(maxLineSpan) }
+                ) {
                     HeaderImage(
                         state = state,
                         image = state.parentImageData,
                         onAllItemClick = onAllItemClick,
-                        showImage = showImage
+                        showImage = showImage,
+                        modifier = Modifier
                     )
                 }
-                item {
+                item(
+                    span = { GridItemSpan(maxLineSpan) }
+                ) {
                     Text(
                         text = state.collectionName,
                         style = MaterialTheme.typography.titleLarge,
@@ -159,8 +168,7 @@ fun CategoryListPage(
                 if(item != null){
                     ImageWithTitle(
                         modifier = Modifier
-                            .fillMaxWidth()
-                        ,
+                            .fillMaxWidth(),
                         model = item,
                         order = index + 1,
                         useTransition = true,
