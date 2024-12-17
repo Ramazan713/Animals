@@ -8,10 +8,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.IMenuItemEnum
-import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
 import com.masterplus.animals.core.shared_features.list.presentation.select_list_with_menu.ShowBottomMenuWithSelectList
 
+
+typealias SpeciesId = Int
 
 @Composable
 fun AddSpeciesToListHandler(
@@ -35,7 +36,7 @@ fun <T: IMenuItemEnum> AddSpeciesToListHandler(
     state: AddSpeciesToListState,
     onAction: (AddSpeciesToListAction) -> Unit,
     bottomMenuItems: List<T>,
-    onBottomMenuItemClick: (T, SpeciesListDetail, Int) -> Unit,
+    onBottomMenuItemClick: (T, SpeciesId, Int) -> Unit,
     listIdControl: Int?
 ) {
 
@@ -51,12 +52,12 @@ fun <T: IMenuItemEnum> AddSpeciesToListHandler(
             is AddSpeciesToListDialogEvent.ShowItemBottomMenu -> {
                 ShowBottomMenuWithSelectList(
                     items = bottomMenuItems,
-                    title = stringResource(id = R.string.n_for_number_word,dialogEvent.posIndex + 1, dialogEvent.item.name),
-                    animalId = dialogEvent.item.id ?: 0,
+                    title = stringResource(id = R.string.n_for_number_word,dialogEvent.posIndex + 1, dialogEvent.speciesName),
+                    speciesId = dialogEvent.speciesId,
                     onClose = close,
                     listIdControl = state.listIdControl,
                     onClickItem = { menuItem ->
-                        onBottomMenuItemClick.invoke(menuItem, dialogEvent.item, dialogEvent.posIndex)
+                        onBottomMenuItemClick.invoke(menuItem, dialogEvent.speciesId, dialogEvent.posIndex)
                     }
                 )
             }

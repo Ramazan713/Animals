@@ -232,7 +232,9 @@ object SampleDatas {
         genus = genus,
         species = species,
         habitatCategories = listOf(habitatCategory),
-        images = listOf(animalImage, animalImage, animalImage)
+        images = listOf(animalImage, animalImage, animalImage),
+        isFavorited = true,
+        isListSelected = true
     )
 
     val titleSectionModel = TitleSectionModel(

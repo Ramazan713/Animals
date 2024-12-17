@@ -45,5 +45,7 @@ data class AnimalDetail(
     override val genus: GenusModel,
     override val species: SpeciesModel,
     override val habitatCategories: List<HabitatCategoryModel>,
-    override val images: List<SpeciesImageModel>
+    override val images: List<SpeciesImageModel>,
+    override val isFavorited: Boolean,
+    override val isListSelected: Boolean
 ): SpeciesDetail

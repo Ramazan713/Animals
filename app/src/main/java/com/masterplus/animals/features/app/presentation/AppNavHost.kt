@@ -176,8 +176,8 @@ fun AppNavHost(
             onNavigateBack = {
                 navHostController.navigateUp()
             },
-            onNavigateToSpeciesDetail = { itemId ->
-                navHostController.navigateToSpeciesDetail(itemId)
+            onNavigateToSpeciesDetail = { itemId, listIdControl ->
+                navHostController.navigateToSpeciesDetail(itemId, listIdControl)
             },
             onNavigateToCategorySearch = {catType, contentType, itemId ->
                 navHostController.navigateToSearchSpecies(catType,contentType, itemId)

@@ -77,6 +77,8 @@ fun AnimalDetailEmbedded.toAnimalDetail(
         genus = genus.toGenus(language),
         species = species.toSpecies(language),
         habitatCategories = habitatCategories.map { it.toHabitatCategory(language) },
-        images = images.map { it.toSpeciesImageModel() }
+        images = images.map { it.toSpeciesImageModel() },
+        isFavorited = listsIsRemovable.any { !it },
+        isListSelected = listsIsRemovable.any { it },
     )
 }

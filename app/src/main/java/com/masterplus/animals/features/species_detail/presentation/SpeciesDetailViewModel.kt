@@ -10,6 +10,7 @@ import com.masterplus.animals.core.domain.models.SpeciesImageModel
 import com.masterplus.animals.core.domain.repo.AnimalRepo
 import com.masterplus.animals.core.domain.repo.PlantRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
+import com.masterplus.animals.core.shared_features.list.domain.repo.ListSpeciesRepo
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.species_detail.presentation.mapper.toFeatureSection2
@@ -28,6 +29,7 @@ class SpeciesDetailViewModel(
     private val speciesRepo: SpeciesRepo,
     private val plantRepo: PlantRepo,
     private val translationRepo: TranslationRepo,
+    private val listSpeciesRepo: ListSpeciesRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -37,12 +39,7 @@ class SpeciesDetailViewModel(
     val state = _state.asStateFlow()
 
     init {
-        translationRepo
-            .getFlowLanguage()
-            .onEach { language ->
-                loadSpeciesData(language)
-            }
-            .launchIn(viewModelScope)
+        initListening()
     }
 
     fun onAction(action: SpeciesDetailAction){
@@ -63,6 +60,35 @@ class SpeciesDetailViewModel(
 
     private fun getTitleSectionImages(images: List<SpeciesImageModel>): List<ImageWithMetadata>{
         return images.map { it.image }
+    }
+
+    private fun initListening(){
+
+        _state.update { it.copy(
+            listIdControl = args.listIdControl
+        ) }
+
+        translationRepo
+            .getFlowLanguage()
+            .onEach { language ->
+                loadSpeciesData(language)
+            }
+            .launchIn(viewModelScope)
+
+        listSpeciesRepo.getHasSpeciesInListFlow(
+            speciesId = args.speciesId,
+            isListFavorite = false
+        ).onEach { isListSelected ->
+            _state.update { it.copy(isListSelected = isListSelected) }
+        }.launchIn(viewModelScope)
+
+        listSpeciesRepo.getHasSpeciesInListFlow(
+            speciesId = args.speciesId,
+            isListFavorite = true
+        ).onEach { isFavorited ->
+            _state.update { it.copy(isFavorited = isFavorited) }
+        }.launchIn(viewModelScope)
+
     }
 
     private suspend fun loadSpeciesData(language: LanguageEnum){
@@ -97,6 +123,10 @@ class SpeciesDetailViewModel(
                 }
             }
         }
+//        args.speciesId
+//        _state.update { it.copy(
+//            listIdControl = if(args.categoryType == CategoryType.List) args.realItemId else null
+//        ) }
         _state.update { it.copy(
             isLoading = false
         ) }

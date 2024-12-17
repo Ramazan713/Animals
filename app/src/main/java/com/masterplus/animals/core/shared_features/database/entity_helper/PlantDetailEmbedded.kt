@@ -7,6 +7,8 @@ import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.GenusEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
+import com.masterplus.animals.core.shared_features.database.entity.ListEntity
+import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
 import com.masterplus.animals.core.shared_features.database.entity.PlantEntity
@@ -98,4 +100,17 @@ data class PlantDetailEmbedded(
         entity = SpeciesImageEntity::class
     )
     val images: List<SpeciesImageWithMetadataEmbedded>,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = ListSpeciesEntity::class,
+            parentColumn = "speciesId",
+            entityColumn = "listId"
+        ),
+        projection = ["isRemovable"],
+        entity = ListEntity::class
+    )
+    val listsIsRemovable: List<Boolean>
 )

@@ -35,7 +35,7 @@ fun NavController.navigateToSpeciesList(categoryId: Int, itemId: Int?, kingdomTy
 
 fun NavGraphBuilder.speciesList(
     onNavigateBack: () -> Unit,
-    onNavigateToSpeciesDetail: (Int) -> Unit,
+    onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit
 ){

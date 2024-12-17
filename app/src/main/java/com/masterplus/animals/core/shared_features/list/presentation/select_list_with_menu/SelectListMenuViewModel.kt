@@ -34,7 +34,7 @@ class SelectListMenuViewModel @Inject constructor(
             }
             is SelectListMenuAction.AddToFavorite -> {
                 viewModelScope.launch {
-                    addFavoriteAnimal(action.animalId)
+                    addFavoriteAnimal(action.speciesId)
                 }
             }
             is SelectListMenuAction.ShowDialog -> {
@@ -46,11 +46,11 @@ class SelectListMenuViewModel @Inject constructor(
                         if(showDia){
                             _state.update { state->
                                 state.copy(
-                                    dialogEvent = SelectListMenuDialogEvent.AskFavoriteDelete(action.animalId)
+                                    dialogEvent = SelectListMenuDialogEvent.AskFavoriteDelete(action.speciesId)
                                 )
                             }
                         }else{
-                            addFavoriteAnimal(action.animalId)
+                            addFavoriteAnimal(action.speciesId)
                         }
                     }
                 }
@@ -67,8 +67,8 @@ class SelectListMenuViewModel @Inject constructor(
         _state.update { it.copy(listIdControl = event.listId)}
         loadDataJob?.cancel()
         loadDataJob = listSpeciesRepo
-            .getHasSpeciesInListFlow(event.animalId, true)
-            .combine(listSpeciesRepo.getHasSpeciesInListFlow(event.animalId, false)){ inFavorite, inLists ->
+            .getHasSpeciesInListFlow(event.speciesId, true)
+            .combine(listSpeciesRepo.getHasSpeciesInListFlow(event.speciesId, false)){ inFavorite, inLists ->
                 return@combine Pair(inFavorite, inLists)
             }
             .distinctUntilChanged()

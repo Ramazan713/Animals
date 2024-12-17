@@ -27,7 +27,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun <T: IMenuItemEnum> ShowBottomMenuWithSelectList(
     items: List<T>,
-    animalId: Int,
+    speciesId: Int,
     listIdControl: Int? = null,
     onClickItem: (T) -> Unit,
     onClose: () -> Unit,
@@ -39,7 +39,7 @@ fun <T: IMenuItemEnum> ShowBottomMenuWithSelectList(
 
     ShowBottomMenuWithSelectList(
         items = items,
-        animalId = animalId,
+        speciesId = speciesId,
         listIdControl = listIdControl,
         onClickItem = onClickItem,
         title = title,
@@ -55,7 +55,7 @@ fun <T: IMenuItemEnum> ShowBottomMenuWithSelectList(
 @Composable
 fun <T: IMenuItemEnum> ShowBottomMenuWithSelectList(
     items: List<T>,
-    animalId: Int,
+    speciesId: Int,
     listIdControl: Int? = null,
     onClickItem: (T) -> Unit,
     onClose: () -> Unit,
@@ -69,7 +69,7 @@ fun <T: IMenuItemEnum> ShowBottomMenuWithSelectList(
     ) {
         SelectMenuWithListBottomContent(
             items = items,
-            animalId = animalId,
+            speciesId = speciesId,
             listIdControl = listIdControl,
             onClickItem = onClickItem,
             title = title,
@@ -87,7 +87,7 @@ fun <T: IMenuItemEnum> ShowBottomMenuWithSelectList(
 @Composable
 private fun <T: IMenuItemEnum> SelectMenuWithListBottomContent(
     items: List<T>,
-    animalId: Int,
+    speciesId: Int,
     listIdControl: Int? = null,
     onClickItem: (T) -> Unit,
     onClose: () -> Unit,
@@ -104,8 +104,8 @@ private fun <T: IMenuItemEnum> SelectMenuWithListBottomContent(
         mutableStateOf(emptyList<IMenuItemEnum>())
     }
 
-    LaunchedEffect(animalId,listIdControl){
-        onEvent(SelectListMenuAction.LoadData(animalId, listIdControl))
+    LaunchedEffect(speciesId,listIdControl){
+        onEvent(SelectListMenuAction.LoadData(speciesId, listIdControl))
     }
 
     LaunchedEffect(items,state.listMenuItems){
@@ -130,10 +130,10 @@ private fun <T: IMenuItemEnum> SelectMenuWithListBottomContent(
                             showSelectListDia = true
                         }
                         SelectListMenuEnum.AddFavorite -> {
-                            onEvent(SelectListMenuAction.AddToFavorite(animalId))
+                            onEvent(SelectListMenuAction.AddToFavorite(speciesId))
                         }
                         SelectListMenuEnum.AddedFavorite -> {
-                            onEvent(SelectListMenuAction.AddOrAskFavorite(animalId))
+                            onEvent(SelectListMenuAction.AddOrAskFavorite(speciesId))
                         }
                     }
                 }
@@ -146,7 +146,7 @@ private fun <T: IMenuItemEnum> SelectMenuWithListBottomContent(
 
     if(showSelectListDia){
         ShowSelectListBottom(
-            animalId = animalId,
+            speciesId = speciesId,
             listIdControl = listIdControl,
             title = selectListTitle,
             onClosed = { showSelectListDia = false }
@@ -161,7 +161,7 @@ private fun <T: IMenuItemEnum> SelectMenuWithListBottomContent(
                     content = stringResource(R.string.affect_current_list),
                     onClosed = {onEvent(SelectListMenuAction.ShowDialog(null))},
                     onApproved = {
-                        onEvent(SelectListMenuAction.AddToFavorite(dialogEvent.animalId))
+                        onEvent(SelectListMenuAction.AddToFavorite(dialogEvent.speciesId))
                     }
                 )
             }
@@ -175,7 +175,7 @@ private fun <T: IMenuItemEnum> SelectMenuWithListBottomContent(
 private fun SelectMenuWithListBottomPreview() {
     SelectMenuWithListBottomContent(
         items = listOf(),
-        animalId = 1,
+        speciesId = 1,
         onClickItem = {},
         state = SelectListMenuState(),
         onEvent = {},

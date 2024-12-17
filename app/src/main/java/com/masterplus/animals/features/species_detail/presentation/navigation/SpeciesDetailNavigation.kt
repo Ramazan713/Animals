@@ -9,11 +9,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SpeciesDetailRoute(
-    val speciesId: Int
+    val speciesId: Int,
+    val listIdControl: Int?
 )
 
-fun NavController.navigateToSpeciesDetail(speciesId: Int){
-    navigate(SpeciesDetailRoute(speciesId))
+fun NavController.navigateToSpeciesDetail(speciesId: Int, listIdControl: Int? = null){
+    navigate(SpeciesDetailRoute(speciesId, listIdControl))
 }
 
 fun NavGraphBuilder.speciesDetail(

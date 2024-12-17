@@ -73,7 +73,7 @@ fun SpeciesListPageRoot(
     addSpeciesToListViewModel: AddSpeciesToListViewModel = koinViewModel(),
     autoSavePointViewModel: AutoSavePointViewModel = koinViewModel(),
     onNavigateBack: () -> Unit,
-    onNavigateToSpeciesDetail: (Int) -> Unit,
+    onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit
 ) {
@@ -117,7 +117,7 @@ fun SpeciesListPage(
     onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
     args: SpeciesListRoute,
     onNavigateBack: () -> Unit,
-    onNavigateToSpeciesDetail: (Int) -> Unit,
+    onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: () -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit
 ) {
@@ -209,7 +209,7 @@ fun SpeciesListPage(
                             orderNum = index + 1,
                             isFavorited = item.isFavorited,
                             onClick = {
-                                onNavigateToSpeciesDetail(item.id ?: 0)
+                                onNavigateToSpeciesDetail(item.id ?: 0, state.listIdControl)
                             },
                             onFavoriteClick = {
                                 onAddSpeciesAction(AddSpeciesToListAction.AddToFavorite(item.id))
@@ -218,7 +218,11 @@ fun SpeciesListPage(
                                 onAddSpeciesAction(AddSpeciesToListAction.AddOrAskFavorite(item.id))
                             },
                             onMenuButtonClick = {
-                                onAddSpeciesAction(AddSpeciesToListAction.ShowDialog(AddSpeciesToListDialogEvent.ShowItemBottomMenu(item,index)))
+                                onAddSpeciesAction(AddSpeciesToListAction.ShowDialog(AddSpeciesToListDialogEvent.ShowItemBottomMenu(
+                                    speciesId = item.id,
+                                    speciesName = item.name,
+                                    posIndex = index
+                                )))
                             },
                         )
                     }
@@ -286,7 +290,7 @@ fun SpeciesListPagePreview() {
             initPosIndex = 0,
             kingdomId = KingdomType.Animals.kingdomId
         ),
-        onNavigateToSpeciesDetail = {},
+        onNavigateToSpeciesDetail = {x,y ->},
         pagingItems = getPreviewLazyPagingData(
             items = listOf(SampleDatas.generateSpeciesDetail(id = 1), SampleDatas.generateSpeciesDetail(id = 2), SampleDatas.generateSpeciesDetail(id = 3)),
             sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading, append = LoadState.Loading),

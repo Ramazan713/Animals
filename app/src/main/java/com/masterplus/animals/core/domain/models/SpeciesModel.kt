@@ -23,6 +23,8 @@ interface SpeciesDetail{
     val species: SpeciesModel
     val habitatCategories: List<HabitatCategoryModel>
     val images: List<SpeciesImageModel>
+    val isFavorited: Boolean
+    val isListSelected: Boolean
 }
 
 interface ISpeciesType {

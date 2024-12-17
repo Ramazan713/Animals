@@ -2,11 +2,11 @@ package com.masterplus.animals.core.shared_features.list.presentation.select_lis
 
 
 sealed interface SelectListMenuAction{
-    data class LoadData(val animalId: Int, val listId: Int?): SelectListMenuAction
+    data class LoadData(val speciesId: Int, val listId: Int?): SelectListMenuAction
 
-    data class AddToFavorite(val animalId: Int): SelectListMenuAction
+    data class AddToFavorite(val speciesId: Int): SelectListMenuAction
 
-    data class AddOrAskFavorite(val animalId: Int): SelectListMenuAction
+    data class AddOrAskFavorite(val speciesId: Int): SelectListMenuAction
 
     data class ShowDialog(val dialogEvent: SelectListMenuDialogEvent?): SelectListMenuAction
 }

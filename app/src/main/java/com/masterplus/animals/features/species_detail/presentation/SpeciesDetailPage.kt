@@ -3,7 +3,10 @@
 package com.masterplus.animals.features.species_detail.presentation
 
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -23,8 +27,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LibraryAddCheck
+import androidx.compose.material.icons.outlined.LibraryAddCheck
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,11 +52,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.presentation.components.image.DefaultImage
@@ -59,6 +73,11 @@ import com.masterplus.animals.core.presentation.transition.renderInSharedTransit
 import com.masterplus.animals.core.presentation.transition.sharedBoundsText
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListState
+import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListViewModel
+import com.masterplus.animals.core.shared_features.list.presentation.select_list.ShowSelectListBottom
 import com.masterplus.animals.features.species_detail.domain.enums.SpeciesInfoPageEnum
 import com.masterplus.animals.features.species_detail.presentation.components.TitleContentInfo
 import com.masterplus.animals.features.species_detail.presentation.components.TitleSectionRow
@@ -71,20 +90,28 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SpeciesDetailPageRoot(
     onNavigateBack: () -> Unit,
-    viewModel: SpeciesDetailViewModel = koinViewModel()
+    viewModel: SpeciesDetailViewModel = koinViewModel(),
+    addSpeciesToListViewModel: AddSpeciesToListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val addSpeciesState by addSpeciesToListViewModel.state.collectAsStateWithLifecycle()
+
     SpeciesDetailPage(
         state = state,
         onAction = viewModel::onAction,
-        onNavigateBack = onNavigateBack
+        onNavigateBack = onNavigateBack,
+        addSpeciesState = addSpeciesState,
+        onAddSpeciesAction = addSpeciesToListViewModel::onAction,
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SpeciesDetailPage(
     state: SpeciesDetailState,
     onAction: (SpeciesDetailAction) -> Unit,
+    addSpeciesState: AddSpeciesToListState,
+    onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val horizontalPagePadding = 8.dp
@@ -139,17 +166,19 @@ fun SpeciesDetailPage(
                         )))
                     }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .renderInSharedTransitionScopeOverlayDefault()
                         .animateEnterExitForTransition(offsetY = { it })
+                        .padding(top = 10.dp, bottom = 8.dp)
+                        .padding(horizontal = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     SegmentedButtonInPage(
                         state = state,
                         onAction = onAction,
-
+                        modifier = Modifier
                     )
                 }
 
@@ -168,7 +197,9 @@ fun SpeciesDetailPage(
                                     onAction(SpeciesDetailAction.ShowDialog(SpeciesDetailDialogEvent.ShowImages(
                                         images = listOf(image),
                                     )))
-                                }
+                                },
+                                onAction = onAction,
+                                onAddSpeciesAction = onAddSpeciesAction
                             )
                         }
                         SpeciesInfoPageEnum.Features.ordinal ->  {
@@ -183,11 +214,18 @@ fun SpeciesDetailPage(
         }
     }
 
-    val closeDialog = remember { {
-        onAction(SpeciesDetailAction.ShowDialog(dialogEvent = null))
-    } }
+
+    AddSpeciesToListHandler(
+        state = addSpeciesState,
+        onAction = onAddSpeciesAction,
+        listIdControl = state.listIdControl,
+    )
 
     state.dialogEvent?.let { dialogEvent->
+        val closeDialog = remember { {
+            onAction(SpeciesDetailAction.ShowDialog(dialogEvent = null))
+        } }
+
         when(dialogEvent){
             is SpeciesDetailDialogEvent.ShowImages -> {
                 ShowImageDia(
@@ -196,8 +234,19 @@ fun SpeciesDetailPage(
                     currentPageIndex = dialogEvent.index
                 )
             }
+
+            SpeciesDetailDialogEvent.ShowSelectListBottom -> {
+                val species = state.speciesDetail?.species ?: return
+                ShowSelectListBottom(
+                    speciesId = species.id,
+                    listIdControl = state.listIdControl,
+                    title = stringResource(id = R.string.add_to_list),
+                    onClosed = closeDialog
+                )
+            }
         }
     }
+
 }
 
 
@@ -284,7 +333,6 @@ private fun SegmentedButtonInPage(
     SingleChoiceSegmentedButtonRow(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 10.dp)
     ) {
         SpeciesInfoPageEnum.entries.forEachIndexed { index, pageEnum ->
             SegmentedButton(
@@ -298,11 +346,61 @@ private fun SegmentedButtonInPage(
     }
 }
 
+@Composable
+private fun ListButtons(
+    state: SpeciesDetailState,
+    onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
+    onAction: (SpeciesDetailAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        FilledTonalButton(
+            modifier = Modifier.animateContentSize(),
+            onClick = {
+                val speciesId = state.speciesDetail?.species?.id ?: return@FilledTonalButton
+                if(state.isFavorited){
+                    onAddSpeciesAction(AddSpeciesToListAction.AddToFavorite(speciesId))
+                }else{
+                    onAddSpeciesAction(AddSpeciesToListAction.AddOrAskFavorite(speciesId))
+                }
+            },
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = null,
+                tint = if(state.isFavorited) MaterialTheme.colorScheme.error else Color.Unspecified
+            )
+            AnimatedVisibility(visible = !state.isFavorited) {
+                Text(text = "Favoriye Ekle", modifier = Modifier.padding(start = 8.dp),)
+            }
+        }
+
+        FilledTonalButton(
+            modifier = Modifier.animateContentSize(),
+            onClick =  {
+                onAction(SpeciesDetailAction.ShowDialog(SpeciesDetailDialogEvent.ShowSelectListBottom))
+            },
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        ) {
+            Icon(if(state.isListSelected)Icons.Default.LibraryAddCheck else Icons.Outlined.LibraryAddCheck, contentDescription = null)
+            AnimatedVisibility(visible = !state.isListSelected) {
+                Text(text = "Listeye Ekle", modifier = Modifier.padding(start = 8.dp),)
+            }
+        }
+    }
+}
+
 
 @Composable
 private fun InfoPageContent(
     state: SpeciesDetailState,
     species: SpeciesModel,
+    onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
+    onAction: (SpeciesDetailAction) -> Unit,
     onShowImageClick: (ImageWithMetadata) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -310,6 +408,15 @@ private fun InfoPageContent(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
     ) {
+
+        ListButtons(
+            state = state,
+            onAddSpeciesAction = onAddSpeciesAction,
+            onAction = onAction,
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = 2.dp)
+        )
+
         Text(
             text = species.name,
             style = MaterialTheme.typography.titleLarge,
@@ -422,7 +529,9 @@ private fun SpeciesDetailPagePreview() {
             featureSection3 = SampleDatas.animal.toFeatureSection3()
         ),
         onAction = {},
-        onNavigateBack = {}
+        onNavigateBack = {},
+        addSpeciesState = AddSpeciesToListState(),
+        onAddSpeciesAction = {}
     )
 }
 

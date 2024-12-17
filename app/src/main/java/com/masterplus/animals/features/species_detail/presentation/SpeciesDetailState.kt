@@ -12,6 +12,9 @@ import com.masterplus.animals.features.species_detail.presentation.models.TitleS
 data class SpeciesDetailState(
     val isLoading: Boolean = false,
     val selectedPage: SpeciesInfoPageEnum = SpeciesInfoPageEnum.Info,
+    val isFavorited: Boolean = false,
+    val isListSelected: Boolean = false,
+    val listIdControl: Int? = null,
     val speciesDetail: SpeciesDetail? = null,
     val titleSectionModels: List<TitleSectionModel> = emptyList(),
     val scientificNomenclatureSection: List<TitleContentModel> = emptyList(),

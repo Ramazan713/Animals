@@ -8,4 +8,6 @@ sealed interface SpeciesDetailDialogEvent {
         val images: List<ImageWithMetadata>,
         val index: Int = 0
     ): SpeciesDetailDialogEvent
+
+    data object ShowSelectListBottom: SpeciesDetailDialogEvent
 }

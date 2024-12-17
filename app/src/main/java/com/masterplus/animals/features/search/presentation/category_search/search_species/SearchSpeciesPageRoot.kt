@@ -111,7 +111,11 @@ private fun SearchResultLazyColumn(
                         },
                         onMenuButtonClick = {
                             onAddSpeciesAction(AddSpeciesToListAction.ShowDialog(
-                                AddSpeciesToListDialogEvent.ShowItemBottomMenu(item,index)))
+                                AddSpeciesToListDialogEvent.ShowItemBottomMenu(
+                                    speciesId = item.id,
+                                    speciesName = item.name,
+                                    posIndex = index
+                                )))
                         },
                     )
                 }

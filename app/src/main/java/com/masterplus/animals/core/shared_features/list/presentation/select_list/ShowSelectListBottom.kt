@@ -37,7 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 @ExperimentalFoundationApi
 @Composable
 fun ShowSelectListBottom(
-    animalId: Int,
+    speciesId: Int,
     listIdControl: Int? = null,
     onClosed: () -> Unit,
     title: String = stringResource(id = R.string.add_to_list),
@@ -46,7 +46,7 @@ fun ShowSelectListBottom(
     val state by listViewModel.state.collectAsStateWithLifecycle()
 
     ShowSelectListBottom(
-        animalId = animalId,
+        speciesId = speciesId,
         listIdControl = listIdControl,
         onClosed = onClosed,
         title = title,
@@ -58,7 +58,7 @@ fun ShowSelectListBottom(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ShowSelectListBottom(
-    animalId: Int,
+    speciesId: Int,
     state: SelectListState,
     onClosed: () -> Unit,
     listIdControl: Int? = null,
@@ -67,7 +67,7 @@ fun ShowSelectListBottom(
 ) {
     ModalBottomSheet(onDismissRequest = onClosed) {
         SelectListBottomContent(
-            animalId = animalId,
+            speciesId = speciesId,
             listIdControl = listIdControl,
             onClosed = onClosed,
             title = title,
@@ -82,7 +82,7 @@ fun ShowSelectListBottom(
 @ExperimentalFoundationApi
 @Composable
 private fun SelectListBottomContent(
-    animalId: Int,
+    speciesId: Int,
     state: SelectListState,
     onClosed: () -> Unit,
     listIdControl: Int? = null,
@@ -93,8 +93,8 @@ private fun SelectListBottomContent(
         mutableStateOf(false)
     }
 
-    LaunchedEffect(animalId,listIdControl){
-        onEvent(SelectListAction.LoadData(animalId, listIdControl))
+    LaunchedEffect(speciesId,listIdControl){
+        onEvent(SelectListAction.LoadData(speciesId, listIdControl))
     }
 
     Column(
@@ -142,7 +142,7 @@ private fun SelectListBottomContent(
                     selectableListView = item,
                     isSelected = state.listIdControl == item.listView.id,
                     onChecked = {
-                        onEvent(SelectListAction.AddOrAskToList(animalId, item))
+                        onEvent(SelectListAction.AddOrAskToList(speciesId, item))
                     },
                     modifier = Modifier
                         .padding(vertical = 1.dp)
@@ -185,7 +185,7 @@ private fun SelectListBottomContentPreview() {
     val items = SampleDatas.selectableListViewArr
 
     SelectListBottomContent(
-        animalId = 1,
+        speciesId = 1,
         listIdControl = 2,
         onClosed = {},
         state = SelectListState(items = items, listIdControl = 2),
