@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.runtime.CompositionLocalProvider
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.appcheck.ktx.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
@@ -14,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle
 import com.masterplus.animals.core.shared_features.translation.presentation.TranslationViewModel
 import com.masterplus.animals.features.app.presentation.MyApp
+import com.masterplus.animals.features.app.presentation.init.initAppCheck
 import com.masterplus.animals.ui.theme.AnimalsTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,15 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(BuildConfig.DEBUG){
-            Firebase.appCheck.installAppCheckProviderFactory(
-                DebugAppCheckProviderFactory.getInstance(),
-            )
-        }else{
-            Firebase.appCheck.installAppCheckProviderFactory(
-                PlayIntegrityAppCheckProviderFactory.getInstance(),
-            )
-        }
+        initAppCheck(this)
 
         setContent {
             ListenEventLifecycle(

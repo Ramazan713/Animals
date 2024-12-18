@@ -47,6 +47,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            buildConfigField("String","APP_CHECK_DEBUG_TOKEN","\"${keystoreProperties["APP_CHECK_DEBUG_TOKEN"]}\"")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
