@@ -29,11 +29,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import coil.compose.AsyncImagePainter
-import coil.compose.AsyncImagePainter.State
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.SubcomposeAsyncImageScope
-import coil.request.ImageRequest
+import coil3.compose.AsyncImagePainter
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageScope
+import coil3.request.ImageRequest
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.components.DefaultToolTip
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
@@ -49,7 +48,7 @@ fun DefaultImage(
     contentDescription: String? = null,
     contentScale: ContentScale? = null,
     error: @Composable() (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Error) -> Unit)? = null,
-    success: @Composable (SubcomposeAsyncImageScope.(State.Success) -> Unit)? = null,
+    success: @Composable (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Success) -> Unit)? = null,
     onSuccess: ((AsyncImagePainter. State. Success) -> Unit)? = null,
     @DrawableRes errorImageResource: Int? = null,
     cacheKey: String? = null,
@@ -72,7 +71,7 @@ fun DefaultImage(
             SharedCircularProgress(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.000001f))
             )
         },
         error = {

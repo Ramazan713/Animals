@@ -117,7 +117,6 @@ dependencies {
 
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.coil.compose)
     implementation(libs.kotlinx.datetime)
     implementation(libs.lib.zoomable)
 
@@ -126,4 +125,5 @@ dependencies {
     implementation(libs.bundles.koin)
     implementation(libs.bundles.credentials)
     implementation(libs.bundles.datastore)
+    implementation(libs.bundles.coil)
 }

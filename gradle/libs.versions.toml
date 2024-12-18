@@ -3,7 +3,7 @@ agp = "8.7.2"
 kotlin = "2.0.0"
 googleKsp = "2.0.0-1.0.21"
 activityCompose = "1.9.3"
-coilCompose = "2.6.0"
+coilCompose = "3.0.4"
 composeBom = "2024.11.00"
 coreKtx = "1.15.0"
 coreSplashscreen = "1.0.1"
@@ -82,8 +82,12 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
+appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
+appcheck-debug = { module = "com.google.firebase:firebase-appcheck-debug" }
 
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
@@ -122,7 +126,7 @@ android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "android
 [bundles]
 firebase = [
     "firebase-auth", "firebase-analytics", "firebase-config", "firebase-crashlytics",
-    "firebase-perf", "firebase-storage"
+    "firebase-perf", "firebase-storage", "appcheck-playintegrity", "appcheck-debug"
 ]
 datastore = [
     "datastore-core-android", "datastore-preferences"
@@ -144,4 +148,7 @@ koin = [
 credentials = [
     "androidx-credentials", "androidx-credentials-play-services",
     "android-identity-googleid"
+]
+coil = [
+    "coil-compose", "coil-network-okhttp"
 ]
