@@ -12,6 +12,6 @@ data class CategoryState(
     val parentImageData: ImageWithMetadata? = null,
     val kingdomType: KingdomType,
     val categoryType: CategoryType,
-    val itemId: Int?,
+    val categoryItemId: Int?,
     val dialogEvent: CategoryListDialogEvent? = null,
 )

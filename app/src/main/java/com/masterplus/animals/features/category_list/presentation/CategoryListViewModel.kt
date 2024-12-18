@@ -9,7 +9,6 @@ import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toCategoryData
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
-import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.category_list.presentation.navigation.CategoryListRoute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +30,7 @@ class CategoryListViewModel(
     private val _state = MutableStateFlow(CategoryState(
         kingdomType = args.kingdomType,
         categoryType = args.categoryType,
-        itemId = null
+        categoryItemId = null
     ))
     val state = _state.asStateFlow()
 

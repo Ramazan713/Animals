@@ -9,7 +9,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocalFlorist
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.masterplus.animals.features.animal.presentation.navigation.AnimalRoute
-import com.masterplus.animals.features.list.presentation.show_list.navigation.ShowListRoute
+import com.masterplus.animals.features.list.presentation.navigation.ShowListRoute
 import com.masterplus.animals.features.plant.presentation.navigation.PlantRoute
 
 sealed class AppNavRoute(

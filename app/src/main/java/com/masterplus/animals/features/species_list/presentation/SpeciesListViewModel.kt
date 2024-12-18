@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
-import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.utils.UiText
@@ -42,7 +41,7 @@ class SpeciesListViewModel(
         .getFlowLanguage()
         .flatMapLatest { language ->
             args.let { args ->
-                speciesRepo.getPagingSpeciesList(args.categoryType, args.realItemId, 20, language, args.kingdomType)
+                speciesRepo.getPagingSpeciesList(args.categoryType, args.categoryItemId, 20, language, args.kingdomType)
             }
         }
         .cachedIn(viewModelScope)
@@ -51,13 +50,13 @@ class SpeciesListViewModel(
         translationRepo
             .getFlowLanguage()
             .onEach { language ->
-                val itemId = args.realItemId
+                val itemId = args.categoryItemId
                 setTitle(itemId, language)
             }
             .launchIn(viewModelScope)
 
         _state.update { it.copy(
-            listIdControl = if(args.categoryType == CategoryType.List) args.realItemId else null
+            listIdControl = args.categoryType.toListIdControlOrNull(args.categoryItemId)
         ) }
     }
 
@@ -74,7 +73,7 @@ class SpeciesListViewModel(
                         title = "Sample",
                         destination = SavePointDestination.fromCategoryType(
                             categoryType = args.categoryType,
-                            destinationId = args.realItemId,
+                            destinationId = args.categoryItemId,
                             kingdomType = args.kingdomType
                         ),
                         itemPosIndex = action.posIndex,
@@ -88,7 +87,7 @@ class SpeciesListViewModel(
 
 
     private suspend fun setTitle(itemId: Int?, language: LanguageEnum){
-        val kingdomTitle = if(args.kingdomType?.isPlants == true) "Bitkiler Listesi" else "Hayvanlar Listesi"
+        val kingdomTitle = if(args.kingdomType.isPlants) "Bitkiler Listesi" else "Hayvanlar Listesi"
         var title: UiText = UiText.Text(kingdomTitle)
 
         if(itemId != null){

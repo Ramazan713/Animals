@@ -11,23 +11,23 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchCategoryRoute(
-    val contentTypeId: Int,
-    val categoryId: Int,
-    val kingdomId: Int,
-    val itemId: Int
-){
-    val contentType get() =  ContentType.from(contentTypeId)
-    val categoryType get() =  CategoryType.fromCatId(categoryId)
-    val realItemId get() = if(itemId == 0) null else itemId
-    val kingdomType get() = KingdomType.fromKingdomId(kingdomId)
-}
+    val contentType: ContentType,
+    val categoryType: CategoryType,
+    val kingdomType: KingdomType,
+    val categoryItemId: Int?
+)
 
-fun NavController.navigateToSearchCategory(categoryType: CategoryType, contentType: ContentType, itemId: Int?, kingdomType: KingdomType){
+fun NavController.navigateToSearchCategory(
+    categoryType: CategoryType,
+    contentType: ContentType,
+    categoryItemId: Int?,
+    kingdomType: KingdomType
+){
     navigate(SearchCategoryRoute(
-        categoryId = categoryType.catId,
-        contentTypeId = contentType.contentTypeId,
-        itemId = itemId ?: 0,
-        kingdomId = kingdomType.kingdomId
+        categoryType = categoryType,
+        contentType = contentType,
+        categoryItemId = categoryItemId,
+        kingdomType = kingdomType
     ))
 }
 

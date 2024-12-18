@@ -51,7 +51,7 @@ fun SearchCategoryPageRoot(
                 .fillMaxWidth()
                 .weight(1f),
             onItemClick = { categoryData ->
-                val categoryType = if(args.realItemId != null) args.categoryType.toChildType() else null
+                val categoryType = if(args.categoryItemId != null) args.categoryType.toChildType() else null
                 categoryNavigateHandler(
                     itemId = categoryData.id,
                     categoryType = categoryType ?: args.categoryType,

@@ -43,8 +43,8 @@ class SearchCategoryViewModel(
         .distinctUntilChanged()
         .flatMapLatest {
             val language = translationRepo.getLanguage()
-            if(args.realItemId != null){
-                searchRepo.searchCategory(categoryType = args.categoryType, query = it, itemId = args.itemId, language =  language)
+            if(args.categoryItemId != null){
+                searchRepo.searchCategory(categoryType = args.categoryType, query = it, itemId = args.categoryItemId, language =  language)
             }else{
                 searchRepo.searchCategory(categoryType = args.categoryType, query = it, language = language)
             }
@@ -55,11 +55,11 @@ class SearchCategoryViewModel(
         translationRepo
             .getFlowLanguage()
             .onEach { language ->
-                val titleForPlaceholder = if(args.realItemId == null){
+                val titleForPlaceholder = if(args.categoryItemId == null){
                     UiText.Text(args.categoryType.title)
                 }
                 else {
-                    categoryRepo.getCategoryName(args.categoryType, args.itemId, language)
+                    categoryRepo.getCategoryName(args.categoryType, args.categoryItemId, language)
                         ?.let { UiText.Text(it) }
                 }
                 _state.update { it.copy(

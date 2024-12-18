@@ -20,19 +20,20 @@ import org.koin.androidx.compose.koinViewModel
 
 @Serializable
 data class CategoryListWithDetailRoute(
-    val categoryId: Int,
-    val kingdomId: Int,
-    val itemId: Int
-){
-    val categoryType get() = CategoryType.fromCatId(categoryId)
-    val kingdomType get() = KingdomType.fromKingdomId(kingdomId)
-}
+    val categoryType: CategoryType,
+    val kingdomType: KingdomType,
+    val categoryItemId: Int
+)
 
-fun NavController.navigateToCategoryListWithDetail(categoryType: CategoryType, itemId: Int, kingdomType: KingdomType){
+fun NavController.navigateToCategoryListWithDetail(
+    categoryType: CategoryType,
+    categoryItemId: Int,
+    kingdomType: KingdomType
+){
     navigate(CategoryListWithDetailRoute(
-        categoryId = categoryType.catId,
-        itemId = itemId,
-        kingdomId = kingdomType.kingdomId
+        categoryType = categoryType,
+        kingdomType = kingdomType,
+        categoryItemId = categoryItemId,
     ))
 }
 
@@ -71,10 +72,10 @@ fun NavGraphBuilder.categoryListWithDetail(
                     )
                 },
                 onAllItemClick = {
-                    onNavigateToSpeciesList(args.categoryType, args.itemId, args.kingdomType)
+                    onNavigateToSpeciesList(args.categoryType, args.categoryItemId, args.kingdomType)
                 },
                 onNavigateToCategorySearch = {
-                    onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.itemId, args.kingdomType)
+                    onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.categoryItemId, args.kingdomType)
                 },
                 autoSavePointState = autoSavePointState,
                 onAutoSavePointAction = autoSavePointViewModel::onAction,
@@ -82,7 +83,7 @@ fun NavGraphBuilder.categoryListWithDetail(
                     SavePointDestination.fromCategoryType(
                         categoryType = args.categoryType,
                         kingdomType = args.kingdomType,
-                        destinationId = args.itemId
+                        destinationId = args.categoryItemId
                     )
                 },
                 onNavigateToSavePointCategorySettings = onNavigateToSavePointCategorySettings

@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,7 +46,6 @@ import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
-import com.masterplus.animals.core.presentation.components.loading.SharedLoadingLazyColumn
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingLazyVerticalGrid
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
@@ -202,8 +199,8 @@ fun CategoryListPage(
             is CategoryListDialogEvent.ShowEditSavePoint -> {
                 EditSavePointDialog(
                     loadParam = EditSavePointLoadParam(
-                        destinationTypeId = state.categoryType.toSavePointDestinationTypeId(state.itemId),
-                        destinationId = state.itemId,
+                        destinationTypeId = state.categoryType.toSavePointDestinationTypeId(state.categoryItemId),
+                        destinationId = state.categoryItemId,
                         kingdomType = state.kingdomType,
                         contentType = SavePointContentType.Category,
                     ),
@@ -263,7 +260,7 @@ private fun HeaderImage(
             transitionKey = TransitionImageType.fromCategoryType(state.categoryType)
                 ?.let {
                     TransitionImageKey(
-                        id = state.itemId ?: 0,
+                        id = state.categoryItemId ?: 0,
                         imageType = it
                     )
                 }
@@ -331,7 +328,7 @@ private fun GetTopBar(
 @Composable
 private fun CategoryListPagePreview1() {
     CategoryListPage(
-        state = CategoryState(kingdomType = KingdomType.Animals, itemId = 1, categoryType = CategoryType.Class),
+        state = CategoryState(kingdomType = KingdomType.Animals, categoryItemId = 1, categoryType = CategoryType.Class),
         onAction = {},
         pagingItems = getPreviewLazyPagingData<CategoryData>(
             items = listOf(

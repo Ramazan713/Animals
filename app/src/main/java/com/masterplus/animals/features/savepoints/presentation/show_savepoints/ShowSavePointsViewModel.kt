@@ -10,7 +10,7 @@ import com.masterplus.animals.core.domain.models.IconInfo
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestinationType
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
-import com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation.ShowSavePointsRoute
+import com.masterplus.animals.features.savepoints.presentation.navigation.ShowSavePointsRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine

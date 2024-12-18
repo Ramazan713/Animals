@@ -1,4 +1,4 @@
-package com.masterplus.animals.features.savepoints.presentation.show_savepoints.navigation
+package com.masterplus.animals.features.savepoints.presentation.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -12,31 +12,35 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ShowSavePointsRoute(
-    val contentTypeId: Int,
-    val kingdomId: Int,
+    val contentType: SavePointContentType,
+    val kingdomType: KingdomType,
     val filteredDestinationTypeIds: List<Int>?
-){
-    val contentType get() = SavePointContentType.from(contentTypeId) ?: SavePointContentType.Content
-    val kingdomType get() = KingdomType.fromKingdomId(kingdomId)
-}
+)
 
 fun NavController.navigateToShowSavePoints(
     contentType: SavePointContentType = SavePointContentType.Content,
     filteredDestinationTypeIds: List<Int>?,
     kingdomType: KingdomType
-){
-    navigate(ShowSavePointsRoute(contentType.contentTypeId, kingdomType.kingdomId, filteredDestinationTypeIds))
+) {
+    navigate(
+        ShowSavePointsRoute(
+            contentType = contentType,
+            kingdomType = kingdomType,
+            filteredDestinationTypeIds = filteredDestinationTypeIds
+        )
+    )
 }
+
 
 
 fun NavGraphBuilder.showSavePoints(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, KingdomType, Int) -> Unit,
-){
+) {
     composable<ShowSavePointsRoute> {
         ShowSavePointsPageRoot(
             onNavigateBack = onNavigateBack,
-            onNavigateToSpeciesList = { savepoint->
+            onNavigateToSpeciesList = { savepoint ->
                 onNavigateToSpeciesList(
                     savepoint.destination.toCategoryType() ?: CategoryType.Order,
                     savepoint.destination.destinationId,

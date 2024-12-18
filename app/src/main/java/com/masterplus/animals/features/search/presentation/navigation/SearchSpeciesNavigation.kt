@@ -10,20 +10,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchSpeciesRoute(
-    val contentTypeId: Int,
-    val categoryId: Int,
-    val itemId: Int
-){
-    val contentType get() =  ContentType.from(contentTypeId)
-    val categoryType get() =  CategoryType.fromCatId(categoryId)
-    val realItemId get() = if(itemId == 0) null else itemId
-}
+    val contentType: ContentType,
+    val categoryType: CategoryType,
+    val categoryItemId: Int?
+)
 
-fun NavController.navigateToSearchSpecies(categoryType: CategoryType, contentType: ContentType, itemId: Int?){
+fun NavController.navigateToSearchSpecies(
+    categoryType: CategoryType,
+    contentType: ContentType,
+    categoryItemId: Int?
+){
     navigate(SearchSpeciesRoute(
-        categoryId = categoryType.catId,
-        contentTypeId = contentType.contentTypeId,
-        itemId = itemId ?: 0
+        categoryType = categoryType,
+        contentType = contentType,
+        categoryItemId = categoryItemId
     ))
 }
 

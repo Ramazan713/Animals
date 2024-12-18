@@ -9,7 +9,6 @@ import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toCategoryData
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
-import com.masterplus.animals.core.presentation.mapper.toImageWithTitleModel
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.category_list.presentation.navigation.CategoryListWithDetailRoute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,7 +32,7 @@ class CategoryListWithDetailViewModel(
     private val _state = MutableStateFlow(CategoryState(
         kingdomType = args.kingdomType,
         categoryType = args.categoryType,
-        itemId = args.itemId
+        categoryItemId = args.categoryItemId
     ))
     val state = _state.asStateFlow()
 
@@ -44,14 +43,13 @@ class CategoryListWithDetailViewModel(
             args.categoryType.let { categoryType ->
                 when (categoryType) {
                     CategoryType.Class -> {
-                        categoryRepo.getPagingOrdersWithClassId(args.itemId, 10, language, args.kingdomType)
+                        categoryRepo.getPagingOrdersWithClassId(args.categoryItemId, 10, language, args.kingdomType)
                             .map { items ->
                                 items.map { it.toCategoryData() }
                             }
                     }
-
                     CategoryType.Order -> {
-                        categoryRepo.getPagingFamiliesWithOrderId(args.itemId, 10, language, args.kingdomType)
+                        categoryRepo.getPagingFamiliesWithOrderId(args.categoryItemId, 10, language, args.kingdomType)
                             .map { items ->
                                 items.map { it.toCategoryData() }
                             }
@@ -71,7 +69,7 @@ class CategoryListWithDetailViewModel(
                 ) }
                 when(args.categoryType){
                     CategoryType.Class -> {
-                        val classModel = categoryRepo.getClassWithId(args.itemId, language) ?: return@onEach
+                        val classModel = categoryRepo.getClassWithId(args.categoryItemId, language) ?: return@onEach
                         _state.update { it.copy(
                             title = classModel.scientificName,
                             subTitle = classModel.className,
@@ -81,7 +79,7 @@ class CategoryListWithDetailViewModel(
                         ) }
                     }
                     CategoryType.Order -> {
-                        val orderModel = categoryRepo.getOrderWithId(args.itemId, language)?: return@onEach
+                        val orderModel = categoryRepo.getOrderWithId(args.categoryItemId, language)?: return@onEach
                         _state.update { it.copy(
                             title = orderModel.scientificName,
                             subTitle = orderModel.order,

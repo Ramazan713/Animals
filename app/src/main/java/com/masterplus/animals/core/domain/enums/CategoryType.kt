@@ -36,6 +36,11 @@ enum class CategoryType(
         }
     }
 
+    fun toListIdControlOrNull(categoryItemId: Int?): Int?{
+        if (this == List) return categoryItemId
+        return null
+    }
+
     companion object {
         fun fromCatId(catId: Int): CategoryType{
             entries.forEach { cat ->

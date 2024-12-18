@@ -95,7 +95,7 @@ fun SpeciesListPageRoot(
         pagingItems = pagingItems,
         onAutoSavePointAction = autoSavePointViewModel::onAction,
         onNavigateToCategorySearch = {
-            onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.realItemId)
+            onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.categoryItemId)
         },
         autoSavePointState = autoSavePointState,
         onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings
@@ -133,7 +133,7 @@ fun SpeciesListPage(
         contentType = SavePointContentType.Content,
         onDestination = {SavePointDestination.fromCategoryType(
             args.categoryType,
-            args.realItemId,
+            args.categoryItemId,
             kingdomType = args.kingdomType
         )},
         onAction = onAutoSavePointAction,
@@ -258,8 +258,8 @@ fun SpeciesListPage(
             is SpeciesListDialogEvent.ShowEditSavePoint -> {
                 EditSavePointDialog(
                     loadParam = EditSavePointLoadParam(
-                        destinationTypeId = args.categoryType.toSavePointDestinationTypeId(args.realItemId),
-                        destinationId = args.realItemId,
+                        destinationTypeId = args.categoryType.toSavePointDestinationTypeId(args.categoryItemId),
+                        destinationId = args.categoryItemId,
                         kingdomType = args.kingdomType
                     ),
                     posIndex = dialogEvent.posIndex,
@@ -285,10 +285,10 @@ fun SpeciesListPagePreview() {
         onAddSpeciesAction = {},
         onNavigateBack = {},
         args = SpeciesListRoute(
-            categoryId = 1,
-            itemId = 1,
+            categoryType = CategoryType.Class,
+            categoryItemId = 1,
             initPosIndex = 0,
-            kingdomId = KingdomType.Animals.kingdomId
+            kingdomType = KingdomType.Animals
         ),
         onNavigateToSpeciesDetail = {x,y ->},
         pagingItems = getPreviewLazyPagingData(

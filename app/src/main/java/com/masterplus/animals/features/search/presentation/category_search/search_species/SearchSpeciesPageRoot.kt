@@ -14,7 +14,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
@@ -46,7 +45,7 @@ fun SearchSpeciesPageRoot(
     AddSpeciesToListHandler(
         state = addSpeciesState,
         onAction = addSpeciesToListViewModel::onAction,
-        listIdControl = if(args.categoryType == CategoryType.List) args.realItemId else null
+        listIdControl = args.categoryType.toListIdControlOrNull(args.categoryItemId)
     )
 
     CategorySearchPage(

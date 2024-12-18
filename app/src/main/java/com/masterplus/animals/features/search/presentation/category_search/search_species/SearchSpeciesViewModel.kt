@@ -1,7 +1,6 @@
 package com.masterplus.animals.features.search.presentation.category_search.search_species
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
@@ -11,14 +10,10 @@ import com.masterplus.animals.core.shared_features.translation.domain.repo.Trans
 import com.masterplus.animals.features.search.domain.enums.HistoryType
 import com.masterplus.animals.features.search.domain.repo.HistoryRepo
 import com.masterplus.animals.features.search.domain.repo.SearchRepo
-import com.masterplus.animals.features.search.presentation.category_search.CategorySearchAction
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchBaseViewModel
-import com.masterplus.animals.features.search.presentation.category_search.CategorySearchState
 import com.masterplus.animals.features.search.presentation.navigation.SearchSpeciesRoute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -27,7 +22,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class SearchSpeciesViewModel(
     private val searchRepo: SearchRepo,
@@ -49,8 +43,8 @@ class SearchSpeciesViewModel(
         .distinctUntilChanged()
         .flatMapLatest {
             val language = translationRepo.getLanguage()
-            if(args.realItemId != null){
-                searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = it, itemId = args.itemId, language = language)
+            if(args.categoryItemId != null){
+                searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = it, itemId = args.categoryItemId, language = language)
             }else{
                 searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = it, language = language)
             }
@@ -62,8 +56,10 @@ class SearchSpeciesViewModel(
             .getFlowLanguage()
             .onEach { language ->
                 val titleForPlaceholder =
-                    categoryRepo.getCategoryName(args.categoryType, args.itemId, language)
-                        ?.let { UiText.Text(it) }
+                    args.categoryItemId?.let {
+                        categoryRepo.getCategoryName(args.categoryType, it, language)
+                            ?.let { UiText.Text(it) }
+                    }
                 _state.update { it.copy(
                     titleForPlaceHolder = titleForPlaceholder
                 ) }

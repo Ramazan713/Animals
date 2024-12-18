@@ -1,4 +1,4 @@
-package com.masterplus.animals.features.list.presentation.archive_list.navigation
+package com.masterplus.animals.features.list.presentation.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api

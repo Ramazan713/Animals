@@ -12,23 +12,24 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SpeciesListRoute(
-    val categoryId: Int,
-    val itemId: Int,
+    val categoryType: CategoryType,
+    val kingdomType: KingdomType,
+    val categoryItemId: Int?,
     val initPosIndex: Int,
-    val kingdomId: Int
+)
+
+
+fun NavController.navigateToSpeciesList(
+    categoryType: CategoryType,
+    categoryItemId: Int?,
+    kingdomType: KingdomType,
+    initPosIndex: Int = 0
 ){
-    val categoryType get() = CategoryType.fromCatId(categoryId)
-    val kingdomType: KingdomType get() = KingdomType.fromKingdomId(kingdomId)
-    val realItemId get() = if(itemId == 0) null else itemId
-}
-
-
-fun NavController.navigateToSpeciesList(categoryId: Int, itemId: Int?, kingdomType: KingdomType? = null, initPosIndex: Int = 0){
     navigate(SpeciesListRoute(
-        categoryId = categoryId,
-        itemId = itemId ?: 0,
+        categoryType = categoryType,
+        categoryItemId = categoryItemId,
         initPosIndex = initPosIndex,
-        kingdomId = kingdomType?.kingdomId ?: KingdomType.DEFAULT.kingdomId
+        kingdomType = kingdomType
     ))
 }
 

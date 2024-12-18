@@ -20,17 +20,14 @@ import org.koin.androidx.compose.koinViewModel
 
 @Serializable
 data class CategoryListRoute(
-    val categoryId: Int,
-    val kingdomId: Int
-){
-    val categoryType get() = CategoryType.fromCatId(categoryId)
-    val kingdomType get() = KingdomType.fromKingdomId(kingdomId)
-}
+    val categoryType: CategoryType,
+    val kingdomType: KingdomType
+)
 
 fun NavController.navigateToCategoryList(categoryType: CategoryType, kingdomType: KingdomType){
     navigate(CategoryListRoute(
-        categoryId = categoryType.catId,
-        kingdomId = kingdomType.kingdomId
+        categoryType = categoryType,
+        kingdomType = kingdomType
     ))
 }
 
