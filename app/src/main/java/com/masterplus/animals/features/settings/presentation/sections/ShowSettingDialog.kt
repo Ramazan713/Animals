@@ -48,7 +48,7 @@ fun ShowSettingDialog(
                 title = stringResource(R.string.question_sign_out),
                 onClosed = close,
                 onApproved = {
-                    onAuthAction(AuthAction.SignOut(true))
+                    onAction(SettingsAction.ShowDialog(SettingsDialogEvent.AskMakeBackupBeforeSignOut))
                 }
             )
         }

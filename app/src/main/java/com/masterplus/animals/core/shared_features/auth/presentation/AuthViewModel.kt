@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.EmailAuthProvider
 import com.masterplus.animals.R
+import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
 import com.masterplus.animals.core.domain.utils.ErrorText
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.UiText
@@ -20,7 +21,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class AuthViewModel(
     private val authRepo: AuthRepo,
@@ -74,12 +74,18 @@ class AuthViewModel(
                 }
             }
             is AuthAction.SignOut -> {
-                executeLoadingWithSuccess(
-                    call = { authRepo.signOut() },
-                    onSuccess = { data ->
-                        _state.update { it.copy(message = data) }
+                viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
+                    when(val result = signOutExecute(action.backupBeforeSignOut)){
+                        is Result.Success->{
+                            _state.update { it.copy(message = UiText.Resource(R.string.successfully_log_out)) }
+                        }
+                        is Result.Error->{
+                            _state.update { it.copy(message = result.error.text) }
+                        }
                     }
-                )
+                    _state.update { state-> state.copy(isLoading = false) }
+                }
             }
 
             AuthAction.ClearMessage -> {
@@ -138,15 +144,29 @@ class AuthViewModel(
                     ) }
                 }
                 is Result.Success -> {
-                    _state.update { state->
-                        state.copy(isLoading = false)
+                    val user = result.data
+                    val refreshBackupResult = backupManager.refreshBackupMetas(user.uid)
+                    var message: UiText? = state.value.message
+                    refreshBackupResult.onFailure {
+                        message = UiText.Resource(R.string.backup_files_not_downloaded)
                     }
+                    refreshBackupResult.onSuccess {
+                        message = UiText.Resource(R.string.successfully_log_in)
+                    }
+
                     val hasBackupMetas = backupManager.hasBackupMetas()
                     val showBackupSectionForLogin = settingsPreferences.getData().showBackupSectionForLogin
+                    var uiAction: AuthUiAction? = state.value.uiAction
                     if(hasBackupMetas && showBackupSectionForLogin){
-                        _state.update { state->
-                            state.copy(uiAction = AuthUiAction.ShowBackupSectionForLogin)
-                        }
+                        uiAction = AuthUiAction.ShowBackupSectionForLogin
+                    }
+
+                    _state.update { state->
+                        state.copy(
+                            isLoading = false,
+                            message = message,
+                            uiAction = uiAction
+                        )
                     }
                 }
             }
@@ -195,7 +215,19 @@ class AuthViewModel(
         }
     }
 
-
+    private suspend fun signOutExecute(makeBackupBeforeSignOut: Boolean): EmptyDefaultResult{
+        if(makeBackupBeforeSignOut){
+            val user = authRepo.currentUser() ?: return Result.errorWithUiText(UiText.Resource(R.string.user_not_found))
+            val backupResult = backupManager.uploadBackup(user.uid)
+            if(backupResult.isError){
+                return Result.errorWithUiText(UiText.Resource(R.string.backup_not_executed_try_later))
+            }
+        }
+        authRepo.signOut().onSuccessAsync {
+            backupManager.deleteAllLocalUserData(true)
+        }
+        return Result.Success(Unit)
+    }
 
     private fun validateFields(
         email: String? = null,

@@ -25,6 +25,9 @@ sealed interface Result<out D, out E: Error> {
     fun onSuccess(callback: (data: D) -> Unit){
         getSuccessData?.let(callback)
     }
+    suspend fun onSuccessAsync(callback: suspend (data: D) -> Unit){
+        getSuccessData?.let{ callback(it) }
+    }
     fun onFailure(callback: (error: E) -> Unit){
         getFailureError?.let(callback)
     }
