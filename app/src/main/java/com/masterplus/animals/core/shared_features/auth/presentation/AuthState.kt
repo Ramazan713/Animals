@@ -8,4 +8,5 @@ data class AuthState(
     val isLoading: Boolean = false,
     val message: UiText? = null,
     val dialogEvent: AuthDialogEvent? = null,
+    val uiAction: AuthUiAction? = null
 )

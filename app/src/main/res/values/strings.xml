@@ -93,4 +93,25 @@
     <string name="n_search_in">%1$s içinde arayın</string>
     <string name="animal_kingdom">Hayvanlar Alemi</string>
     <string name="plant_kingdom">Bitkiler Alemi</string>
+    <string name="error">Hata</string>
+    <string name="download_from_cloud">Buluttan indir</string>
+    <string name="cloud_backup">Bulut yedekleme</string>
+    <string name="add_backup">Yedek oluştur</string>
+    <string name="are_sure_to_continue">Devam etmek istediğinize emin misiniz?</string>
+    <string name="all_data_will_remove_not_revartable">Tüm verileriniz silinecektir. Bu işlem geri alınamaz</string>
+    <string name="some_backup_files_may_change">Bazı yedek dosyalarınızın değişmesine neden olabilir</string>
+    <string name="backup_file_not_found">Yedek dosyası bulunamadı</string>
+    <string name="empty_backup_select">Herhangi bir yedek dosyası bulunamadı</string>
+    <string name="refresh">Yenile</string>
+    <string name="add_on">Üzerine ekle</string>
+    <string name="override_backup_warning">Yerelde bulunan verileriniz silinip buluttaki verileriniz yüklenecektir.(Yerelde kaydedilmemiş verileriniz varsa veri kaybına neden olabilir)</string>
+    <string name="add_on_backup_warning">Yerelde bulunan verileriniz silinmeyecektir ama üzerine ekleneceği için veri değişikliğine, gereksiz veri fazlalığına veya veri kaybına neden olabilir </string>
+    <string name="backup_n">Yedekleme</string>
+    <string name="backup_v">Yedekle</string>
+    <string name="not_backup">Yedekleme</string>
+    <string name="question_add_backup">Yedekleme yapmak ister misiniz?</string>
+    <string name="unsaved_data_may_lose">Kaydedilmeyen verileriniz kaybolabilir</string>
+    <string name="load_last_Backup">En son yedeği yükle</string>
+    <string name="show_backup_files">Yedek dosyalarını göster</string>
+    <string name="not_show_warning_again">Bir daha bu uyarıyı gösterme</string>
 </resources>

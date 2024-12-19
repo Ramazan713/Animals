@@ -3,6 +3,7 @@ package com.masterplus.animals.core.shared_features.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.masterplus.animals.core.shared_features.database.dao.AnimalDao
+import com.masterplus.animals.core.shared_features.database.dao.BackupMetaDao
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.HistoryDao
 import com.masterplus.animals.core.shared_features.database.dao.ListSpeciesDao
@@ -13,6 +14,7 @@ import com.masterplus.animals.core.shared_features.database.dao.SearchCategoryDa
 import com.masterplus.animals.core.shared_features.database.dao.SearchSpeciesDao
 import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
 import com.masterplus.animals.core.shared_features.database.entity.AnimalEntity
+import com.masterplus.animals.core.shared_features.database.entity.BackupMetaEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
@@ -40,7 +42,8 @@ import com.masterplus.trdictionary.core.data.local.services.ListViewDao
         KingdomEntity::class, AnimalEntity::class, SpeciesImageEntity::class, ClassEntity::class, FamilyEntity::class,
         GenusEntity::class, HabitatCategoryEntity::class, OrderEntity::class, PhylumEntity::class,
         SpeciesEntity::class, ListEntity::class, ListSpeciesEntity::class, ImageEntity::class, ImageMetadataEntity::class,
-        SavePointEntity::class, HistoryEntity::class, PlantEntity::class, SpeciesHabitatCategoryEntity::class
+        SavePointEntity::class, HistoryEntity::class, PlantEntity::class, SpeciesHabitatCategoryEntity::class,
+        BackupMetaEntity::class
     ],
     views = [
         ListViewEntity::class, SpeciesRelationsView::class
@@ -69,4 +72,6 @@ abstract class AppDatabase: RoomDatabase() {
     abstract val searchSpeciesDao: SearchSpeciesDao
 
     abstract val historyDao: HistoryDao
+
+    abstract val backupMetaDao: BackupMetaDao
 }

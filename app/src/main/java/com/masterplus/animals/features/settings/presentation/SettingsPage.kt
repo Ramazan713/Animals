@@ -30,6 +30,7 @@ import com.masterplus.animals.core.shared_features.auth.presentation.AuthAction
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthState
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthViewModel
 import com.masterplus.animals.features.settings.presentation.sections.AdvancedSettingSection
+import com.masterplus.animals.features.settings.presentation.sections.CloudBackupSection
 import com.masterplus.animals.features.settings.presentation.sections.GeneralSettingSection
 import com.masterplus.animals.features.settings.presentation.sections.ProfileSettingSection
 import com.masterplus.animals.features.settings.presentation.sections.SettingListeners
@@ -110,6 +111,12 @@ fun SettingsPage(
                 )
             }
 
+            if(authState.user != null){
+                item {
+                    CloudBackupSection(onAction)
+                }
+            }
+
             item {
                 AdvancedSettingSection(
                     state = state,
@@ -146,7 +153,7 @@ fun SettingsPage(
         ShowSettingDialog(
             state = state,
             onAction = onAction,
-            onAuthEvent = onAuthAction,
+            onAuthAction = onAuthAction,
             authState = authState,
             dialogEvent = dialogEvent
         )

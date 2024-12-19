@@ -12,7 +12,8 @@ data class SettingsData(
     val useThemeDynamic: Boolean = false,
     val themeEnum: ThemeEnum = ThemeEnum.defaultValue,
     val languageEnum: LanguageEnum = LanguageEnum.defaultValue,
-    val savePointsSettingsData: SavePointSettingsData = SavePointSettingsData()
+    val savePointsSettingsData: SavePointSettingsData = SavePointSettingsData(),
+    val showBackupSectionForLogin: Boolean = true
 )
 
 @Serializable

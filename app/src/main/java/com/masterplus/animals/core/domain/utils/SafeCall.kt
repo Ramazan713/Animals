@@ -1,6 +1,7 @@
 package com.masterplus.animals.core.domain.utils
 
 import com.masterplus.animals.R
+import com.masterplus.animals.core.presentation.utils.ExceptionUiText
 import kotlin.coroutines.cancellation.CancellationException
 
 
@@ -9,6 +10,7 @@ suspend inline fun <reified T> safeCall(
 ): Result<T, ErrorText>{
     return safeCall(
         onException = {e ->
+            if(e is ExceptionUiText) return Result.Error(ErrorText(e.text))
             val error = e.localizedMessage?.let { UiText.Text(it) } ?: UiText.Resource(R.string.something_went_wrong)
             Result.Error(ErrorText(error))
         },

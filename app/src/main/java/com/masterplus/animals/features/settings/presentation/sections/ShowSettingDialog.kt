@@ -1,8 +1,5 @@
 package com.masterplus.animals.features.settings.presentation.sections
 
-import android.app.LocaleManager
-import android.os.Build
-import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Language
@@ -14,18 +11,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.os.LocaleListCompat
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
+import com.masterplus.animals.core.presentation.selections.ShowSelectBottomMenuItems
 import com.masterplus.animals.core.presentation.selections.ShowSelectRadioItemDia
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthAction
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthState
 import com.masterplus.animals.core.shared_features.auth.presentation.LoginDia
 import com.masterplus.animals.core.shared_features.auth.presentation.ShowDeleteAccountDia
 import com.masterplus.animals.core.shared_features.auth.presentation.ShowQuestionReAuthenticateDia
+import com.masterplus.animals.core.shared_features.backup.presentation.backup_select.ShowCloudSelectBackupDia
+import com.masterplus.animals.core.shared_features.backup.presentation.cloud_backup.ShowCloudSetting
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.features.settings.presentation.SettingsAction
 import com.masterplus.animals.features.settings.presentation.SettingsDialogEvent
 import com.masterplus.animals.features.settings.presentation.SettingsState
-import java.util.Locale
+import com.masterplus.animals.features.settings.presentation.enums.BackupLoadSectionEnum
 
 
 @Composable
@@ -34,7 +34,7 @@ fun ShowSettingDialog(
     state: SettingsState,
     onAction: (SettingsAction)->Unit,
     authState: AuthState,
-    onAuthEvent: (AuthAction) -> Unit,
+    onAuthAction: (AuthAction) -> Unit,
 ){
 
     val close =  remember(onAction) { {
@@ -48,13 +48,13 @@ fun ShowSettingDialog(
                 title = stringResource(R.string.question_sign_out),
                 onClosed = close,
                 onApproved = {
-                    onAuthEvent(AuthAction.SignOut(true))
+                    onAuthAction(AuthAction.SignOut(true))
                 }
             )
         }
         SettingsDialogEvent.ShowAuthDia -> {
             LoginDia(
-                onAction = onAuthEvent,
+                onAction = onAuthAction,
                 state = authState,
                 isDarkMode = false,
                 onClose = close,
@@ -80,7 +80,7 @@ fun ShowSettingDialog(
 
         SettingsDialogEvent.ShowReAuthenticateForDeletingAccount -> {
             ShowDeleteAccountDia(
-                onAction = onAuthEvent,
+                onAction = onAuthAction,
                 state = authState,
                 isDarkMode = false,
                 onClose = close,
@@ -111,6 +111,60 @@ fun ShowSettingDialog(
                     AppCompatDelegate.setApplicationLocales(appLocale)
                 },
                 imageVector = Icons.Default.Language
+            )
+        }
+
+        SettingsDialogEvent.ShowCloudBackup -> {
+            ShowCloudSetting(
+                onClosed = close,
+            )
+        }
+        SettingsDialogEvent.ShowSelectBackup -> {
+            ShowCloudSelectBackupDia(
+                onClosed = close,
+            )
+        }
+        is SettingsDialogEvent.AskMakeBackupBeforeSignOut -> {
+            ShowQuestionDialog(
+                title = stringResource(R.string.question_add_backup),
+                content = stringResource(R.string.unsaved_data_may_lose),
+                onApproved = { onAuthAction(AuthAction.SignOut(true)) },
+                allowDismiss = false,
+                positiveTitle = stringResource(R.string.backup_v),
+                negativeTitle = stringResource(R.string.not_backup),
+                onCancel = {
+                    onAuthAction(AuthAction.SignOut(false))
+                },
+                onClosed = close,
+            )
+        }
+        is SettingsDialogEvent.AskDeleteAllData -> {
+            ShowQuestionDialog(
+                title = stringResource(R.string.are_sure_to_continue),
+                content = stringResource(R.string.all_data_will_remove_not_revartable),
+                onApproved = { onAuthAction(AuthAction.DeleteAllUserData) },
+                onClosed = close,
+            )
+        }
+
+        is SettingsDialogEvent.BackupSectionInit -> {
+            ShowSelectBottomMenuItems(
+                items = BackupLoadSectionEnum.entries,
+                onClickItem = { menuItem->
+                    close()
+                    when(menuItem){
+                        BackupLoadSectionEnum.LoadLastBackup -> {
+                            dialogEvent.onLoadLastBackup()
+                        }
+                        BackupLoadSectionEnum.ShowBackupFiles -> {
+                            onAction(SettingsAction.ShowDialog(SettingsDialogEvent.ShowSelectBackup))
+                        }
+                        BackupLoadSectionEnum.NotShowAgain -> {
+                            onAction(SettingsAction.NotShowBackupInitDialog)
+                        }
+                    }
+                },
+                onClose = close
             )
         }
     }

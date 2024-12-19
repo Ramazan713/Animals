@@ -17,4 +17,6 @@ sealed interface SettingsAction {
 
     data object ClearMessage: SettingsAction
 
+    data object NotShowBackupInitDialog: SettingsAction
+
 }

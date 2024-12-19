@@ -61,3 +61,5 @@ fun <T, E: Error> Result<T, E>.asEmptyResult(): EmptyResult<E> {
 typealias EmptyResult<E> = Result<Unit, E>
 
 typealias DefaultResult<T> = Result<T, ErrorText>
+
+typealias EmptyDefaultResult = Result<Unit, ErrorText>

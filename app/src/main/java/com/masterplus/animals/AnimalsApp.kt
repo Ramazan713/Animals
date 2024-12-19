@@ -16,6 +16,8 @@ import com.masterplus.animals.core.shared_features.add_species_to_list.presentat
 import com.masterplus.animals.core.shared_features.auth.data.di.authDataModule
 import com.masterplus.animals.core.shared_features.auth.domain.di.authDomainModule
 import com.masterplus.animals.core.shared_features.auth.presentation.di.authPresentationModule
+import com.masterplus.animals.core.shared_features.backup.data.di.backupDataModule
+import com.masterplus.animals.core.shared_features.backup.presentation.di.backupPresentationModule
 import com.masterplus.animals.core.shared_features.database.di.databaseModule
 import com.masterplus.animals.core.shared_features.list.data.di.listDataModule
 import com.masterplus.animals.core.shared_features.list.domain.di.listDomainModule
@@ -62,7 +64,8 @@ class AnimalsApp: Application(), SingletonImageLoader.Factory {
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule,
                 authDataModule, authDomainModule, authPresentationModule, settingsPresentationModule,
                 searchPresentationModule, searchDataModule, searchDomainModule,
-                translationDataModule, translationPresentationModule, plantDataModule, plantPresentationModule
+                translationDataModule, translationPresentationModule, plantDataModule, plantPresentationModule,
+                backupDataModule, backupPresentationModule
             )
         }
     }
@@ -97,9 +100,9 @@ class AnimalsApp: Application(), SingletonImageLoader.Factory {
                     .build()
             }
             .apply {
-                if(BuildConfig.DEBUG){
-                    logger(DebugLogger())
-                }
+//                if(BuildConfig.DEBUG){
+//                    logger(DebugLogger())
+//                }
             }
             .build()
     }

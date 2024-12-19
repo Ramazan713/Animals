@@ -3,6 +3,7 @@ package com.masterplus.animals.core.shared_features.auth.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.EmailAuthProvider
+import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.utils.ErrorText
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.UiText
@@ -10,6 +11,8 @@ import com.masterplus.animals.core.shared_features.auth.domain.models.User
 import com.masterplus.animals.core.shared_features.auth.domain.repo.AuthRepo
 import com.masterplus.animals.core.shared_features.auth.domain.use_cases.ValidateEmailUseCase
 import com.masterplus.animals.core.shared_features.auth.domain.use_cases.ValidatePasswordUseCase
+import com.masterplus.animals.core.shared_features.backup.domain.manager.BackupManager
+import com.masterplus.animals.core.shared_features.preferences.domain.SettingsPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,10 +22,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AuthViewModel @Inject constructor(
+class AuthViewModel(
     private val authRepo: AuthRepo,
     private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validatePasswordUseCase: ValidatePasswordUseCase
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val backupManager: BackupManager,
+    private val settingsPreferences: SettingsPreferences
 ): ViewModel() {
 
 
@@ -96,6 +101,20 @@ class AuthViewModel @Inject constructor(
                     onAction(AuthAction.DeleteUserWithCredentials(credential))
                 }
             }
+
+            AuthAction.DeleteAllUserData -> {
+                viewModelScope.launch {
+                    backupManager.deleteAllLocalUserData(false)
+                    _state.update { it.copy(message = UiText.Resource(R.string.successfully_deleted)) }
+                }
+            }
+            AuthAction.ClearUiAction -> {
+                _state.update { it.copy(uiAction = null) }
+            }
+
+            AuthAction.LoadLastBackup -> {
+                loadLastBackup()
+            }
         }
     }
 
@@ -111,11 +130,47 @@ class AuthViewModel @Inject constructor(
     private fun handleSignIn(call: suspend () -> Result<User,ErrorText>){
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = call()
-            _state.update { it.copy(
-                isLoading = false,
-                message = result.getFailureError?.text ?: UiText.Text("Success")
-            ) }
+            when(val result = call()){
+                is Result.Error -> {
+                    _state.update { it.copy(
+                        isLoading = false,
+                        message = result.getFailureError?.text
+                    ) }
+                }
+                is Result.Success -> {
+                    _state.update { state->
+                        state.copy(isLoading = false)
+                    }
+                    val hasBackupMetas = backupManager.hasBackupMetas()
+                    val showBackupSectionForLogin = settingsPreferences.getData().showBackupSectionForLogin
+                    if(hasBackupMetas && showBackupSectionForLogin){
+                        _state.update { state->
+                            state.copy(uiAction = AuthUiAction.ShowBackupSectionForLogin)
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    private fun loadLastBackup(){
+        val user = authRepo.currentUser() ?: return
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            when(val result = backupManager.downloadLastBackup(user.uid)){
+                is Result.Error -> {
+                    _state.update { it.copy(message = result.error.text) }
+                }
+                is Result.Success -> {
+                    _state.update { it.copy(
+                        uiAction = AuthUiAction.RefreshApp,
+                        message = UiText.Resource(R.string.success)
+                    ) }
+                }
+            }
+            _state.update { it.copy(isLoading = false) }
         }
     }
 

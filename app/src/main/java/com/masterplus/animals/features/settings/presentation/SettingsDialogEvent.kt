@@ -15,4 +15,18 @@ sealed interface SettingsDialogEvent {
     data object ShowSelectTheme: SettingsDialogEvent
 
     data object ShowSelectLanguage: SettingsDialogEvent
+
+
+    data object ShowSelectBackup: SettingsDialogEvent
+
+    data object ShowCloudBackup: SettingsDialogEvent
+
+    data object AskMakeBackupBeforeSignOut: SettingsDialogEvent
+
+    data object AskDeleteAllData: SettingsDialogEvent
+
+    data class BackupSectionInit(
+        val onLoadLastBackup: () -> Unit
+    ): SettingsDialogEvent
+
 }

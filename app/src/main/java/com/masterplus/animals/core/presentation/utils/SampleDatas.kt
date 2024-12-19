@@ -21,6 +21,7 @@ import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.shared_features.auth.domain.enums.AuthProviderType
+import com.masterplus.animals.core.shared_features.backup.domain.models.BackupMeta
 import com.masterplus.animals.core.shared_features.list.domain.models.ListView
 import com.masterplus.animals.core.shared_features.list.domain.models.SelectableListView
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
@@ -152,6 +153,7 @@ object SampleDatas {
         speciesId = 2,
         imageOrder = 1,
     )
+    val backupMeta = BackupMeta(id = 1, fileName = "file", updatedDate = 1000L, title = "Title 1")
 
 
 

@@ -37,4 +37,5 @@ val databaseModule = module {
 
     single { get<AppDatabase>().historyDao }
 
+    single { get<AppDatabase>().backupMetaDao }
 }

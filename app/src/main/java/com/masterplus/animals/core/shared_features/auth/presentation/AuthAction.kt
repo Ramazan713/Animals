@@ -21,4 +21,11 @@ sealed interface AuthAction {
     data class DeleteUserWithCredentials(val credential: AuthCredential): AuthAction
 
     data class DeleteUserWithEmail(val email: String, val password: String): AuthAction
+
+    data object DeleteAllUserData: AuthAction
+
+    data object ClearUiAction: AuthAction
+
+    data object LoadLastBackup: AuthAction
+
 }
