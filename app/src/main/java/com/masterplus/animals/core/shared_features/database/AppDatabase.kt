@@ -8,6 +8,7 @@ import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.HistoryDao
 import com.masterplus.animals.core.shared_features.database.dao.ListSpeciesDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
+import com.masterplus.animals.core.shared_features.database.dao.LocalBackupDao
 import com.masterplus.animals.core.shared_features.database.dao.PlantDao
 import com.masterplus.animals.core.shared_features.database.dao.SavePointDao
 import com.masterplus.animals.core.shared_features.database.dao.SearchCategoryDao
@@ -74,4 +75,6 @@ abstract class AppDatabase: RoomDatabase() {
     abstract val historyDao: HistoryDao
 
     abstract val backupMetaDao: BackupMetaDao
+
+    abstract val backupDao: LocalBackupDao
 }

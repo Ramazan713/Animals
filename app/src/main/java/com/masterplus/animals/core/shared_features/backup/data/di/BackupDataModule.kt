@@ -2,6 +2,7 @@ package com.masterplus.animals.core.shared_features.backup.data.di
 
 import com.masterplus.animals.core.shared_features.backup.data.manager.BackupManagerImpl
 import com.masterplus.animals.core.shared_features.backup.data.repo.BackupMetaRepoImpl
+import com.masterplus.animals.core.shared_features.backup.data.repo.BackupParserRepo
 import com.masterplus.animals.core.shared_features.backup.data.repo.FirebaseBackupMetaStorageService
 import com.masterplus.animals.core.shared_features.backup.data.repo.LocalBackupRepoImpl
 import com.masterplus.animals.core.shared_features.backup.domain.manager.BackupManager
@@ -18,4 +19,5 @@ val backupDataModule = module {
     singleOf(::LocalBackupRepoImpl).bind<LocalBackupRepo>()
     singleOf(::BackupMetaRepoImpl).bind<BackupMetaRepo>()
     singleOf(::BackupManagerImpl).bind<BackupManager>()
+    singleOf(::BackupParserRepo)
 }
