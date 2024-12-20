@@ -137,7 +137,10 @@ fun PlantPage(
                         useTransition = true,
                         onClickItem = { item ->
                             onNavigateToSpeciesList(CategoryType.Habitat, item.id, 0)
-                        }
+                        },
+                        onClickMore = {
+                            onNavigateToCategoryList(CategoryType.Habitat)
+                        },
                     )
                 }
 

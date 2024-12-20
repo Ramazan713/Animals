@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e4c9f1a79818665c4a54f06acd7b33fa",
+    "identityHash": "235adce2783e441ad56cf434486520b8",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -763,13 +763,13 @@
       },
       {
         "tableName": "HabitatCategories",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `habitat_category_en` TEXT NOT NULL, `habitat_category_tr` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `habitat_category_en` TEXT NOT NULL, `habitat_category_tr` TEXT NOT NULL, `image_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "habitat_category_en",
@@ -782,16 +782,34 @@
             "columnName": "habitat_category_tr",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "image_id",
+            "columnName": "image_id",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "Images",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "image_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "Orders",
@@ -1913,11 +1931,15 @@
       {
         "viewName": "SpeciesRelationsView",
         "createSql": "CREATE VIEW `${VIEW_NAME}` AS select K.id kingdom_id, P.id phylum_id, C.id class_id, O.id order_id, F.id family_id, \n        G.id genuse_id, S.id species_id\n        FROM Kingdoms K\n        inner join Phylums P on K.id = P.kingdom_id\n        inner join Classes C on P.id = C.phylum_id\n        inner join Orders O on C.id = O.class_id\n        inner join Families F on O.id = F.order_id\n        inner join Genuses G on F.id = G.family_id\n        inner join Species S  on G.id = S.genus_id"
+      },
+      {
+        "viewName": "HabitatKingdomView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT hc.*, s.kingdom_id FROM HabitatCategories hc\n        JOIN SpeciesHabitatCategories shc ON hc.id = shc.category_id\n        JOIN Species s ON shc.species_id = s.id"
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e4c9f1a79818665c4a54f06acd7b33fa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '235adce2783e441ad56cf434486520b8')"
     ]
   }
 }

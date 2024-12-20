@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
+import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.ImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
@@ -69,6 +70,19 @@ data class SavePointWithImageEmbedded(
         entity = ImageEntity::class,
         entityColumn = "id",
         parentColumn = "imageId"
+    )
+    val image: ImageWithMetadataEmbedded?
+)
+
+
+data class HabitatWithImageEmbedded(
+    @Embedded
+    val habitat: HabitatCategoryEntity,
+
+    @Relation(
+        entity = ImageEntity::class,
+        entityColumn = "id",
+        parentColumn = "image_id"
     )
     val image: ImageWithMetadataEmbedded?
 )

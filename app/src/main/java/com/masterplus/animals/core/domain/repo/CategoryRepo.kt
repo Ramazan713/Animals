@@ -38,4 +38,6 @@ interface CategoryRepo {
 
     fun getPagingOrders(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>>
 
+    fun getPagingHabitats(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<HabitatCategoryModel>>
+
 }

@@ -52,6 +52,10 @@ class CategoryListViewModel(
                         categoryRepo.getPagingFamilies(10, language, args.kingdomType)
                             .map { items -> items.map { it.toCategoryData() } }
                     }
+                    CategoryType.Habitat -> {
+                        categoryRepo.getPagingHabitats(10, language, args.kingdomType)
+                            .map { items -> items.map { it.toCategoryData() } }
+                    }
                     else -> flowOf()
                 }
         }

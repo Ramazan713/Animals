@@ -145,7 +145,8 @@ object SampleDatas {
 
     val habitatCategory = HabitatCategoryModel(
         id = 1,
-        habitatCategory = "Karasal"
+        habitatCategory = "Karasal",
+        image = imageWithMetadata
     )
 
     val animalImage = SpeciesImageModel(

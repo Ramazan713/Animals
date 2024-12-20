@@ -14,6 +14,7 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
+import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
@@ -44,7 +45,7 @@ class CategoryRepoImpl constructor(
 
     override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): String? {
         val title = when(categoryType){
-            CategoryType.Habitat -> categoryDao.getHabitatCategoryWithId(itemId)?.let { if(language.isEn) it.habitat_category_en else it.habitat_category_tr }
+            CategoryType.Habitat -> categoryDao.getHabitatCategoryWithId(itemId)?.habitat?.let { if(language.isEn) it.habitat_category_en else it.habitat_category_tr }
             CategoryType.Class -> categoryDao.getClassWithId(itemId)?.classEntity?.scientific_name
             CategoryType.Order -> categoryDao.getOrderWithId(itemId)?.order?.scientific_name
             CategoryType.Family -> categoryDao.getFamilyWithId(itemId)?.family?.scientific_name
@@ -104,6 +105,17 @@ class CategoryRepoImpl constructor(
             config = PagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingOrders(kingdomType.kingdomId) }
         ).flow.map { items -> items.map { it.toOrder(language) } }
+    }
+
+    override fun getPagingHabitats(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType
+    ): Flow<PagingData<HabitatCategoryModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = pageSize),
+            pagingSourceFactory = { categoryDao.getPagingHabitats(kingdomId = kingdomType.kingdomId) }
+        ).flow.map { items -> items.map { it.toHabitatCategory(language) } }
     }
 
     override fun getPagingFamilies(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>> {
