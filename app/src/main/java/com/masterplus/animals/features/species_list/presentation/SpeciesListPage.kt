@@ -16,8 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,10 +35,9 @@ import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
-import com.masterplus.animals.core.presentation.components.NavigationBackIcon
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
-import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.SampleDatas
@@ -146,35 +143,23 @@ fun SpeciesListPage(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            DefaultTopBar(
                 scrollBehavior = topBarScrollBehaviour,
-                title = {
-                    state.title?.let { title ->
-                        Text(text = title.asString())
+                title = state.title?.asString() ?: "",
+                onNavigateBack = onNavigateBack,
+                menuItems = SpeciesListTopItemMenu.entries,
+                onMenuItemClick = { menuItem ->
+                    when(menuItem){
+                        SpeciesListTopItemMenu.Savepoint -> {
+                            onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(posIndex = middlePos)))
+                        }
+                        SpeciesListTopItemMenu.SavePointSettings -> onNavigateToSavePointSpeciesSettings()
                     }
-                },
-                navigationIcon = {
-                    NavigationBackIcon(onNavigateBack = onNavigateBack)
                 },
                 actions = {
                     IconButton(onClick = onNavigateToCategorySearch) {
                         Icon(imageVector = Icons.Default.Search, contentDescription = null)
                     }
-                    CustomDropdownBarMenu(
-                        items = SpeciesListTopItemMenu.entries,
-                        onItemChange = { menuItem ->
-                            when(menuItem){
-                                SpeciesListTopItemMenu.Savepoint -> {
-                                    onAction(
-                                        SpeciesListAction.ShowDialog(
-                                            SpeciesListDialogEvent.ShowEditSavePoint(
-                                        posIndex = middlePos
-                                    )))
-                                }
-                                SpeciesListTopItemMenu.SavePointSettings -> onNavigateToSavePointSpeciesSettings()
-                            }
-                        }
-                    )
                 },
                 modifier = Modifier
                     .renderInSharedTransitionScopeOverlayDefault()

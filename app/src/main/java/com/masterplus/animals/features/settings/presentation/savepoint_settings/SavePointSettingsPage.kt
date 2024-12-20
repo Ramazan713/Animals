@@ -2,6 +2,7 @@ package com.masterplus.animals.features.settings.presentation.savepoint_settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +18,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.features.settings.presentation.components.SettingSectionItem
 import com.masterplus.animals.features.settings.presentation.components.SwitchItem
@@ -57,9 +59,9 @@ fun SavePointSettingsPage(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Kayıt Noktası Ayarları") },
-                navigationIcon = { NavigationBackIcon(onNavigateBack = onNavigateBack) },
+            DefaultTopBar(
+                title = "Kayıt Noktası Ayarları",
+                onNavigateBack = onNavigateBack,
                 scrollBehavior = topAppBarScrollBehavior
             )
         }
@@ -67,7 +69,8 @@ fun SavePointSettingsPage(
         LazyColumn(
             modifier = Modifier
                 .padding(paddings)
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                .fillMaxSize(),
             contentPadding = PaddingValues(bottom = 24.dp, top = 4.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {

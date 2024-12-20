@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -24,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
-import com.masterplus.animals.core.presentation.components.NavigationBackIcon
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.dialogs.ShowLoadingDialog
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthAction
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthState
@@ -82,10 +81,10 @@ fun SettingsPage(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(R.string.settings)) },
-                navigationIcon = { NavigationBackIcon(onNavigateBack = onNavigateBack) },
-                scrollBehavior = topAppBarScrollBehavior
+            DefaultTopBar(
+                title = stringResource(R.string.settings),
+                scrollBehavior = topAppBarScrollBehavior,
+                onNavigateBack = onNavigateBack
             )
         },
     ){paddings->

@@ -19,8 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
@@ -33,17 +31,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
-import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
+import com.masterplus.animals.core.presentation.defaults.SettingTopBarMenuEnum
 import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItemDefaults
-import com.masterplus.animals.features.animal.domain.enums.AnimalTopBarMenu
 import com.masterplus.animals.features.animal.presentation.navigation.ItemId
 import org.koin.androidx.compose.koinViewModel
 
@@ -84,19 +82,13 @@ fun AnimalPage(
     val contentPaddings = PaddingValues(horizontal = 12.dp)
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { 
-                    Text(text = stringResource(id = R.string.animal_kingdom))
-                },
-                actions = {
-                    CustomDropdownBarMenu(
-                        items = AnimalTopBarMenu.entries,
-                        onItemChange = { menuItem ->
-                            when(menuItem){
-                                AnimalTopBarMenu.Settings -> onNavigateToSettings()
-                            }
-                        }
-                    )
+            DefaultTopBar(
+                title = stringResource(id = R.string.animal_kingdom),
+                menuItems = SettingTopBarMenuEnum.entries,
+                onMenuItemClick = { menuItem ->
+                    when(menuItem){
+                        SettingTopBarMenuEnum.Settings -> onNavigateToSettings()
+                    }
                 },
                 modifier = Modifier
                     .renderInSharedTransitionScopeOverlayDefault()

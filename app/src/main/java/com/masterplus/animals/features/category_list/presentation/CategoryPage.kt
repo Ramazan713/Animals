@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -44,16 +43,17 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
-import com.masterplus.animals.core.presentation.components.NavigationBackIcon
-import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
+import com.masterplus.animals.core.presentation.components.TopBarType
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
+import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingLazyVerticalGrid
-import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.selections.ShowSelectBottomMenuItems
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
+import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
@@ -281,7 +281,8 @@ private fun GetTopBar(
     subTitle: String?,
     listMiddlePos: () -> Int
 ) {
-    LargeTopAppBar(
+    DefaultTopBar(
+        topBarType = TopBarType.LARGE,
         title = {
             Column {
                 Text(
@@ -297,27 +298,23 @@ private fun GetTopBar(
                 }
             }
         },
-        navigationIcon = {
-            NavigationBackIcon(onNavigateBack = onNavigateBack)
-        },
+        onNavigateBack = onNavigateBack,
         scrollBehavior = topBarScrollBehaviour,
         actions = {
             IconButton(onClick = onNavigateToCategorySearch) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = null)
             }
-            CustomDropdownBarMenu(
-                items = CategoryListTopBarItemMenu.entries,
-                onItemChange = { menuItem ->
-                    when(menuItem){
-                        CategoryListTopBarItemMenu.Savepoint -> {
-                            onAction(CategoryAction.ShowDialog(CategoryListDialogEvent.ShowEditSavePoint(
-                                posIndex = listMiddlePos()
-                            )))
-                        }
-                        CategoryListTopBarItemMenu.SavePointSettings -> onNavigateToSavePointCategorySettings()
-                    }
+        },
+        menuItems = CategoryListTopBarItemMenu.entries,
+        onMenuItemClick = { menuItem ->
+            when(menuItem){
+                CategoryListTopBarItemMenu.Savepoint -> {
+                    onAction(CategoryAction.ShowDialog(CategoryListDialogEvent.ShowEditSavePoint(
+                        posIndex = listMiddlePos()
+                    )))
                 }
-            )
+                CategoryListTopBarItemMenu.SavePointSettings -> onNavigateToSavePointCategorySettings()
+            }
         }
     )
 }
@@ -334,7 +331,7 @@ private fun CategoryListPagePreview1() {
             items = listOf(
                 SampleDatas.categoryData
             ),
-//            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading)
+            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading)
         ),
         onNavigateBack = {
 

@@ -9,16 +9,17 @@ import com.masterplus.animals.core.domain.models.IconInfo
 import com.masterplus.animals.core.domain.utils.UiText
 
 enum class SpeciesListTopItemMenu: IMenuItemEnum {
-    Savepoint {
-        override val title: UiText
-            get() = UiText.Resource(R.string.save_point)
-        override val iconInfo: IconInfo?
-            get() = IconInfo(Icons.Default.Save)
-    },
     SavePointSettings {
         override val title: UiText
             get() = UiText.Text("Kayıt Noktası Ayarları")
-        override val iconInfo: IconInfo?
+        override val iconInfo: IconInfo
             get() = IconInfo(Icons.Default.Settings)
-    }
+    },
+    Savepoint {
+        override val title: UiText
+            get() = UiText.Resource(R.string.save_point)
+        override val iconInfo: IconInfo
+            get() = IconInfo(Icons.Default.Save)
+    },
+
 }

@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.auth.OAuthProvider
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.NavigationBackIcon
 import com.masterplus.animals.core.presentation.dialogs.ShowLoadingDialog
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
@@ -85,9 +86,9 @@ fun LinkAccountsPage(
     }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Login Options") },
-                navigationIcon = { NavigationBackIcon(onNavigateBack = onNavigateBack) }
+            DefaultTopBar(
+                title = "Login Options",
+                onNavigateBack = onNavigateBack
             )
         }
     ) { paddings ->

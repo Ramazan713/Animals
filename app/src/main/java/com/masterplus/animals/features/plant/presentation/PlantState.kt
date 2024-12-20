@@ -6,7 +6,7 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.models.SaveP
 
 
 data class PlantState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val dailyPlants: CategoryRowModel = CategoryRowModel(),
     val savePoints: List<SavePoint> = emptyList(),
     val habitats: CategoryDataRowModel = CategoryDataRowModel(),

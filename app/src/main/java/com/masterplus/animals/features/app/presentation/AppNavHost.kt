@@ -124,6 +124,9 @@ fun AppNavHost(
             },
             onNavigateToArchive = {
                 navHostController.navigateToArchiveList()
+            },
+            onNavigateToSettings = {
+                navHostController.navigateToSettings()
             }
         )
 

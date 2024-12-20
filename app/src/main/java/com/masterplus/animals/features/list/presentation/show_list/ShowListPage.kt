@@ -22,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -39,15 +38,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.extentions.isScrollingUp
 import com.masterplus.animals.core.presentation.components.DefaultToolTip
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.defaults.SettingTopBarMenuEnum
 import com.masterplus.animals.core.presentation.dialogs.ShowGetTextDialog
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
-import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.selections.ShowSelectBottomMenuItems
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.list.domain.models.ListView
-import com.masterplus.animals.features.list.domain.enums.ShowListBarMenuEnum
 import com.masterplus.animals.features.list.domain.enums.ShowListBottomMenuEnum
 import com.masterplus.animals.features.list.presentation.components.ListViewItem
 import org.koin.androidx.compose.koinViewModel
@@ -57,6 +56,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ShowListPageRoot(
     onNavigateToArchive: ()->Unit,
     onNavigateToDetailList: (listId: Int)->Unit,
+    onNavigateToSettings: ()-> Unit,
     viewModel: ShowListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -64,7 +64,8 @@ fun ShowListPageRoot(
         state = state,
         onAction = viewModel::onAction,
         onNavigateToDetailList = onNavigateToDetailList,
-        onNavigateToArchive = onNavigateToArchive
+        onNavigateToArchive = onNavigateToArchive,
+        onNavigateToSettings = onNavigateToSettings
     )
 }
 
@@ -74,7 +75,8 @@ fun ShowListPageRoot(
 @ExperimentalMaterial3Api
 @Composable
 fun ShowListPage(
-    onNavigateToArchive: ()->Unit,
+    onNavigateToArchive: ()-> Unit,
+    onNavigateToSettings: ()-> Unit,
     onNavigateToDetailList: (listId: Int)->Unit,
     state: ShowListState,
     onAction: (ShowListAction) -> Unit,
@@ -95,7 +97,7 @@ fun ShowListPage(
             GetTopBar(
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
                 onNavigateToArchive = onNavigateToArchive,
-                onNavigateToSettings = {  },
+                onNavigateToSettings = onNavigateToSettings,
             )
         },
         floatingActionButton = {
@@ -186,11 +188,15 @@ private fun GetTopBar(
     onNavigateToArchive: () -> Unit,
     onNavigateToSettings: () -> Unit,
 ) {
-    TopAppBar(
-        title = {
-            Text(text = stringResource(R.string.list))
-        },
+    DefaultTopBar(
+        title = stringResource(id = R.string.list),
+        menuItems = SettingTopBarMenuEnum.entries,
         scrollBehavior = topAppBarScrollBehavior,
+        onMenuItemClick = { menuItem->
+            when(menuItem){
+                SettingTopBarMenuEnum.Settings -> onNavigateToSettings()
+            }
+        },
         actions = {
             DefaultToolTip(
                 tooltip = stringResource(id = R.string.archive_n),
@@ -203,18 +209,7 @@ private fun GetTopBar(
                     )
                 }
             }
-
-            CustomDropdownBarMenu(
-                items = ShowListBarMenuEnum.entries,
-                onItemChange = {menuItem->
-                    when(menuItem){
-                        ShowListBarMenuEnum.ShowSelectSavePoint -> {
-                        }
-                        ShowListBarMenuEnum.Settings -> onNavigateToSettings()
-                    }
-                },
-            )
-        }
+        },
     )
 }
 
@@ -318,7 +313,8 @@ private fun ShowListPagePreview() {
         ),
         onAction = {},
         onNavigateToDetailList = {},
-        onNavigateToArchive = {}
+        onNavigateToArchive = {},
+        onNavigateToSettings = {}
     )
 }
 

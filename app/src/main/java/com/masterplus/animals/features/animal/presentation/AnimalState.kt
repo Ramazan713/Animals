@@ -5,7 +5,7 @@ import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
 import com.masterplus.animals.core.presentation.models.CategoryRowModel
 
 data class AnimalState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val dailyAnimals: CategoryRowModel = CategoryRowModel(),
     val savePoints: List<SavePoint> = emptyList(),
     val habitats: CategoryDataRowModel = CategoryDataRowModel(),

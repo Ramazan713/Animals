@@ -14,11 +14,13 @@ object ShowListRoute
 fun NavGraphBuilder.showList(
     onNavigateToArchive: () -> Unit,
     onNavigateToDetailList: (listId: Int) -> Unit,
+    onNavigateToSettings: ()-> Unit,
 ){
     composable<ShowListRoute>(){
         ShowListPageRoot(
             onNavigateToArchive = onNavigateToArchive,
-            onNavigateToDetailList = onNavigateToDetailList
+            onNavigateToDetailList = onNavigateToDetailList,
+            onNavigateToSettings = onNavigateToSettings
         )
     }
 }

@@ -16,7 +16,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -31,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
-import com.masterplus.animals.core.presentation.components.NavigationBackIcon
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.dialogs.ShowGetTextDialog
 import com.masterplus.animals.core.presentation.dialogs.ShowQuestionDialog
@@ -80,10 +79,11 @@ fun ShowSavePointsPage(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "SavePoints") },
+
+            DefaultTopBar(
+                title = "SavePoints",
                 scrollBehavior = scrollBehavior,
-                navigationIcon = { NavigationBackIcon(onNavigateBack) }
+                onNavigateBack = onNavigateBack
             )
         }
     ) { paddings ->
