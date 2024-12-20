@@ -74,6 +74,13 @@ class SettingsViewModel(
                     }
                 }
             }
+
+            SettingsAction.ResetDefaultValues -> {
+                viewModelScope.launch {
+                    settingsPreferences.clear()
+                    initData()
+                }
+            }
         }
     }
 

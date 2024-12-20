@@ -4,9 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Login
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -22,7 +22,7 @@ import com.masterplus.animals.features.settings.presentation.components.SettingS
 @Composable
 fun AdvancedSettingSection(
     state: SettingsState,
-    onEvent: (SettingsAction)->Unit,
+    onAction: (SettingsAction)->Unit,
     user: User?,
     onNavigateToLinkedAccounts: () -> Unit,
     onNavigateToSavePointSettings: () -> Unit
@@ -45,13 +45,28 @@ fun AdvancedSettingSection(
             imageVector = Icons.Default.Save,
         )
 
+        SettingItem(
+            title = stringResource(R.string.reset_default_setting),
+            imageVector = Icons.Default.SettingsBackupRestore,
+            onClick = {
+                onAction(SettingsAction.ShowDialog(SettingsDialogEvent.AskResetDefault))
+            }
+        )
+        SettingItem(
+            title = stringResource(R.string.delete_all_data),
+            imageVector = Icons.Default.DeleteForever,
+            onClick = {
+                onAction(SettingsAction.ShowDialog(SettingsDialogEvent.AskDeleteAllData))
+            }
+        )
+
         AnimatedVisibility(visible = user != null) {
             SettingItem(
                 title = stringResource(R.string.delete_account),
                 imageVector = Icons.Default.AccountCircle,
                 color = MaterialTheme.colorScheme.error,
                 onClick = {
-                    onEvent(SettingsAction.ShowDialog(SettingsDialogEvent.AskDeleteAccount))
+                    onAction(SettingsAction.ShowDialog(SettingsDialogEvent.AskDeleteAccount))
                 }
             )
         }

@@ -19,4 +19,5 @@ sealed interface SettingsAction {
 
     data object NotShowBackupInitDialog: SettingsAction
 
+    data object ResetDefaultValues: SettingsAction
 }

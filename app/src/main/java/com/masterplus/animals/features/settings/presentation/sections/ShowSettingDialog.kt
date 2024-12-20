@@ -36,11 +36,9 @@ fun ShowSettingDialog(
     authState: AuthState,
     onAuthAction: (AuthAction) -> Unit,
 ){
-
     val close =  remember(onAction) { {
         onAction(SettingsAction.ShowDialog(null))
     }}
-    val context = LocalContext.current
 
     when(dialogEvent){
         is SettingsDialogEvent.AskSignOut -> {
@@ -165,6 +163,14 @@ fun ShowSettingDialog(
                     }
                 },
                 onClose = close
+            )
+        }
+
+        SettingsDialogEvent.AskResetDefault -> {
+            ShowQuestionDialog(
+                title = stringResource(R.string.question_reset_default_values),
+                onApproved = { onAction(SettingsAction.ResetDefaultValues)},
+                onClosed = close,
             )
         }
     }

@@ -29,4 +29,6 @@ sealed interface SettingsDialogEvent {
         val onLoadLastBackup: () -> Unit
     ): SettingsDialogEvent
 
+    data object AskResetDefault: SettingsDialogEvent
+
 }

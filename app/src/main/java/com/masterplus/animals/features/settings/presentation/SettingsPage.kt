@@ -29,6 +29,7 @@ import com.masterplus.animals.core.shared_features.auth.presentation.AuthAction
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthState
 import com.masterplus.animals.core.shared_features.auth.presentation.AuthViewModel
 import com.masterplus.animals.features.settings.presentation.sections.AdvancedSettingSection
+import com.masterplus.animals.features.settings.presentation.sections.ApplicationSettingSection
 import com.masterplus.animals.features.settings.presentation.sections.CloudBackupSection
 import com.masterplus.animals.features.settings.presentation.sections.GeneralSettingSection
 import com.masterplus.animals.features.settings.presentation.sections.ProfileSettingSection
@@ -119,11 +120,15 @@ fun SettingsPage(
             item {
                 AdvancedSettingSection(
                     state = state,
-                    onEvent = onAction,
+                    onAction = onAction,
                     user = authState.user,
                     onNavigateToLinkedAccounts = onNavigateToLinkedAccounts,
                     onNavigateToSavePointSettings = onNavigateToSavePointSettings
                 )
+            }
+
+            item {
+                ApplicationSettingSection()
             }
 
             if(authState.user != null){
@@ -167,9 +172,13 @@ fun SettingsPage(
 @Preview(showBackground = true)
 @Composable
 private fun SettingsPagePreview() {
-//    SettingsPage(
-//        state = SettingsState(),
-//        onAction = {},
-//        onNavigateBack = {}
-//    )
+    SettingsPage(
+        state = SettingsState(),
+        onAction = {},
+        onNavigateBack = {},
+        onNavigateToSavePointSettings = {},
+        authState = AuthState(),
+        onAuthAction = {},
+        onNavigateToLinkedAccounts = {}
+    )
 }
