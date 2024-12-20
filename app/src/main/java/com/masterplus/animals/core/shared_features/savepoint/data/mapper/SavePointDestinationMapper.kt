@@ -15,8 +15,8 @@ fun SavePointDestination.toCategoryType(): CategoryType?{
     }
 }
 
-fun CategoryType.toSavePointDestinationTypeId(itemId: Int?): Int{
-    if(itemId == null) return SavePointDestination.All.DESTINATION_TYPE_ID
+fun CategoryType.toSavePointDestinationTypeId(itemId: Int?, returnAll: Boolean = true): Int{
+    if(itemId == null && returnAll) return SavePointDestination.All.DESTINATION_TYPE_ID
     return when(this){
         CategoryType.Habitat -> SavePointDestination.Habitat.DESTINATION_TYPE_ID
         CategoryType.Class -> SavePointDestination.ClassType.DESTINATION_TYPE_ID

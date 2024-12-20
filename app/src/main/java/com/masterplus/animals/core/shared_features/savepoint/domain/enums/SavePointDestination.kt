@@ -132,11 +132,12 @@ sealed class SavePointDestination(
             categoryType: CategoryType,
             destinationId: Int?,
             kingdomType: KingdomType,
+            returnAll: Boolean = true
         ): SavePointDestination {
-            val destinationTypeId = when {
-                destinationId == null -> SavePointDestinationType.All.destinationTypeId
-                else -> categoryType.toSavePointDestinationTypeId(1)
-            }
+            val destinationTypeId = categoryType.toSavePointDestinationTypeId(
+                itemId = destinationId,
+                returnAll = returnAll
+            )
             return from(
                 destinationTypeId = destinationTypeId,
                 destinationId = destinationId,

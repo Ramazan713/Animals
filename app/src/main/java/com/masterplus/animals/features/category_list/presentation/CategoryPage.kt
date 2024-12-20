@@ -199,7 +199,7 @@ fun CategoryListPage(
             is CategoryListDialogEvent.ShowEditSavePoint -> {
                 EditSavePointDialog(
                     loadParam = EditSavePointLoadParam(
-                        destinationTypeId = state.categoryType.toSavePointDestinationTypeId(state.categoryItemId),
+                        destinationTypeId = state.categoryType.toSavePointDestinationTypeId(state.categoryItemId, returnAll = false),
                         destinationId = state.categoryItemId,
                         kingdomType = state.kingdomType,
                         contentType = SavePointContentType.Category,

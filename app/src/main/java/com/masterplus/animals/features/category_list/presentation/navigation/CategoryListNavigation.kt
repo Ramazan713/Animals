@@ -77,7 +77,8 @@ fun NavGraphBuilder.categoryList(
                     SavePointDestination.fromCategoryType(
                         categoryType = args.categoryType,
                         kingdomType = args.kingdomType,
-                        destinationId = null
+                        destinationId = null,
+                        returnAll = false
                     )
                 },
                 onNavigateToSavePointCategorySettings = onNavigateToSavePointCategorySettings
