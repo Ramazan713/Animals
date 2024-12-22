@@ -5,7 +5,7 @@ data class SpeciesListDetail(
     val introduction: String,
     val name: String,
     val scientificName: String,
-    val genusId: Int,
+    val familyId: Int,
     val recognitionAndInteraction: Int?,
     val habitatCategoryIds: List<Int>,
     val images: List<SpeciesImageModel>,

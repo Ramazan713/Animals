@@ -8,9 +8,9 @@ import androidx.room.PrimaryKey
     tableName = "Species",
     foreignKeys = [
         ForeignKey(
-            entity = GenusEntity::class,
+            entity = FamilyEntity::class,
             parentColumns = arrayOf("id"),
-            childColumns = arrayOf("genus_id"),
+            childColumns = arrayOf("family_id"),
         ),
         ForeignKey(
             entity = KingdomEntity::class,
@@ -25,7 +25,7 @@ data class SpeciesEntity(
     val scientific_name: String = "",
     val name_en: String = "",
     val name_tr: String = "",
-    val genus_id: Int,
+    val family_id: Int,
     val kingdom_id: Int,
     val introduction_en: String = "",
     val introduction_tr: String = "",

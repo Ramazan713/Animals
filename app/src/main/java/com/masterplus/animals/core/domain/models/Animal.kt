@@ -42,7 +42,6 @@ data class AnimalDetail(
     override val classModel: ClassModel,
     override val order: OrderModel,
     override val family: FamilyModel,
-    override val genus: GenusModel,
     override val species: SpeciesModel,
     override val habitatCategories: List<HabitatCategoryModel>,
     override val images: List<SpeciesImageModel>,

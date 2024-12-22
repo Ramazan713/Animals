@@ -37,13 +37,6 @@ fun SpeciesDetail.toScientificNomenclatureSection(): List<TitleContentModel>{
 
     titleContents.add(
         TitleContentModel(
-            title = "Cins",
-            content = getScientificNameWithName(genus.scientificName, genus.genus)
-        )
-    )
-
-    titleContents.add(
-        TitleContentModel(
             title = "Tür",
             content = getScientificNameWithName(species.scientificName, species.name)
         )

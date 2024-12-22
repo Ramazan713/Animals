@@ -7,7 +7,6 @@ import com.masterplus.animals.core.domain.models.AnimalDetail
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
-import com.masterplus.animals.core.domain.models.GenusModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.ImageData
 import com.masterplus.animals.core.domain.models.ImageMetadata
@@ -125,13 +124,6 @@ object SampleDatas {
         kingdomType = KingdomType.Animals,
     )
 
-    val genus = GenusModel(
-        id = 2,
-        scientificName = "Apis",
-        genus = "",
-        familyId = 2,
-        kingdomType = KingdomType.Animals,
-    )
 
     val species = SpeciesModel(
         id = 2,
@@ -139,7 +131,7 @@ object SampleDatas {
         introduction="Arılar, dünya genelinde tarımın ve doğal ekosistemlerin sürdürülebilirliği için hayati öneme sahip polinatörlerdir. Bal üretimi ile tanınsalar da, bitkilerin tozlaşmasını sağlayarak birçok meyve ve sebzenin oluşmasında kritik rol oynarlar. Arılar, karmaşık sosyal yapıları ve etkileyici iş bölümleriyle de dikkat çekerler. Özellikle bal arıları, ürettikleri bal ve balmumu ile insanlık için ekonomik değere sahiptir.",
         name ="Bal Arısı",
         recognitionAndInteraction = 4,
-        genusId=2,
+        familyId = 2,
         kingdomType = KingdomType.Animals
     )
 
@@ -232,7 +224,6 @@ object SampleDatas {
         classModel = classModel,
         order = order,
         family = family,
-        genus = genus,
         species = species,
         habitatCategories = listOf(habitatCategory),
         images = listOf(animalImage, animalImage, animalImage),
@@ -302,7 +293,7 @@ object SampleDatas {
             isListSelected = isListSelected,
             habitatCategoryIds = listOf(habitatCategoryId),
             recognitionAndInteraction = 1,
-            genusId = 1
+            familyId = 1
         )
     }
 

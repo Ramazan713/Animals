@@ -71,7 +71,6 @@ fun PlantDetailEmbedded.toPlantDetail(
         classModel = classEntity.toClass(language),
         order = order.toOrder(language),
         family = family.toFamily(language),
-        genus = genus.toGenus(language),
         species = species.toSpecies(language),
         habitatCategories = habitatCategories.map { it.toHabitatCategory(language) },
         images = images.map { it.toSpeciesImageModel() },

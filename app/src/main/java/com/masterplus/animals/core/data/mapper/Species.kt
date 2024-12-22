@@ -14,7 +14,7 @@ fun SpeciesEntity.toSpecies(
         name = if(isEn) name_en else name_tr,
         introduction = if(isEn) introduction_en else introduction_tr,
         scientificName = scientific_name,
-        genusId = genus_id,
+        familyId = family_id,
         recognitionAndInteraction = recognition_and_interaction,
         kingdomType = KingdomType.fromKingdomId(kingdom_id)
     )

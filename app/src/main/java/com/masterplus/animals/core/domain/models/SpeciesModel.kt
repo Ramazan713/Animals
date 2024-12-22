@@ -8,7 +8,7 @@ data class SpeciesModel(
     val name: String,
     val scientificName: String,
     val kingdomType: KingdomType,
-    val genusId: Int,
+    val familyId: Int,
     val recognitionAndInteraction: Int?,
 )
 
@@ -19,7 +19,6 @@ interface SpeciesDetail{
     val classModel: ClassModel
     val order: OrderModel
     val family: FamilyModel
-    val genus: GenusModel
     val species: SpeciesModel
     val habitatCategories: List<HabitatCategoryModel>
     val images: List<SpeciesImageModel>

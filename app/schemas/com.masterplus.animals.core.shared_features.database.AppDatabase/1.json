@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "235adce2783e441ad56cf434486520b8",
+    "identityHash": "a8c6d2f13a478c1c2c61cf8134889dc5",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -677,91 +677,6 @@
         ]
       },
       {
-        "tableName": "Genuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `genus_en` TEXT NOT NULL, `genus_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`family_id`) REFERENCES `Families`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "scientific_name",
-            "columnName": "scientific_name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "genus_en",
-            "columnName": "genus_en",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "genus_tr",
-            "columnName": "genus_tr",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "family_id",
-            "columnName": "family_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "kingdom_id",
-            "columnName": "kingdom_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "created_at",
-            "columnName": "created_at",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "updated_at",
-            "columnName": "updated_at",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": [
-          {
-            "table": "Families",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "family_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "Kingdoms",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "kingdom_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
-      },
-      {
         "tableName": "HabitatCategories",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `habitat_category_en` TEXT NOT NULL, `habitat_category_tr` TEXT NOT NULL, `image_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
@@ -988,7 +903,7 @@
       },
       {
         "tableName": "Species",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `genus_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`genus_id`) REFERENCES `Genuses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`family_id`) REFERENCES `Families`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1015,8 +930,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "genus_id",
-            "columnName": "genus_id",
+            "fieldPath": "family_id",
+            "columnName": "family_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1066,11 +981,11 @@
         "indices": [],
         "foreignKeys": [
           {
-            "table": "Genuses",
+            "table": "Families",
             "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
             "columns": [
-              "genus_id"
+              "family_id"
             ],
             "referencedColumns": [
               "id"
@@ -1930,7 +1845,7 @@
       },
       {
         "viewName": "SpeciesRelationsView",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS select K.id kingdom_id, P.id phylum_id, C.id class_id, O.id order_id, F.id family_id, \n        G.id genuse_id, S.id species_id\n        FROM Kingdoms K\n        inner join Phylums P on K.id = P.kingdom_id\n        inner join Classes C on P.id = C.phylum_id\n        inner join Orders O on C.id = O.class_id\n        inner join Families F on O.id = F.order_id\n        inner join Genuses G on F.id = G.family_id\n        inner join Species S  on G.id = S.genus_id"
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS select K.id kingdom_id, P.id phylum_id, C.id class_id, O.id order_id, F.id family_id, \n        S.id species_id\n        FROM Kingdoms K\n        inner join Phylums P on K.id = P.kingdom_id\n        inner join Classes C on P.id = C.phylum_id\n        inner join Orders O on C.id = O.class_id\n        inner join Families F on O.id = F.order_id\n        inner join Species S  on F.id = S.family_id"
       },
       {
         "viewName": "HabitatKingdomView",
@@ -1939,7 +1854,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '235adce2783e441ad56cf434486520b8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a8c6d2f13a478c1c2c61cf8134889dc5')"
     ]
   }
 }
