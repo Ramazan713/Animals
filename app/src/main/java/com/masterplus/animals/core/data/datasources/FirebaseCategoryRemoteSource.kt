@@ -8,11 +8,13 @@ import PhylumDto
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.masterplus.animals.core.data.dtos.SpeciesDto
 import com.masterplus.animals.core.data.mapper.toClassWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toHabitatCategoryWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toOrderWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toPhylumWithImageEmbedded
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.safeCall
@@ -24,6 +26,48 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.Phylum
 import kotlinx.coroutines.tasks.await
 
 class FirebaseCategoryRemoteSource: CategoryRemoteSource {
+
+    override suspend fun getSpeciesByKingdom(
+        kingdomType: KingdomType,
+        limit: Int,
+        startAfter: Int?
+    ): DefaultResult<List<SpeciesDto>> {
+        return safeCall {
+            Firebase.firestore.collection("Species")
+                .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
+                .limit(limit.toLong())
+                .orderBy("id")
+                .startAfter(startAfter)
+                .get()
+                .await()
+                .toObjects(SpeciesDto::class.java)
+        }
+    }
+
+    override suspend fun getSpeciesCategories(
+        categoryType: CategoryType,
+        itemId: Int,
+        limit: Int,
+        startAfter: Int?
+    ): DefaultResult<List<SpeciesDto>> {
+        val filter = when(categoryType){
+            CategoryType.Class -> Filter.equalTo("class_id", itemId)
+            CategoryType.Order -> Filter.equalTo("order_id", itemId)
+            CategoryType.Family -> Filter.equalTo("family_id", itemId)
+            CategoryType.Habitat -> Filter.inArray("habitats", listOf(itemId))
+            else -> null
+        }
+        return safeCall {
+            Firebase.firestore.collection("Species")
+                .where(filter!!)
+                .limit(limit.toLong())
+                .orderBy("id")
+                .startAfter(startAfter)
+                .get()
+                .await()
+                .toObjects(SpeciesDto::class.java)
+        }
+    }
 
     override suspend fun getPhylums(
         kingdomType: KingdomType,

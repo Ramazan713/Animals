@@ -2,9 +2,13 @@ package com.masterplus.animals.core.shared_features.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
+import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesDetailEmbedded
 
 @Dao
@@ -50,5 +54,15 @@ interface SpeciesDao {
         where S.id = LA.speciesId and LA.listId = :listId order by S.id
     """)
     fun getPagingSpeciesByListId(listId: Int): PagingSource<Int, SpeciesDetailEmbedded>
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSpecies(species: List<SpeciesEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSpeciesHabitats(speciesHabitats: List<SpeciesHabitatCategoryEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSpeciesImages(speciesImages: List<SpeciesImageEntity>)
 
 }

@@ -61,11 +61,9 @@ fun FamilyDto.toFamilyEntity(): FamilyEntity {
 }
 
 fun FamilyDto.toFamilyWithImageEmbedded(): FamilyWithImageEmbedded {
-    val imageModel = image?.toImageEntity()
-    val metadata = image?.let { it.metadata?.toImageMetadataEntity(it.id) }
     return FamilyWithImageEmbedded(
         family = toFamilyEntity(),
-        image = imageModel?.let { ImageWithMetadataEmbedded(it, metadata) }
+        image = image?.toImageWithMetadata()
     )
 }
 
@@ -82,11 +80,9 @@ fun HabitatCategoryDto.toHabitatCategoryEntity(): HabitatCategoryEntity {
 }
 
 fun HabitatCategoryDto.toHabitatCategoryWithImageEmbedded(): HabitatWithImageEmbedded {
-    val imageModel = image?.toImageEntity()
-    val metadata = image?.let { it.metadata?.toImageMetadataEntity(it.id) }
     return HabitatWithImageEmbedded(
         habitat = toHabitatCategoryEntity(),
-        image = imageModel?.let { ImageWithMetadataEmbedded(it, metadata) }
+        image = image?.toImageWithMetadata()
     )
 }
 
@@ -104,11 +100,9 @@ fun PhylumDto.toPhylumEntity(): PhylumEntity {
 }
 
 fun PhylumDto.toPhylumWithImageEmbedded(): PhylumWithImageEmbedded {
-    val imageModel = image?.toImageEntity()
-    val metadata = image?.let { it.metadata?.toImageMetadataEntity(it.id) }
     return PhylumWithImageEmbedded(
         phylum = toPhylumEntity(),
-        image = imageModel?.let { ImageWithMetadataEmbedded(it, metadata) }
+        image = image?.toImageWithMetadata()
     )
 }
 
@@ -128,11 +122,9 @@ fun OrderDto.toOrderEntity(): OrderEntity {
 }
 
 fun OrderDto.toOrderWithImageEmbedded(): OrderWithImageEmbedded {
-    val imageModel = image?.toImageEntity()
-    val metadata = image?.let { it.metadata?.toImageMetadataEntity(it.id) }
     return OrderWithImageEmbedded(
         order = toOrderEntity(),
-        image = imageModel?.let { ImageWithMetadataEmbedded(it, metadata) }
+        image = image?.toImageWithMetadata()
     )
 }
 
@@ -164,4 +156,9 @@ fun ImageDto.toImageEntity(): ImageEntity{
     )
 }
 
-
+fun ImageDto.toImageWithMetadata(): ImageWithMetadataEmbedded{
+    return ImageWithMetadataEmbedded(
+        image = toImageEntity(),
+        metadata = metadata?.toImageMetadataEntity(id)
+    )
+}

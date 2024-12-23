@@ -50,7 +50,8 @@ data class ImageDto(
     val id: Int = 0,
     val image_path: String = "",
     val image_url: String = "",
-    val metadata: MetadataDto? = null
+    val metadata: MetadataDto? = null,
+    val image_order: Int? = null
 )
 
 data class MetadataDto(

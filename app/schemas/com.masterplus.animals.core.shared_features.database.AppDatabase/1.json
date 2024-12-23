@@ -1,0 +1,1777 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "fc49f3379098dbcba39e16d015c6999c",
+    "entities": [
+      {
+        "tableName": "Kingdoms",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Animals",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `species_id` INTEGER NOT NULL, `size_c_en` TEXT, `size_c_tr` TEXT, `weight_c_en` TEXT, `weight_c_tr` TEXT, `color_c_en` TEXT, `color_c_tr` TEXT, `feeding_c_en` TEXT, `feeding_c_tr` TEXT, `threats_c_en` TEXT, `threats_c_tr` TEXT, `conservation_status_c_en` TEXT, `conservation_status_c_tr` TEXT, `cultural_significance_c_en` TEXT, `cultural_significance_c_tr` TEXT, `physical_characteristics_en` TEXT, `physical_characteristics_tr` TEXT, `natural_habitat_en` TEXT, `natural_habitat_tr` TEXT, `ecosystem_en` TEXT, `ecosystem_tr` TEXT, `feeding_habits_en` TEXT, `feeding_habits_tr` TEXT, `social_structure_and_behaviors_en` TEXT, `social_structure_and_behaviors_tr` TEXT, `reproductive_behaviors_en` TEXT, `reproductive_behaviors_tr` TEXT, `development_of_the_young_en` TEXT, `development_of_the_young_tr` TEXT, `sounds_produced_en` TEXT, `sounds_produced_tr` TEXT, `communication_methods_en` TEXT, `communication_methods_tr` TEXT, `threats_and_dangers_en` TEXT, `threats_and_dangers_tr` TEXT, `conservation_efforts_en` TEXT, `conservation_efforts_tr` TEXT, `conservation_challenges_en` TEXT, `conservation_challenges_tr` TEXT, `cultural_and_historical_significance_en` TEXT, `cultural_and_historical_significance_tr` TEXT, `economic_and_scientific_importance_en` TEXT, `economic_and_scientific_importance_tr` TEXT, `modern_day_perception_en` TEXT, `modern_day_perception_tr` TEXT, `environmental_adaptations_en` TEXT, `environmental_adaptations_tr` TEXT, `evolutionary_processes_en` TEXT, `evolutionary_processes_tr` TEXT, `observed_interesting_behaviors_en` TEXT, `observed_interesting_behaviors_tr` TEXT, `ethological_insights_en` TEXT, `ethological_insights_tr` TEXT, `interesting_and_fun_facts_en` TEXT, `interesting_and_fun_facts_tr` TEXT, `comparative_analysis_en` TEXT, `comparative_analysis_tr` TEXT, `role_in_ecosystem_en` TEXT, `role_in_ecosystem_tr` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`species_id`) REFERENCES `Species`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "species_id",
+            "columnName": "species_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size_c_en",
+            "columnName": "size_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "size_c_tr",
+            "columnName": "size_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "weight_c_en",
+            "columnName": "weight_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "weight_c_tr",
+            "columnName": "weight_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "color_c_en",
+            "columnName": "color_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "color_c_tr",
+            "columnName": "color_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "feeding_c_en",
+            "columnName": "feeding_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "feeding_c_tr",
+            "columnName": "feeding_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "threats_c_en",
+            "columnName": "threats_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "threats_c_tr",
+            "columnName": "threats_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_status_c_en",
+            "columnName": "conservation_status_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_status_c_tr",
+            "columnName": "conservation_status_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cultural_significance_c_en",
+            "columnName": "cultural_significance_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cultural_significance_c_tr",
+            "columnName": "cultural_significance_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "physical_characteristics_en",
+            "columnName": "physical_characteristics_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "physical_characteristics_tr",
+            "columnName": "physical_characteristics_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "natural_habitat_en",
+            "columnName": "natural_habitat_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "natural_habitat_tr",
+            "columnName": "natural_habitat_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ecosystem_en",
+            "columnName": "ecosystem_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ecosystem_tr",
+            "columnName": "ecosystem_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "feeding_habits_en",
+            "columnName": "feeding_habits_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "feeding_habits_tr",
+            "columnName": "feeding_habits_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "social_structure_and_behaviors_en",
+            "columnName": "social_structure_and_behaviors_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "social_structure_and_behaviors_tr",
+            "columnName": "social_structure_and_behaviors_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reproductive_behaviors_en",
+            "columnName": "reproductive_behaviors_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reproductive_behaviors_tr",
+            "columnName": "reproductive_behaviors_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "development_of_the_young_en",
+            "columnName": "development_of_the_young_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "development_of_the_young_tr",
+            "columnName": "development_of_the_young_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sounds_produced_en",
+            "columnName": "sounds_produced_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sounds_produced_tr",
+            "columnName": "sounds_produced_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "communication_methods_en",
+            "columnName": "communication_methods_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "communication_methods_tr",
+            "columnName": "communication_methods_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "threats_and_dangers_en",
+            "columnName": "threats_and_dangers_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "threats_and_dangers_tr",
+            "columnName": "threats_and_dangers_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_efforts_en",
+            "columnName": "conservation_efforts_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_efforts_tr",
+            "columnName": "conservation_efforts_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_challenges_en",
+            "columnName": "conservation_challenges_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_challenges_tr",
+            "columnName": "conservation_challenges_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cultural_and_historical_significance_en",
+            "columnName": "cultural_and_historical_significance_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cultural_and_historical_significance_tr",
+            "columnName": "cultural_and_historical_significance_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "economic_and_scientific_importance_en",
+            "columnName": "economic_and_scientific_importance_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "economic_and_scientific_importance_tr",
+            "columnName": "economic_and_scientific_importance_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "modern_day_perception_en",
+            "columnName": "modern_day_perception_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "modern_day_perception_tr",
+            "columnName": "modern_day_perception_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "environmental_adaptations_en",
+            "columnName": "environmental_adaptations_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "environmental_adaptations_tr",
+            "columnName": "environmental_adaptations_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "evolutionary_processes_en",
+            "columnName": "evolutionary_processes_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "evolutionary_processes_tr",
+            "columnName": "evolutionary_processes_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "observed_interesting_behaviors_en",
+            "columnName": "observed_interesting_behaviors_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "observed_interesting_behaviors_tr",
+            "columnName": "observed_interesting_behaviors_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ethological_insights_en",
+            "columnName": "ethological_insights_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ethological_insights_tr",
+            "columnName": "ethological_insights_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "interesting_and_fun_facts_en",
+            "columnName": "interesting_and_fun_facts_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "interesting_and_fun_facts_tr",
+            "columnName": "interesting_and_fun_facts_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "comparative_analysis_en",
+            "columnName": "comparative_analysis_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "comparative_analysis_tr",
+            "columnName": "comparative_analysis_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "role_in_ecosystem_en",
+            "columnName": "role_in_ecosystem_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "role_in_ecosystem_tr",
+            "columnName": "role_in_ecosystem_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Species",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "species_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "SpeciesImages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`species_id` INTEGER NOT NULL, `image_id` INTEGER NOT NULL, `image_order` INTEGER NOT NULL, PRIMARY KEY(`species_id`, `image_id`), FOREIGN KEY(`species_id`) REFERENCES `Species`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "species_id",
+            "columnName": "species_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image_id",
+            "columnName": "image_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image_order",
+            "columnName": "image_order",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "species_id",
+            "image_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Species",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "species_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Images",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "image_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Classes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `class_en` TEXT NOT NULL, `class_tr` TEXT NOT NULL, `phylum_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scientific_name",
+            "columnName": "scientific_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "class_en",
+            "columnName": "class_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "class_tr",
+            "columnName": "class_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phylum_id",
+            "columnName": "phylum_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kingdom_id",
+            "columnName": "kingdom_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image_id",
+            "columnName": "image_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "created_at",
+            "columnName": "created_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updated_at",
+            "columnName": "updated_at",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Images",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "image_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Families",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `family_en` TEXT NOT NULL, `family_tr` TEXT NOT NULL, `order_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scientific_name",
+            "columnName": "scientific_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "family_en",
+            "columnName": "family_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "family_tr",
+            "columnName": "family_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order_id",
+            "columnName": "order_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kingdom_id",
+            "columnName": "kingdom_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image_id",
+            "columnName": "image_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "created_at",
+            "columnName": "created_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updated_at",
+            "columnName": "updated_at",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Images",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "image_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "HabitatCategories",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `habitat_category_en` TEXT NOT NULL, `habitat_category_tr` TEXT NOT NULL, `image_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitat_category_en",
+            "columnName": "habitat_category_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitat_category_tr",
+            "columnName": "habitat_category_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image_id",
+            "columnName": "image_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Images",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "image_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Orders",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `order_en` TEXT NOT NULL, `order_tr` TEXT NOT NULL, `class_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scientific_name",
+            "columnName": "scientific_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order_en",
+            "columnName": "order_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order_tr",
+            "columnName": "order_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "class_id",
+            "columnName": "class_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kingdom_id",
+            "columnName": "kingdom_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image_id",
+            "columnName": "image_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "created_at",
+            "columnName": "created_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updated_at",
+            "columnName": "updated_at",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Images",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "image_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Phylums",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `phylum_en` TEXT NOT NULL, `phylum_tr` TEXT NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scientific_name",
+            "columnName": "scientific_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phylum_en",
+            "columnName": "phylum_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phylum_tr",
+            "columnName": "phylum_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kingdom_id",
+            "columnName": "kingdom_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image_id",
+            "columnName": "image_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Images",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "image_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Species",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `order_id` INTEGER NOT NULL, `class_id` INTEGER NOT NULL, `phylum_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scientific_name",
+            "columnName": "scientific_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name_en",
+            "columnName": "name_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name_tr",
+            "columnName": "name_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "family_id",
+            "columnName": "family_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order_id",
+            "columnName": "order_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "class_id",
+            "columnName": "class_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phylum_id",
+            "columnName": "phylum_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kingdom_id",
+            "columnName": "kingdom_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "introduction_en",
+            "columnName": "introduction_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "introduction_tr",
+            "columnName": "introduction_tr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recognition_and_interaction",
+            "columnName": "recognition_and_interaction",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updated_at",
+            "columnName": "updated_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "created_at",
+            "columnName": "created_at",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Lists",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `isRemovable` INTEGER NOT NULL DEFAULT 1, `isArchive` INTEGER NOT NULL DEFAULT 0, `pos` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRemovable",
+            "columnName": "isRemovable",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "isArchive",
+            "columnName": "isArchive",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "pos",
+            "columnName": "pos",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ListSpecies",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`listId` INTEGER NOT NULL, `speciesId` INTEGER NOT NULL, `pos` INTEGER NOT NULL, PRIMARY KEY(`listId`, `speciesId`), FOREIGN KEY(`speciesId`) REFERENCES `Species`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`listId`) REFERENCES `Lists`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "listId",
+            "columnName": "listId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speciesId",
+            "columnName": "speciesId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pos",
+            "columnName": "pos",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "listId",
+            "speciesId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_ListSpecies_speciesId",
+            "unique": false,
+            "columnNames": [
+              "speciesId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ListSpecies_speciesId` ON `${TABLE_NAME}` (`speciesId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Species",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "speciesId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Lists",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "listId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Images",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `image_path` TEXT NOT NULL, `image_url` TEXT NOT NULL, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "image_path",
+            "columnName": "image_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image_url",
+            "columnName": "image_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "created_at",
+            "columnName": "created_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updated_at",
+            "columnName": "updated_at",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ImageMetadatas",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `image_id` INTEGER NOT NULL, `usage_terms` TEXT NOT NULL, `artist_name` TEXT, `image_description` TEXT, `date_time_original` TEXT, `description_url` TEXT NOT NULL, `license_url` TEXT NOT NULL, `license_short_name` TEXT NOT NULL, FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "image_id",
+            "columnName": "image_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usage_terms",
+            "columnName": "usage_terms",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "artist_name",
+            "columnName": "artist_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "image_description",
+            "columnName": "image_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "date_time_original",
+            "columnName": "date_time_original",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description_url",
+            "columnName": "description_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "license_url",
+            "columnName": "license_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "license_short_name",
+            "columnName": "license_short_name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Images",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "image_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "SavePoints",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `titleEn` TEXT NOT NULL, `titleTr` TEXT NOT NULL, `contentTypeId` INTEGER NOT NULL, `destinationTypeId` INTEGER NOT NULL, `destinationId` INTEGER, `kingdomId` INTEGER NOT NULL, `saveModeId` INTEGER NOT NULL, `saveKey` TEXT, `itemPosIndex` INTEGER NOT NULL, `modifiedTime` TEXT NOT NULL, `imageId` INTEGER, FOREIGN KEY(`kingdomId`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`imageId`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleTr",
+            "columnName": "titleTr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentTypeId",
+            "columnName": "contentTypeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "destinationTypeId",
+            "columnName": "destinationTypeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "destinationId",
+            "columnName": "destinationId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "kingdomId",
+            "columnName": "kingdomId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "saveModeId",
+            "columnName": "saveModeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "saveKey",
+            "columnName": "saveKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemPosIndex",
+            "columnName": "itemPosIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modifiedTime",
+            "columnName": "modifiedTime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageId",
+            "columnName": "imageId",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Kingdoms",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "kingdomId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Images",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "imageId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Histories",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `content` TEXT NOT NULL, `lang_code` TEXT NOT NULL, `modified_date_time` TEXT NOT NULL, `history_type_id` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lang_code",
+            "columnName": "lang_code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modified_date_time",
+            "columnName": "modified_date_time",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "history_type_id",
+            "columnName": "history_type_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Plants",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `species_id` INTEGER NOT NULL, `size_c_en` TEXT, `size_c_tr` TEXT, `color_c_en` TEXT, `color_c_tr` TEXT, `flowering_time_c_en` TEXT, `flowering_time_c_tr` TEXT, `cultural_importance_c_en` TEXT, `cultural_importance_c_tr` TEXT, `conservation_status_c_en` TEXT, `conservation_status_c_tr` TEXT, `medicinal_benefits_c_en` TEXT, `medicinal_benefits_c_tr` TEXT, `potential_harm_c_en` TEXT, `potential_harm_c_tr` TEXT, `physical_characteristics_en` TEXT, `physical_characteristics_tr` TEXT, `natural_habitat_en` TEXT, `natural_habitat_tr` TEXT, `ecosystem_en` TEXT, `ecosystem_tr` TEXT, `growth_conditions_en` TEXT, `growth_conditions_tr` TEXT, `development_process_en` TEXT, `development_process_tr` TEXT, `flowering_time_and_characteristics_en` TEXT, `flowering_time_and_characteristics_tr` TEXT, `reproduction_methods_en` TEXT, `reproduction_methods_tr` TEXT, `role_in_ecosystem_en` TEXT, `role_in_ecosystem_tr` TEXT, `economic_value_en` TEXT, `economic_value_tr` TEXT, `environmental_adaptations_en` TEXT, `environmental_adaptations_tr` TEXT, `evolutionary_processes_en` TEXT, `evolutionary_processes_tr` TEXT, `cultural_context_en` TEXT, `cultural_context_tr` TEXT, `historical_usage_en` TEXT, `historical_usage_tr` TEXT, `threats_and_dangers_en` TEXT, `threats_and_dangers_tr` TEXT, `conservation_efforts_en` TEXT, `conservation_efforts_tr` TEXT, `medicinal_uses_and_benefits_en` TEXT, `medicinal_uses_and_benefits_tr` TEXT, `potential_harm_and_side_effects_en` TEXT, `potential_harm_and_side_effects_tr` TEXT, `noteworthy_characteristics_en` TEXT, `noteworthy_characteristics_tr` TEXT, `surprising_facts_en` TEXT, `surprising_facts_tr` TEXT, `interesting_and_fun_facts_en` TEXT, `interesting_and_fun_facts_tr` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`species_id`) REFERENCES `Species`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "species_id",
+            "columnName": "species_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size_c_en",
+            "columnName": "size_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "size_c_tr",
+            "columnName": "size_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "color_c_en",
+            "columnName": "color_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "color_c_tr",
+            "columnName": "color_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "flowering_time_c_en",
+            "columnName": "flowering_time_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "flowering_time_c_tr",
+            "columnName": "flowering_time_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cultural_importance_c_en",
+            "columnName": "cultural_importance_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cultural_importance_c_tr",
+            "columnName": "cultural_importance_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_status_c_en",
+            "columnName": "conservation_status_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_status_c_tr",
+            "columnName": "conservation_status_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "medicinal_benefits_c_en",
+            "columnName": "medicinal_benefits_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "medicinal_benefits_c_tr",
+            "columnName": "medicinal_benefits_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "potential_harm_c_en",
+            "columnName": "potential_harm_c_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "potential_harm_c_tr",
+            "columnName": "potential_harm_c_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "physical_characteristics_en",
+            "columnName": "physical_characteristics_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "physical_characteristics_tr",
+            "columnName": "physical_characteristics_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "natural_habitat_en",
+            "columnName": "natural_habitat_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "natural_habitat_tr",
+            "columnName": "natural_habitat_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ecosystem_en",
+            "columnName": "ecosystem_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ecosystem_tr",
+            "columnName": "ecosystem_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "growth_conditions_en",
+            "columnName": "growth_conditions_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "growth_conditions_tr",
+            "columnName": "growth_conditions_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "development_process_en",
+            "columnName": "development_process_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "development_process_tr",
+            "columnName": "development_process_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "flowering_time_and_characteristics_en",
+            "columnName": "flowering_time_and_characteristics_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "flowering_time_and_characteristics_tr",
+            "columnName": "flowering_time_and_characteristics_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reproduction_methods_en",
+            "columnName": "reproduction_methods_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reproduction_methods_tr",
+            "columnName": "reproduction_methods_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "role_in_ecosystem_en",
+            "columnName": "role_in_ecosystem_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "role_in_ecosystem_tr",
+            "columnName": "role_in_ecosystem_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "economic_value_en",
+            "columnName": "economic_value_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "economic_value_tr",
+            "columnName": "economic_value_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "environmental_adaptations_en",
+            "columnName": "environmental_adaptations_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "environmental_adaptations_tr",
+            "columnName": "environmental_adaptations_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "evolutionary_processes_en",
+            "columnName": "evolutionary_processes_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "evolutionary_processes_tr",
+            "columnName": "evolutionary_processes_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cultural_context_en",
+            "columnName": "cultural_context_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cultural_context_tr",
+            "columnName": "cultural_context_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "historical_usage_en",
+            "columnName": "historical_usage_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "historical_usage_tr",
+            "columnName": "historical_usage_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "threats_and_dangers_en",
+            "columnName": "threats_and_dangers_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "threats_and_dangers_tr",
+            "columnName": "threats_and_dangers_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_efforts_en",
+            "columnName": "conservation_efforts_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conservation_efforts_tr",
+            "columnName": "conservation_efforts_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "medicinal_uses_and_benefits_en",
+            "columnName": "medicinal_uses_and_benefits_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "medicinal_uses_and_benefits_tr",
+            "columnName": "medicinal_uses_and_benefits_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "potential_harm_and_side_effects_en",
+            "columnName": "potential_harm_and_side_effects_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "potential_harm_and_side_effects_tr",
+            "columnName": "potential_harm_and_side_effects_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "noteworthy_characteristics_en",
+            "columnName": "noteworthy_characteristics_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "noteworthy_characteristics_tr",
+            "columnName": "noteworthy_characteristics_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "surprising_facts_en",
+            "columnName": "surprising_facts_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "surprising_facts_tr",
+            "columnName": "surprising_facts_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "interesting_and_fun_facts_en",
+            "columnName": "interesting_and_fun_facts_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "interesting_and_fun_facts_tr",
+            "columnName": "interesting_and_fun_facts_tr",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Species",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "species_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "SpeciesHabitatCategories",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`category_id` INTEGER NOT NULL, `species_id` INTEGER NOT NULL, PRIMARY KEY(`category_id`, `species_id`))",
+        "fields": [
+          {
+            "fieldPath": "category_id",
+            "columnName": "category_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "species_id",
+            "columnName": "species_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "category_id",
+            "species_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "BackupMetas",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `fileName` TEXT NOT NULL, `updatedDate` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fileName",
+            "columnName": "fileName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedDate",
+            "columnName": "updatedDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "remote_keys",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`label` TEXT NOT NULL, `nextKey` TEXT, PRIMARY KEY(`label`))",
+        "fields": [
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nextKey",
+            "columnName": "nextKey",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "label"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [
+      {
+        "viewName": "listViews",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS select L.id, L.name, L.isRemovable, L.isArchive, L.pos listPos,\n     count(LS.speciesId) itemCounts, ifnull(max(LS.pos),0) contentMaxPos \n     from Lists L left join ListSpecies LS on  L.id = LS.listId\n     group by L.id"
+      },
+      {
+        "viewName": "HabitatKingdomView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT hc.*, s.kingdom_id FROM HabitatCategories hc\n        JOIN SpeciesHabitatCategories shc ON hc.id = shc.category_id\n        JOIN Species s ON shc.species_id = s.id"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fc49f3379098dbcba39e16d015c6999c')"
+    ]
+  }
+}

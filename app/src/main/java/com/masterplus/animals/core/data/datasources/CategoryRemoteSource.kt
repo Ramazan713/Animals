@@ -1,5 +1,7 @@
 package com.masterplus.animals.core.data.datasources
 
+import com.masterplus.animals.core.data.dtos.SpeciesDto
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.shared_features.database.entity_helper.ClassWithImageEmbedded
@@ -9,6 +11,19 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.OrderW
 import com.masterplus.animals.core.shared_features.database.entity_helper.PhylumWithImageEmbedded
 
 interface CategoryRemoteSource {
+
+    suspend fun getSpeciesByKingdom(
+        kingdomType: KingdomType,
+        limit: Int,
+        startAfter: Int?
+    ): DefaultResult<List<SpeciesDto>>
+
+    suspend fun getSpeciesCategories(
+        categoryType: CategoryType,
+        itemId: Int,
+        limit: Int,
+        startAfter: Int?
+    ): DefaultResult<List<SpeciesDto>>
 
     suspend fun getPhylums(
         kingdomType: KingdomType,

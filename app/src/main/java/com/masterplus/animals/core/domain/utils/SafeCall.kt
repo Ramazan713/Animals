@@ -31,6 +31,7 @@ suspend inline fun <reified T, E: Error> safeCall(
         throw e
     }
     catch (e: Exception){
+        println("AppXXXX: errxx: $e")
         onException(e)
     }
 }

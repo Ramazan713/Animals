@@ -10,18 +10,23 @@ import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity.RemoteKeyEntity
 import java.io.IOException
 
-@OptIn(ExperimentalPagingApi::class)
+
 abstract class BaseRemoteMediator<T: Any>(
-    protected val db: AppDatabase,
+    override val db: AppDatabase,
+): BaseRemoteMediator2<T, T>(db)
+
+@OptIn(ExperimentalPagingApi::class)
+abstract class BaseRemoteMediator2<T: Any, D: Any>(
+    protected open val db: AppDatabase,
 ): RemoteMediator<Int, T>() {
 
     abstract val saveRemoteKey: String
 
-    abstract suspend fun fetchData(startAfter: Int?): DefaultResult<List<T>>
+    abstract suspend fun fetchData(startAfter: Int?): DefaultResult<List<D>>
 
-    abstract fun getNextKey(items: List<T>): Int?
+    abstract fun getNextKey(items: List<D>): Int?
 
-    abstract suspend fun insertData(items: List<T>)
+    abstract suspend fun insertData(items: List<D>)
 
     open suspend fun clearTable(){}
 
@@ -52,9 +57,7 @@ abstract class BaseRemoteMediator<T: Any>(
                     }
                 }
             }
-
             val dataResponse = fetchData(loadKey).getSuccessData!!
-
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     clearTable()
@@ -73,6 +76,7 @@ abstract class BaseRemoteMediator<T: Any>(
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: Exception) {
+            println("AppXXXX errorx: $e")
             MediatorResult.Error(e)
         }
     }

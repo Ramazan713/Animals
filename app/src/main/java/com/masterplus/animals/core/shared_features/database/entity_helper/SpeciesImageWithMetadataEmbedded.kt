@@ -16,23 +16,3 @@ data class SpeciesImageWithMetadataEmbedded(
     )
     val imageWithMetadata: ImageWithMetadataEmbedded
 )
-
-//
-//data class SpeciesImageWithMetadataEmbedded(
-//    @Embedded
-//    val speciesImage: SpeciesImageEntity,
-//
-//    @Relation(
-//        entity = ImageEntity::class,
-//        parentColumn = "image_id",
-//        entityColumn = "id"
-//    )
-//    val image: ImageEntity,
-//
-//    @Relation(
-//        entity = ImageMetadataEntity::class,
-//        parentColumn = "image_id",
-//        entityColumn = "image_id"
-//    )
-//    val metadata: ImageMetadataEntity?
-//)

@@ -1,8 +1,22 @@
 package com.masterplus.animals.core.data.utils
 
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 
 object RemoteKeyUtil {
+
+    fun getSpeciesCategoryRemoteKey(
+        categoryType: CategoryType,
+        itemId: Int?,
+    ): String{
+        return "SpeciesCategoryKey-${categoryType.name.lowercase()}-${itemId ?: 0}"
+    }
+
+    fun getSpeciesKingdomRemoteKey(
+        kingdom: KingdomType,
+    ): String{
+        return "SpeciesKingdomKey-${kingdom.kingdomId}"
+    }
 
     fun getPhylumRemoteKey(
         kingdomType: KingdomType,
