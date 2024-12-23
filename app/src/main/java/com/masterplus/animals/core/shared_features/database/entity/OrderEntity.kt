@@ -8,16 +8,6 @@ import androidx.room.PrimaryKey
     tableName = "Orders",
     foreignKeys = [
         ForeignKey(
-            entity = ClassEntity::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("class_id"),
-        ),
-        ForeignKey(
-            entity = KingdomEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["kingdom_id"]
-        ),
-        ForeignKey(
             entity = ImageEntity::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("image_id"),

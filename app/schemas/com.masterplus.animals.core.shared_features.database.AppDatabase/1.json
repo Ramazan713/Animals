@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a8c6d2f13a478c1c2c61cf8134889dc5",
+    "identityHash": "35361453214e3ef9d806e5953b6136cc",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -474,7 +474,7 @@
       },
       {
         "tableName": "Classes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `class_en` TEXT NOT NULL, `class_tr` TEXT NOT NULL, `phylum_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`phylum_id`) REFERENCES `Phylums`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `class_en` TEXT NOT NULL, `class_tr` TEXT NOT NULL, `phylum_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -540,28 +540,6 @@
         "indices": [],
         "foreignKeys": [
           {
-            "table": "Phylums",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "phylum_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "Kingdoms",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "kingdom_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
             "table": "Images",
             "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
@@ -576,7 +554,7 @@
       },
       {
         "tableName": "Families",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `family_en` TEXT NOT NULL, `family_tr` TEXT NOT NULL, `order_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`order_id`) REFERENCES `Orders`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `family_en` TEXT NOT NULL, `family_tr` TEXT NOT NULL, `order_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -642,28 +620,6 @@
         "indices": [],
         "foreignKeys": [
           {
-            "table": "Orders",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "order_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "Kingdoms",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "kingdom_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
             "table": "Images",
             "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
@@ -728,7 +684,7 @@
       },
       {
         "tableName": "Orders",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `order_en` TEXT NOT NULL, `order_tr` TEXT NOT NULL, `class_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`class_id`) REFERENCES `Classes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `order_en` TEXT NOT NULL, `order_tr` TEXT NOT NULL, `class_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -794,28 +750,6 @@
         "indices": [],
         "foreignKeys": [
           {
-            "table": "Classes",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "class_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "Kingdoms",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "kingdom_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
             "table": "Images",
             "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
@@ -830,7 +764,7 @@
       },
       {
         "tableName": "Phylums",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `phylum_en` TEXT NOT NULL, `phylum_tr` TEXT NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `phylum_en` TEXT NOT NULL, `phylum_tr` TEXT NOT NULL, `kingdom_id` INTEGER NOT NULL, `image_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`image_id`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -878,17 +812,6 @@
         "indices": [],
         "foreignKeys": [
           {
-            "table": "Kingdoms",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "kingdom_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
             "table": "Images",
             "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
@@ -903,7 +826,7 @@
       },
       {
         "tableName": "Species",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`family_id`) REFERENCES `Families`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`kingdom_id`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -979,30 +902,7 @@
           ]
         },
         "indices": [],
-        "foreignKeys": [
-          {
-            "table": "Families",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "family_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "Kingdoms",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "kingdom_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "Lists",
@@ -1854,7 +1754,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a8c6d2f13a478c1c2c61cf8134889dc5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '35361453214e3ef9d806e5953b6136cc')"
     ]
   }
 }

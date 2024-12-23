@@ -6,18 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "Species",
-    foreignKeys = [
-        ForeignKey(
-            entity = FamilyEntity::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("family_id"),
-        ),
-        ForeignKey(
-            entity = KingdomEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["kingdom_id"],
-        ),
-    ]
 )
 data class SpeciesEntity(
     @PrimaryKey(autoGenerate = false)
