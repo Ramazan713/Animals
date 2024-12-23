@@ -10,6 +10,7 @@ import com.masterplus.animals.core.shared_features.database.dao.ListDao
 import com.masterplus.animals.core.shared_features.database.dao.ListSpeciesDao
 import com.masterplus.animals.core.shared_features.database.dao.LocalBackupDao
 import com.masterplus.animals.core.shared_features.database.dao.PlantDao
+import com.masterplus.animals.core.shared_features.database.dao.RemoteKeyDao
 import com.masterplus.animals.core.shared_features.database.dao.SavePointDao
 import com.masterplus.animals.core.shared_features.database.dao.SearchCategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.SearchSpeciesDao
@@ -28,6 +29,7 @@ import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEn
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
 import com.masterplus.animals.core.shared_features.database.entity.PlantEntity
+import com.masterplus.animals.core.shared_features.database.entity.RemoteKeyEntity
 import com.masterplus.animals.core.shared_features.database.entity.SavePointEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
@@ -43,7 +45,7 @@ import com.masterplus.trdictionary.core.data.local.services.ListViewDao
         HabitatCategoryEntity::class, OrderEntity::class, PhylumEntity::class,
         SpeciesEntity::class, ListEntity::class, ListSpeciesEntity::class, ImageEntity::class, ImageMetadataEntity::class,
         SavePointEntity::class, HistoryEntity::class, PlantEntity::class, SpeciesHabitatCategoryEntity::class,
-        BackupMetaEntity::class
+        BackupMetaEntity::class, RemoteKeyEntity::class
     ],
     views = [
         ListViewEntity::class, HabitatKingdomView::class
@@ -76,4 +78,6 @@ abstract class AppDatabase: RoomDatabase() {
     abstract val backupMetaDao: BackupMetaDao
 
     abstract val backupDao: LocalBackupDao
+
+    abstract val remoteKeyDao: RemoteKeyDao
 }

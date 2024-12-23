@@ -8,13 +8,19 @@ import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
+import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepo {
 
-    suspend fun getCategoryData(categoryType: CategoryType, limit: Int, language: LanguageEnum, kingdomType: KingdomType): List<CategoryData>
+    suspend fun getCategoryData(
+        categoryType: CategoryType,
+        limit: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType
+    ): DefaultResult<List<CategoryData>>
 
     suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): String?
 
@@ -29,7 +35,6 @@ interface CategoryRepo {
     fun getPagingOrdersWithClassId(classId: Int, pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>>
 
     fun getPagingFamiliesWithOrderId(orderId: Int, pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>>
-
 
 
     fun getPagingClasses(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<ClassModel>>

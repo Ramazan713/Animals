@@ -82,6 +82,7 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
 appcheck-debug = { module = "com.google.firebase:firebase-appcheck-debug" }
 
@@ -126,7 +127,8 @@ android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "android
 [bundles]
 firebase = [
     "firebase-auth", "firebase-analytics", "firebase-config", "firebase-crashlytics",
-    "firebase-perf", "firebase-storage", "appcheck-playintegrity", "appcheck-debug"
+    "firebase-perf", "firebase-storage", "appcheck-playintegrity", "appcheck-debug",
+    "firebase-firestore"
 ]
 datastore = [
     "datastore-core-android", "datastore-preferences"

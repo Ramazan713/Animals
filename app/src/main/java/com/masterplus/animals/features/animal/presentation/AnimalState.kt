@@ -1,5 +1,6 @@
 package com.masterplus.animals.features.animal.presentation
 
+import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
 import com.masterplus.animals.core.presentation.models.CategoryRowModel
@@ -12,4 +13,5 @@ data class AnimalState(
     val classes: CategoryDataRowModel = CategoryDataRowModel(),
     val orders: CategoryDataRowModel = CategoryDataRowModel(),
     val families: CategoryDataRowModel = CategoryDataRowModel(),
+    val message: UiText? = null
 )

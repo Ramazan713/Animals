@@ -39,6 +39,7 @@ import com.masterplus.animals.core.presentation.defaults.SettingTopBarMenuEnum
 import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItemDefaults
@@ -56,6 +57,10 @@ fun PlantPageRoot(
     onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ShowLifecycleToastMessage(state.message) {
+        viewModel.onAction(PlantAction.ClearMessage)
+    }
     PlantPage(
         state = state,
         onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,

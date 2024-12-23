@@ -45,5 +45,7 @@ val databaseModule = module {
 
     single { get<AppDatabase>().backupDao }
 
+    single { get<AppDatabase>().remoteKeyDao }
+
     singleOf(::TransactionProviderImpl).bind<TransactionProvider>()
 }
