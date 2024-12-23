@@ -34,7 +34,6 @@ import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabita
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 import com.masterplus.animals.core.shared_features.database.view.HabitatKingdomView
 import com.masterplus.animals.core.shared_features.database.view.ListViewEntity
-import com.masterplus.animals.core.shared_features.database.view.SpeciesRelationsView
 import com.masterplus.trdictionary.core.data.local.services.ListViewDao
 
 @Database(
@@ -47,7 +46,7 @@ import com.masterplus.trdictionary.core.data.local.services.ListViewDao
         BackupMetaEntity::class
     ],
     views = [
-        ListViewEntity::class, SpeciesRelationsView::class, HabitatKingdomView::class
+        ListViewEntity::class, HabitatKingdomView::class
     ]
 )
 abstract class AppDatabase: RoomDatabase() {

@@ -14,7 +14,6 @@ import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
-import com.masterplus.animals.core.shared_features.database.view.SpeciesRelationsView
 
 data class AnimalDetailEmbedded(
     @Embedded
@@ -27,46 +26,26 @@ data class AnimalDetailEmbedded(
     val animal: AnimalEntity,
 
     @Relation(
-        parentColumn = "id",
+        parentColumn = "phylum_id",
         entityColumn = "id",
-        associateBy = Junction(
-            value = SpeciesRelationsView::class,
-            parentColumn = "species_id",
-            entityColumn = "phylum_id"
-        )
     )
     val phylum: PhylumEntity,
 
     @Relation(
-        parentColumn = "id",
+        parentColumn = "class_id",
         entityColumn = "id",
-        associateBy = Junction(
-            value = SpeciesRelationsView::class,
-            parentColumn = "species_id",
-            entityColumn = "class_id"
-        )
     )
     val classEntity: ClassEntity,
 
     @Relation(
-        parentColumn = "id",
+        parentColumn = "order_id",
         entityColumn = "id",
-        associateBy = Junction(
-            value = SpeciesRelationsView::class,
-            parentColumn = "species_id",
-            entityColumn = "order_id"
-        )
     )
     val order: OrderEntity,
 
     @Relation(
-        parentColumn = "id",
+        parentColumn = "family_id",
         entityColumn = "id",
-        associateBy = Junction(
-            value = SpeciesRelationsView::class,
-            parentColumn = "species_id",
-            entityColumn = "family_id"
-        )
     )
     val family: FamilyEntity,
 

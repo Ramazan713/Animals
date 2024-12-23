@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "35361453214e3ef9d806e5953b6136cc",
+    "identityHash": "3f8f87a06e2931ff800c80471c1fd598",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -826,7 +826,7 @@
       },
       {
         "tableName": "Species",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `scientific_name` TEXT NOT NULL, `name_en` TEXT NOT NULL, `name_tr` TEXT NOT NULL, `family_id` INTEGER NOT NULL, `order_id` INTEGER NOT NULL, `class_id` INTEGER NOT NULL, `phylum_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, `introduction_en` TEXT NOT NULL, `introduction_tr` TEXT NOT NULL, `recognition_and_interaction` INTEGER, `updated_at` TEXT NOT NULL, `created_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -855,6 +855,24 @@
           {
             "fieldPath": "family_id",
             "columnName": "family_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order_id",
+            "columnName": "order_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "class_id",
+            "columnName": "class_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phylum_id",
+            "columnName": "phylum_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1657,7 +1675,7 @@
       },
       {
         "tableName": "SpeciesHabitatCategories",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`category_id` INTEGER NOT NULL, `species_id` INTEGER NOT NULL, PRIMARY KEY(`category_id`, `species_id`), FOREIGN KEY(`species_id`) REFERENCES `Species`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`category_id`) REFERENCES `HabitatCategories`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`category_id` INTEGER NOT NULL, `species_id` INTEGER NOT NULL, PRIMARY KEY(`category_id`, `species_id`))",
         "fields": [
           {
             "fieldPath": "category_id",
@@ -1680,30 +1698,7 @@
           ]
         },
         "indices": [],
-        "foreignKeys": [
-          {
-            "table": "Species",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "species_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "HabitatCategories",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "category_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "BackupMetas",
@@ -1744,17 +1739,13 @@
         "createSql": "CREATE VIEW `${VIEW_NAME}` AS select L.id, L.name, L.isRemovable, L.isArchive, L.pos listPos,\n     count(LS.speciesId) itemCounts, ifnull(max(LS.pos),0) contentMaxPos \n     from Lists L left join ListSpecies LS on  L.id = LS.listId\n     group by L.id"
       },
       {
-        "viewName": "SpeciesRelationsView",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS select K.id kingdom_id, P.id phylum_id, C.id class_id, O.id order_id, F.id family_id, \n        S.id species_id\n        FROM Kingdoms K\n        inner join Phylums P on K.id = P.kingdom_id\n        inner join Classes C on P.id = C.phylum_id\n        inner join Orders O on C.id = O.class_id\n        inner join Families F on O.id = F.order_id\n        inner join Species S  on F.id = S.family_id"
-      },
-      {
         "viewName": "HabitatKingdomView",
         "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT hc.*, s.kingdom_id FROM HabitatCategories hc\n        JOIN SpeciesHabitatCategories shc ON hc.id = shc.category_id\n        JOIN Species s ON shc.species_id = s.id"
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '35361453214e3ef9d806e5953b6136cc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3f8f87a06e2931ff800c80471c1fd598')"
     ]
   }
 }

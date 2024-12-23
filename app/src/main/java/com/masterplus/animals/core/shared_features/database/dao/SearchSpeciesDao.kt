@@ -28,38 +28,33 @@ interface SearchSpeciesDao {
 
     @Transaction
     @Query("""
-         select S.* from species S, speciesRelationsView SR
-        where SR.species_id = S.id and SR.order_id = :orderId and
-        (S.scientific_name like :query or S.name_tr like :query)
-        order by case  when scientific_name like :queryOrder then 1 when S.name_tr like :queryOrder then 2 else 3 end
+         select * from species where order_id = :orderId and (scientific_name like :query or name_tr like :query)
+        order by case  when scientific_name like :queryOrder then 1 when name_tr like :queryOrder then 2 else 3 end
     """)
     fun searchPagingSpeciesTrByOrderId(orderId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
-         select S.* from species S, speciesRelationsView SR
-        where SR.species_id = S.id and SR.order_id = :orderId and
-        (S.scientific_name like :query or S.name_en like :query)
-        order by case  when scientific_name like :queryOrder then 1 when S.name_en like :queryOrder then 2 else 3 end
+         select * from species where order_id = :orderId and
+        (scientific_name like :query or name_en like :query)
+        order by case  when scientific_name like :queryOrder then 1 when name_en like :queryOrder then 2 else 3 end
     """)
     fun searchPagingSpeciesEnByOrderId(orderId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
 
 
     @Transaction
     @Query("""
-        select S.* from species S, speciesRelationsView SR 
-        where SR.species_id = S.id and SR.class_id = :classId and
-        (S.scientific_name like :query or S.name_tr like :query)
-        order by case  when scientific_name like :queryOrder then 1 when S.name_tr like :queryOrder then 2 else 3 end
+        select * from species where class_id = :classId and
+        (scientific_name like :query or name_tr like :query)
+        order by case  when scientific_name like :queryOrder then 1 when name_tr like :queryOrder then 2 else 3 end
     """)
     fun searchPagingSpeciesTrByClassId(classId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
-        select S.* from species S, speciesRelationsView SR 
-        where SR.species_id = S.id and SR.class_id = :classId and
-        (S.scientific_name like :query or S.name_en like :query)
-        order by case  when scientific_name like :queryOrder then 1 when S.name_en like :queryOrder then 2 else 3 end
+        select * from species where class_id = :classId and
+        (scientific_name like :query or name_en like :query)
+        order by case  when scientific_name like :queryOrder then 1 when name_en like :queryOrder then 2 else 3 end
     """)
     fun searchPagingSpeciesEnByClassId(classId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
 
@@ -67,19 +62,17 @@ interface SearchSpeciesDao {
 
     @Transaction
     @Query("""
-        select S.* from species S, speciesRelationsView SR 
-        where SR.species_id = S.id and SR.family_id = :familyId and
-        (S.scientific_name like :query or S.name_tr like :query)
-        order by case  when scientific_name like :queryOrder then 1 when S.name_tr like :queryOrder then 2 else 3 end
+        select * from species where family_id = :familyId and
+        (scientific_name like :query or name_tr like :query)
+        order by case  when scientific_name like :queryOrder then 1 when name_tr like :queryOrder then 2 else 3 end
     """)
     fun searchPagingSpeciesTrByFamilyId(familyId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
-        select S.* from species S, speciesRelationsView SR 
-        where SR.species_id = S.id and SR.family_id = :familyId and
-        (S.scientific_name like :query or S.name_en like :query)
-        order by case  when scientific_name like :queryOrder then 1 when S.name_en like :queryOrder then 2 else 3 end
+        select * from species where family_id = :familyId and
+        (scientific_name like :query or name_en like :query)
+        order by case  when scientific_name like :queryOrder then 1 when name_en like :queryOrder then 2 else 3 end
     """)
     fun searchPagingSpeciesEnByFamilyId(familyId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
 

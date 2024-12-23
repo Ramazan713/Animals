@@ -28,22 +28,19 @@ interface SpeciesDao {
 
     @Transaction
     @Query("""
-        select S.* from species S, speciesRelationsView SR 
-        where SR.species_id = S.id and SR.class_id = :classId and S.kingdom_id = :kingdomId order by S.id
+        select * from species where class_id = :classId and kingdom_id = :kingdomId order by id
     """)
     fun getPagingSpeciesByClassId(classId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
-        select S.* from species S, speciesRelationsView SR 
-        where SR.species_id = S.id and SR.family_id = :familyId and S.kingdom_id = :kingdomId order by S.id
+        select * from species where family_id = :familyId and kingdom_id = :kingdomId order by id
     """)
     fun getPagingSpeciesByFamilyId(familyId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
-        select S.* from species S, speciesRelationsView SR
-        where SR.species_id = S.id and SR.order_id = :orderId and S.kingdom_id = :kingdomId order by S.id
+        select * from species where order_id = :orderId and kingdom_id = :kingdomId order by id
     """)
     fun getPagingSpeciesByOrderId(orderId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
