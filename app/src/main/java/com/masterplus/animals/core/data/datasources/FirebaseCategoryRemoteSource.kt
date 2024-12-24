@@ -54,7 +54,7 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
             CategoryType.Class -> Filter.equalTo("class_id", itemId)
             CategoryType.Order -> Filter.equalTo("order_id", itemId)
             CategoryType.Family -> Filter.equalTo("family_id", itemId)
-            CategoryType.Habitat -> Filter.inArray("habitats", listOf(itemId))
+            CategoryType.Habitat -> Filter.arrayContains("habitats", itemId)
             else -> null
         }
         return safeCall {
@@ -63,6 +63,18 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
                 .limit(limit.toLong())
                 .orderBy("id")
                 .startAfter(startAfter)
+                .get()
+                .await()
+                .toObjects(SpeciesDto::class.java)
+        }
+    }
+
+    override suspend fun getSpecies(itemIds: List<Int>, limit: Int): DefaultResult<List<SpeciesDto>> {
+        return safeCall {
+            Firebase.firestore.collection("Species")
+                .whereIn("id", itemIds)
+                .limit(limit.toLong())
+                .orderBy("id")
                 .get()
                 .await()
                 .toObjects(SpeciesDto::class.java)
@@ -246,7 +258,7 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
     ): DefaultResult<List<HabitatWithImageEmbedded>> {
         return safeCall {
             Firebase.firestore.collection("Habitats")
-                .where(Filter.inArray("id", itemIds))
+                .whereIn("id", itemIds)
                 .get().await().toObjects(HabitatCategoryDto::class.java)
                 .map { it.toHabitatCategoryWithImageEmbedded(label) }
         }

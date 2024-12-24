@@ -185,7 +185,7 @@ fun SpeciesListPage(
             ) {
                 items(
                     count = pagingItems.itemCount,
-                    key = { pagingItems[it]?.id ?: it }
+                    key = { "${pagingItems[it]?.id}-$it" }
                 ){ index ->
                     val item = pagingItems[index]
                     if(item != null){

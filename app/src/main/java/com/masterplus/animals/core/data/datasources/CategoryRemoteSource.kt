@@ -26,6 +26,11 @@ interface CategoryRemoteSource {
         startAfter: Int?
     ): DefaultResult<List<SpeciesDto>>
 
+    suspend fun getSpecies(
+        itemIds: List<Int>,
+        limit: Int
+    ): DefaultResult<List<SpeciesDto>>
+
     suspend fun getPhylums(
         kingdomType: KingdomType,
         limit: Int,

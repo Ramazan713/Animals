@@ -9,6 +9,7 @@ import com.masterplus.animals.R
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.mapper.toSpecies
 import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
+import com.masterplus.animals.core.data.mediators.SpeciesListRemoteMediator
 import com.masterplus.animals.core.data.mediators.SpeciesCategoryRemoteMediator
 import com.masterplus.animals.core.data.mediators.SpeciesKingdomRemoteMediator
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
@@ -52,20 +53,32 @@ class SpeciesRepoImpl(
         return Pager(
             config = PagingConfig(pageSize = pageSize),
             pagingSourceFactory = {
-                val kingdomId = kingdom?.kingdomId ?: 0
-                if(itemId == null){
-                    return@Pager speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdom!!))
+                when {
+                    itemId == null && kingdom != null -> {
+                        speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdom))
+                    }
+                    categoryType == CategoryType.List && itemId != null-> {
+                        speciesDao.getPagingSpeciesByListId(itemId)
+                    }
+                    else -> {
+                        speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesCategoryRemoteKey(
+                            categoryType = categoryType,
+                            itemId = itemId
+                        ))
+                    }
                 }
-                speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesCategoryRemoteKey(
-                    categoryType = categoryType,
-                    itemId = itemId
-                ))
             },
             remoteMediator = when {
                 itemId == null -> SpeciesKingdomRemoteMediator(
                     kingdom = kingdom ?: KingdomType.DEFAULT,
                     limit = pageSize,
                     db = db,
+                    categoryRemoteSource = categoryRemoteSource
+                )
+                categoryType == CategoryType.List -> SpeciesListRemoteMediator(
+                    db = db,
+                    listId = itemId,
+                    limit = pageSize,
                     categoryRemoteSource = categoryRemoteSource
                 )
                 else -> SpeciesCategoryRemoteMediator(

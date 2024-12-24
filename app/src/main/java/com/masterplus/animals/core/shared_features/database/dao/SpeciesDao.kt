@@ -6,10 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
-import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
-import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
-import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
@@ -61,8 +57,8 @@ interface SpeciesDao {
 
     @Transaction
     @Query("""
-        select S.* from species S, ListSpecies LA 
-        where S.id = LA.speciesId and LA.listId = :listId order by S.id
+        select distinct S.* from species S, ListSpecies LA 
+        where S.id = LA.speciesId and LA.listId = :listId group by S.id order by S.id
     """)
     fun getPagingSpeciesByListId(listId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 

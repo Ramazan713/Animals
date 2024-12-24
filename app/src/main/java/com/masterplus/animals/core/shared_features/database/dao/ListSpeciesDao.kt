@@ -24,6 +24,12 @@ interface ListSpeciesDao {
     """)
     suspend fun getListSpeciesByListId(listId: Int): List<ListSpeciesEntity>
 
+    @Query("""
+        SELECT speciesId FROM listspecies ls WHERE listId = :listId
+        AND NOT EXISTS (SELECT 1 FROM species s WHERE s.id = ls.speciesId) limit :limit
+    """)
+    suspend fun getNotExistsSpeciesIds(listId: Int, limit: Int): List<Int>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertListSpecies(listSpecies: ListSpeciesEntity)
