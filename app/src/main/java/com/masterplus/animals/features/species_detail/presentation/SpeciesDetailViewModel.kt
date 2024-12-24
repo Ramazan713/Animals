@@ -55,6 +55,8 @@ class SpeciesDetailViewModel(
                     dialogEvent = action.dialogEvent
                 ) }
             }
+
+            SpeciesDetailAction.ClearMessage -> _state.update { it.copy(message = null) }
         }
     }
 
@@ -95,6 +97,14 @@ class SpeciesDetailViewModel(
         _state.update { it.copy(isLoading = true) }
         val species = speciesRepo.getSpeciesById(args.speciesId, language)
         if(species != null){
+            val checkResult = speciesRepo.checkSpeciesDetailData(species)
+            if (checkResult.isError){
+                _state.update { it.copy(
+                    isLoading = false,
+                    message = checkResult.getFailureError?.text
+                ) }
+                return
+            }
             when(species.kingdomType){
                 KingdomType.Animals -> {
                     animalRepo.getAnimalDetailBySpeciesId(args.speciesId, language)?.let { animalDetail ->
@@ -123,10 +133,6 @@ class SpeciesDetailViewModel(
                 }
             }
         }
-//        args.speciesId
-//        _state.update { it.copy(
-//            listIdControl = if(args.categoryType == CategoryType.List) args.realItemId else null
-//        ) }
         _state.update { it.copy(
             isLoading = false
         ) }

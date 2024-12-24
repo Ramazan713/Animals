@@ -23,7 +23,8 @@ class HabitatRemoteMediator(
         return categoryRemoteSource.getHabitats(
             kingdomType = kingdomType,
             limit = limit,
-            startAfter = startAfter
+            startAfter = startAfter,
+            label = saveRemoteKey
         )
     }
 
@@ -36,6 +37,6 @@ class HabitatRemoteMediator(
     }
 
     override suspend fun clearTable() {
-        db.categoryDao.deleteHabitats(kingdomId = kingdomType.kingdomId)
+        db.categoryDao.deleteHabitats(saveRemoteKey)
     }
 }

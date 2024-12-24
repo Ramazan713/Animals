@@ -26,7 +26,8 @@ class ClassRemoteMediator(
             kingdomType = kingdomType,
             limit = limit,
             phylumId = phylumId,
-            startAfter = startAfter
+            startAfter = startAfter,
+            label = saveRemoteKey
         )
     }
 
@@ -39,11 +40,7 @@ class ClassRemoteMediator(
     }
 
     override suspend fun clearTable() {
-        if(phylumId != null){
-            db.categoryDao.deleteClasses(phylumId, kingdomType.kingdomId)
-        }else{
-            db.categoryDao.deleteClasses(kingdomType.kingdomId)
-        }
+        db.categoryDao.deleteClasses(saveRemoteKey)
     }
 
 }

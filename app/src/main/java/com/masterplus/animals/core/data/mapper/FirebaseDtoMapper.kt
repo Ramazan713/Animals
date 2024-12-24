@@ -22,16 +22,16 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.OrderW
 import com.masterplus.animals.core.shared_features.database.entity_helper.PhylumWithImageEmbedded
 
 
-fun ClassDto.toClassWithImageEmbedded(): ClassWithImageEmbedded{
+fun ClassDto.toClassWithImageEmbedded(label: String): ClassWithImageEmbedded{
     val imageModel = image?.toImageEntity()
     val metadata = image?.let { it.metadata?.toImageMetadataEntity(it.id) }
     return ClassWithImageEmbedded(
-        classEntity = toClassEntity(),
+        classEntity = toClassEntity(label),
         image = imageModel?.let { ImageWithMetadataEmbedded(it, metadata) }
     )
 }
 
-fun ClassDto.toClassEntity(): ClassEntity{
+fun ClassDto.toClassEntity(label: String): ClassEntity{
     return ClassEntity(
         id = id,
         class_en = class_en,
@@ -41,12 +41,13 @@ fun ClassDto.toClassEntity(): ClassEntity{
         kingdom_id = kingdom_id,
         scientific_name = scientific_name,
         created_at = "",
-        updated_at = ""
+        updated_at = "",
+        label = label
     )
 }
 
 
-fun FamilyDto.toFamilyEntity(): FamilyEntity {
+fun FamilyDto.toFamilyEntity(label: String): FamilyEntity {
     return FamilyEntity(
         id = id,
         family_en = family_en,
@@ -56,13 +57,14 @@ fun FamilyDto.toFamilyEntity(): FamilyEntity {
         scientific_name = scientific_name,
         image_id = image?.id,
         created_at = "",
-        updated_at = ""
+        updated_at = "",
+        label = label
     )
 }
 
-fun FamilyDto.toFamilyWithImageEmbedded(): FamilyWithImageEmbedded {
+fun FamilyDto.toFamilyWithImageEmbedded(label: String): FamilyWithImageEmbedded {
     return FamilyWithImageEmbedded(
-        family = toFamilyEntity(),
+        family = toFamilyEntity(label),
         image = image?.toImageWithMetadata()
     )
 }
@@ -70,25 +72,26 @@ fun FamilyDto.toFamilyWithImageEmbedded(): FamilyWithImageEmbedded {
 
 
 
-fun HabitatCategoryDto.toHabitatCategoryEntity(): HabitatCategoryEntity {
+fun HabitatCategoryDto.toHabitatCategoryEntity(label: String): HabitatCategoryEntity {
     return HabitatCategoryEntity(
         id = id,
         habitat_category_en = habitat_category_en,
         habitat_category_tr = habitat_category_tr,
         image_id = image?.id,
+        label = label
     )
 }
 
-fun HabitatCategoryDto.toHabitatCategoryWithImageEmbedded(): HabitatWithImageEmbedded {
+fun HabitatCategoryDto.toHabitatCategoryWithImageEmbedded(label: String): HabitatWithImageEmbedded {
     return HabitatWithImageEmbedded(
-        habitat = toHabitatCategoryEntity(),
+        habitat = toHabitatCategoryEntity(label),
         image = image?.toImageWithMetadata()
     )
 }
 
 
 
-fun PhylumDto.toPhylumEntity(): PhylumEntity {
+fun PhylumDto.toPhylumEntity(label: String): PhylumEntity {
     return PhylumEntity(
         id = id,
         kingdom_id = kingdom_id,
@@ -96,18 +99,19 @@ fun PhylumDto.toPhylumEntity(): PhylumEntity {
         phylum_tr = phylum_tr,
         scientific_name = scientific_name,
         image_id = image?.id,
+        label = label
     )
 }
 
-fun PhylumDto.toPhylumWithImageEmbedded(): PhylumWithImageEmbedded {
+fun PhylumDto.toPhylumWithImageEmbedded(label: String): PhylumWithImageEmbedded {
     return PhylumWithImageEmbedded(
-        phylum = toPhylumEntity(),
+        phylum = toPhylumEntity(label),
         image = image?.toImageWithMetadata()
     )
 }
 
 
-fun OrderDto.toOrderEntity(): OrderEntity {
+fun OrderDto.toOrderEntity(label: String): OrderEntity {
     return OrderEntity(
         id = id,
         class_id = class_id,
@@ -117,13 +121,14 @@ fun OrderDto.toOrderEntity(): OrderEntity {
         scientific_name = scientific_name,
         image_id = image?.id,
         created_at = "",
-        updated_at = ""
+        updated_at = "",
+        label = label
     )
 }
 
-fun OrderDto.toOrderWithImageEmbedded(): OrderWithImageEmbedded {
+fun OrderDto.toOrderWithImageEmbedded(label: String): OrderWithImageEmbedded {
     return OrderWithImageEmbedded(
-        order = toOrderEntity(),
+        order = toOrderEntity(label),
         image = image?.toImageWithMetadata()
     )
 }

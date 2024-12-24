@@ -9,14 +9,15 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = SpeciesEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["species_id"],
+            parentColumns = ["id", "label"],
+            childColumns = ["species_id", "label"],
         )
     ]
 )
 data class PlantEntity(
     @PrimaryKey(autoGenerate = false)
     val id: Int?,
+    val label: String,
     val species_id: Int,
     val size_c_en: String?,
     val size_c_tr: String?,

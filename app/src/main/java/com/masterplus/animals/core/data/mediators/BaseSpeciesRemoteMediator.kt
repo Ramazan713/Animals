@@ -13,11 +13,13 @@ abstract class BaseSpeciesRemoteMediator<T: Any>(
 ): BaseRemoteMediator2<T, SpeciesDto>(db) {
 
     override suspend fun insertData(items: List<SpeciesDto>) {
-        val species = items.map { it.toSpeciesEntity() }
+        val label = saveRemoteKey
+
+        val species = items.map { it.toSpeciesEntity(label) }
         val speciesHabitats = items.flatMap { it.toSpeciesHabitatCategoryEntity() }
-        val animals = items.mapNotNull { it.animalia?.toAnimalEntity(it.id) }
-        val plants = items.mapNotNull { it.plantae?.toPlantEntity(it.id) }
-        val speciesImageWithMetadata = items.flatMap { it.toSpeciesImageWithMetadataEmbedded() }
+        val animals = items.mapNotNull { it.animalia?.toAnimalEntity(it.id, label) }
+        val plants = items.mapNotNull { it.plantae?.toPlantEntity(it.id, label) }
+        val speciesImageWithMetadata = items.flatMap { it.toSpeciesImageWithMetadataEmbedded(label) }
         val images = speciesImageWithMetadata.map { it.imageWithMetadata.image }
         val imageMetadatas = speciesImageWithMetadata.mapNotNull { it.imageWithMetadata.metadata }
         val speciesImages = speciesImageWithMetadata.map { it.speciesImage }

@@ -4,6 +4,7 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 
 object RemoteKeyUtil {
+    const val DEFAULT = "default"
 
     fun getSpeciesCategoryRemoteKey(
         categoryType: CategoryType,

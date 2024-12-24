@@ -21,99 +21,114 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.Phylum
 
 @Dao
 interface CategoryDao {
+
+    @Query("""
+        select * from phylums where id = :phylumId limit 1
+    """)
+    suspend fun getPhylumWithId2(phylumId: Int): PhylumEntity?
+
     @Transaction
     @Query("""
-        select * from classes where id = :classId
+        select * from classes where id = :classId limit 1
     """)
     suspend fun getClassWithId(classId: Int): ClassWithImageEmbedded?
 
+    @Query("""
+        select * from classes where id = :classId limit 1
+    """)
+    suspend fun getClassWithId2(classId: Int): ClassEntity?
+
     @Transaction
     @Query("""
-        select * from orders where id = :orderId
+        select * from orders where id = :orderId limit 1
     """)
     suspend fun getOrderWithId(orderId: Int): OrderWithImageEmbedded?
 
+    @Query("""
+        select * from orders where id = :orderId limit 1
+    """)
+    suspend fun getOrderWithId2(orderId: Int): OrderEntity?
+
     @Transaction
     @Query("""
-        select * from families where id = :familyId
+        select * from families where id = :familyId limit 1
     """)
     suspend fun getFamilyWithId(familyId: Int): FamilyWithImageEmbedded?
 
+    @Query("""
+        select * from families where id = :familyId limit 1
+    """)
+    suspend fun getFamilyWithId2(familyId: Int): FamilyEntity?
+
+
     @Transaction
     @Query("""
-        select * from habitatcategories where id = :habitatCategoryId
+        select * from habitatcategories where id = :habitatCategoryId limit 1
     """)
     suspend fun getHabitatCategoryWithId(habitatCategoryId: Int): HabitatWithImageEmbedded?
 
+    @Query("""
+        select * from habitatcategories where id = :habitatCategoryId limit 1
+    """)
+    suspend fun getHabitatCategoryWithId2(habitatCategoryId: Int): HabitatCategoryEntity?
+
 
     @Transaction
     @Query("""
-        select * from classes where kingdom_id = :kingdomId
+        select * from classes where label = :label
         order by id asc limit :limit
     """)
-    suspend fun getClasses(limit: Int, kingdomId: Int): List<ClassWithImageEmbedded>
+    suspend fun getClasses(limit: Int, label: String): List<ClassWithImageEmbedded>
 
     @Transaction
     @Query("""
-        select * from classes where kingdom_id = :kingdomId order by id asc
+        select * from classes where label = :label  order by id asc
     """)
-    fun getPagingClasses(kingdomId: Int): PagingSource<Int, ClassWithImageEmbedded>
+    fun getPagingClasses(label: String): PagingSource<Int, ClassWithImageEmbedded>
 
 
     @Transaction
     @Query("""
-        select * from families where kingdom_id = :kingdomId
+        select * from families where label = :label
         order by id asc limit :limit
     """)
-    suspend fun getFamilies(limit: Int, kingdomId: Int): List<FamilyWithImageEmbedded>
+    suspend fun getFamilies(limit: Int, label: String): List<FamilyWithImageEmbedded>
 
     @Transaction
     @Query("""
-        select * from families where kingdom_id = :kingdomId and order_id = :orderId order by id asc
-    """)
-    fun getPagingFamiliesWithOrderId(orderId: Int, kingdomId: Int): PagingSource<Int, FamilyWithImageEmbedded>
-
-    @Transaction
-    @Query("""
-        select * from families where kingdom_id = :kingdomId
+        select * from families where label = :label
         order by id asc
     """)
-    fun getPagingFamilies(kingdomId: Int): PagingSource<Int, FamilyWithImageEmbedded>
+    fun getPagingFamilies(label: String): PagingSource<Int, FamilyWithImageEmbedded>
 
 
     @Transaction
     @Query("""
-        select * from habitatcategories order by id asc limit :limit
+        select * from habitatcategories where label = :label order by id asc limit :limit
     """)
-    suspend fun getHabitatCategories(limit: Int): List<HabitatWithImageEmbedded>
+    suspend fun getHabitatCategories(limit: Int, label: String): List<HabitatWithImageEmbedded>
 
 
     @Transaction
     @Query("""
-        select * from orders where kingdom_id = :kingdomId
+        select * from orders where label = :label
         order by id asc limit :limit
     """)
-    suspend fun getOrders(limit: Int, kingdomId: Int): List<OrderWithImageEmbedded>
+    suspend fun getOrders(limit: Int, label: String): List<OrderWithImageEmbedded>
+
 
     @Transaction
     @Query("""
-        select * from orders where kingdom_id = :kingdomId and class_id = :classId order by id asc
-    """)
-    fun getPagingOrdersWithClassId(classId: Int, kingdomId: Int): PagingSource<Int, OrderWithImageEmbedded>
-
-    @Transaction
-    @Query("""
-        select * from orders where kingdom_id = :kingdomId 
+        select * from orders where label = :label
         order by id asc
     """)
-    fun getPagingOrders(kingdomId: Int): PagingSource<Int, OrderWithImageEmbedded>
+    fun getPagingOrders(label: String): PagingSource<Int, OrderWithImageEmbedded>
 
     @Transaction
     @Query("""
-        select * from habitatkingdomview where kingdom_id = :kingdomId order by id asc
+        select * from habitatkingdomview where label = :label order by id asc
     """)
-    fun getPagingHabitats(kingdomId: Int): PagingSource<Int, HabitatWithImageEmbedded>
-
+    fun getPagingHabitats(label: String): PagingSource<Int, HabitatWithImageEmbedded>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPhylums(phylums: List<PhylumEntity>)
@@ -188,30 +203,18 @@ interface CategoryDao {
     }
 
 
-    @Query("delete from phylums where kingdom_id = :kingdomId")
-    suspend fun deletePhylums(kingdomId: Int)
+    @Query("delete from phylums where label = :label")
+    suspend fun deletePhylums(label: String)
 
-    @Query("delete from classes where kingdom_id = :kingdomId")
-    suspend fun deleteClasses(kingdomId: Int)
+    @Query("delete from classes where label = :label")
+    suspend fun deleteClasses(label: String)
 
-    @Query("delete from classes where phylum_id = :phylumId and kingdom_id = :kingdomId")
-    suspend fun deleteClasses(phylumId: Int, kingdomId: Int)
+    @Query("delete from orders where label = :label")
+    suspend fun deleteOrders(label: String)
 
+    @Query("delete from families where label = :label")
+    suspend fun deleteFamilies(label: String)
 
-    @Query("delete from orders where kingdom_id = :kingdomId")
-    suspend fun deleteOrders(kingdomId: Int)
-
-    @Query("delete from orders where class_id = :classId and kingdom_id = :kingdomId")
-    suspend fun deleteOrders(classId: Int, kingdomId: Int)
-
-
-    @Query("delete from families where kingdom_id = :kingdomId")
-    suspend fun deleteFamilies(kingdomId: Int)
-
-    @Query("delete from families where order_id = :orderId and kingdom_id = :kingdomId")
-    suspend fun deleteFamilies(orderId: Int, kingdomId: Int)
-
-
-    @Query("delete from habitatcategories where id in (select id from habitatkingdomview where kingdom_id = :kingdomId)")
-    suspend fun deleteHabitats(kingdomId: Int)
+    @Query("delete from habitatcategories where label = :label")
+    suspend fun deleteHabitats(label: String)
 }

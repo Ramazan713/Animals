@@ -16,6 +16,9 @@ fun SpeciesEntity.toSpecies(
         scientificName = scientific_name,
         familyId = family_id,
         recognitionAndInteraction = recognition_and_interaction,
-        kingdomType = KingdomType.fromKingdomId(kingdom_id)
+        kingdomType = KingdomType.fromKingdomId(kingdom_id),
+        orderId = order_id,
+        phylumId = phylum_id,
+        classId = class_id
     )
 }

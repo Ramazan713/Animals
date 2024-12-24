@@ -12,11 +12,12 @@ import androidx.room.PrimaryKey
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("image_id"),
         )
-    ]
+    ],
+    primaryKeys = ["id", "label"]
 )
 data class HabitatCategoryEntity(
-    @PrimaryKey
     val id: Int,
+    val label: String,
     val habitat_category_en: String,
     val habitat_category_tr: String,
     val image_id: Int?,

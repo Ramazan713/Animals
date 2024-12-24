@@ -11,6 +11,7 @@ import androidx.room.DatabaseView
     """)
 data class HabitatKingdomView(
     val id: Int,
+    val label: String,
     val habitat_category_en: String,
     val habitat_category_tr: String,
     val image_id: Int?,

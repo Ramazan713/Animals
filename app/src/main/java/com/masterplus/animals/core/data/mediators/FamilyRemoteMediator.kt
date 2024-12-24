@@ -26,7 +26,8 @@ class FamilyRemoteMediator(
             kingdomType = kingdomType,
             limit = limit,
             orderId = orderId,
-            startAfter = startAfter
+            startAfter = startAfter,
+            label = saveRemoteKey
         )
     }
 
@@ -39,10 +40,6 @@ class FamilyRemoteMediator(
     }
 
     override suspend fun clearTable() {
-        if(orderId != null){
-            db.categoryDao.deleteFamilies(orderId, kingdomType.kingdomId)
-        }else{
-            db.categoryDao.deleteFamilies(kingdomType.kingdomId)
-        }
+        db.categoryDao.deleteFamilies(saveRemoteKey)
     }
 }

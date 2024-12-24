@@ -7,4 +7,6 @@ sealed interface SpeciesDetailAction {
     data class ChangePage(val page: SpeciesInfoPageEnum): SpeciesDetailAction
 
     data class ShowDialog(val dialogEvent: SpeciesDetailDialogEvent?): SpeciesDetailAction
+
+    data object ClearMessage: SpeciesDetailAction
 }

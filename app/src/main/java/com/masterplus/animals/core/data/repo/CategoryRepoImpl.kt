@@ -15,6 +15,7 @@ import com.masterplus.animals.core.data.mediators.ClassRemoteMediator
 import com.masterplus.animals.core.data.mediators.FamilyRemoteMediator
 import com.masterplus.animals.core.data.mediators.HabitatRemoteMediator
 import com.masterplus.animals.core.data.mediators.OrderRemoteMediator
+import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
@@ -52,7 +53,7 @@ class CategoryRepoImpl constructor(
         return when(categoryType){
             CategoryType.Habitat -> {
                 fetchWithFallback(
-                    localFetch = { categoryDao.getHabitatCategories(limit) },
+                    localFetch = { categoryDao.getHabitatCategories(limit, RemoteKeyUtil.getHabitatRemoteKey(kingdomType)) },
                     remoteFetch = {
                         categoryRemoteRepo.getHabitats(kingdomType = kingdomType, limit = limit)
                     },
@@ -61,7 +62,7 @@ class CategoryRepoImpl constructor(
             }
             CategoryType.Class -> {
                 fetchWithFallback(
-                    localFetch = { categoryDao.getClasses(limit, kingdomId) },
+                    localFetch = { categoryDao.getClasses(limit, RemoteKeyUtil.getClassRemoteKey(kingdomType, null)) },
                     remoteFetch = {
                         categoryRemoteRepo.getClasses(kingdomType = kingdomType, limit = limit,)
                     },
@@ -70,7 +71,7 @@ class CategoryRepoImpl constructor(
             }
             CategoryType.Order -> {
                 fetchWithFallback(
-                    localFetch = { categoryDao.getOrders(limit, kingdomId) },
+                    localFetch = { categoryDao.getOrders(limit, RemoteKeyUtil.getOrderRemoteKey(kingdomType, null)) },
                     remoteFetch = {
                         categoryRemoteRepo.getOrders(kingdomType = kingdomType, limit = limit,)
                     },
@@ -79,7 +80,7 @@ class CategoryRepoImpl constructor(
             }
             CategoryType.Family -> {
                 fetchWithFallback(
-                    localFetch = { categoryDao.getFamilies(limit, kingdomId) },
+                    localFetch = { categoryDao.getFamilies(limit, RemoteKeyUtil.getFamilyRemoteKey(kingdomType, null)) },
                     remoteFetch = {
                         categoryRemoteRepo.getFamilies(kingdomType = kingdomType, limit = limit,)
                     },
@@ -142,7 +143,7 @@ class CategoryRepoImpl constructor(
     ): Flow<PagingData<OrderModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingOrdersWithClassId(classId, kingdomType.kingdomId) },
+            pagingSourceFactory = { categoryDao.getPagingOrders(RemoteKeyUtil.getOrderRemoteKey(kingdomType, classId)) },
             remoteMediator = OrderRemoteMediator(
                 db = db,
                 kingdomType = kingdomType,
@@ -162,7 +163,7 @@ class CategoryRepoImpl constructor(
     ): Flow<PagingData<FamilyModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingFamiliesWithOrderId(orderId, kingdomType.kingdomId) },
+            pagingSourceFactory = { categoryDao.getPagingFamilies(RemoteKeyUtil.getFamilyRemoteKey(kingdomType, orderId)) },
             remoteMediator = FamilyRemoteMediator(
                 db = db,
                 kingdomType = kingdomType,
@@ -177,7 +178,7 @@ class CategoryRepoImpl constructor(
     override fun getPagingClasses(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<ClassModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingClasses(kingdomType.kingdomId) },
+            pagingSourceFactory = { categoryDao.getPagingClasses(RemoteKeyUtil.getClassRemoteKey(kingdomType, null)) },
             remoteMediator = ClassRemoteMediator(
                 db = db,
                 kingdomType = kingdomType,
@@ -192,7 +193,7 @@ class CategoryRepoImpl constructor(
     override fun getPagingOrders(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingOrders(kingdomType.kingdomId) },
+            pagingSourceFactory = { categoryDao.getPagingOrders(RemoteKeyUtil.getOrderRemoteKey(kingdomType, null)) },
             remoteMediator = OrderRemoteMediator(
                 db = db,
                 kingdomType = kingdomType,
@@ -211,7 +212,7 @@ class CategoryRepoImpl constructor(
     ): Flow<PagingData<HabitatCategoryModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingHabitats(kingdomId = kingdomType.kingdomId) },
+            pagingSourceFactory = { categoryDao.getPagingHabitats(RemoteKeyUtil.getHabitatRemoteKey(kingdomType)) },
             remoteMediator = HabitatRemoteMediator(
                 db = db,
                 kingdomType = kingdomType,
@@ -225,7 +226,7 @@ class CategoryRepoImpl constructor(
     override fun getPagingFamilies(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
-            pagingSourceFactory = { categoryDao.getPagingFamilies(kingdomType.kingdomId) },
+            pagingSourceFactory = { categoryDao.getPagingFamilies(RemoteKeyUtil.getFamilyRemoteKey(kingdomType, null)) },
             remoteMediator = FamilyRemoteMediator(
                 db = db,
                 kingdomType = kingdomType,

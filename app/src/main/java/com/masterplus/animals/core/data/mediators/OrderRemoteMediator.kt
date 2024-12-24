@@ -26,7 +26,8 @@ class OrderRemoteMediator(
             kingdomType = kingdomType,
             limit = limit,
             classId = classId,
-            startAfter = startAfter
+            startAfter = startAfter,
+            label = saveRemoteKey
         )
     }
 
@@ -39,10 +40,6 @@ class OrderRemoteMediator(
     }
 
     override suspend fun clearTable() {
-        if(classId != null){
-            db.categoryDao.deleteOrders(classId, kingdomType.kingdomId)
-        }else{
-            db.categoryDao.deleteOrders(kingdomType.kingdomId)
-        }
+        db.categoryDao.deleteOrders(saveRemoteKey)
     }
 }

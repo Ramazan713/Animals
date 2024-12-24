@@ -32,7 +32,8 @@ class FirebaseCategoryRemoteRepo(
             kingdomType = kingdomType,
             limit = limit,
             phylumId = phylumId,
-            startAfter = nextKey
+            startAfter = nextKey,
+            label = saveKey
         )
         if(response.isError) return response.map {  }
 
@@ -60,7 +61,8 @@ class FirebaseCategoryRemoteRepo(
         val response = categoryRemoteSource.getPhylums(
             kingdomType = kingdomType,
             limit = limit,
-            startAfter = nextKey
+            startAfter = nextKey,
+            label = saveKey
         )
         if(response.isError) return response.map {  }
 
@@ -91,7 +93,8 @@ class FirebaseCategoryRemoteRepo(
             kingdomType = kingdomType,
             limit = limit,
             classId = classId,
-            startAfter = nextKey
+            startAfter = nextKey,
+            label = saveKey
         )
         if(response.isError) return response.map {  }
 
@@ -122,7 +125,8 @@ class FirebaseCategoryRemoteRepo(
             kingdomType = kingdomType,
             limit = limit,
             orderId = orderId,
-            startAfter = nextKey
+            startAfter = nextKey,
+            label = saveKey
         )
         if(response.isError) return response.map {  }
 
@@ -150,7 +154,8 @@ class FirebaseCategoryRemoteRepo(
         val response = categoryRemoteSource.getHabitats(
             kingdomType = kingdomType,
             limit = limit,
-            startAfter = nextKey
+            startAfter = nextKey,
+            label = saveKey
         )
         if(response.isError) return response.map {  }
 

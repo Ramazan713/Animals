@@ -6,6 +6,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
+import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
+import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
+import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
@@ -17,11 +21,18 @@ interface SpeciesDao {
     @Query("select * from species where id = :id")
     suspend fun getSpeciesById(id: Int): SpeciesEntity?
 
+
     @Transaction
     @Query("""
         select * from species where kingdom_id = :kingdomId order by id
     """)
     fun getPagingSpecies(kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
+
+    @Transaction
+    @Query("""
+        select * from species where label = :label order by id
+    """)
+    fun getPagingSpeciesByLabel(label: String): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
@@ -64,5 +75,12 @@ interface SpeciesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSpeciesImages(speciesImages: List<SpeciesImageEntity>)
+
+
+    @Query("""
+        select distinct category_id from specieshabitatcategories where species_id = :speciesId and 
+        category_id not in (select distinct id from habitatcategories)
+    """)
+    suspend fun getNotExistsHabitatIds(speciesId: Int): List<Int>
 
 }

@@ -12,11 +12,12 @@ import androidx.room.PrimaryKey
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("image_id"),
         )
-    ]
+    ],
+    primaryKeys = ["id", "label"]
 )
 data class ClassEntity(
-    @PrimaryKey(autoGenerate = false)
     val id: Int,
+    val label: String,
     val scientific_name: String,
     val class_en: String,
     val class_tr: String,

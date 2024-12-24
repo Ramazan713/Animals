@@ -13,19 +13,19 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.PlantD
 import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesImageWithMetadataEmbedded
 
 
-fun SpeciesDto.toAnimalDataEmbedded(): AnimalDataEmbedded{
+fun SpeciesDto.toAnimalDataEmbedded(label: String): AnimalDataEmbedded{
     return AnimalDataEmbedded(
-        species = toSpeciesEntity(),
-        images = toSpeciesImageWithMetadataEmbedded(),
-        animal = animalia?.toAnimalEntity(id)!!
+        species = toSpeciesEntity(label),
+        images = toSpeciesImageWithMetadataEmbedded(label),
+        animal = animalia?.toAnimalEntity(id,label)!!
     )
 }
 
-fun SpeciesDto.toPlantDataEmbedded(): PlantDataEmbedded {
+fun SpeciesDto.toPlantDataEmbedded(label: String): PlantDataEmbedded {
     return PlantDataEmbedded(
-        species = toSpeciesEntity(),
-        images = toSpeciesImageWithMetadataEmbedded(),
-        plant = plantae?.toPlantEntity(id)!!
+        species = toSpeciesEntity(label),
+        images = toSpeciesImageWithMetadataEmbedded(label),
+        plant = plantae?.toPlantEntity(id, label)!!
     )
 }
 
@@ -38,13 +38,14 @@ fun SpeciesDto.toSpeciesHabitatCategoryEntity(): List<SpeciesHabitatCategoryEnti
     }
 }
 
-fun SpeciesDto.toSpeciesImageWithMetadataEmbedded(): List<SpeciesImageWithMetadataEmbedded>{
+fun SpeciesDto.toSpeciesImageWithMetadataEmbedded(label: String): List<SpeciesImageWithMetadataEmbedded>{
     return images.mapIndexed { index, image ->
         SpeciesImageWithMetadataEmbedded(
             speciesImage = SpeciesImageEntity(
                 species_id = id,
                 image_id = image.id,
-                image_order = image.image_order ?: index
+                image_order = image.image_order ?: index,
+                label = label
             ),
             imageWithMetadata = image.toImageWithMetadata()
         )
@@ -52,7 +53,7 @@ fun SpeciesDto.toSpeciesImageWithMetadataEmbedded(): List<SpeciesImageWithMetada
 }
 
 
-fun SpeciesDto.toSpeciesEntity(): SpeciesEntity{
+fun SpeciesDto.toSpeciesEntity(label: String): SpeciesEntity{
     return SpeciesEntity(
         id = id,
         name_en = name_en,
@@ -67,11 +68,12 @@ fun SpeciesDto.toSpeciesEntity(): SpeciesEntity{
         created_at = "",
         order_id = order_id,
         class_id = class_id,
-        phylum_id = phylum_id
+        phylum_id = phylum_id,
+        label = label
     )
 }
 
-fun SpeciesAnimalDto.toAnimalEntity(speciesId: Int): AnimalEntity {
+fun SpeciesAnimalDto.toAnimalEntity(speciesId: Int,label: String): AnimalEntity {
     return AnimalEntity(
         id = null,
         species_id = speciesId,
@@ -132,12 +134,13 @@ fun SpeciesAnimalDto.toAnimalEntity(speciesId: Int): AnimalEntity {
         comparative_analysis_en = en.comparative_analysis_en,
         comparative_analysis_tr = tr.comparative_analysis_tr,
         role_in_ecosystem_en = en.role_in_ecosystem_en,
-        role_in_ecosystem_tr = tr.role_in_ecosystem_tr
+        role_in_ecosystem_tr = tr.role_in_ecosystem_tr,
+        label = label
     )
 }
 
 
-fun SpeciesPlantDto.toPlantEntity(speciesId: Int): PlantEntity {
+fun SpeciesPlantDto.toPlantEntity(speciesId: Int,label: String): PlantEntity {
     return PlantEntity(
         id = null,
         species_id = speciesId,
@@ -194,6 +197,7 @@ fun SpeciesPlantDto.toPlantEntity(speciesId: Int): PlantEntity {
         surprising_facts_en = en.surprising_facts_en,
         surprising_facts_tr = tr.surprising_facts_tr,
         interesting_and_fun_facts_en = en.interesting_and_fun_facts_en,
-        interesting_and_fun_facts_tr = tr.interesting_and_fun_facts_tr
+        interesting_and_fun_facts_tr = tr.interesting_and_fun_facts_tr,
+        label = label
     )
 }

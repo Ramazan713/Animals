@@ -1,15 +1,14 @@
 package com.masterplus.animals.core.shared_features.database.entity
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "Species",
+    primaryKeys = ["id", "label"]
 )
 data class SpeciesEntity(
-    @PrimaryKey(autoGenerate = false)
     val id: Int,
+    val label: String,
     val scientific_name: String = "",
     val name_en: String = "",
     val name_tr: String = "",
@@ -24,3 +23,5 @@ data class SpeciesEntity(
     val updated_at: String,
     val created_at: String
 )
+
+

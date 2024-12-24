@@ -69,6 +69,7 @@ import com.masterplus.animals.core.presentation.transition.renderInSharedTransit
 import com.masterplus.animals.core.presentation.transition.sharedBoundsText
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.SampleDatas
+import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListState
@@ -91,6 +92,10 @@ fun SpeciesDetailPageRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val addSpeciesState by addSpeciesToListViewModel.state.collectAsStateWithLifecycle()
+
+    ShowLifecycleToastMessage(state.message) {
+        viewModel.onAction(SpeciesDetailAction.ClearMessage)
+    }
 
     SpeciesDetailPage(
         state = state,

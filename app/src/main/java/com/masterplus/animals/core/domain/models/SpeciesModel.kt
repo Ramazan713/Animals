@@ -9,6 +9,9 @@ data class SpeciesModel(
     val scientificName: String,
     val kingdomType: KingdomType,
     val familyId: Int,
+    val classId: Int,
+    val phylumId: Int,
+    val orderId: Int,
     val recognitionAndInteraction: Int?,
 )
 

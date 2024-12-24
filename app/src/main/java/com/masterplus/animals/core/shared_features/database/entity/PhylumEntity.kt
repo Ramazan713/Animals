@@ -12,11 +12,12 @@ import androidx.room.PrimaryKey
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("image_id"),
         )
-    ]
+    ],
+    primaryKeys = ["id", "label"]
 )
 data class PhylumEntity(
-    @PrimaryKey(autoGenerate = false)
     val id: Int,
+    val label: String,
     val scientific_name: String,
     val phylum_en: String,
     val phylum_tr: String,

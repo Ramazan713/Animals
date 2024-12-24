@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = SpeciesEntity::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("species_id"),
+            parentColumns = arrayOf("id", "label"),
+            childColumns = arrayOf("species_id", "label"),
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
@@ -20,9 +20,10 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE
         ),
     ],
-    primaryKeys = ["species_id", "image_id"]
+    primaryKeys = ["label", "species_id", "image_id"]
 )
 data class SpeciesImageEntity(
+    val label: String,
     val species_id: Int,
     val image_id: Int,
     val image_order: Int = 1

@@ -23,7 +23,8 @@ class PhylumRemoteMediator(
         return categoryRemoteSource.getPhylums(
             kingdomType = kingdomType,
             limit = limit,
-            startAfter = startAfter
+            startAfter = startAfter,
+            label = saveRemoteKey
         )
     }
 
@@ -36,6 +37,6 @@ class PhylumRemoteMediator(
     }
 
     override suspend fun clearTable() {
-        db.categoryDao.deletePhylums(kingdomType.kingdomId)
+        db.categoryDao.deletePhylums(saveRemoteKey)
     }
 }

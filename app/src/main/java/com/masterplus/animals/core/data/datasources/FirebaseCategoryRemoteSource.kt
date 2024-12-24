@@ -72,7 +72,8 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
     override suspend fun getPhylums(
         kingdomType: KingdomType,
         limit: Int,
-        startAfter: Int?
+        startAfter: Int?,
+        label: String
     ): DefaultResult<List<PhylumWithImageEmbedded>> {
         return safeCall {
             Firebase.firestore.collection("Phylums")
@@ -83,7 +84,19 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
                 .get()
                 .await()
                 .toObjects(PhylumDto::class.java)
-                .map { it.toPhylumWithImageEmbedded() }
+                .map { it.toPhylumWithImageEmbedded(label) }
+        }
+    }
+
+    override suspend fun getPhylumById(
+        itemId: Int,
+        label: String
+    ): DefaultResult<PhylumWithImageEmbedded?> {
+        return safeCall {
+            Firebase.firestore.collection("Phylums")
+                .document("$itemId")
+                .get().await().toObject(PhylumDto::class.java)
+                ?.toPhylumWithImageEmbedded(label)
         }
     }
 
@@ -91,7 +104,8 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
         kingdomType: KingdomType,
         limit: Int,
         phylumId: Int?,
-        startAfter: Int?
+        startAfter: Int?,
+        label: String
     ): DefaultResult<List<ClassWithImageEmbedded>> {
         return safeCall {
             var query = Firebase.firestore.collection("Classes")
@@ -106,7 +120,19 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
                 .get()
                 .await()
                 .toObjects(ClassDto::class.java)
-                .map { it.toClassWithImageEmbedded() }
+                .map { it.toClassWithImageEmbedded(label) }
+        }
+    }
+
+    override suspend fun getClassById(
+        itemId: Int,
+        label: String
+    ): DefaultResult<ClassWithImageEmbedded?> {
+        return safeCall {
+            Firebase.firestore.collection("Classes")
+                .document("$itemId")
+                .get().await().toObject(ClassDto::class.java)
+                ?.toClassWithImageEmbedded(label)
         }
     }
 
@@ -114,7 +140,8 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
         kingdomType: KingdomType,
         limit: Int,
         classId: Int?,
-        startAfter: Int?
+        startAfter: Int?,
+        label: String
     ): DefaultResult<List<OrderWithImageEmbedded>> {
         return safeCall {
             var query = Firebase.firestore.collection("Orders")
@@ -129,7 +156,19 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
                 .get()
                 .await()
                 .toObjects(OrderDto::class.java)
-                .map { it.toOrderWithImageEmbedded() }
+                .map { it.toOrderWithImageEmbedded(label) }
+        }
+    }
+
+    override suspend fun getOrderById(
+        itemId: Int,
+        label: String
+    ): DefaultResult<OrderWithImageEmbedded?> {
+        return safeCall {
+            Firebase.firestore.collection("Orders")
+                .document("$itemId")
+                .get().await().toObject(OrderDto::class.java)
+                ?.toOrderWithImageEmbedded(label)
         }
     }
 
@@ -137,7 +176,8 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
         kingdomType: KingdomType,
         limit: Int,
         orderId: Int?,
-        startAfter: Int?
+        startAfter: Int?,
+        label: String
     ): DefaultResult<List<FamilyWithImageEmbedded>> {
         return safeCall {
             var query = Firebase.firestore.collection("Families")
@@ -152,14 +192,27 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
                 .get()
                 .await()
                 .toObjects(FamilyDto::class.java)
-                .map { it.toFamilyWithImageEmbedded() }
+                .map { it.toFamilyWithImageEmbedded(label) }
+        }
+    }
+
+    override suspend fun getFamilyById(
+        itemId: Int,
+        label: String
+    ): DefaultResult<FamilyWithImageEmbedded?> {
+        return safeCall {
+            Firebase.firestore.collection("Families")
+                .document("$itemId")
+                .get().await().toObject(FamilyDto::class.java)
+                ?.toFamilyWithImageEmbedded(label)
         }
     }
 
     override suspend fun getHabitats(
         kingdomType: KingdomType,
         limit: Int,
-        startAfter: Int?
+        startAfter: Int?,
+        label: String
     ): DefaultResult<List<HabitatWithImageEmbedded>> {
         return safeCall {
             Firebase.firestore.collection("Habitats")
@@ -171,7 +224,31 @@ class FirebaseCategoryRemoteSource: CategoryRemoteSource {
                 .get()
                 .await()
                 .toObjects(HabitatCategoryDto::class.java)
-                .map { it.toHabitatCategoryWithImageEmbedded() }
+                .map { it.toHabitatCategoryWithImageEmbedded(label) }
+        }
+    }
+
+    override suspend fun getHabitatById(
+        itemId: Int,
+        label: String
+    ): DefaultResult<HabitatWithImageEmbedded?> {
+        return safeCall {
+            Firebase.firestore.collection("Habitats")
+                .document("$itemId")
+                .get().await().toObject(HabitatCategoryDto::class.java)
+                ?.toHabitatCategoryWithImageEmbedded(label)
+        }
+    }
+
+    override suspend fun getHabitatsByIds(
+        itemIds: List<Int>,
+        label: String
+    ): DefaultResult<List<HabitatWithImageEmbedded>> {
+        return safeCall {
+            Firebase.firestore.collection("Habitats")
+                .where(Filter.inArray("id", itemIds))
+                .get().await().toObjects(HabitatCategoryDto::class.java)
+                .map { it.toHabitatCategoryWithImageEmbedded(label) }
         }
     }
 }
