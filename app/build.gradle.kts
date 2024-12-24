@@ -36,7 +36,7 @@ android {
         resourceConfigurations += arrayOf("tr","en")
 
         buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_CLIENT_ID"]}\"")
-
+        manifestPlaceholders["crashlyticsCollectionEnabled"] = true
     }
 
     buildTypes {
@@ -48,6 +48,7 @@ android {
             )
         }
         debug {
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = false
             buildConfigField("String","APP_CHECK_DEBUG_TOKEN","\"${keystoreProperties["APP_CHECK_DEBUG_TOKEN"]}\"")
         }
     }
