@@ -17,43 +17,11 @@ interface SpeciesDao {
     @Query("select * from species where id = :id")
     suspend fun getSpeciesById(id: Int): SpeciesEntity?
 
-
-    @Transaction
-    @Query("""
-        select * from species where kingdom_id = :kingdomId order by id
-    """)
-    fun getPagingSpecies(kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
-
     @Transaction
     @Query("""
         select * from species where label = :label order by id
     """)
     fun getPagingSpeciesByLabel(label: String): PagingSource<Int, SpeciesDetailEmbedded>
-
-    @Transaction
-    @Query("""
-        select S.* from species S, SpeciesHabitatCategories SHC
-        where S.id = SHC.species_id and SHC.category_id = :habitatCategoryId and S.kingdom_id = :kingdomId order by id
-    """)
-    fun getPagingSpeciesByHabitatCategoryId(habitatCategoryId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
-
-    @Transaction
-    @Query("""
-        select * from species where class_id = :classId and kingdom_id = :kingdomId order by id
-    """)
-    fun getPagingSpeciesByClassId(classId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
-
-    @Transaction
-    @Query("""
-        select * from species where family_id = :familyId and kingdom_id = :kingdomId order by id
-    """)
-    fun getPagingSpeciesByFamilyId(familyId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
-
-    @Transaction
-    @Query("""
-        select * from species where order_id = :orderId and kingdom_id = :kingdomId order by id
-    """)
-    fun getPagingSpeciesByOrderId(orderId: Int, kingdomId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
@@ -74,8 +42,8 @@ interface SpeciesDao {
 
 
     @Query("""
-        select distinct category_id from specieshabitatcategories where species_id = :speciesId and 
-        category_id not in (select distinct id from habitatcategories)
+        SELECT DISTINCT category_id FROM specieshabitatcategories shc WHERE shc.species_id = :speciesId 
+        AND NOT EXISTS (SELECT 1 FROM habitatcategories hc WHERE hc.id = shc.category_id)
     """)
     suspend fun getNotExistsHabitatIds(speciesId: Int): List<Int>
 

@@ -6,9 +6,5 @@ import com.masterplus.animals.core.shared_features.translation.domain.enums.Lang
 
 interface AnimalRepo {
 
-    suspend fun getAnimalById(animalId: Int, language: LanguageEnum): Animal?
-
-    suspend fun getAnimalDetailById(animalId: Int, language: LanguageEnum): AnimalDetail?
-
     suspend fun getAnimalDetailBySpeciesId(speciesId: Int, language: LanguageEnum): AnimalDetail?
 }

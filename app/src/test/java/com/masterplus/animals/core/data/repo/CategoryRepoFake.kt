@@ -11,6 +11,8 @@ import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.repo.CategoryRepo
+import com.masterplus.animals.core.domain.utils.DefaultResult
+import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.test_utils.FakePagingSource
 import kotlinx.coroutines.flow.Flow
@@ -27,8 +29,8 @@ class CategoryRepoFake: CategoryRepo{
         limit: Int,
         language: LanguageEnum,
         kingdomType: KingdomType
-    ): List<CategoryData> {
-        return fakeCategories.filter { it.categoryType == categoryType }.take(limit)
+    ): DefaultResult<List<CategoryData>> {
+        return Result.Success(fakeCategories.filter { it.categoryType == categoryType }.take(limit))
     }
 
     override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): String? {

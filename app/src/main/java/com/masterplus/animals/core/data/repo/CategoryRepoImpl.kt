@@ -49,7 +49,6 @@ class CategoryRepoImpl constructor(
         language: LanguageEnum,
         kingdomType: KingdomType
     ): DefaultResult<List<CategoryData>> {
-        val kingdomId = kingdomType.kingdomId
         return when(categoryType){
             CategoryType.Habitat -> {
                 fetchWithFallback(

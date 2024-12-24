@@ -6,26 +6,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.masterplus.animals.core.shared_features.database.entity.AnimalEntity
-import com.masterplus.animals.core.shared_features.database.entity.PlantEntity
-import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDetailEmbedded
 import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDataEmbedded
+import com.masterplus.animals.core.shared_features.database.entity_helper.AnimalDetailEmbedded
 
 @Dao
 interface AnimalDao {
-
-    @Transaction
-    @Query("""
-        select S.* from species S, Animals A 
-        where S.id = A.species_id and A.id = :id
-    """)
-    suspend fun getAnimalById(id: Int): AnimalDataEmbedded?
-
-    @Transaction
-    @Query("""
-        select S.* from species S, Animals A  
-        where S.id = A.species_id and A.id = :id
-    """)
-    suspend fun getAnimalDetailById(id: Int): AnimalDetailEmbedded?
 
     @Transaction
     @Query("""
