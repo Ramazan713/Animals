@@ -1,10 +1,10 @@
-package com.masterplus.animals.features.animal.data.repo
+package com.masterplus.animals.features.kingdom.data.repo
 
 import com.masterplus.animals.core.data.mapper.toAnimal
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.shared_features.database.dao.AnimalDao
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
-import com.masterplus.animals.features.animal.domain.repo.DailyAnimalRepo
+import com.masterplus.animals.features.kingdom.domain.repo.DailyAnimalRepo
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

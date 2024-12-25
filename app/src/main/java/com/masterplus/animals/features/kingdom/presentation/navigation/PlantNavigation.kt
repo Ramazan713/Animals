@@ -1,33 +1,32 @@
-package com.masterplus.animals.features.animal.presentation.navigation
+package com.masterplus.animals.features.kingdom.presentation.navigation
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
-import com.masterplus.animals.features.animal.presentation.AnimalPageRoot
+import com.masterplus.animals.features.kingdom.presentation.KingdomPageRoot
+import com.masterplus.animals.features.kingdom.presentation.PlantViewModel
 import kotlinx.serialization.Serializable
+import org.koin.androidx.compose.koinViewModel
 
-
-typealias ItemId = Int
 
 @Serializable
-data object AnimalRoute
+data object PlantRoute
 
-@OptIn(ExperimentalSharedTransitionApi::class)
-fun NavGraphBuilder.animal(
+fun NavGraphBuilder.plant(
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
-    onNavigateToSettings: () -> Unit,
+    onNavigateToSettings: () -> Unit
 ){
-    composable<AnimalRoute> {
+    composable<PlantRoute> {
         NavAnimatedVisibilityProvider(
             scope = this
         ){
-            AnimalPageRoot(
+            KingdomPageRoot(
+                viewModel = koinViewModel<PlantViewModel>(),
                 onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail,
                 onNavigateToCategoryList = onNavigateToCategoryList,
                 onNavigateToSpeciesList = onNavigateToSpeciesList,

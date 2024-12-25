@@ -1,13 +1,16 @@
-package com.masterplus.animals.features.animal.presentation
+package com.masterplus.animals.features.kingdom.presentation
 
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
 import com.masterplus.animals.core.presentation.models.CategoryRowModel
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 
-data class AnimalState(
+data class KingdomState(
+    val title: UiText = UiText.Text(""),
     val isLoading: Boolean = true,
+    val kingdomType: KingdomType = KingdomType.DEFAULT,
     val languageEnum: LanguageEnum = LanguageEnum.defaultValue,
     val dailyAnimals: CategoryRowModel = CategoryRowModel(isLoading = true),
     val savePoints: List<SavePoint> = emptyList(),

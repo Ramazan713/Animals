@@ -1,4 +1,4 @@
-package com.masterplus.animals.features.animal.domain.repo
+package com.masterplus.animals.features.kingdom.domain.repo
 
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum

@@ -30,13 +30,11 @@ import com.masterplus.animals.core.shared_features.theme.data.di.themeDataModule
 import com.masterplus.animals.core.shared_features.theme.presentation.di.themePresentationModule
 import com.masterplus.animals.core.shared_features.translation.data.di.translationDataModule
 import com.masterplus.animals.core.shared_features.translation.presentation.di.translationPresentationModule
-import com.masterplus.animals.features.animal.data.di.animalDataModule
-import com.masterplus.animals.features.animal.presentation.di.animalPresentationModule
 import com.masterplus.animals.features.app.presentation.di.appDataModule
 import com.masterplus.animals.features.category_list.presentation.di.categoryListPresentationModule
+import com.masterplus.animals.features.kingdom.data.di.kingdomDataModule
+import com.masterplus.animals.features.kingdom.presentation.di.kingdomPresentationModule
 import com.masterplus.animals.features.list.presentation.di.showListPresentationModule
-import com.masterplus.animals.features.plant.data.di.plantDataModule
-import com.masterplus.animals.features.plant.presentation.di.plantPresentationModule
 import com.masterplus.animals.features.savepoints.presentation.di.savePointsPresentationModule
 import com.masterplus.animals.features.search.data.di.searchDataModule
 import com.masterplus.animals.features.search.domain.di.searchDomainModule
@@ -58,14 +56,14 @@ class AnimalsApp: Application(), SingletonImageLoader.Factory {
         startKoin {
             androidContext(this@AnimalsApp)
             modules(
-                databaseModule, animalPresentationModule, coreDataModule, themeDataModule, themePresentationModule,
+                databaseModule,  coreDataModule, themeDataModule, themePresentationModule,
                 categoryListPresentationModule, speciesListPresentationModule, addSpeciesToListModule,
-                speciesDetailPresentationModule, animalDataModule, preferencesDataModule,
+                speciesDetailPresentationModule, preferencesDataModule, kingdomPresentationModule, kingdomDataModule,
                 listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule,
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule,
                 authDataModule, authDomainModule, authPresentationModule, settingsPresentationModule,
                 searchPresentationModule, searchDataModule, searchDomainModule,
-                translationDataModule, translationPresentationModule, plantDataModule, plantPresentationModule,
+                translationDataModule, translationPresentationModule,
                 backupDataModule, backupPresentationModule, analyticsDataModule, appDataModule
             )
         }

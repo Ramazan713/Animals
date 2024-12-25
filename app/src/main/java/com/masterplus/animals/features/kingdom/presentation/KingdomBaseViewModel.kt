@@ -1,6 +1,8 @@
+package com.masterplus.animals.features.kingdom.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.constants.K
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
@@ -8,6 +10,7 @@ import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
+import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
@@ -15,9 +18,6 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
-import com.masterplus.animals.features.animal.domain.repo.DailyAnimalRepo
-import com.masterplus.animals.features.animal.presentation.AnimalAction
-import com.masterplus.animals.features.animal.presentation.AnimalState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,28 +26,28 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.Language
 
-class AnimalViewModel(
+abstract class KingdomBaseViewModel(
     private val categoryRepo: CategoryRepo,
     private val savePointRepo: SavePointRepo,
-    private val dailyAnimalRepo: DailyAnimalRepo,
     private val translationRepo: TranslationRepo
 ): ViewModel() {
-
-    private val kingdomType = KingdomType.Animals
-    private val _state = MutableStateFlow(AnimalState())
+    
+    abstract val kingdomType: KingdomType
+    
+    protected val _state = MutableStateFlow(KingdomState())
     val state = _state.asStateFlow()
 
     init {
+        setTitle()
         loadCategories()
         loadSavePoints()
     }
 
-    fun onAction(action: AnimalAction){
+    fun onAction(action: KingdomAction){
         when(action){
-            AnimalAction.ClearMessage -> _state.update { it.copy(message = null) }
-            is AnimalAction.RetryCategory -> {
+            KingdomAction.ClearMessage -> _state.update { it.copy(message = null) }
+            is KingdomAction.RetryCategory -> {
                 viewModelScope.launch {
                     when(action.categoryType){
                         CategoryType.Habitat -> loadHabits(state.value.languageEnum)
@@ -63,6 +63,13 @@ class AnimalViewModel(
                 }
             }
         }
+    }
+
+    private fun setTitle(){
+        _state.update { it.copy(
+            title = UiText.Resource(if(kingdomType.isAnimals) R.string.animal_kingdom else R.string.plant_kingdom),
+            kingdomType = kingdomType
+        ) }
     }
 
     private fun loadCategories(){
