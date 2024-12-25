@@ -9,4 +9,8 @@ object KPref {
     val thresholdOpeningCount = PrefKey("thresholdOpeningCount",15)
     val consumeIntervalSeconds = PrefKey("consumeIntervalSeconds",4)
     val thresholdConsumeSeconds = PrefKey("thresholdConsumeSeconds",80)
+
+    val contentReadCounter = PrefKey("contentReadCounter",0)
+    val categoryReadCounter = PrefKey("categoryReadCounter",0)
+    val lastUpdatedReadCounter = PrefKey("lastUpdatedReadCounter","")
 }

@@ -13,6 +13,7 @@ import com.google.firebase.appcheck.ktx.appCheck
 import com.google.firebase.ktx.Firebase
 import com.masterplus.animals.core.data.di.coreDataModule
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.di.addSpeciesToListModule
+import com.masterplus.animals.core.shared_features.analytics.data.di.analyticsDataModule
 import com.masterplus.animals.core.shared_features.auth.data.di.authDataModule
 import com.masterplus.animals.core.shared_features.auth.domain.di.authDomainModule
 import com.masterplus.animals.core.shared_features.auth.presentation.di.authPresentationModule
@@ -65,7 +66,7 @@ class AnimalsApp: Application(), SingletonImageLoader.Factory {
                 authDataModule, authDomainModule, authPresentationModule, settingsPresentationModule,
                 searchPresentationModule, searchDataModule, searchDomainModule,
                 translationDataModule, translationPresentationModule, plantDataModule, plantPresentationModule,
-                backupDataModule, backupPresentationModule
+                backupDataModule, backupPresentationModule, analyticsDataModule
             )
         }
     }

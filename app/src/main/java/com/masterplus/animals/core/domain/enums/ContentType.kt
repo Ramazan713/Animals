@@ -10,6 +10,9 @@ enum class ContentType(
         contentTypeId = 2
     );
 
+    val isCategory get() = this == Category
+    val isContent get() = this == Content
+
     companion object {
         fun from(contentTypeId: Int): ContentType? {
             for(type in ContentType.entries){

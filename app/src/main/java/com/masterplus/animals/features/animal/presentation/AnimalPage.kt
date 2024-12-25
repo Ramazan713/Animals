@@ -6,6 +6,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.masterplus.animals.BuildConfig
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
@@ -49,15 +51,18 @@ import com.masterplus.animals.core.presentation.transition.animateEnterExitForTr
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
+import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItemDefaults
 import com.masterplus.animals.features.animal.presentation.navigation.ItemId
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun AnimalPageRoot(
     viewModel: AnimalViewModel = koinViewModel(),
+    serverReadCounter: ServerReadCounter = koinInject(),
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
@@ -66,6 +71,9 @@ fun AnimalPageRoot(
     onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val contentCounter by serverReadCounter.contentCountersFlow.collectAsStateWithLifecycle(0)
+    val categoryCounter by serverReadCounter.categoryCountersFlow.collectAsStateWithLifecycle(0)
 
     ShowLifecycleToastMessage(state.message) {
         viewModel.onAction(AnimalAction.ClearMessage)
@@ -78,7 +86,8 @@ fun AnimalPageRoot(
         onNavigateToShowSavePoints = onNavigateToShowSavePoints,
         onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
         onNavigateToSettings = onNavigateToSettings,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onGetDebugAnalyticsValues = { Pair(contentCounter, categoryCounter)}
     )
 }
 
@@ -87,13 +96,14 @@ fun AnimalPageRoot(
 @Composable
 fun AnimalPage(
     state: AnimalState,
+    onGetDebugAnalyticsValues: () -> Pair<Int, Int>,
     onAction: (AnimalAction) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
     onNavigateToShowSavePoints: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
 ) {
     val contentPaddings = PaddingValues(horizontal = 12.dp)
     Scaffold(
@@ -121,6 +131,19 @@ fun AnimalPage(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
+
+                if(BuildConfig.DEBUG){
+                    item {
+                        val pairData = onGetDebugAnalyticsValues()
+                        Column(
+                            modifier = Modifier.padding(contentPaddings),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text("Content: ${pairData.first}")
+                            Text("Category: ${pairData.second}")
+                        }
+                    }
+                }
 
                 item {
                     DailyAnimalsSection(
@@ -372,6 +395,7 @@ fun AnimalPagePreview() {
         onNavigateToShowSavePoints = {},
         onNavigateToSpeciesDetail = {},
         onNavigateToSettings = {},
-        onAction = {}
+        onAction = {},
+        onGetDebugAnalyticsValues = {Pair(5,2)}
     )
 }
