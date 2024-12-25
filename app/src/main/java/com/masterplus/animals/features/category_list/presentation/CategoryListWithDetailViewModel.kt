@@ -65,7 +65,8 @@ class CategoryListWithDetailViewModel(
             .getFlowLanguage()
             .onEach { language ->
                 _state.update { it.copy(
-                    isLoading = true
+                    isLoading = true,
+                    showAllImageInHeader = false
                 ) }
                 when(args.categoryType){
                     CategoryType.Class -> {
@@ -75,7 +76,7 @@ class CategoryListWithDetailViewModel(
                             subTitle = classModel.className,
                             parentImageData = classModel.image,
                             collectionName = "Takımlar",
-                            isLoading = false
+                            isLoading = false,
                         ) }
                     }
                     CategoryType.Order -> {
@@ -85,7 +86,7 @@ class CategoryListWithDetailViewModel(
                             subTitle = orderModel.order,
                             parentImageData = orderModel.image,
                             collectionName = "Familyalar",
-                            isLoading = false
+                            isLoading = false,
                         ) }
                     }
                     else -> Unit

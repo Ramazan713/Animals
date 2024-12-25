@@ -14,7 +14,7 @@ interface PlantDao {
 
     @Transaction
     @Query("""
-        select * from species where id = :speciesId
+        select * from species where id = :speciesId limit 1
     """)
     suspend fun getPlantDetailBySpeciesId(speciesId: Int): PlantDetailEmbedded?
 

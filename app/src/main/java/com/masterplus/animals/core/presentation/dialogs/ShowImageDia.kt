@@ -119,6 +119,7 @@ fun ShowImageDia(
                             .clickableWithoutRipple {
                                 showButtons = !showButtons
                             },
+                        showLoadingBackgroundColor = false,
                         contentScale = ContentScale.Fit
                     )
                 }

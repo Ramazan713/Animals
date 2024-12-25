@@ -45,6 +45,7 @@ fun ClassModel.toCategoryData(): CategoryData {
         image = image,
         title = scientificName,
         secondaryTitle = className,
-        categoryType = CategoryType.Class
+        categoryType = CategoryType.Class,
+        kingdomType = kingdomType
     )
 }

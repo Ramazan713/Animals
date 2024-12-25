@@ -134,7 +134,8 @@ class SpeciesDetailViewModel(
             }
         }
         _state.update { it.copy(
-            isLoading = false
+            isLoading = false,
+            species = species
         ) }
     }
 

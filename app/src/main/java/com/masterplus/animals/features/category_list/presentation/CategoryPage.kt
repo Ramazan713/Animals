@@ -88,18 +88,6 @@ fun CategoryListPage(
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val showImage by remember(state, pagingItems.itemCount) {
-        derivedStateOf {
-            when {
-                state.isLoading -> false
-//                state.parentImageData != null && pagingItems.itemCount > 0 -> true
-//                state.parentImageData != null -> true
-                else -> true
-            }
-        }
-    }
-
-
     val lazyListState = rememberLazyGridState()
     val middlePos = lazyListState.visibleMiddlePosition()
     val scope = rememberCoroutineScope()
@@ -145,7 +133,7 @@ fun CategoryListPage(
                         state = state,
                         image = state.parentImageData,
                         onAllItemClick = onAllItemClick,
-                        showImage = showImage,
+                        showImage = !state.isLoading,
                         modifier = Modifier
                     )
                 }
@@ -244,6 +232,13 @@ private fun HeaderImage(
     onAllItemClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val extraKey by remember(state, image) {
+        derivedStateOf {
+            if(state.showAllImageInHeader) "all"
+            else if(image == null) "default"
+            else null
+        }
+    }
     AnimatedVisibility(
         enter = fadeIn() + expandIn(),
         visible = showImage,
@@ -262,7 +257,9 @@ private fun HeaderImage(
                 ?.let {
                     TransitionImageKey(
                         id = state.categoryItemId ?: 0,
-                        imageType = it
+                        kingdomType = state.kingdomType,
+                        imageType = it,
+                        extra = extraKey
                     )
                 }
         )
@@ -338,7 +335,7 @@ private fun CategoryListPagePreview1() {
         onAction = {},
         pagingItems = getPreviewLazyPagingData<CategoryData>(
             items = listOf(
-//                SampleDatas.categoryData
+                SampleDatas.categoryData
             ),
 //            sourceLoadStates = previewPagingLoadStates(append = LoadState.Loading),
 //            mediatorLoadStates = previewPagingLoadStates(append = LoadState.Loading)

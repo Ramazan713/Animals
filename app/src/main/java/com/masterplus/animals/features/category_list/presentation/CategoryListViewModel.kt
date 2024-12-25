@@ -67,6 +67,7 @@ class CategoryListViewModel(
         _state.update { it.copy(
             title = args.categoryType.title,
             collectionName = args.categoryType.title,
+            showAllImageInHeader = true
         ) }
     }
 

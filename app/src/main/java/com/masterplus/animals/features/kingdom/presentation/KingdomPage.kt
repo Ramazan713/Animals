@@ -167,7 +167,7 @@ fun KingdomPage(
                         items = state.habitats.categoryDataList,
                         showMore = state.habitats.showMore,
                         isLoading = state.habitats.isLoading,
-                        useTransition = true,
+                        useTransition = false,
                         onClickItem = { item ->
                             onNavigateToSpeciesList(CategoryType.Habitat, item.id, 0)
                         },

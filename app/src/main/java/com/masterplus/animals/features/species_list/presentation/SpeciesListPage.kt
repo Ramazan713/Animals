@@ -284,7 +284,7 @@ fun SpeciesListPagePreview() {
         onNavigateToSpeciesDetail = {x,y ->},
         pagingItems = getPreviewLazyPagingData(
             items = listOf(SampleDatas.generateSpeciesDetail(id = 1), SampleDatas.generateSpeciesDetail(id = 2), SampleDatas.generateSpeciesDetail(id = 3)),
-            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading, append = LoadState.Loading),
+//            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading, append = LoadState.Loading),
         ),
         onNavigateToCategorySearch = {},
         onAutoSavePointAction = {},

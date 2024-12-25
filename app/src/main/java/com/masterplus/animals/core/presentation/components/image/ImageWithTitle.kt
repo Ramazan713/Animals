@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.presentation.components.OrderText
@@ -73,7 +74,8 @@ fun ImageWithTitle(
         transitionKey = TransitionImageType.fromCategoryType(model.categoryType)?.let {
             TransitionImageKey(
                 id = model.id ?: 0,
-                imageType = it
+                imageType = it,
+                kingdomType = model.kingdomType
             )
         }
     )
@@ -247,7 +249,8 @@ fun ImageWithTitlePreview() {
                 image = SampleDatas.imageWithMetadata,
                 transitionKey = TransitionImageKey(
                     id = 1,
-                    TransitionImageType.Order
+                    TransitionImageType.Order,
+                    kingdomType = KingdomType.DEFAULT
                 )
             )
             ImageWithTitle(
@@ -255,7 +258,8 @@ fun ImageWithTitlePreview() {
                 image = SampleDatas.imageWithMetadata,
                 transitionKey = TransitionImageKey(
                     id = 2,
-                    TransitionImageType.Order
+                    TransitionImageType.Order,
+                    kingdomType = KingdomType.DEFAULT
                 )
             )
         }

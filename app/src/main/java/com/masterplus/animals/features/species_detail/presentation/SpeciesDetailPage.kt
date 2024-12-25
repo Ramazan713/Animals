@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesModel
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
@@ -325,7 +326,8 @@ private fun TopBarImage(
                         TransitionImageKey(
                             id = it.speciesId,
                             extra = it.image.id?.toString(),
-                            imageType = TransitionImageType.SpeciesImages
+                            imageType = TransitionImageType.SpeciesImages,
+                            kingdomType = state.species?.kingdomType ?: KingdomType.DEFAULT
                         )
                     }
                 )

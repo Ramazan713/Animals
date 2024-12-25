@@ -53,6 +53,7 @@ fun DefaultImage(
     @DrawableRes errorImageResource: Int? = null,
     cacheKey: String? = null,
     showErrorIcon: Boolean = true,
+    showLoadingBackgroundColor: Boolean = true
 ) {
     val context = LocalContext.current
     val currentContentScale = contentScale ?: ContentScale.Crop
@@ -71,7 +72,9 @@ fun DefaultImage(
             SharedCircularProgress(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.000001f))
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(
+                        alpha = if(showLoadingBackgroundColor) 1f else 0.000001f)
+                    )
             )
         },
         error = {

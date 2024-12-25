@@ -45,6 +45,7 @@ fun FamilyModel.toCategoryData(): CategoryData {
         image = image,
         title = scientificName,
         secondaryTitle = family,
-        categoryType = CategoryType.Family
+        categoryType = CategoryType.Family,
+        kingdomType = kingdomType
     )
 }

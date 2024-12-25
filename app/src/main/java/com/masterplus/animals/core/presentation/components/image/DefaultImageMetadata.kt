@@ -43,7 +43,8 @@ fun DefaultImageMetadata(
     cacheKey: String? = null,
     showErrorIcon: Boolean = true,
     fallbackImageData: Any? = null,
-    metadataIconAlignment: Alignment = Alignment.TopEnd
+    metadataIconAlignment: Alignment = Alignment.TopEnd,
+    showLoadingBackgroundColor: Boolean = true
 ) {
     var isSuccess by rememberSaveable {
         mutableStateOf(false)
@@ -67,6 +68,7 @@ fun DefaultImageMetadata(
             cacheKey = cacheKey,
             showErrorIcon = showErrorIcon,
             onSuccess = { isSuccess = true },
+            showLoadingBackgroundColor = showLoadingBackgroundColor
         )
         if(isSuccess){
             image?.metadata?.let { metadata ->

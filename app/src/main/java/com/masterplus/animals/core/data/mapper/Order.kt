@@ -44,6 +44,7 @@ fun OrderModel.toCategoryData(): CategoryData {
         image = image,
         title = scientificName,
         secondaryTitle = order,
-        categoryType = CategoryType.Order
+        categoryType = CategoryType.Order,
+        kingdomType = kingdomType
     )
 }

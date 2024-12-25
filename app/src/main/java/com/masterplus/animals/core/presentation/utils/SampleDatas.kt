@@ -86,7 +86,8 @@ object SampleDatas {
         secondaryTitle = "Sub Title",
         id = 2,
         image = imageWithMetadata,
-        categoryType = CategoryType.Class
+        categoryType = CategoryType.Class,
+        kingdomType = KingdomType.DEFAULT
     )
 
     val sampleDestination = SavePointDestination.All(KingdomType.Animals)
@@ -296,7 +297,8 @@ object SampleDatas {
             isListSelected = isListSelected,
             habitatCategoryIds = listOf(habitatCategoryId),
             recognitionAndInteraction = 1,
-            familyId = 1
+            familyId = 1,
+            kingdomType = KingdomType.DEFAULT
         )
     }
 

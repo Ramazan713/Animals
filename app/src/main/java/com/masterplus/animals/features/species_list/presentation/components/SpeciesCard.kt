@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.presentation.components.OrderText
@@ -80,7 +81,8 @@ fun SpeciesCard(
             TransitionImageKey(
                 id = it.speciesId,
                 extra = it.image.id?.toString(),
-                imageType = TransitionImageType.SpeciesImages
+                imageType = TransitionImageType.SpeciesImages,
+                kingdomType = species.kingdomType
             )
         } else null
     )

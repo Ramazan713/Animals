@@ -14,7 +14,7 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.Specie
 @Dao
 interface SpeciesDao {
 
-    @Query("select * from species where id = :id")
+    @Query("select * from species where id = :id limit 1")
     suspend fun getSpeciesById(id: Int): SpeciesEntity?
 
     @Transaction
