@@ -4,6 +4,7 @@ import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.datasources.FirebaseCategoryRemoteSource
 import com.masterplus.animals.core.data.repo.AnimalRepoImpl
 import com.masterplus.animals.core.data.repo.CategoryRepoImpl
+import com.masterplus.animals.core.data.repo.ConnectivityObserverImpl
 import com.masterplus.animals.core.data.repo.FirebaseCategoryRemoteRepo
 import com.masterplus.animals.core.data.repo.PlantRepoImpl
 import com.masterplus.animals.core.data.repo.SpeciesRepoImpl
@@ -11,6 +12,7 @@ import com.masterplus.animals.core.data.repo.StringProviderImpl
 import com.masterplus.animals.core.domain.repo.AnimalRepo
 import com.masterplus.animals.core.domain.repo.CategoryRemoteRepo
 import com.masterplus.animals.core.domain.repo.CategoryRepo
+import com.masterplus.animals.core.domain.repo.ConnectivityObserver
 import com.masterplus.animals.core.domain.repo.PlantRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.repo.StringProvider
@@ -26,4 +28,5 @@ val coreDataModule = module {
     singleOf(::StringProviderImpl).bind<StringProvider>()
     singleOf(::FirebaseCategoryRemoteSource).bind<CategoryRemoteSource>()
     singleOf(::FirebaseCategoryRemoteRepo).bind<CategoryRemoteRepo>()
+    singleOf(::ConnectivityObserverImpl).bind<ConnectivityObserver>()
 }

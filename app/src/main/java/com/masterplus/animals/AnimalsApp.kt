@@ -8,7 +8,6 @@ import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
-import coil3.util.DebugLogger
 import com.google.firebase.appcheck.ktx.appCheck
 import com.google.firebase.ktx.Firebase
 import com.masterplus.animals.core.data.di.coreDataModule
@@ -33,6 +32,7 @@ import com.masterplus.animals.core.shared_features.translation.data.di.translati
 import com.masterplus.animals.core.shared_features.translation.presentation.di.translationPresentationModule
 import com.masterplus.animals.features.animal.data.di.animalDataModule
 import com.masterplus.animals.features.animal.presentation.di.animalPresentationModule
+import com.masterplus.animals.features.app.presentation.di.appDataModule
 import com.masterplus.animals.features.category_list.presentation.di.categoryListPresentationModule
 import com.masterplus.animals.features.list.presentation.di.showListPresentationModule
 import com.masterplus.animals.features.plant.data.di.plantDataModule
@@ -66,7 +66,7 @@ class AnimalsApp: Application(), SingletonImageLoader.Factory {
                 authDataModule, authDomainModule, authPresentationModule, settingsPresentationModule,
                 searchPresentationModule, searchDataModule, searchDomainModule,
                 translationDataModule, translationPresentationModule, plantDataModule, plantPresentationModule,
-                backupDataModule, backupPresentationModule, analyticsDataModule
+                backupDataModule, backupPresentationModule, analyticsDataModule, appDataModule
             )
         }
     }
