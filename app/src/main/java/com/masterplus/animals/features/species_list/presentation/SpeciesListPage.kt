@@ -18,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,6 +35,10 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
+import com.masterplus.animals.core.extentions.isAnyItemLoading
+import com.masterplus.animals.core.extentions.isAppendItemLoading
+import com.masterplus.animals.core.extentions.isEmptyResult
+import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
@@ -140,7 +145,6 @@ fun SpeciesListPage(
         lazyListState = lazyListState
     )
 
-
     Scaffold(
         topBar = {
             DefaultTopBar(
@@ -172,20 +176,19 @@ fun SpeciesListPage(
                 .padding(paddings)
                 .nestedScroll(topBarScrollBehaviour.nestedScrollConnection)
                 .fillMaxSize(),
-            isLoading = pagingItems.loadState.refresh is LoadState.Loading || autoSavePointState.loadingSavePointPos,
-            isEmptyResult = pagingItems.itemCount == 0,
+            isLoading = pagingItems.isLoading() || autoSavePointState.loadingSavePointPos,
+            isEmptyResult = pagingItems.isEmptyResult(),
             overlayLoading = true
         ) {
             LazyColumn(
                 state = lazyListState,
                 modifier = Modifier
-                    .matchParentSize(),
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)
             ) {
                 items(
                     count = pagingItems.itemCount,
-                    key = { "${pagingItems[it]?.id}-$it" }
                 ){ index ->
                     val item = pagingItems[index]
                     if(item != null){
@@ -212,13 +215,16 @@ fun SpeciesListPage(
                         )
                     }
                 }
-                if(pagingItems.loadState.append is LoadState.Loading){
+                if(pagingItems.isAppendItemLoading()){
                     item {
                         SharedCircularProgress(modifier = Modifier.fillMaxWidth())
                     }
                 }
             }
         }
+
+
+
     }
 
     AddSpeciesToListHandler(

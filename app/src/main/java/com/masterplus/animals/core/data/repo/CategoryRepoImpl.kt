@@ -141,7 +141,7 @@ class CategoryRepoImpl constructor(
         kingdomType: KingdomType
     ): Flow<PagingData<OrderModel>> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
+            config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingOrders(RemoteKeyUtil.getOrderRemoteKey(kingdomType, classId)) },
             remoteMediator = OrderRemoteMediator(
                 db = db,
@@ -161,7 +161,7 @@ class CategoryRepoImpl constructor(
         kingdomType: KingdomType
     ): Flow<PagingData<FamilyModel>> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
+            config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingFamilies(RemoteKeyUtil.getFamilyRemoteKey(kingdomType, orderId)) },
             remoteMediator = FamilyRemoteMediator(
                 db = db,
@@ -176,7 +176,7 @@ class CategoryRepoImpl constructor(
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagingClasses(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<ClassModel>> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
+            config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingClasses(RemoteKeyUtil.getClassRemoteKey(kingdomType, null)) },
             remoteMediator = ClassRemoteMediator(
                 db = db,
@@ -191,7 +191,7 @@ class CategoryRepoImpl constructor(
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagingOrders(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
+            config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingOrders(RemoteKeyUtil.getOrderRemoteKey(kingdomType, null)) },
             remoteMediator = OrderRemoteMediator(
                 db = db,
@@ -210,7 +210,7 @@ class CategoryRepoImpl constructor(
         kingdomType: KingdomType
     ): Flow<PagingData<HabitatCategoryModel>> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
+            config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingHabitats(RemoteKeyUtil.getHabitatRemoteKey(kingdomType)) },
             remoteMediator = HabitatRemoteMediator(
                 db = db,
@@ -224,7 +224,7 @@ class CategoryRepoImpl constructor(
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagingFamilies(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
+            config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingFamilies(RemoteKeyUtil.getFamilyRemoteKey(kingdomType, null)) },
             remoteMediator = FamilyRemoteMediator(
                 db = db,
@@ -234,5 +234,12 @@ class CategoryRepoImpl constructor(
                 limit = pageSize
             )
         ).flow.map { items -> items.map { it.toFamily(language) } }
+    }
+
+    private fun getPagingConfig(pageSize: Int): PagingConfig{
+        return PagingConfig(
+            pageSize = pageSize,
+            initialLoadSize = pageSize * 2
+        )
     }
 }

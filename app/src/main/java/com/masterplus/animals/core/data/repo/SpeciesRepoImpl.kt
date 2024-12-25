@@ -9,9 +9,9 @@ import com.masterplus.animals.R
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.mapper.toSpecies
 import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
-import com.masterplus.animals.core.data.mediators.SpeciesListRemoteMediator
 import com.masterplus.animals.core.data.mediators.SpeciesCategoryRemoteMediator
 import com.masterplus.animals.core.data.mediators.SpeciesKingdomRemoteMediator
+import com.masterplus.animals.core.data.mediators.SpeciesListRemoteMediator
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
@@ -51,7 +51,10 @@ class SpeciesRepoImpl(
         kingdom: KingdomType?
     ): Flow<PagingData<SpeciesListDetail>> {
         return Pager(
-            config = PagingConfig(pageSize = pageSize),
+            config = PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = pageSize * 2
+            ),
             pagingSourceFactory = {
                 when {
                     itemId == null && kingdom != null -> {

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
+import com.masterplus.animals.core.domain.constants.K
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.utils.UiText
@@ -41,7 +42,7 @@ class SpeciesListViewModel(
         .getFlowLanguage()
         .flatMapLatest { language ->
             args.let { args ->
-                speciesRepo.getPagingSpeciesList(args.categoryType, args.categoryItemId, 20, language, args.kingdomType)
+                speciesRepo.getPagingSpeciesList(args.categoryType, args.categoryItemId, K.SPECIES_PAGE_SIZE, language, args.kingdomType)
             }
         }
         .cachedIn(viewModelScope)

@@ -101,7 +101,8 @@ class SpeciesDetailViewModel(
             if (checkResult.isError){
                 _state.update { it.copy(
                     isLoading = false,
-                    message = checkResult.getFailureError?.text
+                    message = checkResult.getFailureError?.text,
+                    species = species
                 ) }
                 return
             }
@@ -110,7 +111,7 @@ class SpeciesDetailViewModel(
                     animalRepo.getAnimalDetailBySpeciesId(args.speciesId, language)?.let { animalDetail ->
                         val titleSectionImages = getTitleSectionImages(animalDetail.images)
                         _state.update { it.copy(
-                            speciesDetail = animalDetail,
+                            images = animalDetail.images,
                             titleSectionModels = animalDetail.detail.toTitleSections(images = titleSectionImages),
                             scientificNomenclatureSection = animalDetail.toScientificNomenclatureSection(),
                             featureSection2 = animalDetail.toFeatureSection2(),
@@ -122,14 +123,13 @@ class SpeciesDetailViewModel(
                     plantRepo.getPlantDetailBySpeciesId(args.speciesId, language)?.let { plantDetail ->
                         val titleSectionImages = getTitleSectionImages(plantDetail.images)
                         _state.update { it.copy(
-                            speciesDetail = plantDetail ,
+                            images = plantDetail.images,
                             titleSectionModels = plantDetail.detail.toTitleSections(images = titleSectionImages),
                             scientificNomenclatureSection = plantDetail.toScientificNomenclatureSection(),
                             featureSection2 = plantDetail.toFeatureSection2(),
                             featureSection3 = plantDetail.detail.toFeatureSection3()
                         ) }
                     }
-
                 }
             }
         }

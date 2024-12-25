@@ -40,6 +40,13 @@ fun SharedLoadingPageContent(
             (overlayLoading || !isLoading) && !isEmptyResult
         }
     }
+
+    val showEmptyResult by remember(isEmptyResult, isLoading) {
+        derivedStateOf {
+            !isLoading && isEmptyResult
+        }
+    }
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -53,7 +60,7 @@ fun SharedLoadingPageContent(
             )
         }
 
-        if (!isLoading && isEmptyResult) {
+        if (showEmptyResult) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()

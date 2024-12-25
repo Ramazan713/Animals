@@ -35,13 +35,15 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
+import com.masterplus.animals.core.extentions.isAppendItemLoading
+import com.masterplus.animals.core.extentions.isEmptyResult
+import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.TopBarType
@@ -53,7 +55,6 @@ import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
-import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
@@ -91,12 +92,13 @@ fun CategoryListPage(
         derivedStateOf {
             when {
                 state.isLoading -> false
-                state.parentImageData != null && pagingItems.itemCount > 0 -> true
-                pagingItems.itemCount > 0 -> true
-                else -> false
+//                state.parentImageData != null && pagingItems.itemCount > 0 -> true
+//                state.parentImageData != null -> true
+                else -> true
             }
         }
     }
+
 
     val lazyListState = rememberLazyGridState()
     val middlePos = lazyListState.visibleMiddlePosition()
@@ -131,10 +133,10 @@ fun CategoryListPage(
                 .padding(paddings)
                 .fillMaxSize()
                 .nestedScroll(topBarScrollBehaviour.nestedScrollConnection),
-            isEmptyResult = pagingItems.itemCount == 0,
+            isEmptyResult = pagingItems.isEmptyResult(),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp),
             state = lazyListState,
-            isLoading = pagingItems.loadState.refresh is LoadState.Loading,
+            isLoading = pagingItems.isLoading() || autoSavePointState.loadingSavePointPos || state.isLoading,
             stickHeaderContent = {
                 item(
                     span = { GridItemSpan(maxLineSpan) }
@@ -159,7 +161,6 @@ fun CategoryListPage(
         ) {
             items(
                 count = pagingItems.itemCount,
-                key = { pagingItems[it]?.id ?: it }
             ){ index ->
                 val item = pagingItems[index]
                 if(item != null){
@@ -183,7 +184,7 @@ fun CategoryListPage(
                     )
                 }
             }
-            if(pagingItems.loadState.append is LoadState.Loading){
+            if(pagingItems.isAppendItemLoading()){
                 item {
                     SharedCircularProgress(modifier = Modifier.fillMaxWidth())
                 }
@@ -325,13 +326,22 @@ private fun GetTopBar(
 @Composable
 private fun CategoryListPagePreview1() {
     CategoryListPage(
-        state = CategoryState(kingdomType = KingdomType.Animals, categoryItemId = 1, categoryType = CategoryType.Class),
+        state = CategoryState(
+            kingdomType = KingdomType.Animals,
+            categoryItemId = 1,
+            categoryType = CategoryType.Class,
+            parentImageData = SampleDatas.imageWithMetadata,
+            title = "Sample title",
+            subTitle = "SubTitle",
+            isLoading = false
+        ),
         onAction = {},
         pagingItems = getPreviewLazyPagingData<CategoryData>(
             items = listOf(
-                SampleDatas.categoryData
+//                SampleDatas.categoryData
             ),
-            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading)
+//            sourceLoadStates = previewPagingLoadStates(append = LoadState.Loading),
+//            mediatorLoadStates = previewPagingLoadStates(append = LoadState.Loading)
         ),
         onNavigateBack = {
 

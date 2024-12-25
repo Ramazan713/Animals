@@ -1,13 +1,19 @@
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.masterplus.animals.core.domain.constants.K
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.repo.CategoryRepo
+import com.masterplus.animals.core.domain.utils.DefaultResult
+import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
+import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
+import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.animal.domain.repo.DailyAnimalRepo
 import com.masterplus.animals.features.animal.presentation.AnimalAction
@@ -20,6 +26,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.intellij.lang.annotations.Language
 
 class AnimalViewModel(
     private val categoryRepo: CategoryRepo,
@@ -32,13 +39,6 @@ class AnimalViewModel(
     private val _state = MutableStateFlow(AnimalState())
     val state = _state.asStateFlow()
 
-    private val categoryTypes = listOf(
-        CategoryType.Habitat,
-        CategoryType.Order,
-        CategoryType.Class,
-        CategoryType.Family
-    )
-
     init {
         loadCategories()
         loadSavePoints()
@@ -47,6 +47,21 @@ class AnimalViewModel(
     fun onAction(action: AnimalAction){
         when(action){
             AnimalAction.ClearMessage -> _state.update { it.copy(message = null) }
+            is AnimalAction.RetryCategory -> {
+                viewModelScope.launch {
+                    when(action.categoryType){
+                        CategoryType.Habitat -> loadHabits(state.value.languageEnum)
+                        CategoryType.Class -> loadClasses(state.value.languageEnum)
+                        CategoryType.Order -> loadOrders(state.value.languageEnum)
+                        CategoryType.Family -> loadFamilies(state.value.languageEnum)
+                        CategoryType.List -> null
+                    }?.onFailure { error ->
+                        _state.update { it.copy(
+                            message = error.text
+                        ) }
+                    }
+                }
+            }
         }
     }
 
@@ -55,56 +70,20 @@ class AnimalViewModel(
             .getFlowLanguage()
             .onEach { language->
                 _state.update { it.copy(
-                    isLoading = true
+                    isLoading = false,
+                    languageEnum = language
                 ) }
                 viewModelScope.launch {
-                    val results = categoryTypes.map { type ->
-                        async {
-                            type to categoryRepo
-                                .getCategoryData(type, CATEGORY_LIMIT, language, kingdomType)
-                        }
-                    }
-
-                    val dataMap = results.awaitAll().toMap()
-
-                    val error = dataMap.values.firstNotNullOfOrNull { it.getFailureError?.text }
-
-//                    val dailyAnimals = dailyAnimalRepo.getTodayAnimals(3, language = language)
-//                    .mapNotNull { it.toImageWithTitleModel() }.let { imageWithTitleModels ->
-//                        CategoryRowModel(imageWithTitleModels = imageWithTitleModels, showMore = false)
-//                    }
-
+                    val jobs = listOf(
+                        async { loadHabits(language) },
+                        async { loadClasses(language) },
+                        async { loadOrders(language) },
+                        async { loadFamilies(language) },
+                    )
+                    val jobsResponse = jobs.awaitAll()
+                    val error = jobsResponse.firstNotNullOfOrNull { it.getFailureError?.text }
                     _state.update { it.copy(
-                        isLoading = false,
-                        message = error,
-                        habitats = dataMap[CategoryType.Habitat]?.getSuccessData?.let { imageWithTitleModels ->
-                            CategoryDataRowModel(
-                                categoryDataList = imageWithTitleModels,
-                                showMore = imageWithTitleModels.size >= CATEGORY_LIMIT
-                            )
-                        } ?: CategoryDataRowModel(),
-
-                        orders = dataMap[CategoryType.Order]?.getSuccessData?.let { imageWithTitleModels ->
-                            CategoryDataRowModel(
-                                categoryDataList = imageWithTitleModels,
-                                showMore = imageWithTitleModels.size >= CATEGORY_LIMIT
-                            )
-                        } ?: CategoryDataRowModel(),
-
-                        classes = dataMap[CategoryType.Class]?.getSuccessData?.let { imageWithTitleModels ->
-                            CategoryDataRowModel(
-                                categoryDataList = imageWithTitleModels,
-                                showMore = imageWithTitleModels.size >= CATEGORY_LIMIT
-                            )
-                        } ?: CategoryDataRowModel(),
-
-                        families = dataMap[CategoryType.Family]?.getSuccessData?.let { imageWithTitleModels ->
-                            CategoryDataRowModel(
-                                categoryDataList = imageWithTitleModels,
-                                showMore = imageWithTitleModels.size >= CATEGORY_LIMIT
-                            )
-                        } ?: CategoryDataRowModel(),
-//                    dailyAnimals = listOf()
+                        message = error
                     ) }
                 }
             }
@@ -127,7 +106,73 @@ class AnimalViewModel(
             .launchIn(viewModelScope)
     }
 
+    private suspend fun loadHabits(language: LanguageEnum): EmptyDefaultResult {
+        _state.update { it.copy(
+            habitats = CategoryDataRowModel(isLoading = true)
+        ) }
+        val result = loadCategoryData(CategoryType.Habitat, language)
+        result.onSuccess {
+            _state.update { state -> state.copy(
+                habitats = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= CATEGORY_LIMIT)
+            ) }
+        }
+        return result.asEmptyResult()
+    }
+
+    private suspend fun loadClasses(language: LanguageEnum): EmptyDefaultResult {
+        _state.update { it.copy(
+            classes = CategoryDataRowModel(isLoading = true)
+        ) }
+        val result = loadCategoryData(CategoryType.Class, language)
+        result.onSuccess {
+            _state.update { state -> state.copy(
+                classes = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= CATEGORY_LIMIT)
+            ) }
+        }
+        return result.asEmptyResult()
+    }
+
+
+    private suspend fun loadOrders(language: LanguageEnum): EmptyDefaultResult {
+        _state.update { it.copy(
+            orders = CategoryDataRowModel(isLoading = true)
+        ) }
+        val result = loadCategoryData(CategoryType.Order, language)
+        result.onSuccess {
+            _state.update { state -> state.copy(
+                orders = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= CATEGORY_LIMIT)
+            ) }
+        }
+        return result.asEmptyResult()
+    }
+
+
+    private suspend fun loadFamilies(language: LanguageEnum): EmptyDefaultResult {
+        _state.update { it.copy(
+            families = CategoryDataRowModel(isLoading = true)
+        ) }
+        val result = loadCategoryData(CategoryType.Family, language)
+        result.onSuccess {
+            _state.update { state -> state.copy(
+                families = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= CATEGORY_LIMIT)
+            ) }
+        }
+        return result.asEmptyResult()
+    }
+
+    private suspend fun loadCategoryData(
+        type: CategoryType,
+        language: LanguageEnum
+    ): DefaultResult<List<CategoryData>> {
+        return categoryRepo.getCategoryData(
+            categoryType = type,
+            limit = CATEGORY_LIMIT,
+            language = language,
+            kingdomType = kingdomType
+        )
+    }
+
     companion object {
-        private const val CATEGORY_LIMIT = 7
+        private const val CATEGORY_LIMIT = K.HOME_CATEGORY_PAGE_SIZE
     }
 }

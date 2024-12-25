@@ -7,6 +7,7 @@ import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toCategoryData
+import com.masterplus.animals.core.domain.constants.K
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
@@ -41,19 +42,19 @@ class CategoryListViewModel(
             args.categoryType.let { categoryType ->
                 when(categoryType){
                     CategoryType.Class -> {
-                        categoryRepo.getPagingClasses(10, language, args.kingdomType)
+                        categoryRepo.getPagingClasses(K.CATEGORY_PAGE_SIZE, language, args.kingdomType)
                             .map { items -> items.map { it.toCategoryData() } }
                     }
                     CategoryType.Order -> {
-                        categoryRepo.getPagingOrders(10, language, args.kingdomType)
+                        categoryRepo.getPagingOrders(K.CATEGORY_PAGE_SIZE, language, args.kingdomType)
                             .map { items -> items.map { it.toCategoryData() } }
                     }
                     CategoryType.Family -> {
-                        categoryRepo.getPagingFamilies(10, language, args.kingdomType)
+                        categoryRepo.getPagingFamilies(K.CATEGORY_PAGE_SIZE, language, args.kingdomType)
                             .map { items -> items.map { it.toCategoryData() } }
                     }
                     CategoryType.Habitat -> {
-                        categoryRepo.getPagingHabitats(10, language, args.kingdomType)
+                        categoryRepo.getPagingHabitats(K.CATEGORY_PAGE_SIZE, language, args.kingdomType)
                             .map { items -> items.map { it.toCategoryData() } }
                     }
                     else -> flowOf()

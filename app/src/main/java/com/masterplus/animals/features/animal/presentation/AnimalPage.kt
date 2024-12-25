@@ -5,6 +5,7 @@ import AnimalViewModel
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -19,10 +21,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +43,8 @@ import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.defaults.SettingTopBarMenuEnum
+import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
+import com.masterplus.animals.core.presentation.models.CategoryRowModel
 import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.SampleDatas
@@ -68,7 +77,8 @@ fun AnimalPageRoot(
         onNavigateToSpeciesList = onNavigateToSpeciesList,
         onNavigateToShowSavePoints = onNavigateToShowSavePoints,
         onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
-        onNavigateToSettings = onNavigateToSettings
+        onNavigateToSettings = onNavigateToSettings,
+        onAction = viewModel::onAction
     )
 }
 
@@ -77,6 +87,7 @@ fun AnimalPageRoot(
 @Composable
 fun AnimalPage(
     state: AnimalState,
+    onAction: (AnimalAction) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, ItemId) -> Unit,
     onNavigateToCategoryList: (CategoryType) -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, Int) -> Unit,
@@ -137,6 +148,7 @@ fun AnimalPage(
                         title = "Yaşam Alanları",
                         items = state.habitats.categoryDataList,
                         showMore = state.habitats.showMore,
+                        isLoading = state.habitats.isLoading,
                         useTransition = true,
                         onClickItem = { item ->
                             onNavigateToSpeciesList(CategoryType.Habitat, item.id, 0)
@@ -144,6 +156,11 @@ fun AnimalPage(
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Habitat)
                         },
+                        emptyContent = {
+                            TryAgainButton(onClick = {
+                                onAction(AnimalAction.RetryCategory(CategoryType.Habitat))
+                            })
+                        }
                     )
                 }
 
@@ -152,13 +169,19 @@ fun AnimalPage(
                         contentPaddings = contentPaddings,
                         title = "Sınıflar",
                         items = state.classes.categoryDataList,
-                        showMore = state.classes.showMore || true,
+                        showMore = state.classes.showMore,
+                        isLoading = state.classes.isLoading,
                         useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Class)
                         },
                         onClickItem = { item ->
                             onNavigateToCategoryListWithDetail(CategoryType.Class, item.id ?: 0)
+                        },
+                        emptyContent = {
+                            TryAgainButton(onClick = {
+                                onAction(AnimalAction.RetryCategory(CategoryType.Class))
+                            })
                         }
                     )
                 }
@@ -169,12 +192,18 @@ fun AnimalPage(
                         title = "Takımlar",
                         items = state.orders.categoryDataList,
                         showMore = state.orders.showMore,
+                        isLoading = state.orders.isLoading,
                         useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Order)
                         },
                         onClickItem = { item ->
                             onNavigateToCategoryListWithDetail(CategoryType.Order, item.id ?: 0)
+                        },
+                        emptyContent = {
+                            TryAgainButton(onClick = {
+                                onAction(AnimalAction.RetryCategory(CategoryType.Order))
+                            })
                         }
                     )
                 }
@@ -185,12 +214,18 @@ fun AnimalPage(
                         title = "Familyalar",
                         items = state.families.categoryDataList,
                         showMore = state.families.showMore,
+                        isLoading = state.families.isLoading,
                         useTransition = true,
                         onClickMore = {
                             onNavigateToCategoryList(CategoryType.Family)
                         },
                         onClickItem = { item ->
                             onNavigateToSpeciesList(CategoryType.Family, item.id, 0)
+                        },
+                        emptyContent = {
+                            TryAgainButton(onClick = {
+                                onAction(AnimalAction.RetryCategory(CategoryType.Family))
+                            })
                         }
                     )
                 }
@@ -213,7 +248,8 @@ private fun DailyAnimalsSection(
         ImageCategoryDataRow(
             modifier = modifier,
             title = "Günün Hayvanları",
-            contentPaddings = contentPaddings
+            contentPaddings = contentPaddings,
+            isLoading = state.isLoading
         ){
             HorizontalUncontainedCarousel(
                 state = rememberCarouselState {
@@ -241,6 +277,24 @@ private fun DailyAnimalsSection(
 }
 
 @Composable
+private fun TryAgainButton(
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .requiredHeight(100.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        TextButton(
+            onClick = onClick,
+        ) {
+            Text("Tekrar Dene")
+        }
+    }
+
+}
+
+@Composable
 private fun SavePointSection(
     state: AnimalState,
     contentPaddings: PaddingValues,
@@ -250,7 +304,12 @@ private fun SavePointSection(
 ) {
     val maxSavePointsSize = 5
     val savePointsSize = state.savePoints.size
-    val savePointsLimited = state.savePoints.subList(0, minOf(maxSavePointsSize,savePointsSize))
+
+    val savePointsLimited by remember {
+        derivedStateOf {
+            state.savePoints.subList(0, minOf(maxSavePointsSize,savePointsSize))
+        }
+    }
 
     ImageCategoryDataRow(
         modifier = modifier
@@ -259,6 +318,7 @@ private fun SavePointSection(
         title = "Kaldıgın yerden devam et",
         onClickMore = onNavigateToShowSavePoints,
         showMore = savePointsSize > maxSavePointsSize,
+        isLoading = state.isSavePointLoading
     ){ showMoreBtn ->
         Row (
             modifier = Modifier
@@ -300,13 +360,18 @@ fun AnimalPagePreview() {
     AnimalPage(
         state = AnimalState(
             isLoading = false,
-            savePoints = listOf(SampleDatas.generateSavePoint(), SampleDatas.generateSavePoint(id = 2).copy(title = "Title"))
+            isSavePointLoading = true,
+            habitats = CategoryDataRowModel(isLoading = true),
+            dailyAnimals = CategoryRowModel(isLoading = true),
+            classes = CategoryDataRowModel(isLoading = true),
+//            savePoints = listOf(SampleDatas.generateSavePoint(), SampleDatas.generateSavePoint(id = 2).copy(title = "Title"))
         ),
         onNavigateToCategoryListWithDetail = { _, _ ->},
         onNavigateToCategoryList = {},
         onNavigateToSpeciesList = { _, _, _ -> },
         onNavigateToShowSavePoints = {},
         onNavigateToSpeciesDetail = {},
-        onNavigateToSettings = {}
+        onNavigateToSettings = {},
+        onAction = {}
     )
 }

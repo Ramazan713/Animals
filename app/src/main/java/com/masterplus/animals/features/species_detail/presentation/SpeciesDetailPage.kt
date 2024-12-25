@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -58,6 +59,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesModel
+import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.image.DefaultImage
 import com.masterplus.animals.core.presentation.components.image.TransitionImage
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
@@ -81,7 +83,6 @@ import com.masterplus.animals.features.species_detail.presentation.components.Ti
 import com.masterplus.animals.features.species_detail.presentation.mapper.toFeatureSection2
 import com.masterplus.animals.features.species_detail.presentation.mapper.toFeatureSection3
 import com.masterplus.animals.features.species_detail.presentation.mapper.toScientificNomenclatureSection
-import com.masterplus.animals.features.species_detail.presentation.mapper.toTitleSections
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -106,7 +107,7 @@ fun SpeciesDetailPageRoot(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SpeciesDetailPage(
     state: SpeciesDetailState,
@@ -127,8 +128,14 @@ fun SpeciesDetailPage(
         pagerState.animateScrollToPage(pageEnum.ordinal)
     }
 
-    Scaffold { paddings ->
-        val species = state.speciesDetail?.species
+    Scaffold(
+        topBar = {
+            if(!state.isLoading && state.species == null){
+                DefaultTopBar(title = "", onNavigateBack = onNavigateBack)
+            }
+        }
+    ) { paddings ->
+        val species = state.species
 
         SharedLoadingPageContent(
             modifier = Modifier
@@ -162,7 +169,7 @@ fun SpeciesDetailPage(
                     onNavigateBack = onNavigateBack,
                     onShowImageClick = {
                         onAction(SpeciesDetailAction.ShowDialog(SpeciesDetailDialogEvent.ShowImages(
-                            images = state.speciesDetail.detail.images.map { it.image },
+                            images = state.images.map { it.image },
                             index = it
                         )))
                     }
@@ -186,7 +193,8 @@ fun SpeciesDetailPage(
                 HorizontalPager(
                     state = pagerState,
                     userScrollEnabled = false,
-                    contentPadding = PaddingValues(bottom = 16.dp)
+                    contentPadding = PaddingValues(bottom = 16.dp),
+                    verticalAlignment = Alignment.Top
                 ) { pageIndex ->
                     when(pageIndex){
                         SpeciesInfoPageEnum.Info.ordinal ->  {
@@ -205,7 +213,9 @@ fun SpeciesDetailPage(
                         }
                         SpeciesInfoPageEnum.Features.ordinal ->  {
                             FeaturePageContent(
-                                state = state
+                                state = state,
+                                modifier = Modifier
+                                    .fillMaxSize()
                             )
                         }
                     }
@@ -237,7 +247,7 @@ fun SpeciesDetailPage(
             }
 
             SpeciesDetailDialogEvent.ShowSelectListBottom -> {
-                val species = state.speciesDetail?.species ?: return
+                val species = state.species ?: return
                 ShowSelectListBottom(
                     speciesId = species.id,
                     listIdControl = state.listIdControl,
@@ -261,7 +271,7 @@ private fun TopBarImage(
     onShowImageClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val images = state.speciesDetail?.detail?.images ?: emptyList()
+    val images = state.images
     val carouselState = rememberCarouselState {
         images.size
     }
@@ -311,7 +321,7 @@ private fun TopBarImage(
                     ,
                     image = images[index].image,
                     shape = RoundedCornerShape(16.dp),
-                    transitionKey = state.speciesDetail?.images?.get(index)?.let {
+                    transitionKey = state.images[index].let {
                         TransitionImageKey(
                             id = it.speciesId,
                             extra = it.image.id?.toString(),
@@ -361,7 +371,7 @@ private fun ListButtons(
         FilledTonalButton(
             modifier = Modifier.animateContentSize(),
             onClick = {
-                val speciesId = state.speciesDetail?.species?.id ?: return@FilledTonalButton
+                val speciesId = state.species?.id ?: return@FilledTonalButton
                 if(state.isFavorited){
                     onAddSpeciesAction(AddSpeciesToListAction.AddOrAskFavorite(speciesId))
                 }else{
@@ -414,7 +424,8 @@ private fun InfoPageContent(
             state = state,
             onAddSpeciesAction = onAddSpeciesAction,
             onAction = onAction,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(bottom = 2.dp)
         )
 
@@ -445,8 +456,12 @@ private fun InfoPageContent(
             style = MaterialTheme.typography.bodyMedium
         )
 
+        val titleSectionModels = state.titleSectionModels
 
-        state.titleSectionModels.forEach { titleSectionModel ->
+        if(titleSectionModels.isEmpty()){
+            DataNotLoaded(modifier = Modifier.padding(vertical = 8.dp))
+        }
+        titleSectionModels.forEach { titleSectionModel ->
             TitleSectionRow(
                 modifier = Modifier
                     .padding(bottom = 12.dp),
@@ -463,16 +478,25 @@ private fun FeaturePageContent(
     state: SpeciesDetailState,
     modifier: Modifier = Modifier
 ) {
+    val scientificNomenclatureSection = state.scientificNomenclatureSection
+    val featureSection2 = state.featureSection2
+    val featureSection3 = state.featureSection3
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
-
     ) {
+
+        if(scientificNomenclatureSection.isEmpty() && featureSection2.isEmpty() &&featureSection3.isEmpty()){
+            DataNotLoaded(modifier = Modifier.padding(vertical = 8.dp))
+            return@Column
+        }
+
         Text(
             text = "Bilimsel Adlandırma",
             style = MaterialTheme.typography.labelLarge
         )
-        state.scientificNomenclatureSection.chunked(2).forEach { titleContentsRow ->
+        scientificNomenclatureSection.chunked(2).forEach { titleContentsRow ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -486,10 +510,13 @@ private fun FeaturePageContent(
                 }
             }
         }
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 12.dp)
-        )
-        state.featureSection2.chunked(2).forEach { titleContentsRow ->
+        if(scientificNomenclatureSection.isNotEmpty()){
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+        }
+
+        featureSection2.chunked(2).forEach { titleContentsRow ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -503,10 +530,14 @@ private fun FeaturePageContent(
                 }
             }
         }
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 12.dp)
-        )
-        state.featureSection3.forEach { titleContent ->
+
+        if(featureSection2.isNotEmpty()){
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+        }
+
+        featureSection3.forEach { titleContent ->
             TitleContentInfo(
                 titleContent = titleContent
             )
@@ -517,14 +548,33 @@ private fun FeaturePageContent(
 }
 
 
+@Composable
+private fun DataNotLoaded(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Veriler Yüklenemedi",
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.W500
+            )
+        )
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
 private fun SpeciesDetailPagePreview() {
     SpeciesDetailPage(
         state = SpeciesDetailState(
-            speciesDetail = SampleDatas.animalDetail,
             selectedPage = SpeciesInfoPageEnum.Info,
-            titleSectionModels = SampleDatas.animal.toTitleSections(images = listOf(SampleDatas.imageWithMetadata, SampleDatas.imageWithMetadata)),
+            isLoading = false,
+            species = SampleDatas.species,
+//            titleSectionModels = SampleDatas.animal.toTitleSections(images = listOf(SampleDatas.imageWithMetadata, SampleDatas.imageWithMetadata)),
             scientificNomenclatureSection = SampleDatas.animalDetail.toScientificNomenclatureSection(),
             featureSection2 = SampleDatas.animalDetail.toFeatureSection2(),
             featureSection3 = SampleDatas.animal.toFeatureSection3()

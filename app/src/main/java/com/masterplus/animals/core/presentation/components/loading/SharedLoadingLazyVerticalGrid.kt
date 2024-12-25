@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
@@ -18,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -62,7 +66,9 @@ fun SharedLoadingLazyVerticalGrid(
                     .clickable(enabled = false, onClick = {})
             )
         }
+
         LazyVerticalGrid(
+            modifier = Modifier,
             columns = GridCells.Adaptive(minSize = 400.dp),
             state = state,
             verticalArrangement = Arrangement.spacedBy(verticalSpaceBy),
@@ -79,8 +85,8 @@ fun SharedLoadingLazyVerticalGrid(
                 ) {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxSize()
+                            .fillMaxHeight()
+                            .height(100.dp)
                             .zIndex(2f)
                             .align(Alignment.Center),
                         contentAlignment = Alignment.Center
@@ -88,7 +94,7 @@ fun SharedLoadingLazyVerticalGrid(
                         Text(
                             emptyMessage,
                             style = MaterialTheme.typography.bodyLarge,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         )
                     }
                 }
@@ -157,17 +163,17 @@ private fun GetPreviewContent(
                 }
             },
             content = {
-                item {
-                    Box(
-                        modifier = Modifier.height(100.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Hello world",
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
+//                item {
+//                    Box(
+//                        modifier = Modifier.height(100.dp),
+//                        contentAlignment = Alignment.Center
+//                    ) {
+//                        Text(
+//                            text = "Hello world",
+//                            textAlign = TextAlign.Center
+//                        )
+//                    }
+//                }
             }
         )
     }
