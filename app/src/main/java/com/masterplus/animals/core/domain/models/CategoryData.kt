@@ -5,12 +5,12 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 
 
 data class CategoryData(
-    val id: Int?,
+    override val id: Int,
     val image: ImageWithMetadata?,
     val title: String,
     val categoryType: CategoryType,
     val kingdomType: KingdomType,
     val secondaryTitle: String? = null
-){
+): Item{
     val imageUrl get() = image?.imageUrl
 }

@@ -4,14 +4,25 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.paging.compose.LazyPagingItems
+import com.masterplus.animals.R
+import com.masterplus.animals.core.domain.models.Item
+import com.masterplus.animals.core.extentions.hasLimitException
+import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle
@@ -20,14 +31,17 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
 
+
+
 @Composable
-fun AutoSavePointHandler(
+fun <T: Item> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
-    itemPosIndex: Int,
+    onItemPosIndex: () -> Int,
     itemInitPos: Int = 0,
+    pagingItems: LazyPagingItems<T>,
     onInitPosResponse: ((Int) -> Unit)? = null
 ) {
     val currentOnInitPosResponse by rememberUpdatedState(onInitPosResponse)
@@ -37,8 +51,29 @@ fun AutoSavePointHandler(
         onAction(AutoSavePointAction.ClearUiEvent)
         when(uiEvent){
             is AutoSavePointEvent.LoadItemPos -> {
-                currentOnInitPosResponse?.invoke(uiEvent.pos)
+                val pos = uiEvent.pos
+                if(pos != null) {
+                    currentOnInitPosResponse?.invoke(pos)
+                    return@EventHandler
+                }
+                if(pagingItems.hasLimitException()){
+                    onAction(AutoSavePointAction.ShowDialog(AutoSavePointDialogEvent.ShowAdRequired))
+                }else{
+                    pagingItems.refresh()
+                }
             }
+            AutoSavePointEvent.RetryPagingAfterAd -> {
+                pagingItems.retry()
+            }
+            AutoSavePointEvent.ShowAd -> {
+                onAction(AutoSavePointAction.SuccessShowAd)
+            }
+        }
+    }
+
+    LaunchedEffect(pagingItems.loadState, pagingItems.itemCount){
+        if(pagingItems.hasLimitException() && pagingItems.isEmptyResult()){
+            onAction(AutoSavePointAction.ShowDialog(AutoSavePointDialogEvent.ShowAdRequired))
         }
     }
 
@@ -56,23 +91,62 @@ fun AutoSavePointHandler(
             onAction(AutoSavePointAction.UpsertSavePoint(
                 destination = currentOnDestination(),
                 contentType = contentType,
-                itemPosIndex = itemPosIndex
+                itemPosIndex = onItemPosIndex()
             ))
         }
     )
+
+    state.dialogEvent?.let { dialogEvent ->
+        val close = remember { {
+            onAction(AutoSavePointAction.ShowDialog(null))
+        } }
+        when(dialogEvent){
+            is AutoSavePointDialogEvent.ShowAdRequired -> {
+                AlertDialog(
+                    onDismissRequest = close,
+                    title = {
+                        Text("Kayıt yükleme limitine ulaştınız")
+                    },
+                    text = {
+                        Text("Devam etmek için reklam izlemeniz gerekmektedir")
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = close,
+                        ){
+                            Text(stringResource(R.string.cancel))
+                        }
+                    },
+                    confirmButton = {
+                        FilledTonalButton(
+                            onClick = {
+                                onAction(AutoSavePointAction.ShowAd)
+                                close()
+                            }
+                        ) {
+                            Text("Onayla")
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AutoSavePointHandler(
+private fun <T: Item> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
-    itemPosIndex: Int,
+    onItemPosIndex: () -> Int,
     topBarScrollBehaviour: TopAppBarScrollBehavior?,
     scrollToPos: suspend (Int) -> Unit,
-    itemInitPos: Int = 0
+    itemInitPos: Int = 0,
+    pagingItems: LazyPagingItems<T>,
 ){
     val scope = rememberCoroutineScope()
     val configuration = LocalConfiguration.current
@@ -86,9 +160,10 @@ private fun AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        itemPosIndex = itemPosIndex,
+        onItemPosIndex = onItemPosIndex,
         state = state,
         itemInitPos = itemInitPos,
+        pagingItems = pagingItems,
         onInitPosResponse = {pos ->
             scope.launch {
                 val itemSize = ceil(configuration.screenHeightDp / 180f).toInt() - 2
@@ -102,15 +177,17 @@ private fun AutoSavePointHandler(
     )
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AutoSavePointHandler(
+fun <T: Item> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
     itemInitPos: Int = 0,
     lazyListState: LazyListState,
+    pagingItems: LazyPagingItems<T>,
     topBarScrollBehaviour: TopAppBarScrollBehavior? = null
 ){
     val itemPosIndex = lazyListState.visibleMiddlePosition()
@@ -118,11 +195,13 @@ fun AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        itemPosIndex = itemPosIndex,
+        onItemPosIndex = { itemPosIndex },
         state = state,
         itemInitPos = itemInitPos,
         topBarScrollBehaviour = topBarScrollBehaviour,
+        pagingItems = pagingItems,
         scrollToPos = {pos ->
+            println("AppXXXX: pos: $pos")
             lazyListState.scrollToItem(pos)
         }
     )
@@ -130,13 +209,14 @@ fun AutoSavePointHandler(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AutoSavePointHandler(
+fun <T: Item> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
     itemInitPos: Int = 0,
     lazyListState: LazyGridState,
+    pagingItems: LazyPagingItems<T>,
     topBarScrollBehaviour: TopAppBarScrollBehavior? = null
 ){
     val itemPosIndex = lazyListState.visibleMiddlePosition()
@@ -144,9 +224,10 @@ fun AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        itemPosIndex = itemPosIndex,
+        onItemPosIndex = { itemPosIndex },
         state = state,
         itemInitPos = itemInitPos,
+        pagingItems = pagingItems,
         topBarScrollBehaviour = topBarScrollBehaviour,
         scrollToPos = { pos ->
             lazyListState.scrollToItem(pos)

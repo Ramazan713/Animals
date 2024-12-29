@@ -17,4 +17,15 @@ sealed interface AutoSavePointAction {
     ): AutoSavePointAction
 
     data object ClearUiEvent: AutoSavePointAction
+
+    data class RequestNavigateToPosByItemId(
+        val itemId: Int,
+        val label: String
+    ): AutoSavePointAction
+
+    data object ShowAd: AutoSavePointAction
+
+    data object SuccessShowAd: AutoSavePointAction
+
+    data class ShowDialog(val dialogEvent: AutoSavePointDialogEvent? = null): AutoSavePointAction
 }

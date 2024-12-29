@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -16,26 +17,26 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
-import com.masterplus.animals.core.extentions.isAnyItemLoading
 import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
@@ -47,7 +48,7 @@ import com.masterplus.animals.core.presentation.transition.animateEnterExitForTr
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
-import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
+import com.masterplus.animals.core.shared_features.ad.presentation.components.ContinueWithAdButton
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
@@ -66,7 +67,6 @@ import com.masterplus.animals.features.species_list.domain.enums.SpeciesListBott
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListTopItemMenu
 import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
 import com.masterplus.animals.features.species_list.presentation.navigation.SpeciesListRoute
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -100,7 +100,7 @@ fun SpeciesListPageRoot(
             onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.categoryItemId)
         },
         autoSavePointState = autoSavePointState,
-        onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings
+        onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings,
     )
 }
 
@@ -121,15 +121,11 @@ fun SpeciesListPage(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: () -> Unit,
-    onNavigateToSavePointSpeciesSettings: () -> Unit
+    onNavigateToSavePointSpeciesSettings: () -> Unit,
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val lazyListState = rememberLazyListState(
-        initialFirstVisibleItemIndex = args.initPosIndex
-    )
-    val scope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
     val middlePos = lazyListState.visibleMiddlePosition()
-
 
     AutoSavePointHandler(
         contentType = SavePointContentType.Content,
@@ -142,8 +138,22 @@ fun SpeciesListPage(
         state = autoSavePointState,
         itemInitPos = args.initPosIndex,
         topBarScrollBehaviour = topBarScrollBehaviour,
-        lazyListState = lazyListState
+        lazyListState = lazyListState,
+        pagingItems = pagingItems,
     )
+
+
+    LaunchedEffect(pagingItems.itemCount){
+        val count = pagingItems.itemCount
+        println("AppXXXX itemCount: ${count}")
+//        if(count != 0){
+//            println("AppXXXX itemCount: ${(0..count - 1).map { i -> pagingItems[i]?.id ?: i }}")
+//        }
+    }
+
+
+
+
 
     Scaffold(
         topBar = {
@@ -155,7 +165,10 @@ fun SpeciesListPage(
                 onMenuItemClick = { menuItem ->
                     when(menuItem){
                         SpeciesListTopItemMenu.Savepoint -> {
-                            onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(posIndex = middlePos)))
+                            onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(
+                                posIndex = middlePos,
+                                itemId = 1104992
+                            )))
                         }
                         SpeciesListTopItemMenu.SavePointSettings -> onNavigateToSavePointSpeciesSettings()
                     }
@@ -171,6 +184,7 @@ fun SpeciesListPage(
             )
         }
     ) { paddings ->
+
         SharedLoadingPageContent(
             modifier = Modifier
                 .padding(paddings)
@@ -187,17 +201,27 @@ fun SpeciesListPage(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)
             ) {
+
+                ContinueWithAdButton(
+                    pagingItems = pagingItems,
+                    onWatchAd = {
+                        onAutoSavePointAction(AutoSavePointAction.ShowAd)
+                    }
+                )
+
                 items(
                     count = pagingItems.itemCount,
+                    key = pagingItems.itemKey { it.id },
+                    contentType = pagingItems.itemContentType { "MyPagingItems" }
                 ){ index ->
                     val item = pagingItems[index]
                     if(item != null){
                         SpeciesCard(
                             species = item,
-                            orderNum = index + 1,
+                            orderNum = "${index + 1} - ${item.id}",
                             isFavorited = item.isFavorited,
                             onClick = {
-                                onNavigateToSpeciesDetail(item.id ?: 0, state.listIdControl)
+                                onNavigateToSpeciesDetail(item.id, state.listIdControl)
                             },
                             onFavoriteClick = {
                                 onAddSpeciesAction(AddSpeciesToListAction.AddToFavorite(item.id))
@@ -213,8 +237,18 @@ fun SpeciesListPage(
                                 )))
                             },
                         )
+                    }else{
+                        Text("Loading", modifier = Modifier.height(130.dp))
                     }
                 }
+
+                ContinueWithAdButton(
+                    pagingItems = pagingItems,
+                    onWatchAd = {
+                        onAutoSavePointAction(AutoSavePointAction.ShowAd)
+                    }
+                )
+
                 if(pagingItems.isAppendItemLoading()){
                     item {
                         SharedCircularProgress(modifier = Modifier.fillMaxWidth())
@@ -222,9 +256,6 @@ fun SpeciesListPage(
                 }
             }
         }
-
-
-
     }
 
     AddSpeciesToListHandler(
@@ -235,7 +266,7 @@ fun SpeciesListPage(
         onBottomMenuItemClick = { menuItem, item, pos ->
             when(menuItem){
                 SpeciesListBottomItemMenu.Savepoint -> {
-                    onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(pos)))
+                    onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(pos, item)))
                 }
             }
         }
@@ -256,9 +287,11 @@ fun SpeciesListPage(
                     posIndex = dialogEvent.posIndex,
                     onClosed = close,
                     onNavigateLoad = {
-                        scope.launch {
-                            lazyListState.animateScrollToItem(it.itemPosIndex)
-                        }
+                        onAction(SpeciesListAction.SetPagingTargetId(dialogEvent.itemId))
+                        onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByItemId(
+                            itemId = dialogEvent.itemId,
+                            label = state.label
+                        ))
                     }
                 )
             }
@@ -289,6 +322,6 @@ fun SpeciesListPagePreview() {
         onNavigateToCategorySearch = {},
         onAutoSavePointAction = {},
         autoSavePointState = AutoSavePointState(),
-        onNavigateToSavePointSpeciesSettings = {}
+        onNavigateToSavePointSpeciesSettings = {},
     )
 }

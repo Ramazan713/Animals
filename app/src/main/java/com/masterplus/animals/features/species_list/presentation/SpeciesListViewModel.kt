@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
+import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.constants.K
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
@@ -19,6 +20,7 @@ import com.masterplus.animals.features.species_list.presentation.navigation.Spec
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -30,21 +32,25 @@ class SpeciesListViewModel(
     private val speciesRepo: SpeciesRepo,
     private val categoryRepo: CategoryRepo,
     private val savePointRepo: SavePointRepo,
-    private val translationRepo: TranslationRepo,
+    translationRepo: TranslationRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     val args = savedStateHandle.toRoute<SpeciesListRoute>()
-    
+
     private val _state = MutableStateFlow(SpeciesListState())
     val state = _state.asStateFlow()
 
-    val pagingItems = translationRepo
-        .getFlowLanguage()
-        .flatMapLatest { language ->
-            args.let { args ->
-                speciesRepo.getPagingSpeciesList(args.categoryType, args.categoryItemId, K.SPECIES_PAGE_SIZE, language, args.kingdomType)
-            }
+    private val _targetItemId = MutableStateFlow<Int?>(null)
+
+    val pagingItems = combine(
+        translationRepo
+            .getFlowLanguage(),
+        _targetItemId
+    ){ language, targetItemId ->
+        args.let { args ->
+            speciesRepo.getPagingSpeciesList(args.categoryType, args.categoryItemId, K.SPECIES_PAGE_SIZE, language, args.kingdomType, targetItemId)
         }
+    }.flatMapLatest { it }
         .cachedIn(viewModelScope)
 
     init {
@@ -56,8 +62,10 @@ class SpeciesListViewModel(
             }
             .launchIn(viewModelScope)
 
+        //TODO: set label with category
         _state.update { it.copy(
-            listIdControl = args.categoryType.toListIdControlOrNull(args.categoryItemId)
+            listIdControl = args.categoryType.toListIdControlOrNull(args.categoryItemId),
+            label = RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdom = args.kingdomType)
         ) }
     }
 
@@ -83,9 +91,11 @@ class SpeciesListViewModel(
                     )
                 }
             }
+            is SpeciesListAction.SetPagingTargetId -> {
+                _targetItemId.value = action.targetId
+            }
         }
     }
-
 
     private suspend fun setTitle(itemId: Int?, language: LanguageEnum){
         val kingdomTitle = if(args.kingdomType.isPlants) "Bitkiler Listesi" else "Hayvanlar Listesi"

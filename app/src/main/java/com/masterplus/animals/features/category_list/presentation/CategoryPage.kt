@@ -99,7 +99,8 @@ fun CategoryListPage(
         state = autoSavePointState,
         itemInitPos = initPos,
         lazyListState = lazyListState,
-        topBarScrollBehaviour = topBarScrollBehaviour
+        topBarScrollBehaviour = topBarScrollBehaviour,
+        pagingItems = pagingItems
     )
 
     Scaffold(

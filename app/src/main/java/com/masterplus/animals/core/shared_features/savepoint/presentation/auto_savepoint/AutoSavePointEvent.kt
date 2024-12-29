@@ -2,6 +2,10 @@ package com.masterplus.animals.core.shared_features.savepoint.presentation.auto_
 
 sealed interface AutoSavePointEvent {
     data class LoadItemPos(
-        val pos: Int
+        val pos: Int?
     ): AutoSavePointEvent
+
+    data object RetryPagingAfterAd: AutoSavePointEvent
+
+    data object ShowAd: AutoSavePointEvent
 }

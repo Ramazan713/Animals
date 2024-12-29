@@ -9,5 +9,6 @@ import androidx.room.PrimaryKey
 data class RemoteKeyEntity(
     @PrimaryKey(autoGenerate = false)
     val label: String,
-    val nextKey: String?
+    val nextKey: String?,
+    val prevKey: String?
 )

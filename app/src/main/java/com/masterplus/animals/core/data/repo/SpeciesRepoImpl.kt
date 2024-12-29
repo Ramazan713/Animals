@@ -10,7 +10,7 @@ import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.mapper.toSpecies
 import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
 import com.masterplus.animals.core.data.mediators.SpeciesCategoryRemoteMediator
-import com.masterplus.animals.core.data.mediators.SpeciesKingdomRemoteMediator
+import com.masterplus.animals.core.data.mediators.SpeciesKingdomRemoteMediator2
 import com.masterplus.animals.core.data.mediators.SpeciesListRemoteMediator
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
@@ -23,6 +23,7 @@ import com.masterplus.animals.core.domain.utils.EmptyResult
 import com.masterplus.animals.core.domain.utils.ErrorText
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.asEmptyResult
+import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
@@ -39,7 +40,8 @@ class SpeciesRepoImpl(
     private val speciesDao: SpeciesDao,
     private val categoryDao: CategoryDao,
     private val db: AppDatabase,
-    private val categoryRemoteSource: CategoryRemoteSource
+    private val categoryRemoteSource: CategoryRemoteSource,
+    private val serverReadCounter: ServerReadCounter
 ): SpeciesRepo {
     
     @OptIn(ExperimentalPagingApi::class)
@@ -48,12 +50,14 @@ class SpeciesRepoImpl(
         itemId: Int?,
         pageSize: Int,
         language: LanguageEnum,
-        kingdom: KingdomType?
+        kingdom: KingdomType?,
+        targetItemId: Int?
     ): Flow<PagingData<SpeciesListDetail>> {
         return Pager(
             config = PagingConfig(
                 pageSize = pageSize,
-                initialLoadSize = pageSize * 2
+                jumpThreshold = pageSize * 2,
+                enablePlaceholders = true
             ),
             pagingSourceFactory = {
                 when {
@@ -72,11 +76,12 @@ class SpeciesRepoImpl(
                 }
             },
             remoteMediator = when {
-                itemId == null -> SpeciesKingdomRemoteMediator(
+                itemId == null -> SpeciesKingdomRemoteMediator2(
                     kingdom = kingdom ?: KingdomType.DEFAULT,
-                    limit = pageSize,
                     db = db,
-                    categoryRemoteSource = categoryRemoteSource
+                    categoryRemoteSource = categoryRemoteSource,
+                    targetItemId = targetItemId,
+                    serverReadCounter = serverReadCounter
                 )
                 categoryType == CategoryType.List -> SpeciesListRemoteMediator(
                     db = db,
@@ -165,5 +170,10 @@ class SpeciesRepoImpl(
             return@coroutineScope Result.Success(Unit)
         }
 
+    }
+
+    override suspend fun getSpeciesPosByLabel(itemId: Int, label: String): Int? {
+        speciesDao.getSpeciesByIdAndLabel(itemId, label) ?: return null
+        return speciesDao.getSpeciesPosByLabel(itemId, label)
     }
 }

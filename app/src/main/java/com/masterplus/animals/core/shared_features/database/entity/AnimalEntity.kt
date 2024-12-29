@@ -11,6 +11,8 @@ import androidx.room.PrimaryKey
             entity = SpeciesEntity::class,
             parentColumns = ["id", "label"],
             childColumns = ["species_id", "label"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
         )
     ]
 )

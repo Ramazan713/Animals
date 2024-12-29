@@ -5,4 +5,6 @@ sealed interface SpeciesListAction {
     data class ShowDialog(val dialogEvent: SpeciesListDialogEvent?): SpeciesListAction
 
     data class SavePosition(val posIndex: Int): SpeciesListAction
+
+    data class SetPagingTargetId(val targetId: Int): SpeciesListAction
 }

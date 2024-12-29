@@ -97,7 +97,7 @@ private fun SearchResultLazyColumn(
                 if (item != null) {
                     SpeciesCard(
                         species = item,
-                        orderNum = index + 1,
+                        orderNum = "${index + 1}",
                         isFavorited = item.isFavorited,
                         onClick = {
                             onItemClick(item)

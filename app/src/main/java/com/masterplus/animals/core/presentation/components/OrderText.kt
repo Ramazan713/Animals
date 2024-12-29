@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun OrderText(
-    order: Int?,
+    order: String?,
     modifier: Modifier = Modifier,
 ) {
     Text(
@@ -34,6 +34,6 @@ fun OrderText(
 @Composable
 private fun OrderTextPreview() {
     OrderText(
-        order = 2
+        order = "2"
     )
 }

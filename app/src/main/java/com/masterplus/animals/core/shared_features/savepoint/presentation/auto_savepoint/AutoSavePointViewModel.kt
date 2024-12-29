@@ -2,6 +2,9 @@ package com.masterplus.animals.core.shared_features.savepoint.presentation.auto_
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.domain.repo.SpeciesRepo
+import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.preferences.domain.SettingsPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
@@ -15,7 +18,9 @@ import kotlinx.coroutines.launch
 class AutoSavePointViewModel(
     private val upsertAutoMode: SavePointUpsertAutoModeUseCase,
     private val settingsPreferences: SettingsPreferences,
-    private val savePointRepo: SavePointRepo
+    private val savePointRepo: SavePointRepo,
+    private val speciesRepo: SpeciesRepo,
+    private val readCounter: ServerReadCounter
 ): ViewModel(){
 
     private val _state = MutableStateFlow(AutoSavePointState())
@@ -43,7 +48,6 @@ class AutoSavePointViewModel(
                         return@launch
                     }
 
-
                     _state.update { it.copy(
                         loadingSavePointPos = true
                     ) }
@@ -68,6 +72,38 @@ class AutoSavePointViewModel(
 
             AutoSavePointAction.ClearUiEvent -> {
                 _state.update { it.copy(uiEvent = null) }
+            }
+
+            is AutoSavePointAction.RequestNavigateToPosByItemId -> {
+                viewModelScope.launch {
+                    //TODO: refactor by savepointType
+                    val pos = speciesRepo.getSpeciesPosByLabel(
+                        itemId = action.itemId,
+                        label = action.label
+                    )
+                    _state.update { it.copy(
+                        uiEvent = AutoSavePointEvent.LoadItemPos(pos = pos),
+                        navToPosRequest = AutoSavePointRequestPos(itemId = action.itemId, label = action.label)
+                    ) }
+                }
+            }
+            is AutoSavePointAction.ShowAd -> {
+                _state.update { it.copy(
+                    uiEvent = AutoSavePointEvent.ShowAd,
+                ) }
+            }
+
+            AutoSavePointAction.SuccessShowAd -> {
+                viewModelScope.launch {
+                    readCounter.resetCounter(ContentType.Content)
+                    _state.update { it.copy(
+                        uiEvent = AutoSavePointEvent.RetryPagingAfterAd
+                    ) }
+                }
+            }
+
+            is AutoSavePointAction.ShowDialog -> {
+                _state.update { it.copy(dialogEvent = action.dialogEvent) }
             }
         }
     }

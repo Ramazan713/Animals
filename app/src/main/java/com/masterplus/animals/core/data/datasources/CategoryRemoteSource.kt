@@ -1,5 +1,6 @@
 package com.masterplus.animals.core.data.datasources
 
+import androidx.paging.LoadType
 import com.masterplus.animals.core.data.dtos.SpeciesDto
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
@@ -17,6 +18,19 @@ interface CategoryRemoteSource {
         kingdomType: KingdomType,
         limit: Int,
         startAfter: Int?
+    ): DefaultResult<List<SpeciesDto>>
+
+    suspend fun getSpeciesByKingdom2(
+        kingdomType: KingdomType,
+        limit: Int,
+        startAfter: Int?
+    ): DefaultResult<List<SpeciesDto>>
+
+    suspend fun getSpeciesByKingdom3(
+        kingdomType: KingdomType,
+        limit: Int,
+        startAfter: Int?,
+        loadType: LoadType
     ): DefaultResult<List<SpeciesDto>>
 
     suspend fun getSpeciesCategories(

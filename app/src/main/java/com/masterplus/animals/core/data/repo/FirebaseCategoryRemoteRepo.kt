@@ -41,7 +41,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.classEntity?.id?.toString()
+                nextKey = items.lastOrNull()?.classEntity?.id?.toString(),
+                prevKey = items.firstOrNull()?.classEntity?.id?.toString()
             ))
             categoryDao.insertClassesWithImages(items)
         }
@@ -70,7 +71,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.phylum?.id?.toString()
+                nextKey = items.lastOrNull()?.phylum?.id?.toString(),
+                prevKey = items.firstOrNull()?.phylum?.id?.toString()
             ))
             categoryDao.insertPhylumWithImages(items)
         }
@@ -102,7 +104,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.order?.id?.toString()
+                nextKey = items.lastOrNull()?.order?.id?.toString(),
+                prevKey = items.firstOrNull()?.order?.id?.toString()
             ))
             categoryDao.insertOrdersWithImages(items)
         }
@@ -134,7 +137,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.family?.id?.toString()
+                nextKey = items.lastOrNull()?.family?.id?.toString(),
+                prevKey = items.firstOrNull()?.family?.id?.toString()
             ))
             categoryDao.insertFamiliesWithImages(items)
         }
@@ -163,7 +167,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.habitat?.id?.toString()
+                nextKey = items.lastOrNull()?.habitat?.id?.toString(),
+                prevKey = items.firstOrNull()?.habitat?.id?.toString()
             ))
             categoryDao.insertHabitatsWithImages(items)
         }

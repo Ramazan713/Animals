@@ -13,27 +13,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.masterplus.animals.core.domain.utils.ReadLimitExceededException
 
+fun <T: Any>LazyPagingItems<T>.hasLimitException(): Boolean{
+    val append = loadState.append
+    val prepend = loadState.prepend
+    val refresh = loadState.refresh
+
+    val isAppendError = append is LoadState.Error && append.error is ReadLimitExceededException
+    val isPrependError = prepend is LoadState.Error && prepend.error is ReadLimitExceededException
+    val isRefreshError = refresh is LoadState.Error && refresh.error is ReadLimitExceededException
+
+    return isRefreshError || isPrependError || isAppendError
+}
 
 fun <T: Any>LazyPagingItems<T>.isLoading(): Boolean{
     val isLocalRefresh = loadState.source.refresh is LoadState.Loading
-    val isRemoteRefresh = loadState.mediator?.refresh is LoadState.Loading
+//    val isRemoteRefresh = loadState.mediator?.refresh is LoadState.Loading
     val isRefresh = loadState.refresh is LoadState.Loading
-    return isRemoteRefresh || isLocalRefresh || isRefresh
+    return isLocalRefresh || isRefresh
 }
 
 fun <T: Any>LazyPagingItems<T>.isAppendItemLoading(): Boolean{
     val isLocalAppend = loadState.source.append is LoadState.Loading
-    val isRemoteAppend = loadState.mediator?.append is LoadState.Loading
+//    val isRemoteAppend = loadState.mediator?.append is LoadState.Loading
     val isAppend = loadState.append is LoadState.Loading
-    return isLocalAppend || isRemoteAppend || isAppend
+    return isLocalAppend || isAppend
 }
 
 fun <T: Any>LazyPagingItems<T>.isPrependItemLoading(): Boolean{
     val isLocalPrepend = loadState.source.prepend is LoadState.Loading
-    val isRemotePrepend = loadState.mediator?.prepend is LoadState.Loading
+//    val isRemotePrepend = loadState.mediator?.prepend is LoadState.Loading
     val isPrepend = loadState.prepend is LoadState.Loading
-    return isLocalPrepend || isRemotePrepend || isPrepend
+    return isLocalPrepend || isPrepend
 }
 
 fun <T: Any>LazyPagingItems<T>.isAnyItemLoading(): Boolean{

@@ -146,7 +146,7 @@ fun ImageWithTitle(
     ) {
 
         OrderText(
-            order = order,
+            order = order?.toString(),
             modifier = Modifier
                 .padding(8.dp)
                 .zIndex(2f)

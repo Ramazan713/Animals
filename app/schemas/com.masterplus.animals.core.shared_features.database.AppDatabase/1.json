@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "96b628eed0c311295026a3687ac6a6b0",
+    "identityHash": "7e9a263694995f7af20e07ed1c42f564",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -32,7 +32,7 @@
       },
       {
         "tableName": "Animals",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `label` TEXT NOT NULL, `species_id` INTEGER NOT NULL, `size_c_en` TEXT, `size_c_tr` TEXT, `weight_c_en` TEXT, `weight_c_tr` TEXT, `color_c_en` TEXT, `color_c_tr` TEXT, `feeding_c_en` TEXT, `feeding_c_tr` TEXT, `threats_c_en` TEXT, `threats_c_tr` TEXT, `conservation_status_c_en` TEXT, `conservation_status_c_tr` TEXT, `cultural_significance_c_en` TEXT, `cultural_significance_c_tr` TEXT, `physical_characteristics_en` TEXT, `physical_characteristics_tr` TEXT, `natural_habitat_en` TEXT, `natural_habitat_tr` TEXT, `ecosystem_en` TEXT, `ecosystem_tr` TEXT, `feeding_habits_en` TEXT, `feeding_habits_tr` TEXT, `social_structure_and_behaviors_en` TEXT, `social_structure_and_behaviors_tr` TEXT, `reproductive_behaviors_en` TEXT, `reproductive_behaviors_tr` TEXT, `development_of_the_young_en` TEXT, `development_of_the_young_tr` TEXT, `sounds_produced_en` TEXT, `sounds_produced_tr` TEXT, `communication_methods_en` TEXT, `communication_methods_tr` TEXT, `threats_and_dangers_en` TEXT, `threats_and_dangers_tr` TEXT, `conservation_efforts_en` TEXT, `conservation_efforts_tr` TEXT, `conservation_challenges_en` TEXT, `conservation_challenges_tr` TEXT, `cultural_and_historical_significance_en` TEXT, `cultural_and_historical_significance_tr` TEXT, `economic_and_scientific_importance_en` TEXT, `economic_and_scientific_importance_tr` TEXT, `modern_day_perception_en` TEXT, `modern_day_perception_tr` TEXT, `environmental_adaptations_en` TEXT, `environmental_adaptations_tr` TEXT, `evolutionary_processes_en` TEXT, `evolutionary_processes_tr` TEXT, `observed_interesting_behaviors_en` TEXT, `observed_interesting_behaviors_tr` TEXT, `ethological_insights_en` TEXT, `ethological_insights_tr` TEXT, `interesting_and_fun_facts_en` TEXT, `interesting_and_fun_facts_tr` TEXT, `comparative_analysis_en` TEXT, `comparative_analysis_tr` TEXT, `role_in_ecosystem_en` TEXT, `role_in_ecosystem_tr` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`species_id`, `label`) REFERENCES `Species`(`id`, `label`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `label` TEXT NOT NULL, `species_id` INTEGER NOT NULL, `size_c_en` TEXT, `size_c_tr` TEXT, `weight_c_en` TEXT, `weight_c_tr` TEXT, `color_c_en` TEXT, `color_c_tr` TEXT, `feeding_c_en` TEXT, `feeding_c_tr` TEXT, `threats_c_en` TEXT, `threats_c_tr` TEXT, `conservation_status_c_en` TEXT, `conservation_status_c_tr` TEXT, `cultural_significance_c_en` TEXT, `cultural_significance_c_tr` TEXT, `physical_characteristics_en` TEXT, `physical_characteristics_tr` TEXT, `natural_habitat_en` TEXT, `natural_habitat_tr` TEXT, `ecosystem_en` TEXT, `ecosystem_tr` TEXT, `feeding_habits_en` TEXT, `feeding_habits_tr` TEXT, `social_structure_and_behaviors_en` TEXT, `social_structure_and_behaviors_tr` TEXT, `reproductive_behaviors_en` TEXT, `reproductive_behaviors_tr` TEXT, `development_of_the_young_en` TEXT, `development_of_the_young_tr` TEXT, `sounds_produced_en` TEXT, `sounds_produced_tr` TEXT, `communication_methods_en` TEXT, `communication_methods_tr` TEXT, `threats_and_dangers_en` TEXT, `threats_and_dangers_tr` TEXT, `conservation_efforts_en` TEXT, `conservation_efforts_tr` TEXT, `conservation_challenges_en` TEXT, `conservation_challenges_tr` TEXT, `cultural_and_historical_significance_en` TEXT, `cultural_and_historical_significance_tr` TEXT, `economic_and_scientific_importance_en` TEXT, `economic_and_scientific_importance_tr` TEXT, `modern_day_perception_en` TEXT, `modern_day_perception_tr` TEXT, `environmental_adaptations_en` TEXT, `environmental_adaptations_tr` TEXT, `evolutionary_processes_en` TEXT, `evolutionary_processes_tr` TEXT, `observed_interesting_behaviors_en` TEXT, `observed_interesting_behaviors_tr` TEXT, `ethological_insights_en` TEXT, `ethological_insights_tr` TEXT, `interesting_and_fun_facts_en` TEXT, `interesting_and_fun_facts_tr` TEXT, `comparative_analysis_en` TEXT, `comparative_analysis_tr` TEXT, `role_in_ecosystem_en` TEXT, `role_in_ecosystem_tr` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`species_id`, `label`) REFERENCES `Species`(`id`, `label`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -411,8 +411,8 @@
         "foreignKeys": [
           {
             "table": "Species",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "species_id",
               "label"
@@ -1349,7 +1349,7 @@
       },
       {
         "tableName": "Plants",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `label` TEXT NOT NULL, `species_id` INTEGER NOT NULL, `size_c_en` TEXT, `size_c_tr` TEXT, `color_c_en` TEXT, `color_c_tr` TEXT, `flowering_time_c_en` TEXT, `flowering_time_c_tr` TEXT, `cultural_importance_c_en` TEXT, `cultural_importance_c_tr` TEXT, `conservation_status_c_en` TEXT, `conservation_status_c_tr` TEXT, `medicinal_benefits_c_en` TEXT, `medicinal_benefits_c_tr` TEXT, `potential_harm_c_en` TEXT, `potential_harm_c_tr` TEXT, `physical_characteristics_en` TEXT, `physical_characteristics_tr` TEXT, `natural_habitat_en` TEXT, `natural_habitat_tr` TEXT, `ecosystem_en` TEXT, `ecosystem_tr` TEXT, `growth_conditions_en` TEXT, `growth_conditions_tr` TEXT, `development_process_en` TEXT, `development_process_tr` TEXT, `flowering_time_and_characteristics_en` TEXT, `flowering_time_and_characteristics_tr` TEXT, `reproduction_methods_en` TEXT, `reproduction_methods_tr` TEXT, `role_in_ecosystem_en` TEXT, `role_in_ecosystem_tr` TEXT, `economic_value_en` TEXT, `economic_value_tr` TEXT, `environmental_adaptations_en` TEXT, `environmental_adaptations_tr` TEXT, `evolutionary_processes_en` TEXT, `evolutionary_processes_tr` TEXT, `cultural_context_en` TEXT, `cultural_context_tr` TEXT, `historical_usage_en` TEXT, `historical_usage_tr` TEXT, `threats_and_dangers_en` TEXT, `threats_and_dangers_tr` TEXT, `conservation_efforts_en` TEXT, `conservation_efforts_tr` TEXT, `medicinal_uses_and_benefits_en` TEXT, `medicinal_uses_and_benefits_tr` TEXT, `potential_harm_and_side_effects_en` TEXT, `potential_harm_and_side_effects_tr` TEXT, `noteworthy_characteristics_en` TEXT, `noteworthy_characteristics_tr` TEXT, `surprising_facts_en` TEXT, `surprising_facts_tr` TEXT, `interesting_and_fun_facts_en` TEXT, `interesting_and_fun_facts_tr` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`species_id`, `label`) REFERENCES `Species`(`id`, `label`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `label` TEXT NOT NULL, `species_id` INTEGER NOT NULL, `size_c_en` TEXT, `size_c_tr` TEXT, `color_c_en` TEXT, `color_c_tr` TEXT, `flowering_time_c_en` TEXT, `flowering_time_c_tr` TEXT, `cultural_importance_c_en` TEXT, `cultural_importance_c_tr` TEXT, `conservation_status_c_en` TEXT, `conservation_status_c_tr` TEXT, `medicinal_benefits_c_en` TEXT, `medicinal_benefits_c_tr` TEXT, `potential_harm_c_en` TEXT, `potential_harm_c_tr` TEXT, `physical_characteristics_en` TEXT, `physical_characteristics_tr` TEXT, `natural_habitat_en` TEXT, `natural_habitat_tr` TEXT, `ecosystem_en` TEXT, `ecosystem_tr` TEXT, `growth_conditions_en` TEXT, `growth_conditions_tr` TEXT, `development_process_en` TEXT, `development_process_tr` TEXT, `flowering_time_and_characteristics_en` TEXT, `flowering_time_and_characteristics_tr` TEXT, `reproduction_methods_en` TEXT, `reproduction_methods_tr` TEXT, `role_in_ecosystem_en` TEXT, `role_in_ecosystem_tr` TEXT, `economic_value_en` TEXT, `economic_value_tr` TEXT, `environmental_adaptations_en` TEXT, `environmental_adaptations_tr` TEXT, `evolutionary_processes_en` TEXT, `evolutionary_processes_tr` TEXT, `cultural_context_en` TEXT, `cultural_context_tr` TEXT, `historical_usage_en` TEXT, `historical_usage_tr` TEXT, `threats_and_dangers_en` TEXT, `threats_and_dangers_tr` TEXT, `conservation_efforts_en` TEXT, `conservation_efforts_tr` TEXT, `medicinal_uses_and_benefits_en` TEXT, `medicinal_uses_and_benefits_tr` TEXT, `potential_harm_and_side_effects_en` TEXT, `potential_harm_and_side_effects_tr` TEXT, `noteworthy_characteristics_en` TEXT, `noteworthy_characteristics_tr` TEXT, `surprising_facts_en` TEXT, `surprising_facts_tr` TEXT, `interesting_and_fun_facts_en` TEXT, `interesting_and_fun_facts_tr` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`species_id`, `label`) REFERENCES `Species`(`id`, `label`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1704,8 +1704,8 @@
         "foreignKeys": [
           {
             "table": "Species",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "species_id",
               "label"
@@ -1778,7 +1778,7 @@
       },
       {
         "tableName": "remote_keys",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`label` TEXT NOT NULL, `nextKey` TEXT, PRIMARY KEY(`label`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`label` TEXT NOT NULL, `nextKey` TEXT, `prevKey` TEXT, PRIMARY KEY(`label`))",
         "fields": [
           {
             "fieldPath": "label",
@@ -1789,6 +1789,12 @@
           {
             "fieldPath": "nextKey",
             "columnName": "nextKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "prevKey",
+            "columnName": "prevKey",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -1815,7 +1821,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '96b628eed0c311295026a3687ac6a6b0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e9a263694995f7af20e07ed1c42f564')"
     ]
   }
 }

@@ -16,10 +16,13 @@ interface SpeciesRepo {
         itemId: Int?,
         pageSize: Int,
         language: LanguageEnum,
-        kingdom: KingdomType?
+        kingdom: KingdomType?,
+        targetItemId: Int? = null
     ): Flow<PagingData<SpeciesListDetail>>
 
     suspend fun getSpeciesById(speciesId: Int, lang: LanguageEnum): SpeciesModel?
 
     suspend fun checkSpeciesDetailData(species: SpeciesModel): EmptyDefaultResult
+
+    suspend fun getSpeciesPosByLabel(itemId: Int, label: String): Int?
 }
