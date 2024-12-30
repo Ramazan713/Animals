@@ -14,7 +14,7 @@ data class SavePoint(
     val destination: SavePointDestination,
     val kingdomType: KingdomType,
     val saveMode: SavePointSaveMode,
-    var itemPosIndex: Int,
+    var itemId: Int,
     val modifiedTime: LocalDateTime,
     val image: ImageWithMetadata?
 )

@@ -13,13 +13,13 @@ interface SavePointRepo {
     suspend fun insertSavePoint(
         title: String,
         destination: SavePointDestination,
-        itemPosIndex: Int,
+        itemId: Int,
         contentType: SavePointContentType,
         saveMode: SavePointSaveMode,
         dateTime: LocalDateTime? = null
     )
 
-    suspend fun updateSavePointPos(id: Int, posIndex: Int)
+    suspend fun updateSavePointPos(id: Int, itemId: Int)
 
     suspend fun updateSavePointTitle(id: Int, title: String)
 

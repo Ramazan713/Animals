@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7e9a263694995f7af20e07ed1c42f564",
+    "identityHash": "dd9ec75983dee9b8c8237793df60803b",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -1196,7 +1196,7 @@
       },
       {
         "tableName": "SavePoints",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `titleEn` TEXT NOT NULL, `titleTr` TEXT NOT NULL, `contentTypeId` INTEGER NOT NULL, `destinationTypeId` INTEGER NOT NULL, `destinationId` INTEGER, `kingdomId` INTEGER NOT NULL, `saveModeId` INTEGER NOT NULL, `saveKey` TEXT, `itemPosIndex` INTEGER NOT NULL, `modifiedTime` TEXT NOT NULL, `imageId` INTEGER, FOREIGN KEY(`kingdomId`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`imageId`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `titleEn` TEXT NOT NULL, `titleTr` TEXT NOT NULL, `contentTypeId` INTEGER NOT NULL, `destinationTypeId` INTEGER NOT NULL, `destinationId` INTEGER, `kingdomId` INTEGER NOT NULL, `saveModeId` INTEGER NOT NULL, `saveKey` TEXT, `itemId` INTEGER NOT NULL, `modifiedTime` TEXT NOT NULL, `imageId` INTEGER, FOREIGN KEY(`kingdomId`) REFERENCES `Kingdoms`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`imageId`) REFERENCES `Images`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1253,8 +1253,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "itemPosIndex",
-            "columnName": "itemPosIndex",
+            "fieldPath": "itemId",
+            "columnName": "itemId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1821,7 +1821,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e9a263694995f7af20e07ed1c42f564')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dd9ec75983dee9b8c8237793df60803b')"
     ]
   }
 }

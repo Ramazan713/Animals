@@ -23,7 +23,7 @@ fun SavePointWithImageEmbedded.toSavePoint(): SavePoint?{
                 saveKey = saveKey,
                 kingdomType = KingdomType.fromKingdomId(kingdomId)
             ) ?: return null,
-            itemPosIndex = itemPosIndex,
+            itemId = itemId,
             modifiedTime = LocalDateTime.parse(modifiedTime),
             image = image?.toImageWithMetadata(),
             kingdomType = KingdomType.fromKingdomId(kingdomId),
@@ -41,7 +41,7 @@ fun SavePoint.toSavePointEntity(): SavePointEntity{
         destinationId = destination.destinationId,
         destinationTypeId = destination.destinationTypeId,
         saveKey = destination.saveKey,
-        itemPosIndex = itemPosIndex,
+        itemId = itemId,
         modifiedTime = modifiedTime.toString(),
         imageId = image?.id,
         kingdomId = kingdomType.kingdomId,

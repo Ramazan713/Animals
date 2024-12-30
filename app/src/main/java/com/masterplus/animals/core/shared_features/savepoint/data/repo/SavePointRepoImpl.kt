@@ -26,7 +26,7 @@ class SavePointRepoImpl(
     override suspend fun insertSavePoint(
         title: String,
         destination: SavePointDestination,
-        itemPosIndex: Int,
+        itemId: Int,
         contentType: SavePointContentType,
         saveMode: SavePointSaveMode,
         dateTime: LocalDateTime?
@@ -35,7 +35,7 @@ class SavePointRepoImpl(
         val savePoint = SavePoint(
             title = title,
             contentType = contentType,
-            itemPosIndex = itemPosIndex,
+            itemId = itemId,
             destination = destination,
             modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
             image = imageInfo.image,
@@ -45,8 +45,8 @@ class SavePointRepoImpl(
         savePointDao.insertSavePoint(savePoint.toSavePointEntity())
     }
 
-    override suspend fun updateSavePointPos(id: Int, posIndex: Int) {
-        savePointDao.updateSavePointPos(id, posIndex)
+    override suspend fun updateSavePointPos(id: Int, itemId: Int) {
+        savePointDao.updateSavePointItemId(id, itemId)
     }
 
     override suspend fun updateSavePointTitle(id: Int, title: String) {

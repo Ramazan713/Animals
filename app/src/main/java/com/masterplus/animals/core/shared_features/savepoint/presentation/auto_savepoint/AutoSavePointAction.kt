@@ -4,10 +4,16 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 
 sealed interface AutoSavePointAction {
+
+    data class Init(
+        val destination: SavePointDestination,
+        val contentType: SavePointContentType,
+    ): AutoSavePointAction
+
     data class UpsertSavePoint(
         val destination: SavePointDestination,
         val contentType: SavePointContentType,
-        val itemPosIndex: Int
+        val itemId: Int
     ): AutoSavePointAction
 
     data class LoadSavePoint(
@@ -20,7 +26,6 @@ sealed interface AutoSavePointAction {
 
     data class RequestNavigateToPosByItemId(
         val itemId: Int,
-        val label: String
     ): AutoSavePointAction
 
     data object ShowAd: AutoSavePointAction

@@ -8,7 +8,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toCategoryData
-import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.CategoryData
@@ -63,13 +62,6 @@ class CategoryListWithDetailViewModel(
         .cachedIn(viewModelScope)
 
     init {
-        _state.update { it.copy(
-            label = RemoteKeyUtil.getRemoteKeyWithCategoryType(
-                categoryType = args.categoryType,
-                kingdomType = args.kingdomType,
-                parentItemId = args.categoryItemId
-            )
-        ) }
         translationRepo
             .getFlowLanguage()
             .onEach { language ->

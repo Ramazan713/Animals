@@ -8,6 +8,7 @@ import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerR
 import com.masterplus.animals.core.shared_features.preferences.domain.SettingsPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
+import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointPosRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.use_cases.SavePointUpsertAutoModeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +20,8 @@ class AutoSavePointViewModel(
     private val upsertAutoMode: SavePointUpsertAutoModeUseCase,
     private val settingsPreferences: SettingsPreferences,
     private val savePointRepo: SavePointRepo,
-    private val speciesRepo: SpeciesRepo,
-    private val readCounter: ServerReadCounter
+    private val readCounter: ServerReadCounter,
+    private val savePointPosRepo: SavePointPosRepo
 ): ViewModel(){
 
     private val _state = MutableStateFlow(AutoSavePointState())
@@ -33,7 +34,7 @@ class AutoSavePointViewModel(
                     if(!checkSaveSavePoint(action.contentType)) return@launch
                     upsertAutoMode(
                         destination = action.destination,
-                        itemPosIndex = action.itemPosIndex,
+                        itemId = action.itemId,
                         contentType = action.contentType
                     )
                 }
@@ -61,7 +62,7 @@ class AutoSavePointViewModel(
                     _state.update { state ->
                         state.copy(
                             uiEvent = if(savePoint == null) null else AutoSavePointEvent.LoadItemPos(
-                                pos = savePoint.itemPosIndex
+                                pos = savePoint.itemId
                             ),
                             loadingSavePointPos = false,
                             isInitLoaded = true
@@ -76,14 +77,14 @@ class AutoSavePointViewModel(
 
             is AutoSavePointAction.RequestNavigateToPosByItemId -> {
                 viewModelScope.launch {
-                    //TODO: refactor by savepointType
-                    val pos = speciesRepo.getSpeciesPosByLabel(
+                    val config = _state.value.config ?: return@launch
+                    val pos = savePointPosRepo.getItemPos(
                         itemId = action.itemId,
-                        label = action.label
+                        contentType = config.contentType,
+                        destination = config.destination
                     )
                     _state.update { it.copy(
                         uiEvent = AutoSavePointEvent.LoadItemPos(pos = pos),
-                        navToPosRequest = AutoSavePointRequestPos(itemId = action.itemId, label = action.label)
                     ) }
                 }
             }
@@ -104,6 +105,12 @@ class AutoSavePointViewModel(
 
             is AutoSavePointAction.ShowDialog -> {
                 _state.update { it.copy(dialogEvent = action.dialogEvent) }
+            }
+
+            is AutoSavePointAction.Init -> {
+                _state.update { it.copy(
+                    config = AutoSavePointConfig(destination = action.destination, contentType = action.contentType)
+                ) }
             }
         }
     }

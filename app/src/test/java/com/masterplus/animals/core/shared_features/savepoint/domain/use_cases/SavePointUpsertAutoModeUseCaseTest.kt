@@ -43,11 +43,11 @@ class SavePointUpsertAutoModeUseCaseTest {
         val kingdomType = KingdomType.Animals
         val destination = SavePointDestination.All(kingdomType)
         val contentType = SavePointContentType.Content
-        val itemPosIndex = 10
+        val itemId = 10
 
         useCase.invoke(
             destination = destination,
-            itemPosIndex = itemPosIndex,
+            itemId = itemId,
             contentType = SavePointContentType.Content
         )
 
@@ -67,7 +67,7 @@ class SavePointUpsertAutoModeUseCaseTest {
         assertThat(returnedSavePoint!!.saveMode).isEqualTo(SavePointSaveMode.Auto)
         assertThat(returnedSavePoint.destination).isEqualTo(destination)
         assertThat(returnedSavePoint.contentType).isEqualTo(contentType)
-        assertThat(returnedSavePoint.itemPosIndex).isEqualTo(itemPosIndex)
+        assertThat(returnedSavePoint.itemId).isEqualTo(itemId)
         assertThat(returnedSavePoint.title).isEqualTo(suggestedTitle)
     }
 
@@ -75,21 +75,21 @@ class SavePointUpsertAutoModeUseCaseTest {
     fun whenSavePointExists_shouldBePosUpdated() = runTest {
         val destination = SavePointDestination.All(KingdomType.Animals)
         val contentType = SavePointContentType.Content
-        val itemPosIndex = 10
+        val itemId = 10
 
         savePointRepo.insertSavePoint(
             destination = destination,
-            itemPosIndex = itemPosIndex,
+            itemId = itemId,
             saveMode = SavePointSaveMode.Auto,
             title = "fake title",
             contentType = contentType
         )
 
-        val updatedItemPosIndex = 20
+        val updatedItemId = 20
 
         useCase.invoke(
             destination = destination,
-            itemPosIndex = updatedItemPosIndex,
+            itemId = updatedItemId,
             contentType = contentType
         )
 
@@ -103,7 +103,7 @@ class SavePointUpsertAutoModeUseCaseTest {
         assertThat(returnedSavePoint!!.saveMode).isEqualTo(SavePointSaveMode.Auto)
         assertThat(returnedSavePoint.destination).isEqualTo(destination)
         assertThat(returnedSavePoint.contentType).isEqualTo(contentType)
-        assertThat(returnedSavePoint.itemPosIndex).isEqualTo(updatedItemPosIndex)
+        assertThat(returnedSavePoint.itemId).isEqualTo(updatedItemId)
     }
 
 }

@@ -13,7 +13,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.masterplus.animals.core.domain.models.Item
 import com.masterplus.animals.core.domain.utils.ReadLimitExceededException
+
+@Composable
+fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(pos: Int): Int?{
+    return remember(pos) {
+        derivedStateOf {
+            if(pos >= itemCount) null else peek(pos)?.id
+        }
+    }.value
+}
+
+@Composable
+fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyListState: LazyListState): Int?{
+    val visibleMiddlePos = lazyListState.visibleMiddlePosition()
+    return visibleMiddleItemId(visibleMiddlePos)
+}
+
+@Composable
+fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyGridState: LazyGridState): Int?{
+    val visibleMiddlePos = lazyGridState.visibleMiddlePosition()
+    return visibleMiddleItemId(visibleMiddlePos)
+}
 
 fun <T: Any>LazyPagingItems<T>.hasLimitException(): Boolean{
     val append = loadState.append

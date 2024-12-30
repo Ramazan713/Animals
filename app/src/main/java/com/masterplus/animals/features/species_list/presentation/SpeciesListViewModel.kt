@@ -72,10 +72,8 @@ class SpeciesListViewModel(
             }
             .launchIn(viewModelScope)
 
-        //TODO: set label with category
         _state.update { it.copy(
             listIdControl = args.categoryType.toListIdControlOrNull(args.categoryItemId),
-            label = RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdom = args.kingdomType)
         ) }
     }
 
@@ -95,7 +93,7 @@ class SpeciesListViewModel(
                             destinationId = args.categoryItemId,
                             kingdomType = args.kingdomType
                         ),
-                        itemPosIndex = action.posIndex,
+                        itemId = action.posIndex,
                         saveMode = SavePointSaveMode.Manuel,
                         contentType = SavePointContentType.Content
                     )

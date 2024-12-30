@@ -1,5 +1,6 @@
 package com.masterplus.animals.core.shared_features.savepoint.domain.enums
 
+import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
@@ -106,7 +107,35 @@ sealed class SavePointDestination(
         }
     }
 
+    fun toCategoryType(): CategoryType? {
+        return when(this){
+            is All -> null
+            is ClassType -> CategoryType.Class
+            is Family -> CategoryType.Family
+            is Habitat -> CategoryType.Habitat
+            is ListType -> CategoryType.List
+            is Order -> CategoryType.Order
+        }
+    }
 
+    fun toLabel(contentType: SavePointContentType): String{
+        if(this is All && contentType.isContent){
+            return RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdomType)
+        }
+        destinationId
+        val categoryType = toCategoryType() ?: return RemoteKeyUtil.DEFAULT
+        if(contentType.isContent){
+            return RemoteKeyUtil.getSpeciesCategoryRemoteKey(
+                categoryType = categoryType,
+                itemId = destinationId
+            )
+        }
+        return RemoteKeyUtil.getRemoteKeyWithCategoryType(
+            kingdomType = kingdomType,
+            categoryType = categoryType,
+            parentItemId = destinationId
+        )
+    }
 
 
 

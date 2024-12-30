@@ -362,7 +362,7 @@ private fun SavePointSection(
                         onNavigateToSpeciesList(
                             savePoint.destination.toCategoryType() ?: CategoryType.Order,
                             savePoint.destination.destinationId,
-                            savePoint.itemPosIndex
+                            savePoint.itemId
                         )
                     }
                 )

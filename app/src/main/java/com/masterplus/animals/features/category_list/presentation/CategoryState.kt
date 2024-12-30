@@ -6,7 +6,6 @@ import com.masterplus.animals.core.domain.models.ImageWithMetadata
 
 data class CategoryState(
     val isLoading: Boolean = false,
-    val label: String = "",
     val showAllImageInHeader: Boolean = false,
     val title: String = "",
     val collectionName: String = "",

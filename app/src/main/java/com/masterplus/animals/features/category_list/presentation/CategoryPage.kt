@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -68,8 +67,6 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_s
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListBottomItemMenu
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListTopBarItemMenu
-import com.masterplus.animals.features.species_list.presentation.SpeciesListAction
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
@@ -178,7 +175,6 @@ fun CategoryListPage(
                         onLongClick = {
                             onAction(CategoryAction.ShowDialog(
                                 dialogEvent = CategoryListDialogEvent.ShowBottomSheet(
-                                    posIndex = index,
                                     item = item
                                 )
                             ))
@@ -215,13 +211,12 @@ fun CategoryListPage(
                         kingdomType = state.kingdomType,
                         contentType = SavePointContentType.Category,
                     ),
-                    posIndex = dialogEvent.itemId,
+                    itemId = dialogEvent.itemId,
                     onClosed = close,
-                    onNavigateLoad = {
-                        onAction(CategoryAction.SetPagingTargetId(dialogEvent.itemId))
+                    onNavigateLoad = { savepoint ->
+                        onAction(CategoryAction.SetPagingTargetId(savepoint.itemId))
                         onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByItemId(
-                            itemId = dialogEvent.itemId,
-                            label = state.label
+                            itemId = savepoint.itemId,
                         ))
                     }
                 )
@@ -230,7 +225,7 @@ fun CategoryListPage(
             is CategoryListDialogEvent.ShowBottomSheet -> {
                 ShowSelectBottomMenuItems(
                     items = CategoryListBottomItemMenu.entries,
-                    title = stringResource(R.string.n_for_number_word, dialogEvent.posIndex + 1, dialogEvent.item.title),
+                    title = stringResource(R.string.n_for_number_word, dialogEvent.item.id + 1, dialogEvent.item.title),
                     onClose = close,
                     onClickItem = { menuItem ->
                         when(menuItem){

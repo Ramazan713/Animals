@@ -23,7 +23,7 @@ import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.models.Item
 import com.masterplus.animals.core.extentions.hasLimitException
 import com.masterplus.animals.core.extentions.isEmptyResult
-import com.masterplus.animals.core.extentions.visibleMiddlePosition
+import com.masterplus.animals.core.extentions.visibleMiddleItemId
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
@@ -32,14 +32,13 @@ import kotlinx.coroutines.launch
 import kotlin.math.ceil
 
 
-
 @Composable
 fun <T: Item> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
-    onItemPosIndex: () -> Int,
+    onItemPosId: () -> Int?,
     itemInitPos: Int = 0,
     pagingItems: LazyPagingItems<T>,
     onInitPosResponse: ((Int) -> Unit)? = null
@@ -85,14 +84,23 @@ fun <T: Item> AutoSavePointHandler(
         ))
     }
 
+    LaunchedEffect(contentType,currentOnDestination){
+        onAction(AutoSavePointAction.Init(
+            contentType = contentType,
+            destination = currentOnDestination()
+        ))
+    }
+
     ListenEventLifecycle(
         keys = arrayOf(contentType),
         onStop = {
-            onAction(AutoSavePointAction.UpsertSavePoint(
-                destination = currentOnDestination(),
-                contentType = contentType,
-                itemPosIndex = onItemPosIndex()
-            ))
+            onItemPosId()?.let { itemId ->
+                onAction(AutoSavePointAction.UpsertSavePoint(
+                    destination = currentOnDestination(),
+                    contentType = contentType,
+                    itemId = itemId
+                ))
+            }
         }
     )
 
@@ -142,7 +150,7 @@ private fun <T: Item> AutoSavePointHandler(
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
-    onItemPosIndex: () -> Int,
+    onItemPosId: () -> Int?,
     topBarScrollBehaviour: TopAppBarScrollBehavior?,
     scrollToPos: suspend (Int) -> Unit,
     itemInitPos: Int = 0,
@@ -160,7 +168,7 @@ private fun <T: Item> AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        onItemPosIndex = onItemPosIndex,
+        onItemPosId = onItemPosId,
         state = state,
         itemInitPos = itemInitPos,
         pagingItems = pagingItems,
@@ -190,17 +198,17 @@ fun <T: Item> AutoSavePointHandler(
     pagingItems: LazyPagingItems<T>,
     topBarScrollBehaviour: TopAppBarScrollBehavior? = null
 ){
-    val itemPosIndex = lazyListState.visibleMiddlePosition()
+    val itemPosId = pagingItems.visibleMiddleItemId(lazyListState)
     AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        onItemPosIndex = { itemPosIndex },
+        onItemPosId = { itemPosId },
         state = state,
         itemInitPos = itemInitPos,
         topBarScrollBehaviour = topBarScrollBehaviour,
         pagingItems = pagingItems,
-        scrollToPos = {pos ->
+        scrollToPos = { pos ->
             println("AppXXXX: pos: $pos")
             lazyListState.scrollToItem(pos)
         }
@@ -219,12 +227,12 @@ fun <T: Item> AutoSavePointHandler(
     pagingItems: LazyPagingItems<T>,
     topBarScrollBehaviour: TopAppBarScrollBehavior? = null
 ){
-    val itemPosIndex = lazyListState.visibleMiddlePosition()
+    val itemPosId = pagingItems.visibleMiddleItemId(lazyListState)
     AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        onItemPosIndex = { itemPosIndex },
+        onItemPosId = { itemPosId },
         state = state,
         itemInitPos = itemInitPos,
         pagingItems = pagingItems,

@@ -7,11 +7,4 @@ data class AutoSavePointState(
     val uiEvent: AutoSavePointEvent? = null,
     val config: AutoSavePointConfig? = null,
     val dialogEvent: AutoSavePointDialogEvent? = null,
-    val navToPosRequest: AutoSavePointRequestPos? = null
-)
-
-
-data class AutoSavePointRequestPos(
-    val itemId: Int,
-    val label: String
 )

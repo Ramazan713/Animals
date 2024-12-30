@@ -134,10 +134,12 @@ interface SavePointDao {
     @Update
     suspend fun updateSavePoint(savePoint: SavePointEntity)
 
-    @Query("""
-        update savepoints set itemPosIndex = :itemPosIndex where id = :id
-    """)
-    suspend fun updateSavePointPos(id: Int, itemPosIndex: Int)
+    @Query(
+        """
+        update savepoints set itemId = :itemId where id = :id
+    """
+    )
+    suspend fun updateSavePointItemId(id: Int, itemId: Int)
 
     @Query("""
         update savepoints set titleEn = :title, titleTr = :title where id = :id

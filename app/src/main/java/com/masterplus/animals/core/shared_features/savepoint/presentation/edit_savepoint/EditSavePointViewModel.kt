@@ -61,7 +61,7 @@ class EditSavePointViewModel @Inject constructor(
                     val loadParam = state.value.loadParam ?: return@launch
                     savePointRepo.insertSavePoint(
                         title = action.title,
-                        itemPosIndex = action.posIndex,
+                        itemId = action.itemId,
                         destination = state.value.loadParam?.destination ?: return@launch,
                         dateTime = action.currentDateTime,
                         contentType = loadParam.contentType,

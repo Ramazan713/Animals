@@ -31,7 +31,7 @@ data class SavePointEntity(
     val kingdomId: Int,
     val saveModeId: Int = SavePointSaveMode.DEFAULT.modeId,
     val saveKey: String?,
-    val itemPosIndex: Int,
+    val itemId: Int,
     val modifiedTime: String,
     val imageId: Int?,
 )

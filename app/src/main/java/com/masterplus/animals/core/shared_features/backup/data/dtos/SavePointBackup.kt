@@ -13,7 +13,7 @@ data class SavePointBackup(
     val kingdomId: Int,
     val saveModeId: Int,
     val saveKey: String?,
-    val itemPosIndex: Int,
+    val itemId: Int,
     val modifiedTime: String,
     val imageId: Int?,
 )

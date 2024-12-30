@@ -253,13 +253,13 @@ object SampleDatas {
     fun generateSavePoint(
         id: Int = 1,
         title: String = "Title $id",
-        itemPosIndex: Int = 5,
+        itemId: Int = 5,
         savePointDestination: SavePointDestination = SavePointDestination.ListType(1),
         modifiedDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
     ): SavePoint {
         return SavePoint(
             id, title, SavePointContentType.Content,savePointDestination,
-            KingdomType.Animals, SavePointSaveMode.Manuel, itemPosIndex, modifiedDate,
+            KingdomType.Animals, SavePointSaveMode.Manuel, itemId, modifiedDate,
             image = imageWithMetadata)
     }
 

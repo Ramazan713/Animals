@@ -8,7 +8,6 @@ sealed interface CategoryListDialogEvent {
     ): CategoryListDialogEvent
 
     data class ShowBottomSheet(
-        val posIndex: Int,
         val item: CategoryData
     ): CategoryListDialogEvent
 }

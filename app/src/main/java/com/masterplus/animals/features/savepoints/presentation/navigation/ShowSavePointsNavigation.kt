@@ -45,7 +45,7 @@ fun NavGraphBuilder.showSavePoints(
                     savepoint.destination.toCategoryType() ?: CategoryType.Order,
                     savepoint.destination.destinationId,
                     KingdomType.Animals,
-                    savepoint.itemPosIndex,
+                    savepoint.itemId,
                 )
             }
         )
