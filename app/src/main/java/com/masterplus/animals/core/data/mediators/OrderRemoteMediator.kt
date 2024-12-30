@@ -1,9 +1,12 @@
 package com.masterplus.animals.core.data.mediators
 
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
+import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toOrderWithImageEmbedded
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.utils.DefaultResult
+import com.masterplus.animals.core.domain.utils.map
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity_helper.OrderWithImageEmbedded
 
@@ -26,9 +29,8 @@ class OrderRemoteMediator(
             kingdomType = kingdomType,
             limit = limit,
             classId = classId,
-            startAfter = startAfter,
-            label = saveRemoteKey
-        )
+            loadKey = startAfter,
+        ).map { items -> items.map { it.toOrderWithImageEmbedded(saveRemoteKey) } }
     }
 
     override suspend fun insertData(items: List<OrderWithImageEmbedded>) {

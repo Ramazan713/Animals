@@ -1,10 +1,17 @@
 package com.masterplus.animals.core.data.datasources
 
-import androidx.paging.LoadType
+import ClassDto
+import FamilyDto
+import HabitatCategoryDto
+import OrderDto
+import PhylumDto
 import com.masterplus.animals.core.data.dtos.SpeciesDto
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.enums.OrderDirection
+import com.masterplus.animals.core.domain.enums.RemoteLoadType
+import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.shared_features.database.entity_helper.ClassWithImageEmbedded
 import com.masterplus.animals.core.shared_features.database.entity_helper.FamilyWithImageEmbedded
@@ -16,103 +23,105 @@ interface CategoryRemoteSource {
 
     suspend fun getSpeciesByKingdom(
         kingdomType: KingdomType,
+        loadKey: Int?,
         limit: Int,
-        startAfter: Int?
-    ): DefaultResult<List<SpeciesDto>>
-
-    suspend fun getSpeciesByKingdom2(
-        kingdomType: KingdomType,
-        limit: Int,
-        startAfter: Int?
-    ): DefaultResult<List<SpeciesDto>>
-
-    suspend fun getSpeciesByKingdom3(
-        kingdomType: KingdomType,
-        limit: Int,
-        startAfter: Int?,
-        loadType: LoadType
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): DefaultResult<List<SpeciesDto>>
 
     suspend fun getSpeciesCategories(
         categoryType: CategoryType,
         itemId: Int,
+        loadKey: Int?,
         limit: Int,
-        startAfter: Int?
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): DefaultResult<List<SpeciesDto>>
 
     suspend fun getSpecies(
         itemIds: List<Int>,
-        limit: Int
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): DefaultResult<List<SpeciesDto>>
 
     suspend fun getPhylums(
         kingdomType: KingdomType,
+        loadKey: Int?,
         limit: Int,
-        startAfter: Int? = null,
-        label: String
-    ): DefaultResult<List<PhylumWithImageEmbedded>>
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
+    ): DefaultResult<List<PhylumDto>>
 
     suspend fun getPhylumById(
         itemId: Int,
-        label: String = RemoteKeyUtil.DEFAULT
-    ): DefaultResult<PhylumWithImageEmbedded?>
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+    ): DefaultResult<PhylumDto?>
 
 
     suspend fun getClasses(
         kingdomType: KingdomType,
-        limit: Int,
         phylumId: Int? = null,
-        startAfter: Int? = null,
-        label: String
-    ): DefaultResult<List<ClassWithImageEmbedded>>
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
+    ): DefaultResult<List<ClassDto>>
 
     suspend fun getClassById(
         itemId: Int,
-        label: String = RemoteKeyUtil.DEFAULT
-    ): DefaultResult<ClassWithImageEmbedded?>
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+    ): DefaultResult<ClassDto?>
 
     suspend fun getOrders(
         kingdomType: KingdomType,
-        limit: Int,
         classId: Int? = null,
-        startAfter: Int? = null,
-        label: String
-    ): DefaultResult<List<OrderWithImageEmbedded>>
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
+    ): DefaultResult<List<OrderDto>>
 
     suspend fun getOrderById(
         itemId: Int,
-        label: String = RemoteKeyUtil.DEFAULT
-    ): DefaultResult<OrderWithImageEmbedded?>
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+    ): DefaultResult<OrderDto?>
 
     suspend fun getFamilies(
         kingdomType: KingdomType,
-        limit: Int,
         orderId: Int? = null,
-        startAfter: Int? = null,
-        label: String
-    ): DefaultResult<List<FamilyWithImageEmbedded>>
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
+    ): DefaultResult<List<FamilyDto>>
 
     suspend fun getFamilyById(
         itemId: Int,
-        label: String = RemoteKeyUtil.DEFAULT
-    ): DefaultResult<FamilyWithImageEmbedded?>
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT
+    ): DefaultResult<FamilyDto?>
 
 
     suspend fun getHabitats(
         kingdomType: KingdomType,
+        loadKey: Int?,
         limit: Int,
-        startAfter: Int? = null,
-        label: String
-    ): DefaultResult<List<HabitatWithImageEmbedded>>
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
+    ): DefaultResult<List<HabitatCategoryDto>>
 
     suspend fun getHabitatById(
         itemId: Int,
-        label: String = RemoteKeyUtil.DEFAULT
-    ): DefaultResult<HabitatWithImageEmbedded?>
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT
+    ): DefaultResult<HabitatCategoryDto?>
 
     suspend fun getHabitatsByIds(
         itemIds: List<Int>,
-        label: String = RemoteKeyUtil.DEFAULT
-    ): DefaultResult<List<HabitatWithImageEmbedded>>
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
+    ): DefaultResult<List<HabitatCategoryDto>>
 
 }

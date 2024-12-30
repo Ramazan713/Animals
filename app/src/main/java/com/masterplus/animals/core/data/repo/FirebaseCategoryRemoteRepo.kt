@@ -1,8 +1,15 @@
 package com.masterplus.animals.core.data.repo
 
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
+import com.masterplus.animals.core.data.mapper.toClassWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toHabitatCategoryWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toOrderWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toPhylumWithImageEmbedded
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.enums.RemoteLoadType
+import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.repo.CategoryRemoteRepo
 import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
 import com.masterplus.animals.core.domain.utils.map
@@ -21,23 +28,26 @@ class FirebaseCategoryRemoteRepo(
         kingdomType: KingdomType,
         limit: Int,
         phylumId: Int?,
-        refresh: Boolean
+        loadKey: Int?,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
     ): EmptyDefaultResult {
         val saveKey = RemoteKeyUtil.getClassRemoteKey(
             kingdomType = kingdomType,
             phylumId = phylumId
         )
-        val nextKey = getRemoteKey(saveKey, refresh)
+        val nextKey = getRemoteKey(saveKey, loadType)
         val response = categoryRemoteSource.getClasses(
             kingdomType = kingdomType,
             limit = limit,
             phylumId = phylumId,
-            startAfter = nextKey,
-            label = saveKey
+            loadKey = nextKey,
+            loadType = loadType,
+            sourceType = sourceType
         )
         if(response.isError) return response.map {  }
 
-        val items = response.getSuccessData!!
+        val items = response.getSuccessData!!.map { it.toClassWithImageEmbedded(saveKey) }
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
@@ -52,22 +62,24 @@ class FirebaseCategoryRemoteRepo(
     override suspend fun getPhylums(
         kingdomType: KingdomType,
         limit: Int,
-        startAfter: Int?,
-        refresh: Boolean
+        loadKey: Int?,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
     ): EmptyDefaultResult {
         val saveKey = RemoteKeyUtil.getPhylumRemoteKey(
             kingdomType = kingdomType,
         )
-        val nextKey = getRemoteKey(saveKey, refresh)
+        val nextKey = getRemoteKey(saveKey, loadType)
         val response = categoryRemoteSource.getPhylums(
             kingdomType = kingdomType,
             limit = limit,
-            startAfter = nextKey,
-            label = saveKey
+            loadKey = nextKey,
+            loadType = loadType,
+            sourceType = sourceType
         )
         if(response.isError) return response.map {  }
 
-        val items = response.getSuccessData!!
+        val items = response.getSuccessData!!.map { it.toPhylumWithImageEmbedded(saveKey) }
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
@@ -83,24 +95,26 @@ class FirebaseCategoryRemoteRepo(
         kingdomType: KingdomType,
         limit: Int,
         classId: Int?,
-        startAfter: Int?,
-        refresh: Boolean
+        loadKey: Int?,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
     ): EmptyDefaultResult {
         val saveKey = RemoteKeyUtil.getOrderRemoteKey(
             kingdomType = kingdomType,
             classId = classId
         )
-        val nextKey = getRemoteKey(saveKey, refresh)
+        val nextKey = getRemoteKey(saveKey, loadType)
         val response = categoryRemoteSource.getOrders(
             kingdomType = kingdomType,
             limit = limit,
             classId = classId,
-            startAfter = nextKey,
-            label = saveKey
+            loadKey = nextKey,
+            loadType = loadType,
+            sourceType = sourceType
         )
         if(response.isError) return response.map {  }
 
-        val items = response.getSuccessData!!
+        val items = response.getSuccessData!!.map { it.toOrderWithImageEmbedded(saveKey) }
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
@@ -116,24 +130,26 @@ class FirebaseCategoryRemoteRepo(
         kingdomType: KingdomType,
         limit: Int,
         orderId: Int?,
-        startAfter: Int?,
-        refresh: Boolean
+        loadKey: Int?,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
     ): EmptyDefaultResult {
         val saveKey = RemoteKeyUtil.getFamilyRemoteKey(
             kingdomType = kingdomType,
             orderId = orderId
         )
-        val nextKey = getRemoteKey(saveKey, refresh)
+        val nextKey = getRemoteKey(saveKey, loadType)
         val response = categoryRemoteSource.getFamilies(
             kingdomType = kingdomType,
             limit = limit,
             orderId = orderId,
-            startAfter = nextKey,
-            label = saveKey
+            loadKey = nextKey,
+            loadType = loadType,
+            sourceType = sourceType
         )
         if(response.isError) return response.map {  }
 
-        val items = response.getSuccessData!!
+        val items = response.getSuccessData!!.map { it.toFamilyWithImageEmbedded(saveKey) }
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
@@ -148,22 +164,24 @@ class FirebaseCategoryRemoteRepo(
     override suspend fun getHabitats(
         kingdomType: KingdomType,
         limit: Int,
-        startAfter: Int?,
-        refresh: Boolean
+        loadKey: Int?,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
     ): EmptyDefaultResult {
         val saveKey = RemoteKeyUtil.getHabitatRemoteKey(
             kingdomType = kingdomType,
         )
-        val nextKey = getRemoteKey(saveKey, refresh)
+        val nextKey = getRemoteKey(saveKey, loadType)
         val response = categoryRemoteSource.getHabitats(
             kingdomType = kingdomType,
             limit = limit,
-            startAfter = nextKey,
-            label = saveKey
+            loadKey = nextKey,
+            loadType = loadType,
+            sourceType = sourceType
         )
         if(response.isError) return response.map {  }
 
-        val items = response.getSuccessData!!
+        val items = response.getSuccessData!!.map { it.toHabitatCategoryWithImageEmbedded(saveKey) }
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
@@ -176,8 +194,8 @@ class FirebaseCategoryRemoteRepo(
     }
 
 
-    private suspend fun getRemoteKey(saveKey: String, refresh: Boolean): Int? {
-        return if(refresh) null else {
+    private suspend fun getRemoteKey(saveKey: String, loadType: RemoteLoadType): Int? {
+        return if(loadType.isRefresh) null else {
             remoteKeyDao.remoteKeyByQuery(saveKey)?.nextKey?.toIntOrNull()
         }
     }

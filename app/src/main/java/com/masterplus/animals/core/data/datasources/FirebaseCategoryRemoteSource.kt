@@ -5,31 +5,26 @@ import FamilyDto
 import HabitatCategoryDto
 import OrderDto
 import PhylumDto
-import androidx.paging.LoadType
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import com.masterplus.animals.core.data.dtos.SpeciesDto
-import com.masterplus.animals.core.data.mapper.toClassWithImageEmbedded
-import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
-import com.masterplus.animals.core.data.mapper.toHabitatCategoryWithImageEmbedded
-import com.masterplus.animals.core.data.mapper.toOrderWithImageEmbedded
-import com.masterplus.animals.core.data.mapper.toPhylumWithImageEmbedded
+import com.masterplus.animals.core.data.extensions.toFirebaseSource
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.enums.OrderDirection
+import com.masterplus.animals.core.domain.enums.RemoteLoadType
+import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.ErrorText
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.safeCall
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
-import com.masterplus.animals.core.shared_features.database.entity_helper.ClassWithImageEmbedded
-import com.masterplus.animals.core.shared_features.database.entity_helper.FamilyWithImageEmbedded
-import com.masterplus.animals.core.shared_features.database.entity_helper.HabitatWithImageEmbedded
-import com.masterplus.animals.core.shared_features.database.entity_helper.OrderWithImageEmbedded
-import com.masterplus.animals.core.shared_features.database.entity_helper.PhylumWithImageEmbedded
 import kotlinx.coroutines.tasks.await
 
 class FirebaseCategoryRemoteSource(
@@ -38,74 +33,31 @@ class FirebaseCategoryRemoteSource(
 
     override suspend fun getSpeciesByKingdom(
         kingdomType: KingdomType,
+        loadKey: Int?,
         limit: Int,
-        startAfter: Int?
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
     ): DefaultResult<List<SpeciesDto>> {
-        return execute2(
+        return execute(
             contentType = ContentType.Content,
-            mapper = { it.toObjects(SpeciesDto::class.java) }
-        ) {
-            Firebase.firestore.collection("Species")
-                .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
-                .limit(limit.toLong())
-                .orderBy("id")
-                .startAfter(startAfter)
-                .get()
-                .await()
-        }
-    }
-
-    override suspend fun getSpeciesByKingdom2(
-        kingdomType: KingdomType,
-        limit: Int,
-        startAfter: Int?
-    ): DefaultResult<List<SpeciesDto>> {
-        return execute2(
-            contentType = ContentType.Content,
-            mapper = { it.toObjects(SpeciesDto::class.java) }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<SpeciesDto>() } }
         )  {
             Firebase.firestore.collection("Species")
-                .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
-                .limit(limit.toLong())
-                .orderBy("id")
-                .startAt(startAfter)
-                .get()
-                .await()
-        }
-    }
-
-    override suspend fun getSpeciesByKingdom3(
-        kingdomType: KingdomType,
-        limit: Int,
-        startAfter: Int?,
-        loadType: LoadType
-    ): DefaultResult<List<SpeciesDto>> {
-        val isDescending = loadType == LoadType.PREPEND
-        return execute2(
-            contentType = ContentType.Content,
-            mapper = { items -> items.toObjects(SpeciesDto::class.java).let { if(isDescending)it.reversed() else it } }
-        )  {
-            println("AppXXXX fetchBackend: $loadType : :$startAfter")
-            val baseQuery = Firebase.firestore.collection("Species")
                 .whereEqualTo("kingdom_id", kingdomType.kingdomId)
-                .orderBy("id", if(isDescending) Query.Direction.DESCENDING else Query.Direction.ASCENDING)
-                .limit(limit.toLong())
-
-            val finalQuery = when {
-                loadType == LoadType.REFRESH -> baseQuery.startAt(startAfter)
-                startAfter != null -> baseQuery.startAfter(startAfter)
-                else -> baseQuery
-            }
-
-            finalQuery.get().await()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
+                .await()
         }
     }
 
     override suspend fun getSpeciesCategories(
         categoryType: CategoryType,
         itemId: Int,
+        loadKey: Int?,
         limit: Int,
-        startAfter: Int?
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
     ): DefaultResult<List<SpeciesDto>> {
         val filter = when(categoryType){
             CategoryType.Class -> Filter.equalTo("class_id", itemId)
@@ -114,79 +66,86 @@ class FirebaseCategoryRemoteSource(
             CategoryType.Habitat -> Filter.arrayContains("habitats", itemId)
             else -> null
         }
-        return execute2(
+        return execute(
             contentType = ContentType.Content,
-            mapper = { it.toObjects(SpeciesDto::class.java) }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<SpeciesDto>() } }
         )   {
             Firebase.firestore.collection("Species")
                 .where(filter!!)
-                .limit(limit.toLong())
-                .orderBy("id")
-                .startAfter(startAfter)
-                .get()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
                 .await()
         }
     }
 
-    override suspend fun getSpecies(itemIds: List<Int>, limit: Int): DefaultResult<List<SpeciesDto>> {
-        return execute2(
+    override suspend fun getSpecies(
+        itemIds: List<Int>,
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
+    ): DefaultResult<List<SpeciesDto>> {
+        return execute(
             contentType = ContentType.Content,
-            mapper = { it.toObjects(SpeciesDto::class.java) }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<SpeciesDto>() } }
         )   {
             Firebase.firestore.collection("Species")
                 .whereIn("id", itemIds)
-                .limit(limit.toLong())
-                .orderBy("id")
-                .get()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
                 .await()
-
         }
     }
 
     override suspend fun getPhylums(
         kingdomType: KingdomType,
+        loadKey: Int?,
         limit: Int,
-        startAfter: Int?,
-        label: String
-    ): DefaultResult<List<PhylumWithImageEmbedded>> {
-        return execute2(
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType,
+    ): DefaultResult<List<PhylumDto>> {
+        return execute(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(PhylumDto::class.java).map { it.toPhylumWithImageEmbedded(label) } }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<PhylumDto>() } }
         ) {
             Firebase.firestore.collection("Phylums")
                 .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
-                .limit(limit.toLong())
-                .orderBy("id")
-                .startAfter(startAfter)
-                .get()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
                 .await()
         }
     }
 
     override suspend fun getPhylumById(
         itemId: Int,
-        label: String
-    ): DefaultResult<PhylumWithImageEmbedded?> {
+        sourceType: RemoteSourceType
+    ): DefaultResult<PhylumDto?> {
         return execute2(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(PhylumDto::class.java).firstOrNull()?.toPhylumWithImageEmbedded(label) }
+            mapper = { it.map { it.toObject<PhylumDto>() }.firstOrNull() }
         ) {
             Firebase.firestore.collection("Phylums")
                 .where(Filter.equalTo("id",itemId))
-                .get().await()
+                .get(sourceType.toFirebaseSource())
+                .await()
         }
     }
 
     override suspend fun getClasses(
         kingdomType: KingdomType,
-        limit: Int,
         phylumId: Int?,
-        startAfter: Int?,
-        label: String
-    ): DefaultResult<List<ClassWithImageEmbedded>> {
-        return execute2(
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
+    ): DefaultResult<List<ClassDto>> {
+        return execute(
             contentType = ContentType.Category,
-            mapper = {  it.toObjects(ClassDto::class.java).map { it.toClassWithImageEmbedded(label) } }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<ClassDto>()} }
         ) {
             var query = Firebase.firestore.collection("Classes")
                 .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
@@ -194,10 +153,8 @@ class FirebaseCategoryRemoteSource(
                 query = query.where(Filter.equalTo("phylum_id",phylumId))
             }
             query
-                .limit(limit.toLong())
-                .orderBy("id")
-                .startAfter(startAfter)
-                .get()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
                 .await()
 
         }
@@ -205,28 +162,30 @@ class FirebaseCategoryRemoteSource(
 
     override suspend fun getClassById(
         itemId: Int,
-        label: String
-    ): DefaultResult<ClassWithImageEmbedded?> {
+        sourceType: RemoteSourceType
+    ): DefaultResult<ClassDto?> {
         return execute2(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(ClassDto::class.java).firstOrNull()?.toClassWithImageEmbedded(label) }
+            mapper = { items -> items.map { it.toObject<ClassDto>() }.firstOrNull() }
         ) {
             Firebase.firestore.collection("Classes")
                 .where(Filter.equalTo("id",itemId))
-                .get().await()
+                .get(sourceType.toFirebaseSource()).await()
         }
     }
 
     override suspend fun getOrders(
         kingdomType: KingdomType,
-        limit: Int,
         classId: Int?,
-        startAfter: Int?,
-        label: String
-    ): DefaultResult<List<OrderWithImageEmbedded>> {
-        return execute2(
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
+    ): DefaultResult<List<OrderDto>> {
+        return execute(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(OrderDto::class.java).map { it.toOrderWithImageEmbedded(label) } }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<OrderDto>()} }
         ) {
             var query = Firebase.firestore.collection("Orders")
                 .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
@@ -234,38 +193,38 @@ class FirebaseCategoryRemoteSource(
                 query = query.where(Filter.equalTo("class_id",classId))
             }
             query
-                .limit(limit.toLong())
-                .orderBy("id")
-                .startAfter(startAfter)
-                .get()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
                 .await()
         }
     }
 
     override suspend fun getOrderById(
         itemId: Int,
-        label: String
-    ): DefaultResult<OrderWithImageEmbedded?> {
+        sourceType: RemoteSourceType
+    ): DefaultResult<OrderDto?> {
         return execute2(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(OrderDto::class.java).firstOrNull()?.toOrderWithImageEmbedded(label) }
+            mapper = { items -> items.map { it.toObject<OrderDto>() }.firstOrNull() }
         ) {
             Firebase.firestore.collection("Orders")
                 .where(Filter.equalTo("id",itemId))
-                .get().await()
+                .get(sourceType.toFirebaseSource()).await()
         }
     }
 
     override suspend fun getFamilies(
         kingdomType: KingdomType,
-        limit: Int,
         orderId: Int?,
-        startAfter: Int?,
-        label: String
-    ): DefaultResult<List<FamilyWithImageEmbedded>> {
-        return execute2(
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
+    ): DefaultResult<List<FamilyDto>> {
+        return execute(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(FamilyDto::class.java).map { it.toFamilyWithImageEmbedded(label) } }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<FamilyDto>()} }
         ){
             var query = Firebase.firestore.collection("Families")
                 .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
@@ -273,92 +232,85 @@ class FirebaseCategoryRemoteSource(
                 query = query.where(Filter.equalTo("order_id",orderId))
             }
             query
-                .limit(limit.toLong())
-                .orderBy("id")
-                .startAfter(startAfter)
-                .get()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
                 .await()
         }
     }
 
     override suspend fun getFamilyById(
         itemId: Int,
-        label: String
-    ): DefaultResult<FamilyWithImageEmbedded?> {
+        sourceType: RemoteSourceType
+    ): DefaultResult<FamilyDto?> {
         return execute2(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(FamilyDto::class.java).firstOrNull()?.toFamilyWithImageEmbedded(label) }
+            mapper = { items -> items.map { it.toObject<FamilyDto>() }.firstOrNull() }
         ) {
             Firebase.firestore.collection("Families")
                 .where(Filter.equalTo("id",itemId))
-                .get().await()
+                .get(sourceType.toFirebaseSource()).await()
         }
     }
 
     override suspend fun getHabitats(
         kingdomType: KingdomType,
+        loadKey: Int?,
         limit: Int,
-        startAfter: Int?,
-        label: String
-    ): DefaultResult<List<HabitatWithImageEmbedded>> {
-        return execute2(
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
+    ): DefaultResult<List<HabitatCategoryDto>> {
+        return execute(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(HabitatCategoryDto::class.java).map { it.toHabitatCategoryWithImageEmbedded(label) } }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<HabitatCategoryDto>()} }
         ){
             Firebase.firestore.collection("Habitats")
                 //TODO: add filter with kingdomId
 //                .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
-                .limit(limit.toLong())
-                .orderBy("id")
-                .startAfter(startAfter)
-                .get()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
                 .await()
         }
     }
 
     override suspend fun getHabitatById(
         itemId: Int,
-        label: String
-    ): DefaultResult<HabitatWithImageEmbedded?> {
+        sourceType: RemoteSourceType
+    ): DefaultResult<HabitatCategoryDto?> {
         return execute2(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(HabitatCategoryDto::class.java).firstOrNull()?.toHabitatCategoryWithImageEmbedded(label) }
+            mapper = { items -> items.map { it.toObject<HabitatCategoryDto>() }.firstOrNull() }
         ) {
             Firebase.firestore.collection("Habitats")
                 .where(Filter.equalTo("id",itemId))
-                .get().await()
+                .get(sourceType.toFirebaseSource()).await()
         }
     }
 
     override suspend fun getHabitatsByIds(
         itemIds: List<Int>,
-        label: String
-    ): DefaultResult<List<HabitatWithImageEmbedded>> {
-        return execute2(
+        loadKey: Int?,
+        limit: Int,
+        sourceType: RemoteSourceType,
+        loadType: RemoteLoadType
+    ): DefaultResult<List<HabitatCategoryDto>> {
+        return execute(
             contentType = ContentType.Category,
-            mapper = { it.toObjects(HabitatCategoryDto::class.java).map { it.toHabitatCategoryWithImageEmbedded(label) } }
+            orderDirection = loadType.orderDirection,
+            mapper = { items -> items.map { it.toObject<HabitatCategoryDto>()} }
         ) {
             Firebase.firestore.collection("Habitats")
                 .whereIn("id", itemIds)
-                .get().await()
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .get(sourceType.toFirebaseSource())
+                .await()
         }
     }
 
     private suspend inline fun <reified T> execute(
         contentType: ContentType,
-        crossinline execute: suspend () -> T
-    ): Result<T, ErrorText> {
-        return safeCall {
-            val result = execute()
-            val counter: Int =  if(result is List<*>) maxOf(result.size, 1) else 1
-            serverReadCounter.addCounter(contentType, counter)
-            result
-        }
-    }
-
-    private suspend inline fun <reified T> execute2(
-        contentType: ContentType,
-        crossinline mapper: suspend (QuerySnapshot) -> T,
+        orderDirection: OrderDirection,
+        crossinline mapper: suspend (List<QueryDocumentSnapshot>) -> T,
         crossinline execute: suspend () -> QuerySnapshot
     ): Result<T, ErrorText> {
         return safeCall {
@@ -369,8 +321,43 @@ class FirebaseCategoryRemoteSource(
                 else -> maxOf(result.size(), 1)
             }
             serverReadCounter.addCounter(contentType, counter)
-            mapper(result)
+
+            if(orderDirection.isDescending){
+                mapper(result.reversed())
+            }else{
+                mapper(result.mapNotNull { it })
+            }
         }
     }
 
+    private suspend inline fun <reified T> execute2(
+        contentType: ContentType,
+        crossinline mapper: suspend (List<QueryDocumentSnapshot>) -> T,
+        crossinline execute: suspend () -> QuerySnapshot
+    ): Result<T, ErrorText> {
+        return execute(
+            contentType = contentType,
+            orderDirection = OrderDirection.ASCENDING,
+            mapper = mapper,
+            execute = execute
+        )
+    }
+
+}
+
+
+private fun Query.customBuild(
+    loadKey: Int?,
+    loadType: RemoteLoadType,
+    limit: Int
+): Query{
+    val baseQuery = this
+        .orderBy("id",if(loadType.orderDirection.isDescending)Query.Direction.DESCENDING else Query.Direction.ASCENDING)
+    val finalQuery = when {
+        loadType.isRefresh -> baseQuery.startAt(loadKey)
+        loadKey != null -> baseQuery.startAfter(loadKey)
+        else -> baseQuery
+    }
+    return finalQuery
+        .limit(limit.toLong())
 }

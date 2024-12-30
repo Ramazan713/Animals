@@ -1,6 +1,8 @@
 package com.masterplus.animals.core.domain.repo
 
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.enums.RemoteLoadType
+import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
 
 interface CategoryRemoteRepo {
@@ -9,15 +11,18 @@ interface CategoryRemoteRepo {
         kingdomType: KingdomType,
         limit: Int,
         phylumId: Int? = null,
-        refresh: Boolean = false
+        loadKey: Int? = null,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): EmptyDefaultResult
 
 
     suspend fun getPhylums(
         kingdomType: KingdomType,
         limit: Int,
-        startAfter: Int? = null,
-        refresh: Boolean = false
+        loadKey: Int? = null,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): EmptyDefaultResult
 
 
@@ -25,8 +30,9 @@ interface CategoryRemoteRepo {
         kingdomType: KingdomType,
         limit: Int,
         classId: Int? = null,
-        startAfter: Int? = null,
-        refresh: Boolean = false
+        loadKey: Int? = null,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): EmptyDefaultResult
 
 
@@ -34,15 +40,17 @@ interface CategoryRemoteRepo {
         kingdomType: KingdomType,
         limit: Int,
         orderId: Int? = null,
-        startAfter: Int? = null,
-        refresh: Boolean = false
+        loadKey: Int? = null,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): EmptyDefaultResult
 
 
     suspend fun getHabitats(
         kingdomType: KingdomType,
         limit: Int,
-        startAfter: Int? = null,
-        refresh: Boolean = false
+        loadKey: Int? = null,
+        sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
+        loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): EmptyDefaultResult
 }

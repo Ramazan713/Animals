@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.dtos.SpeciesDto
+import com.masterplus.animals.core.data.extensions.toRemoteLoadType
 import com.masterplus.animals.core.data.mapper.toAnimalEntity
 import com.masterplus.animals.core.data.mapper.toPlantEntity
 import com.masterplus.animals.core.data.mapper.toSpeciesEntity
@@ -83,11 +84,11 @@ class SpeciesKingdomRemoteMediator2(
             if(counter > K.READ_EXCEED_LIMIT){
                 return MediatorResult.Error(ReadLimitExceededException)
             }
-            val dataResponse = categoryRemoteSource.getSpeciesByKingdom3(
+            val dataResponse = categoryRemoteSource.getSpeciesByKingdom(
                 kingdomType = kingdom,
                 limit = state.config.pageSize,
-                loadType = loadType,
-                startAfter = loadKey,
+                loadType = loadType.toRemoteLoadType(),
+                loadKey = loadKey
             ).getSuccessData!!
             println("AppXXX state:contentCountersFlow:${counter} :")
             println("AppXXXX: mediator2: loadType: $loadType::$loadKey::refresh: ${targetItemId} ::remoteKey: ${remoteKey}  ::::response: ${getIds(dataResponse)}")

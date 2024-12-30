@@ -23,7 +23,7 @@ class SpeciesKingdomRemoteMediator(
         return categoryRemoteSource.getSpeciesByKingdom(
             kingdomType = kingdom,
             limit = limit,
-            startAfter = startAfter
+            loadKey = startAfter
         )
     }
 }

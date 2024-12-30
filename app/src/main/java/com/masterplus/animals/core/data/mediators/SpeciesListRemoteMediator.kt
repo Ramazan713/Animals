@@ -26,6 +26,6 @@ class SpeciesListRemoteMediator(
     override suspend fun fetchData(startAfter: Int?): DefaultResult<List<SpeciesDto>> {
         val speciesIds = db.listSpeciesDao.getNotExistsSpeciesIds(listId, limit)
         if(speciesIds.isEmpty()) return Result.Success(listOf())
-        return categoryRemoteSource.getSpecies(speciesIds, limit)
+        return categoryRemoteSource.getSpecies(speciesIds, null,limit)
     }
 }

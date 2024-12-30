@@ -65,7 +65,8 @@ abstract class BaseRemoteMediator2<T: Any, D: Any>(
                 db.remoteKeyDao.insertOrReplace(
                     RemoteKeyEntity(
                         label = saveRemoteKey,
-                        nextKey = getNextKey(dataResponse)?.toString()
+                        nextKey = getNextKey(dataResponse)?.toString(),
+                        prevKey = null
                     )
                 )
                 insertData(dataResponse)

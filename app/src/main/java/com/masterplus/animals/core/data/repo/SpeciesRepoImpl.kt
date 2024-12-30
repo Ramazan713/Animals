@@ -7,6 +7,11 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.masterplus.animals.R
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
+import com.masterplus.animals.core.data.mapper.toClassWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toHabitatCategoryWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toOrderWithImageEmbedded
+import com.masterplus.animals.core.data.mapper.toPhylumWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toSpecies
 import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
 import com.masterplus.animals.core.data.mediators.SpeciesCategoryRemoteMediator
@@ -23,6 +28,7 @@ import com.masterplus.animals.core.domain.utils.EmptyResult
 import com.masterplus.animals.core.domain.utils.ErrorText
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.asEmptyResult
+import com.masterplus.animals.core.domain.utils.map
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
@@ -91,7 +97,7 @@ class SpeciesRepoImpl(
                 )
                 else -> SpeciesCategoryRemoteMediator(
                     categoryType = categoryType,
-                    itemId = itemId ?: 0,
+                    itemId = itemId,
                     limit = pageSize,
                     db = db,
                     categoryRemoteSource = categoryRemoteSource
@@ -112,6 +118,7 @@ class SpeciesRepoImpl(
                 async {
                     if (categoryDao.getPhylumWithId2(species.phylumId) == null) {
                         val response = categoryRemoteSource.getPhylumById(species.phylumId)
+                            .map { it?.toPhylumWithImageEmbedded(RemoteKeyUtil.getPhylumRemoteKey(species.kingdomType)) }
                         response.onSuccessAsync {
                             categoryDao.insertPhylumWithImages(listOf(it!!))
                         }
@@ -122,6 +129,7 @@ class SpeciesRepoImpl(
                 async {
                     if (categoryDao.getClassWithId2(species.classId) == null) {
                         val response = categoryRemoteSource.getClassById(species.classId)
+                            .map { it?.toClassWithImageEmbedded(RemoteKeyUtil.getClassRemoteKey(kingdomType = species.kingdomType, phylumId = species.phylumId)) }
                         response.onSuccessAsync {
                             categoryDao.insertClassesWithImages(listOf(it!!))
                         }
@@ -132,6 +140,8 @@ class SpeciesRepoImpl(
                 async {
                     if (categoryDao.getOrderWithId2(species.orderId) == null) {
                         val response = categoryRemoteSource.getOrderById(species.orderId)
+                            .map { it?.toOrderWithImageEmbedded(RemoteKeyUtil.getOrderRemoteKey(kingdomType = species.kingdomType, classId = species.classId))
+                            }
                         response.onSuccessAsync {
                             categoryDao.insertOrdersWithImages(listOf(it!!))
                         }
@@ -142,6 +152,7 @@ class SpeciesRepoImpl(
                 async {
                     if (categoryDao.getFamilyWithId2(species.familyId) == null) {
                         val response = categoryRemoteSource.getFamilyById(species.familyId)
+                            .map { it?.toFamilyWithImageEmbedded(RemoteKeyUtil.getFamilyRemoteKey(kingdomType = species.kingdomType, orderId = species.orderId)) }
                         response.onSuccessAsync {
                             categoryDao.insertFamiliesWithImages(listOf(it!!))
                         }
@@ -152,7 +163,8 @@ class SpeciesRepoImpl(
                 async {
                     val notExistsHabitatIds = speciesDao.getNotExistsHabitatIds(species.id)
                     if (notExistsHabitatIds.isNotEmpty()) {
-                        val response = categoryRemoteSource.getHabitatsByIds(notExistsHabitatIds)
+                        val response = categoryRemoteSource.getHabitatsByIds(notExistsHabitatIds, loadKey = null, limit = notExistsHabitatIds.size)
+                            .map { items -> items.map { it.toHabitatCategoryWithImageEmbedded(RemoteKeyUtil.getHabitatRemoteKey(species.kingdomType)) } }
                         response.getSuccessData?.let { data ->
                             categoryDao.insertHabitatsWithImages(data)
                             if(data.size != notExistsHabitatIds.size){
