@@ -29,6 +29,7 @@ import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.map
+import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
@@ -41,7 +42,8 @@ class CategoryRepoImpl constructor(
     private val listDao: ListDao,
     private val db: AppDatabase,
     private val categoryRemoteRepo: CategoryRemoteRepo,
-    private val categoryRemoteSource: CategoryRemoteSource
+    private val categoryRemoteSource: CategoryRemoteSource,
+    private val readCounter: ServerReadCounter
 ): CategoryRepo {
     override suspend fun getCategoryData(
         categoryType: CategoryType,
@@ -138,7 +140,8 @@ class CategoryRepoImpl constructor(
         classId: Int,
         pageSize: Int,
         language: LanguageEnum,
-        kingdomType: KingdomType
+        kingdomType: KingdomType,
+        targetItemId: Int?
     ): Flow<PagingData<OrderModel>> {
         return Pager(
             config = getPagingConfig(pageSize = pageSize),
@@ -148,7 +151,8 @@ class CategoryRepoImpl constructor(
                 kingdomType = kingdomType,
                 classId = classId,
                 categoryRemoteSource = categoryRemoteSource,
-                limit = pageSize
+                targetItemId = targetItemId,
+                readCounter = readCounter
             )
         ).flow.map { items -> items.map { it.toOrder(language) } }
     }
@@ -158,7 +162,8 @@ class CategoryRepoImpl constructor(
         orderId: Int,
         pageSize: Int,
         language: LanguageEnum,
-        kingdomType: KingdomType
+        kingdomType: KingdomType,
+        targetItemId: Int?
     ): Flow<PagingData<FamilyModel>> {
         return Pager(
             config = getPagingConfig(pageSize = pageSize),
@@ -168,13 +173,19 @@ class CategoryRepoImpl constructor(
                 kingdomType = kingdomType,
                 orderId = orderId,
                 categoryRemoteSource = categoryRemoteSource,
-                limit = pageSize
+                targetItemId = targetItemId,
+                readCounter = readCounter
             )
         ).flow.map { items -> items.map { it.toFamily(language) } }
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getPagingClasses(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<ClassModel>> {
+    override fun getPagingClasses(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int?
+    ): Flow<PagingData<ClassModel>> {
         return Pager(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingClasses(RemoteKeyUtil.getClassRemoteKey(kingdomType, null)) },
@@ -183,13 +194,19 @@ class CategoryRepoImpl constructor(
                 kingdomType = kingdomType,
                 phylumId = null,
                 categoryRemoteSource = categoryRemoteSource,
-                limit = pageSize
+                targetItemId = targetItemId,
+                readCounter = readCounter
             )
         ).flow.map { items -> items.map { it.toClass(language) } }
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getPagingOrders(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>> {
+    override fun getPagingOrders(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int?
+    ): Flow<PagingData<OrderModel>> {
         return Pager(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingOrders(RemoteKeyUtil.getOrderRemoteKey(kingdomType, null)) },
@@ -198,7 +215,8 @@ class CategoryRepoImpl constructor(
                 kingdomType = kingdomType,
                 classId = null,
                 categoryRemoteSource = categoryRemoteSource,
-                limit = pageSize
+                targetItemId = targetItemId,
+                readCounter = readCounter
             )
         ).flow.map { items -> items.map { it.toOrder(language) } }
     }
@@ -207,7 +225,8 @@ class CategoryRepoImpl constructor(
     override fun getPagingHabitats(
         pageSize: Int,
         language: LanguageEnum,
-        kingdomType: KingdomType
+        kingdomType: KingdomType,
+        targetItemId: Int?
     ): Flow<PagingData<HabitatCategoryModel>> {
         return Pager(
             config = getPagingConfig(pageSize = pageSize),
@@ -216,13 +235,19 @@ class CategoryRepoImpl constructor(
                 db = db,
                 kingdomType = kingdomType,
                 categoryRemoteSource = categoryRemoteSource,
-                limit = pageSize
+                targetItemId = targetItemId,
+                readCounter = readCounter
             )
         ).flow.map { items -> items.map { it.toHabitatCategory(language) } }
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getPagingFamilies(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>> {
+    override fun getPagingFamilies(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int?
+    ): Flow<PagingData<FamilyModel>> {
         return Pager(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingFamilies(RemoteKeyUtil.getFamilyRemoteKey(kingdomType, null)) },
@@ -231,7 +256,8 @@ class CategoryRepoImpl constructor(
                 kingdomType = kingdomType,
                 orderId = null,
                 categoryRemoteSource = categoryRemoteSource,
-                limit = pageSize
+                targetItemId = targetItemId,
+                readCounter = readCounter
             )
         ).flow.map { items -> items.map { it.toFamily(language) } }
     }
@@ -239,7 +265,7 @@ class CategoryRepoImpl constructor(
     private fun getPagingConfig(pageSize: Int): PagingConfig{
         return PagingConfig(
             pageSize = pageSize,
-            initialLoadSize = pageSize * 2
+            jumpThreshold = pageSize * 2
         )
     }
 }

@@ -32,17 +32,49 @@ interface CategoryRepo {
     suspend fun getFamilyWithId(familyId: Int, language: LanguageEnum): FamilyModel?
 
 
-    fun getPagingOrdersWithClassId(classId: Int, pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>>
+    fun getPagingOrdersWithClassId(
+        classId: Int,
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int? = null
+    ): Flow<PagingData<OrderModel>>
 
-    fun getPagingFamiliesWithOrderId(orderId: Int, pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>>
+    fun getPagingFamiliesWithOrderId(
+        orderId: Int,
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int? = null
+    ): Flow<PagingData<FamilyModel>>
 
 
-    fun getPagingClasses(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<ClassModel>>
+    fun getPagingClasses(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int? = null
+    ): Flow<PagingData<ClassModel>>
 
-    fun getPagingFamilies(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>>
+    fun getPagingFamilies(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int? = null
+    ): Flow<PagingData<FamilyModel>>
 
-    fun getPagingOrders(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>>
+    fun getPagingOrders(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int? = null
+    ): Flow<PagingData<OrderModel>>
 
-    fun getPagingHabitats(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<HabitatCategoryModel>>
+    fun getPagingHabitats(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int? = null
+    ): Flow<PagingData<HabitatCategoryModel>>
 
 }

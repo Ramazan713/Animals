@@ -8,6 +8,8 @@ interface ServerReadCounter {
     val contentCountersFlow: Flow<Int>
     val categoryCountersFlow: Flow<Int>
 
+    suspend fun getCounter(contentType: ContentType): Int
+
     suspend fun addCounter(contentType: ContentType, number: Int)
 
     suspend fun resetCounter(contentType: ContentType)

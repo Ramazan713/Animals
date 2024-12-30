@@ -1,12 +1,17 @@
 package com.masterplus.animals.core.data.mediators
 
+import androidx.paging.LoadType
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.mapper.toClassWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
+import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.enums.RemoteLoadType
+import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.map
+import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity_helper.ClassWithImageEmbedded
 
@@ -15,8 +20,9 @@ class ClassRemoteMediator(
     private val kingdomType: KingdomType,
     private val phylumId: Int?,
     private val categoryRemoteSource: CategoryRemoteSource,
-    private val limit: Int
-): BaseRemoteMediator<ClassWithImageEmbedded>(db) {
+    readCounter: ServerReadCounter,
+    targetItemId: Int? = null,
+): BaseRemoteMediator<ClassWithImageEmbedded>(db, readCounter, targetItemId) {
 
     override val saveRemoteKey: String
         get() = RemoteKeyUtil.getClassRemoteKey(
@@ -24,21 +30,31 @@ class ClassRemoteMediator(
             phylumId = phylumId
         )
 
-    override suspend fun fetchData(startAfter: Int?): DefaultResult<List<ClassWithImageEmbedded>> {
+    override val contentType: ContentType
+        get() = ContentType.Category
+
+    override suspend fun fetchData(
+        loadKey: Int?,
+        loadType: RemoteLoadType,
+        sourceType: RemoteSourceType,
+        limit: Int
+    ): DefaultResult<List<ClassWithImageEmbedded>> {
         return categoryRemoteSource.getClasses(
             kingdomType = kingdomType,
             limit = limit,
             phylumId = phylumId,
-            loadKey = startAfter,
+            loadKey = loadKey,
+            loadType = loadType,
+            sourceType = sourceType
         ).map { items -> items.map { it.toClassWithImageEmbedded(saveRemoteKey) } }
+    }
+
+    override suspend fun isItemExists(itemId: Int, label: String): Boolean {
+        return db.categoryDao.getClassWithId2(itemId, label) != null
     }
 
     override suspend fun insertData(items: List<ClassWithImageEmbedded>) {
         db.categoryDao.insertClassesWithImages(items)
-    }
-
-    override fun getNextKey(items: List<ClassWithImageEmbedded>): Int? {
-        return items.lastOrNull()?.classEntity?.id
     }
 
     override suspend fun clearTable() {

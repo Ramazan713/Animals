@@ -8,7 +8,6 @@ import com.masterplus.animals.core.shared_features.preferences.data.set
 import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -21,6 +20,13 @@ class FirebaseServerReadCounter(
         get() = appPreferences.dataFlow.map { it[KPref.contentReadCounter] }.distinctUntilChanged()
     override val categoryCountersFlow: Flow<Int>
         get() = appPreferences.dataFlow.map { it[KPref.categoryReadCounter] }.distinctUntilChanged()
+
+    override suspend fun getCounter(contentType: ContentType): Int {
+        return when(contentType){
+            ContentType.Category -> appPreferences.getItem(KPref.categoryReadCounter)
+            ContentType.Content -> appPreferences.getItem(KPref.contentReadCounter)
+        }
+    }
 
     override suspend fun addCounter(contentType: ContentType, number: Int) {
         resetIfNewDay()

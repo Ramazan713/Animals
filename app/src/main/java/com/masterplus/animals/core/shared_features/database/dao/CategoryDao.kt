@@ -27,6 +27,13 @@ interface CategoryDao {
     """)
     suspend fun getPhylumWithId2(phylumId: Int): PhylumEntity?
 
+    @Query("""
+        select * from phylums where id = :phylumId and label = :label limit 1
+    """)
+    suspend fun getPhylumWithId2(phylumId: Int, label: String): PhylumEntity?
+
+
+
     @Transaction
     @Query("""
         select * from classes where id = :classId limit 1
@@ -37,6 +44,12 @@ interface CategoryDao {
         select * from classes where id = :classId limit 1
     """)
     suspend fun getClassWithId2(classId: Int): ClassEntity?
+
+    @Query("""
+        select * from classes where id = :classId and label = :label limit 1
+    """)
+    suspend fun getClassWithId2(classId: Int, label: String): ClassEntity?
+
 
     @Transaction
     @Query("""
@@ -49,6 +62,12 @@ interface CategoryDao {
     """)
     suspend fun getOrderWithId2(orderId: Int): OrderEntity?
 
+    @Query("""
+        select * from orders where id = :orderId and label = :label limit 1
+    """)
+    suspend fun getOrderWithId2(orderId: Int, label: String): OrderEntity?
+
+
     @Transaction
     @Query("""
         select * from families where id = :familyId limit 1
@@ -59,6 +78,11 @@ interface CategoryDao {
         select * from families where id = :familyId limit 1
     """)
     suspend fun getFamilyWithId2(familyId: Int): FamilyEntity?
+
+    @Query("""
+        select * from families where id = :familyId and label = :label limit 1
+    """)
+    suspend fun getFamilyWithId2(familyId: Int, label: String): FamilyEntity?
 
 
     @Transaction
@@ -71,6 +95,11 @@ interface CategoryDao {
         select * from habitatcategories where id = :habitatCategoryId limit 1
     """)
     suspend fun getHabitatCategoryWithId2(habitatCategoryId: Int): HabitatCategoryEntity?
+
+    @Query("""
+        select * from habitatcategories where id = :habitatCategoryId and label = :label limit 1
+    """)
+    suspend fun getHabitatCategoryWithId2(habitatCategoryId: Int, label: String): HabitatCategoryEntity?
 
 
     @Transaction

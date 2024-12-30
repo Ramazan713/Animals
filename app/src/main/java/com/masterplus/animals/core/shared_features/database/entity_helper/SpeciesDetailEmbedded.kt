@@ -3,6 +3,7 @@ package com.masterplus.animals.core.shared_features.database.entity_helper
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.masterplus.animals.core.domain.models.Item
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.ListSpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
@@ -44,4 +45,7 @@ data class SpeciesDetailEmbedded(
         entity = ListEntity::class
     )
     val listsIsRemovable: List<Boolean>
-)
+): Item{
+    override val id: Int
+        get() = species.id
+}

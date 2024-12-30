@@ -4,9 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.constants.K
+import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.utils.UiText
@@ -18,6 +21,7 @@ import com.masterplus.animals.core.shared_features.translation.domain.enums.Lang
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.species_list.presentation.navigation.SpeciesListRoute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -47,9 +51,7 @@ class SpeciesListViewModel(
             .getFlowLanguage(),
         _targetItemId
     ){ language, targetItemId ->
-        args.let { args ->
-            speciesRepo.getPagingSpeciesList(args.categoryType, args.categoryItemId, K.SPECIES_PAGE_SIZE, language, args.kingdomType, targetItemId)
-        }
+        getPagingFlow(language, targetItemId)
     }.flatMapLatest { it }
         .cachedIn(viewModelScope)
 
@@ -93,6 +95,35 @@ class SpeciesListViewModel(
             }
             is SpeciesListAction.SetPagingTargetId -> {
                 _targetItemId.value = action.targetId
+            }
+        }
+    }
+
+    private fun getPagingFlow(language: LanguageEnum, targetItemId: Int?): Flow<PagingData<SpeciesListDetail>>{
+        val pageSize = K.SPECIES_PAGE_SIZE
+        return with(args){
+            when {
+                categoryItemId == null -> speciesRepo.getPagingSpeciesWithKingdom(
+                    pageSize = pageSize,
+                    kingdom = kingdomType,
+                    targetItemId = targetItemId,
+                    language = language
+                )
+                categoryType == CategoryType.List -> speciesRepo.getPagingSpeciesWithList(
+                    pageSize = pageSize,
+                    targetItemId = targetItemId,
+                    language = language,
+                    itemId = categoryItemId
+                )
+                else -> speciesRepo.getPagingSpeciesWithCategory(
+                    pageSize = pageSize,
+                    kingdom = kingdomType,
+                    targetItemId = targetItemId,
+                    language = language,
+                    categoryType = categoryType,
+                    itemId = categoryItemId
+                )
+
             }
         }
     }

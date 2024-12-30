@@ -51,11 +51,6 @@ class SpeciesKingdomRemoteMediator2(
                 db.remoteKeyDao.remoteKeyByQuery(saveRemoteKey)
             }
 
-            val firstItemId = state.firstItemOrNull()
-            state.config.let {
-                println("AppXXX state:config: ${state.anchorPosition}::${firstItemId}: contentCountersFlow:${serverReadCounter.contentCountersFlow.firstOrNull()} :")
-            }
-
             val loadKey = when (loadType) {
                 LoadType.REFRESH -> {
                     if(targetItemId != null){
@@ -112,6 +107,7 @@ class SpeciesKingdomRemoteMediator2(
                     nextKey = nextKey,
                     prevKey = prevKey
                 )
+
                 db.remoteKeyDao.insertOrReplace(updatedRemoteKey)
                 insertData(dataResponse)
             }

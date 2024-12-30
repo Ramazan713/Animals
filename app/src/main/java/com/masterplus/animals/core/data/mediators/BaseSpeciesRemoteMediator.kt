@@ -6,11 +6,23 @@ import com.masterplus.animals.core.data.mapper.toPlantEntity
 import com.masterplus.animals.core.data.mapper.toSpeciesEntity
 import com.masterplus.animals.core.data.mapper.toSpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.data.mapper.toSpeciesImageWithMetadataEmbedded
+import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.domain.models.Item
+import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 
-abstract class BaseSpeciesRemoteMediator<T: Any>(
+abstract class BaseSpeciesRemoteMediator<T: Item>(
     override val db: AppDatabase,
-): BaseRemoteMediator2<T, SpeciesDto>(db) {
+    readCounter: ServerReadCounter,
+    targetItemId: Int?
+): BaseRemoteMediator2<T, SpeciesDto>(db, readCounter, targetItemId) {
+
+    override val contentType: ContentType
+        get() = ContentType.Content
+
+    override suspend fun isItemExists(itemId: Int, label: String): Boolean {
+        return db.speciesDao.getSpeciesByIdAndLabel(itemId, label) != null
+    }
 
     override suspend fun insertData(items: List<SpeciesDto>) {
         val label = saveRemoteKey
@@ -31,9 +43,5 @@ abstract class BaseSpeciesRemoteMediator<T: Any>(
         db.animalDao.insertAnimals(animals)
         db.plantDao.insertPlants(plants)
         db.speciesDao.insertSpeciesImages(speciesImages)
-    }
-
-    override fun getNextKey(items: List<SpeciesDto>): Int? {
-        return items.lastOrNull()?.id
     }
 }

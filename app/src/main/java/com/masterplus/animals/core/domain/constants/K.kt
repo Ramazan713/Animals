@@ -6,7 +6,7 @@ object K {
     const val maxDownloadSizeBytes = 1024*1024*8L
 
     const val SPECIES_PAGE_SIZE = 20
-    const val CATEGORY_PAGE_SIZE = 8
+    const val CATEGORY_PAGE_SIZE = 15
     const val HOME_CATEGORY_PAGE_SIZE = 8
     const val READ_EXCEED_LIMIT = 150
 }

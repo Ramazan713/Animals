@@ -2,6 +2,7 @@ package com.masterplus.animals.core.shared_features.database.entity_helper
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.masterplus.animals.core.domain.models.Item
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
@@ -20,7 +21,10 @@ data class PhylumWithImageEmbedded(
         parentColumn = "image_id"
     )
     val image: ImageWithMetadataEmbedded?
-)
+): Item{
+    override val id: Int
+        get() = phylum.id
+}
 
 
 data class ClassWithImageEmbedded(
@@ -33,7 +37,10 @@ data class ClassWithImageEmbedded(
         parentColumn = "image_id"
     )
     val image: ImageWithMetadataEmbedded?
-)
+): Item{
+    override val id: Int
+        get() = classEntity.id
+}
 
 
 data class OrderWithImageEmbedded(
@@ -46,7 +53,10 @@ data class OrderWithImageEmbedded(
         parentColumn = "image_id"
     )
     val image: ImageWithMetadataEmbedded?
-)
+): Item{
+    override val id: Int
+        get() = order.id
+}
 
 
 data class FamilyWithImageEmbedded(
@@ -59,7 +69,10 @@ data class FamilyWithImageEmbedded(
         parentColumn = "image_id"
     )
     val image: ImageWithMetadataEmbedded?
-)
+): Item{
+    override val id: Int
+        get() = family.id
+}
 
 
 data class SavePointWithImageEmbedded(
@@ -85,4 +98,7 @@ data class HabitatWithImageEmbedded(
         parentColumn = "image_id"
     )
     val image: ImageWithMetadataEmbedded?
-)
+): Item{
+    override val id: Int
+        get() = habitat.id
+}

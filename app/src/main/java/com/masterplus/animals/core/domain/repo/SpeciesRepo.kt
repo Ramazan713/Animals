@@ -11,9 +11,23 @@ import kotlinx.coroutines.flow.Flow
 
 interface SpeciesRepo {
 
-    fun getPagingSpeciesList(
+    fun getPagingSpeciesWithKingdom(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdom: KingdomType,
+        targetItemId: Int? = null
+    ): Flow<PagingData<SpeciesListDetail>>
+
+    fun getPagingSpeciesWithList(
+        itemId: Int,
+        pageSize: Int,
+        language: LanguageEnum,
+        targetItemId: Int? = null
+    ): Flow<PagingData<SpeciesListDetail>>
+
+    fun getPagingSpeciesWithCategory(
         categoryType: CategoryType,
-        itemId: Int?,
+        itemId: Int,
         pageSize: Int,
         language: LanguageEnum,
         kingdom: KingdomType?,

@@ -49,63 +49,90 @@ class SpeciesRepoImpl(
     private val categoryRemoteSource: CategoryRemoteSource,
     private val serverReadCounter: ServerReadCounter
 ): SpeciesRepo {
-    
+
     @OptIn(ExperimentalPagingApi::class)
-    override fun getPagingSpeciesList(
+    override fun getPagingSpeciesWithKingdom(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdom: KingdomType,
+        targetItemId: Int?
+    ): Flow<PagingData<SpeciesListDetail>> {
+        return Pager(
+            config = getPagingConfig(pageSize),
+            pagingSourceFactory = {
+                speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdom))
+            },
+            remoteMediator = SpeciesKingdomRemoteMediator2(
+                kingdom = kingdom,
+                db = db,
+                categoryRemoteSource = categoryRemoteSource,
+                targetItemId = targetItemId,
+                serverReadCounter = serverReadCounter
+            )
+        ).flow.map { items ->
+            items.map { it.toSpeciesListDetail(language) }
+        }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getPagingSpeciesWithList(
+        itemId: Int,
+        pageSize: Int,
+        language: LanguageEnum,
+        targetItemId: Int?
+    ): Flow<PagingData<SpeciesListDetail>> {
+        return Pager(
+            config = getPagingConfig(pageSize),
+            pagingSourceFactory = {
+                speciesDao.getPagingSpeciesByListId(itemId)
+            },
+            remoteMediator = SpeciesListRemoteMediator(
+                db = db,
+                listId = itemId,
+                targetItemId = targetItemId,
+                readCounter = serverReadCounter,
+                categoryRemoteSource = categoryRemoteSource
+            )
+        ).flow.map { items ->
+            items.map { it.toSpeciesListDetail(language) }
+        }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getPagingSpeciesWithCategory(
         categoryType: CategoryType,
-        itemId: Int?,
+        itemId: Int,
         pageSize: Int,
         language: LanguageEnum,
         kingdom: KingdomType?,
         targetItemId: Int?
     ): Flow<PagingData<SpeciesListDetail>> {
         return Pager(
-            config = PagingConfig(
-                pageSize = pageSize,
-                jumpThreshold = pageSize * 2,
-                enablePlaceholders = true
-            ),
+            config = getPagingConfig(pageSize),
             pagingSourceFactory = {
-                when {
-                    itemId == null && kingdom != null -> {
-                        speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdom))
-                    }
-                    categoryType == CategoryType.List && itemId != null-> {
-                        speciesDao.getPagingSpeciesByListId(itemId)
-                    }
-                    else -> {
-                        speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesCategoryRemoteKey(
-                            categoryType = categoryType,
-                            itemId = itemId
-                        ))
-                    }
-                }
-            },
-            remoteMediator = when {
-                itemId == null -> SpeciesKingdomRemoteMediator2(
-                    kingdom = kingdom ?: KingdomType.DEFAULT,
-                    db = db,
-                    categoryRemoteSource = categoryRemoteSource,
-                    targetItemId = targetItemId,
-                    serverReadCounter = serverReadCounter
-                )
-                categoryType == CategoryType.List -> SpeciesListRemoteMediator(
-                    db = db,
-                    listId = itemId,
-                    limit = pageSize,
-                    categoryRemoteSource = categoryRemoteSource
-                )
-                else -> SpeciesCategoryRemoteMediator(
+                speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesCategoryRemoteKey(
                     categoryType = categoryType,
-                    itemId = itemId,
-                    limit = pageSize,
-                    db = db,
-                    categoryRemoteSource = categoryRemoteSource
-                )
-            }
+                    itemId = itemId
+                ))
+            },
+            remoteMediator = SpeciesCategoryRemoteMediator(
+                categoryType = categoryType,
+                itemId = itemId,
+                db = db,
+                targetItemId = targetItemId,
+                readCounter = serverReadCounter,
+                categoryRemoteSource = categoryRemoteSource
+            )
         ).flow.map { items ->
             items.map { it.toSpeciesListDetail(language) }
         }
+    }
+
+    private fun getPagingConfig(pageSize: Int): PagingConfig{
+        return PagingConfig(
+            pageSize = pageSize,
+            jumpThreshold = pageSize * 2
+        )
     }
 
     override suspend fun getSpeciesById(speciesId: Int, lang: LanguageEnum): SpeciesModel? {
