@@ -36,6 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
@@ -55,6 +57,7 @@ import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
+import com.masterplus.animals.core.shared_features.ad.presentation.components.ContinueWithAdButton
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
@@ -65,6 +68,7 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_s
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListBottomItemMenu
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListTopBarItemMenu
+import com.masterplus.animals.features.species_list.presentation.SpeciesListAction
 import kotlinx.coroutines.launch
 
 
@@ -90,7 +94,6 @@ fun CategoryListPage(
 
     val lazyListState = rememberLazyGridState()
     val middlePos = lazyListState.visibleMiddlePosition()
-    val scope = rememberCoroutineScope()
 
     AutoSavePointHandler(
         contentType = SavePointContentType.Category,
@@ -148,8 +151,18 @@ fun CategoryListPage(
                 }
             }
         ) {
+
+            ContinueWithAdButton(
+                pagingItems = pagingItems,
+                onWatchAd = {
+                    onAutoSavePointAction(AutoSavePointAction.ShowAd)
+                }
+            )
+
             items(
                 count = pagingItems.itemCount,
+                key = pagingItems.itemKey { it.id },
+                contentType = pagingItems.itemContentType { "MyPagingCategoryPage" }
             ){ index ->
                 val item = pagingItems[index]
                 if(item != null){
@@ -173,6 +186,14 @@ fun CategoryListPage(
                     )
                 }
             }
+
+            ContinueWithAdButton(
+                pagingItems = pagingItems,
+                onWatchAd = {
+                    onAutoSavePointAction(AutoSavePointAction.ShowAd)
+                }
+            )
+
             if(pagingItems.isAppendItemLoading()){
                 item {
                     SharedCircularProgress(modifier = Modifier.fillMaxWidth())
@@ -194,12 +215,14 @@ fun CategoryListPage(
                         kingdomType = state.kingdomType,
                         contentType = SavePointContentType.Category,
                     ),
-                    posIndex = dialogEvent.posIndex,
+                    posIndex = dialogEvent.itemId,
                     onClosed = close,
                     onNavigateLoad = {
-                        scope.launch {
-                            lazyListState.animateScrollToItem(it.itemPosIndex)
-                        }
+                        onAction(CategoryAction.SetPagingTargetId(dialogEvent.itemId))
+                        onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByItemId(
+                            itemId = dialogEvent.itemId,
+                            label = state.label
+                        ))
                     }
                 )
             }
@@ -213,7 +236,7 @@ fun CategoryListPage(
                         when(menuItem){
                             CategoryListBottomItemMenu.Savepoint -> {
                                 onAction(CategoryAction.ShowDialog(CategoryListDialogEvent.ShowEditSavePoint(
-                                    posIndex = dialogEvent.posIndex
+                                    itemId = dialogEvent.item.id
                                 )))
                             }
                         }
@@ -309,7 +332,7 @@ private fun GetTopBar(
             when(menuItem){
                 CategoryListTopBarItemMenu.Savepoint -> {
                     onAction(CategoryAction.ShowDialog(CategoryListDialogEvent.ShowEditSavePoint(
-                        posIndex = listMiddlePos()
+                        itemId = listMiddlePos()
                     )))
                 }
                 CategoryListTopBarItemMenu.SavePointSettings -> onNavigateToSavePointCategorySettings()

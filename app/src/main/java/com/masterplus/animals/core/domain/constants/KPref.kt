@@ -13,4 +13,9 @@ object KPref {
     val contentReadCounter = PrefKey("contentReadCounter",0)
     val categoryReadCounter = PrefKey("categoryReadCounter",0)
     val lastUpdatedReadCounter = PrefKey("lastUpdatedReadCounter","")
+
+    val speciesPageSize = PrefKey("speciesPageSize",20)
+    val categoryPageSize = PrefKey("categoryPageSize",20)
+    val homeCategoryPageSize = PrefKey("homeCategoryPageSize",8)
+    val readExceedLimit = PrefKey("readExceedLimit",150)
 }

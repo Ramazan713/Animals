@@ -33,6 +33,7 @@ import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerR
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -47,7 +48,8 @@ class SpeciesRepoImpl(
     private val categoryDao: CategoryDao,
     private val db: AppDatabase,
     private val categoryRemoteSource: CategoryRemoteSource,
-    private val serverReadCounter: ServerReadCounter
+    private val serverReadCounter: ServerReadCounter,
+    private val appPreferences: AppPreferences
 ): SpeciesRepo {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -67,7 +69,8 @@ class SpeciesRepoImpl(
                 db = db,
                 categoryRemoteSource = categoryRemoteSource,
                 targetItemId = targetItemId,
-                serverReadCounter = serverReadCounter
+                serverReadCounter = serverReadCounter,
+                appPreferences = appPreferences
             )
         ).flow.map { items ->
             items.map { it.toSpeciesListDetail(language) }
@@ -91,7 +94,8 @@ class SpeciesRepoImpl(
                 listId = itemId,
                 targetItemId = targetItemId,
                 readCounter = serverReadCounter,
-                categoryRemoteSource = categoryRemoteSource
+                categoryRemoteSource = categoryRemoteSource,
+                appPreferences = appPreferences
             )
         ).flow.map { items ->
             items.map { it.toSpeciesListDetail(language) }
@@ -121,7 +125,8 @@ class SpeciesRepoImpl(
                 db = db,
                 targetItemId = targetItemId,
                 readCounter = serverReadCounter,
-                categoryRemoteSource = categoryRemoteSource
+                categoryRemoteSource = categoryRemoteSource,
+                appPreferences = appPreferences
             )
         ).flow.map { items ->
             items.map { it.toSpeciesListDetail(language) }

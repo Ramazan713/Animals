@@ -4,7 +4,7 @@ import com.masterplus.animals.core.domain.models.CategoryData
 
 sealed interface CategoryListDialogEvent {
     data class ShowEditSavePoint(
-        val posIndex: Int
+        val itemId: Int
     ): CategoryListDialogEvent
 
     data class ShowBottomSheet(

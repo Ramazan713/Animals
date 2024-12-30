@@ -10,12 +10,14 @@ import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.models.Item
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 
 abstract class BaseSpeciesRemoteMediator<T: Item>(
     override val db: AppDatabase,
     readCounter: ServerReadCounter,
+    appPreferences: AppPreferences,
     targetItemId: Int?
-): BaseRemoteMediator2<T, SpeciesDto>(db, readCounter, targetItemId) {
+): BaseRemoteMediator2<T, SpeciesDto>(db, readCounter, appPreferences, targetItemId) {
 
     override val contentType: ContentType
         get() = ContentType.Content

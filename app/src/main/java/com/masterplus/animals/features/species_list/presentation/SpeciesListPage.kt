@@ -143,18 +143,6 @@ fun SpeciesListPage(
     )
 
 
-    LaunchedEffect(pagingItems.itemCount){
-        val count = pagingItems.itemCount
-        println("AppXXXX itemCount: ${count}")
-//        if(count != 0){
-//            println("AppXXXX itemCount: ${(0..count - 1).map { i -> pagingItems[i]?.id ?: i }}")
-//        }
-    }
-
-
-
-
-
     Scaffold(
         topBar = {
             DefaultTopBar(
@@ -212,7 +200,7 @@ fun SpeciesListPage(
                 items(
                     count = pagingItems.itemCount,
                     key = pagingItems.itemKey { it.id },
-                    contentType = pagingItems.itemContentType { "MyPagingItems" }
+                    contentType = pagingItems.itemContentType { "MyPagingSpeciesList" }
                 ){ index ->
                     val item = pagingItems[index]
                     if(item != null){

@@ -14,13 +14,14 @@ import com.masterplus.animals.core.data.mapper.toSpeciesEntity
 import com.masterplus.animals.core.data.mapper.toSpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.data.mapper.toSpeciesImageWithMetadataEmbedded
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
-import com.masterplus.animals.core.domain.constants.K
+import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.utils.ReadLimitExceededException
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity.RemoteKeyEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesDetailEmbedded
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import kotlinx.coroutines.flow.firstOrNull
 import java.io.IOException
 
@@ -30,7 +31,8 @@ class SpeciesKingdomRemoteMediator2(
     private val categoryRemoteSource: CategoryRemoteSource,
     private val serverReadCounter: ServerReadCounter,
     private val kingdom: KingdomType,
-    private val targetItemId: Int? = null
+    private val targetItemId: Int? = null,
+    private val appPreferences: AppPreferences
 ): RemoteMediator<Int, SpeciesDetailEmbedded>() {
 
     val saveRemoteKey: String
@@ -63,12 +65,12 @@ class SpeciesKingdomRemoteMediator2(
                     }
                 }
                 LoadType.PREPEND ->{
-                    getRemoteKeyForFirstItem(state, remoteKey) ?: return MediatorResult.Success(
+                    remoteKey?.prevKey?.toIntOrNull() ?: return MediatorResult.Success(
                         endOfPaginationReached = true
                     )
                 }
                 LoadType.APPEND -> {
-                    val key = getRemoteKeyForLastItem(state, remoteKey)
+                    val key = remoteKey?.nextKey?.toIntOrNull()
                     if(remoteKey != null && key == null)return MediatorResult.Success(
                         endOfPaginationReached = true
                     )
@@ -76,7 +78,7 @@ class SpeciesKingdomRemoteMediator2(
                 }
             }
             val counter = serverReadCounter.contentCountersFlow.firstOrNull() ?: 0
-            if(counter > K.READ_EXCEED_LIMIT){
+            if(counter > appPreferences.getItem(KPref.readExceedLimit)){
                 return MediatorResult.Error(ReadLimitExceededException)
             }
             val dataResponse = categoryRemoteSource.getSpeciesByKingdom(

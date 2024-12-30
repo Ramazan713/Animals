@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.masterplus.animals.core.data.extensions.toRemoteLoadType
-import com.masterplus.animals.core.domain.constants.K
+import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.RemoteLoadType
 import com.masterplus.animals.core.domain.enums.RemoteSourceType
@@ -16,19 +16,22 @@ import com.masterplus.animals.core.domain.utils.ReadLimitExceededException
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity.RemoteKeyEntity
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import java.io.IOException
 
 
 abstract class BaseRemoteMediator<T: Item>(
     override val db: AppDatabase,
     readCounter: ServerReadCounter,
+    appPreferences: AppPreferences,
     targetItemId: Int?
-): BaseRemoteMediator2<T, T>(db, readCounter, targetItemId)
+): BaseRemoteMediator2<T, T>(db, readCounter, appPreferences, targetItemId)
 
 @OptIn(ExperimentalPagingApi::class)
 abstract class BaseRemoteMediator2<T: Item, D: Item>(
     protected open val db: AppDatabase,
     private val readCounter: ServerReadCounter,
+    private val appPreferences: AppPreferences,
     private val targetItemId: Int?
 ): RemoteMediator<Int, T>() {
 
@@ -69,12 +72,12 @@ abstract class BaseRemoteMediator2<T: Item, D: Item>(
                     }
                 }
                 LoadType.PREPEND ->{
-                    getRemoteKeyForFirstItem(state, remoteKey) ?: return MediatorResult.Success(
+                    remoteKey?.prevKey?.toIntOrNull() ?: return MediatorResult.Success(
                         endOfPaginationReached = true
                     )
                 }
                 LoadType.APPEND -> {
-                    val key = getRemoteKeyForLastItem(state, remoteKey)
+                    val key = remoteKey?.nextKey?.toIntOrNull()
                     if(remoteKey != null && key == null)return MediatorResult.Success(
                         endOfPaginationReached = true
                     )
@@ -118,7 +121,7 @@ abstract class BaseRemoteMediator2<T: Item, D: Item>(
 
     open suspend fun checkReadExceedLimit(): Boolean{
         val counter = readCounter.getCounter(contentType)
-        return counter > K.READ_EXCEED_LIMIT
+        return counter > appPreferences.getItem(KPref.readExceedLimit)
     }
 
     open fun getNextKey(items: List<D>, loadType: LoadType,  remoteKey: RemoteKeyEntity?): String? {

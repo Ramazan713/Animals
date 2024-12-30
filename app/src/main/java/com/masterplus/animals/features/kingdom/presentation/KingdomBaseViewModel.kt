@@ -3,7 +3,7 @@ package com.masterplus.animals.features.kingdom.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.R
-import com.masterplus.animals.core.domain.constants.K
+import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
@@ -13,6 +13,7 @@ import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
@@ -30,7 +31,8 @@ import kotlinx.coroutines.launch
 abstract class KingdomBaseViewModel(
     private val categoryRepo: CategoryRepo,
     private val savePointRepo: SavePointRepo,
-    private val translationRepo: TranslationRepo
+    private val translationRepo: TranslationRepo,
+    private val appPreferences: AppPreferences
 ): ViewModel() {
     
     abstract val kingdomType: KingdomType
@@ -49,11 +51,13 @@ abstract class KingdomBaseViewModel(
             KingdomAction.ClearMessage -> _state.update { it.copy(message = null) }
             is KingdomAction.RetryCategory -> {
                 viewModelScope.launch {
+                    val pageSize = appPreferences.getItem(KPref.homeCategoryPageSize)
+                    val lang = state.value.languageEnum
                     when(action.categoryType){
-                        CategoryType.Habitat -> loadHabits(state.value.languageEnum)
-                        CategoryType.Class -> loadClasses(state.value.languageEnum)
-                        CategoryType.Order -> loadOrders(state.value.languageEnum)
-                        CategoryType.Family -> loadFamilies(state.value.languageEnum)
+                        CategoryType.Habitat -> loadHabits(lang, pageSize)
+                        CategoryType.Class -> loadClasses(lang, pageSize)
+                        CategoryType.Order -> loadOrders(lang, pageSize)
+                        CategoryType.Family -> loadFamilies(lang, pageSize)
                         CategoryType.List -> null
                     }?.onFailure { error ->
                         _state.update { it.copy(
@@ -80,12 +84,13 @@ abstract class KingdomBaseViewModel(
                     isLoading = false,
                     languageEnum = language
                 ) }
+                val pageSize = appPreferences.getItem(KPref.homeCategoryPageSize)
                 viewModelScope.launch {
                     val jobs = listOf(
-                        async { loadHabits(language) },
-                        async { loadClasses(language) },
-                        async { loadOrders(language) },
-                        async { loadFamilies(language) },
+                        async { loadHabits(language,pageSize) },
+                        async { loadClasses(language, pageSize) },
+                        async { loadOrders(language, pageSize) },
+                        async { loadFamilies(language, pageSize) },
                     )
                     val jobsResponse = jobs.awaitAll()
                     val error = jobsResponse.firstNotNullOfOrNull { it.getFailureError?.text }
@@ -113,55 +118,55 @@ abstract class KingdomBaseViewModel(
             .launchIn(viewModelScope)
     }
 
-    private suspend fun loadHabits(language: LanguageEnum): EmptyDefaultResult {
+    private suspend fun loadHabits(language: LanguageEnum, pageSize: Int): EmptyDefaultResult {
         _state.update { it.copy(
             habitats = CategoryDataRowModel(isLoading = true)
         ) }
-        val result = loadCategoryData(CategoryType.Habitat, language)
+        val result = loadCategoryData(CategoryType.Habitat, language, pageSize)
         result.onSuccess {
             _state.update { state -> state.copy(
-                habitats = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= CATEGORY_LIMIT)
+                habitats = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= pageSize)
             ) }
         }
         return result.asEmptyResult()
     }
 
-    private suspend fun loadClasses(language: LanguageEnum): EmptyDefaultResult {
+    private suspend fun loadClasses(language: LanguageEnum, pageSize: Int): EmptyDefaultResult {
         _state.update { it.copy(
             classes = CategoryDataRowModel(isLoading = true)
         ) }
-        val result = loadCategoryData(CategoryType.Class, language)
+        val result = loadCategoryData(CategoryType.Class, language, pageSize)
         result.onSuccess {
             _state.update { state -> state.copy(
-                classes = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= CATEGORY_LIMIT)
+                classes = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= pageSize)
             ) }
         }
         return result.asEmptyResult()
     }
 
 
-    private suspend fun loadOrders(language: LanguageEnum): EmptyDefaultResult {
+    private suspend fun loadOrders(language: LanguageEnum, pageSize: Int): EmptyDefaultResult {
         _state.update { it.copy(
             orders = CategoryDataRowModel(isLoading = true)
         ) }
-        val result = loadCategoryData(CategoryType.Order, language)
+        val result = loadCategoryData(CategoryType.Order, language, pageSize)
         result.onSuccess {
             _state.update { state -> state.copy(
-                orders = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= CATEGORY_LIMIT)
+                orders = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= pageSize)
             ) }
         }
         return result.asEmptyResult()
     }
 
 
-    private suspend fun loadFamilies(language: LanguageEnum): EmptyDefaultResult {
+    private suspend fun loadFamilies(language: LanguageEnum, pageSize: Int): EmptyDefaultResult {
         _state.update { it.copy(
             families = CategoryDataRowModel(isLoading = true)
         ) }
-        val result = loadCategoryData(CategoryType.Family, language)
+        val result = loadCategoryData(CategoryType.Family, language, pageSize)
         result.onSuccess {
             _state.update { state -> state.copy(
-                families = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= CATEGORY_LIMIT)
+                families = CategoryDataRowModel(isLoading = false, categoryDataList = it, showMore = it.size >= pageSize)
             ) }
         }
         return result.asEmptyResult()
@@ -169,17 +174,14 @@ abstract class KingdomBaseViewModel(
 
     private suspend fun loadCategoryData(
         type: CategoryType,
-        language: LanguageEnum
+        language: LanguageEnum,
+        pageSize: Int
     ): DefaultResult<List<CategoryData>> {
         return categoryRepo.getCategoryData(
             categoryType = type,
-            limit = CATEGORY_LIMIT,
+            limit = pageSize,
             language = language,
             kingdomType = kingdomType
         )
-    }
-
-    companion object {
-        private const val CATEGORY_LIMIT = K.HOME_CATEGORY_PAGE_SIZE
     }
 }

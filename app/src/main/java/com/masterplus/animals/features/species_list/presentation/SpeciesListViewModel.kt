@@ -7,12 +7,14 @@ import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
-import com.masterplus.animals.core.domain.constants.K
+import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.shared_features.preferences.data.get
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
@@ -25,8 +27,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -36,6 +40,7 @@ class SpeciesListViewModel(
     private val speciesRepo: SpeciesRepo,
     private val categoryRepo: CategoryRepo,
     private val savePointRepo: SavePointRepo,
+    private val appPreferences: AppPreferences,
     translationRepo: TranslationRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -44,15 +49,18 @@ class SpeciesListViewModel(
     private val _state = MutableStateFlow(SpeciesListState())
     val state = _state.asStateFlow()
 
-    private val _targetItemId = MutableStateFlow<Int?>(null)
+    private val _targetItemIdFlow = MutableStateFlow<Int?>(null)
+    private val speciesPageSizeFlow = appPreferences.dataFlow.map { it[KPref.speciesPageSize] }.distinctUntilChanged()
+
 
     val pagingItems = combine(
         translationRepo
             .getFlowLanguage(),
-        _targetItemId
-    ){ language, targetItemId ->
-        getPagingFlow(language, targetItemId)
-    }.flatMapLatest { it }
+        _targetItemIdFlow,
+        speciesPageSizeFlow
+    ){ language, targetItemId, speciesPageSize ->
+        getPagingFlow(language, targetItemId, speciesPageSize)
+    }.flatMapLatest { flow -> flow  }
         .cachedIn(viewModelScope)
 
     init {
@@ -94,13 +102,12 @@ class SpeciesListViewModel(
                 }
             }
             is SpeciesListAction.SetPagingTargetId -> {
-                _targetItemId.value = action.targetId
+                _targetItemIdFlow.value = action.targetId
             }
         }
     }
 
-    private fun getPagingFlow(language: LanguageEnum, targetItemId: Int?): Flow<PagingData<SpeciesListDetail>>{
-        val pageSize = K.SPECIES_PAGE_SIZE
+    private fun getPagingFlow(language: LanguageEnum, targetItemId: Int?, pageSize: Int): Flow<PagingData<SpeciesListDetail>>{
         return with(args){
             when {
                 categoryItemId == null -> speciesRepo.getPagingSpeciesWithKingdom(

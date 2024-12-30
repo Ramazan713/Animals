@@ -10,6 +10,7 @@ import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesDetailEmbedded
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 
 class SpeciesCategoryRemoteMediator(
     db: AppDatabase,
@@ -17,8 +18,9 @@ class SpeciesCategoryRemoteMediator(
     private val categoryType: CategoryType,
     private val itemId: Int,
     readCounter: ServerReadCounter,
+    appPreferences: AppPreferences,
     targetItemId: Int? = null,
-): BaseSpeciesRemoteMediator<SpeciesDetailEmbedded>(db, readCounter, targetItemId) {
+): BaseSpeciesRemoteMediator<SpeciesDetailEmbedded>(db, readCounter, appPreferences, targetItemId) {
     override val saveRemoteKey: String
         get() = RemoteKeyUtil.getSpeciesCategoryRemoteKey(
             categoryType = categoryType,

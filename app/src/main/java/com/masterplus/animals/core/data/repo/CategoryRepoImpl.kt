@@ -33,6 +33,7 @@ import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerR
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -43,7 +44,8 @@ class CategoryRepoImpl constructor(
     private val db: AppDatabase,
     private val categoryRemoteRepo: CategoryRemoteRepo,
     private val categoryRemoteSource: CategoryRemoteSource,
-    private val readCounter: ServerReadCounter
+    private val readCounter: ServerReadCounter,
+    private val appPreferences: AppPreferences
 ): CategoryRepo {
     override suspend fun getCategoryData(
         categoryType: CategoryType,
@@ -152,7 +154,8 @@ class CategoryRepoImpl constructor(
                 classId = classId,
                 categoryRemoteSource = categoryRemoteSource,
                 targetItemId = targetItemId,
-                readCounter = readCounter
+                readCounter = readCounter,
+                appPreferences = appPreferences
             )
         ).flow.map { items -> items.map { it.toOrder(language) } }
     }
@@ -174,7 +177,8 @@ class CategoryRepoImpl constructor(
                 orderId = orderId,
                 categoryRemoteSource = categoryRemoteSource,
                 targetItemId = targetItemId,
-                readCounter = readCounter
+                readCounter = readCounter,
+                appPreferences = appPreferences
             )
         ).flow.map { items -> items.map { it.toFamily(language) } }
     }
@@ -195,7 +199,8 @@ class CategoryRepoImpl constructor(
                 phylumId = null,
                 categoryRemoteSource = categoryRemoteSource,
                 targetItemId = targetItemId,
-                readCounter = readCounter
+                readCounter = readCounter,
+                appPreferences = appPreferences
             )
         ).flow.map { items -> items.map { it.toClass(language) } }
     }
@@ -216,7 +221,8 @@ class CategoryRepoImpl constructor(
                 classId = null,
                 categoryRemoteSource = categoryRemoteSource,
                 targetItemId = targetItemId,
-                readCounter = readCounter
+                readCounter = readCounter,
+                appPreferences = appPreferences
             )
         ).flow.map { items -> items.map { it.toOrder(language) } }
     }
@@ -236,7 +242,8 @@ class CategoryRepoImpl constructor(
                 kingdomType = kingdomType,
                 categoryRemoteSource = categoryRemoteSource,
                 targetItemId = targetItemId,
-                readCounter = readCounter
+                readCounter = readCounter,
+                appPreferences = appPreferences
             )
         ).flow.map { items -> items.map { it.toHabitatCategory(language) } }
     }
@@ -257,7 +264,8 @@ class CategoryRepoImpl constructor(
                 orderId = null,
                 categoryRemoteSource = categoryRemoteSource,
                 targetItemId = targetItemId,
-                readCounter = readCounter
+                readCounter = readCounter,
+                appPreferences = appPreferences
             )
         ).flow.map { items -> items.map { it.toFamily(language) } }
     }

@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.data.mediators
 
-import androidx.paging.LoadType
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
@@ -13,6 +12,7 @@ import com.masterplus.animals.core.domain.utils.map
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity_helper.FamilyWithImageEmbedded
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 
 class FamilyRemoteMediator(
     db: AppDatabase,
@@ -20,8 +20,9 @@ class FamilyRemoteMediator(
     private val orderId: Int?,
     private val categoryRemoteSource: CategoryRemoteSource,
     readCounter: ServerReadCounter,
+    appPreferences: AppPreferences,
     targetItemId: Int? = null,
-): BaseRemoteMediator<FamilyWithImageEmbedded>(db, readCounter, targetItemId) {
+): BaseRemoteMediator<FamilyWithImageEmbedded>(db, readCounter, appPreferences, targetItemId) {
 
     override val saveRemoteKey: String
         get() = RemoteKeyUtil.getFamilyRemoteKey(

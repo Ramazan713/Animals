@@ -1,8 +1,6 @@
 package com.masterplus.animals.core.data.mediators
 
-import androidx.paging.LoadType
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
-import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toOrderWithImageEmbedded
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.ContentType
@@ -14,6 +12,7 @@ import com.masterplus.animals.core.domain.utils.map
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity_helper.OrderWithImageEmbedded
+import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 
 class OrderRemoteMediator(
     db: AppDatabase,
@@ -21,8 +20,9 @@ class OrderRemoteMediator(
     private val classId: Int?,
     private val categoryRemoteSource: CategoryRemoteSource,
     readCounter: ServerReadCounter,
+    appPreferences: AppPreferences,
     targetItemId: Int? = null,
-): BaseRemoteMediator<OrderWithImageEmbedded>(db, readCounter, targetItemId) {
+): BaseRemoteMediator<OrderWithImageEmbedded>(db, readCounter, appPreferences, targetItemId) {
 
     override val saveRemoteKey: String
         get() = RemoteKeyUtil.getOrderRemoteKey(
