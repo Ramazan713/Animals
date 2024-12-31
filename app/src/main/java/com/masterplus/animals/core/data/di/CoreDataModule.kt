@@ -2,6 +2,7 @@ package com.masterplus.animals.core.data.di
 
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.datasources.FirebaseCategoryRemoteSource
+import com.masterplus.animals.core.data.mediators.RemoteMediatorConfig
 import com.masterplus.animals.core.data.repo.AnimalRepoImpl
 import com.masterplus.animals.core.data.repo.CategoryRepoImpl
 import com.masterplus.animals.core.data.repo.ConnectivityObserverImpl
@@ -29,4 +30,5 @@ val coreDataModule = module {
     singleOf(::FirebaseCategoryRemoteSource).bind<CategoryRemoteSource>()
     singleOf(::FirebaseCategoryRemoteRepo).bind<CategoryRemoteRepo>()
     singleOf(::ConnectivityObserverImpl).bind<ConnectivityObserver>()
+    singleOf(::RemoteMediatorConfig)
 }

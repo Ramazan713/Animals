@@ -1,9 +1,6 @@
 package com.masterplus.animals.core.data.mediators
 
-import androidx.paging.LoadType
-import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.mapper.toClassWithImageEmbedded
-import com.masterplus.animals.core.data.mapper.toFamilyWithImageEmbedded
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
@@ -11,20 +8,14 @@ import com.masterplus.animals.core.domain.enums.RemoteLoadType
 import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.map
-import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
-import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity_helper.ClassWithImageEmbedded
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 
 class ClassRemoteMediator(
-    db: AppDatabase,
+    config: RemoteMediatorConfig,
+    targetItemId: Int? = null,
     private val kingdomType: KingdomType,
     private val phylumId: Int?,
-    private val categoryRemoteSource: CategoryRemoteSource,
-    readCounter: ServerReadCounter,
-    appPreferences: AppPreferences,
-    targetItemId: Int? = null,
-): BaseRemoteMediator<ClassWithImageEmbedded>(db, readCounter, appPreferences, targetItemId) {
+): BaseRemoteMediator<ClassWithImageEmbedded>(config, targetItemId) {
 
     override val saveRemoteKey: String
         get() = RemoteKeyUtil.getClassRemoteKey(

@@ -14,8 +14,9 @@ import com.masterplus.animals.core.data.mapper.toOrderWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toPhylumWithImageEmbedded
 import com.masterplus.animals.core.data.mapper.toSpecies
 import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
+import com.masterplus.animals.core.data.mediators.RemoteMediatorConfig
 import com.masterplus.animals.core.data.mediators.SpeciesCategoryRemoteMediator
-import com.masterplus.animals.core.data.mediators.SpeciesKingdomRemoteMediator2
+import com.masterplus.animals.core.data.mediators.SpeciesKingdomRemoteMediator
 import com.masterplus.animals.core.data.mediators.SpeciesListRemoteMediator
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
@@ -29,11 +30,8 @@ import com.masterplus.animals.core.domain.utils.ErrorText
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.domain.utils.map
-import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
-import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -46,10 +44,8 @@ import kotlinx.coroutines.flow.map
 class SpeciesRepoImpl(
     private val speciesDao: SpeciesDao,
     private val categoryDao: CategoryDao,
-    private val db: AppDatabase,
     private val categoryRemoteSource: CategoryRemoteSource,
-    private val serverReadCounter: ServerReadCounter,
-    private val appPreferences: AppPreferences
+    private val remoteMediatorConfig: RemoteMediatorConfig
 ): SpeciesRepo {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -64,13 +60,10 @@ class SpeciesRepoImpl(
             pagingSourceFactory = {
                 speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdom))
             },
-            remoteMediator = SpeciesKingdomRemoteMediator2(
-                kingdom = kingdom,
-                db = db,
-                categoryRemoteSource = categoryRemoteSource,
+            remoteMediator = SpeciesKingdomRemoteMediator(
+                config = remoteMediatorConfig,
                 targetItemId = targetItemId,
-                serverReadCounter = serverReadCounter,
-                appPreferences = appPreferences
+                kingdom = kingdom
             )
         ).flow.map { items ->
             items.map { it.toSpeciesListDetail(language) }
@@ -90,12 +83,9 @@ class SpeciesRepoImpl(
                 speciesDao.getPagingSpeciesByListId(itemId)
             },
             remoteMediator = SpeciesListRemoteMediator(
-                db = db,
+                config = remoteMediatorConfig,
                 listId = itemId,
-                targetItemId = targetItemId,
-                readCounter = serverReadCounter,
-                categoryRemoteSource = categoryRemoteSource,
-                appPreferences = appPreferences
+                targetItemId = targetItemId
             )
         ).flow.map { items ->
             items.map { it.toSpeciesListDetail(language) }
@@ -120,13 +110,10 @@ class SpeciesRepoImpl(
                 ))
             },
             remoteMediator = SpeciesCategoryRemoteMediator(
+                config = remoteMediatorConfig,
                 categoryType = categoryType,
                 itemId = itemId,
-                db = db,
-                targetItemId = targetItemId,
-                readCounter = serverReadCounter,
-                categoryRemoteSource = categoryRemoteSource,
-                appPreferences = appPreferences
+                targetItemId = targetItemId
             )
         ).flow.map { items ->
             items.map { it.toSpeciesListDetail(language) }

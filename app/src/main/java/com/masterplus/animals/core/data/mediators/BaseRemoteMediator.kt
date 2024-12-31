@@ -5,6 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.extensions.toRemoteLoadType
 import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.ContentType
@@ -21,19 +22,20 @@ import java.io.IOException
 
 
 abstract class BaseRemoteMediator<T: Item>(
-    override val db: AppDatabase,
-    readCounter: ServerReadCounter,
-    appPreferences: AppPreferences,
+    config: RemoteMediatorConfig,
     targetItemId: Int?
-): BaseRemoteMediator2<T, T>(db, readCounter, appPreferences, targetItemId)
+): BaseRemoteMediator2<T, T>(config, targetItemId)
 
 @OptIn(ExperimentalPagingApi::class)
 abstract class BaseRemoteMediator2<T: Item, D: Item>(
-    protected open val db: AppDatabase,
-    private val readCounter: ServerReadCounter,
-    private val appPreferences: AppPreferences,
+    private val config: RemoteMediatorConfig,
     private val targetItemId: Int?
 ): RemoteMediator<Int, T>() {
+
+    protected val db: AppDatabase = config.db
+    private val readCounter: ServerReadCounter = config.readCounter
+    private val appPreferences: AppPreferences = config.appPreferences
+    protected val categoryRemoteSource: CategoryRemoteSource = config.categoryRemoteSource
 
     abstract val saveRemoteKey: String
     abstract val contentType: ContentType

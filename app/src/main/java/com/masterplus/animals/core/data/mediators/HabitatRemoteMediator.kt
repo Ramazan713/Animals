@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.data.mediators
 
-import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.mapper.toHabitatCategoryWithImageEmbedded
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.ContentType
@@ -9,19 +8,13 @@ import com.masterplus.animals.core.domain.enums.RemoteLoadType
 import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.map
-import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
-import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity_helper.HabitatWithImageEmbedded
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 
 class HabitatRemoteMediator(
-    db: AppDatabase,
-    private val kingdomType: KingdomType,
-    private val categoryRemoteSource: CategoryRemoteSource,
-    readCounter: ServerReadCounter,
-    appPreferences: AppPreferences,
+    config: RemoteMediatorConfig,
     targetItemId: Int? = null,
-): BaseRemoteMediator<HabitatWithImageEmbedded>(db, readCounter, appPreferences, targetItemId) {
+    private val kingdomType: KingdomType,
+): BaseRemoteMediator<HabitatWithImageEmbedded>(config, targetItemId) {
 
     override val saveRemoteKey: String
         get() = RemoteKeyUtil.getHabitatRemoteKey(

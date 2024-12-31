@@ -5,7 +5,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.mapper.toCategoryData
 import com.masterplus.animals.core.data.mapper.toClass
 import com.masterplus.animals.core.data.mapper.toFamily
@@ -15,6 +14,7 @@ import com.masterplus.animals.core.data.mediators.ClassRemoteMediator
 import com.masterplus.animals.core.data.mediators.FamilyRemoteMediator
 import com.masterplus.animals.core.data.mediators.HabitatRemoteMediator
 import com.masterplus.animals.core.data.mediators.OrderRemoteMediator
+import com.masterplus.animals.core.data.mediators.RemoteMediatorConfig
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
@@ -29,23 +29,17 @@ import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
 import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.map
-import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
-import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.database.dao.ListDao
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class CategoryRepoImpl constructor(
+class CategoryRepoImpl(
     private val categoryDao: CategoryDao,
     private val listDao: ListDao,
-    private val db: AppDatabase,
     private val categoryRemoteRepo: CategoryRemoteRepo,
-    private val categoryRemoteSource: CategoryRemoteSource,
-    private val readCounter: ServerReadCounter,
-    private val appPreferences: AppPreferences
+    private val remoteMediatorConfig: RemoteMediatorConfig
 ): CategoryRepo {
     override suspend fun getCategoryData(
         categoryType: CategoryType,
@@ -149,13 +143,10 @@ class CategoryRepoImpl constructor(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingOrders(RemoteKeyUtil.getOrderRemoteKey(kingdomType, classId)) },
             remoteMediator = OrderRemoteMediator(
-                db = db,
+                config = remoteMediatorConfig,
                 kingdomType = kingdomType,
                 classId = classId,
-                categoryRemoteSource = categoryRemoteSource,
-                targetItemId = targetItemId,
-                readCounter = readCounter,
-                appPreferences = appPreferences
+                targetItemId = targetItemId
             )
         ).flow.map { items -> items.map { it.toOrder(language) } }
     }
@@ -172,13 +163,10 @@ class CategoryRepoImpl constructor(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingFamilies(RemoteKeyUtil.getFamilyRemoteKey(kingdomType, orderId)) },
             remoteMediator = FamilyRemoteMediator(
-                db = db,
+                config = remoteMediatorConfig,
                 kingdomType = kingdomType,
                 orderId = orderId,
-                categoryRemoteSource = categoryRemoteSource,
-                targetItemId = targetItemId,
-                readCounter = readCounter,
-                appPreferences = appPreferences
+                targetItemId = targetItemId
             )
         ).flow.map { items -> items.map { it.toFamily(language) } }
     }
@@ -194,13 +182,10 @@ class CategoryRepoImpl constructor(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingClasses(RemoteKeyUtil.getClassRemoteKey(kingdomType, null)) },
             remoteMediator = ClassRemoteMediator(
-                db = db,
+                config = remoteMediatorConfig,
                 kingdomType = kingdomType,
                 phylumId = null,
-                categoryRemoteSource = categoryRemoteSource,
                 targetItemId = targetItemId,
-                readCounter = readCounter,
-                appPreferences = appPreferences
             )
         ).flow.map { items -> items.map { it.toClass(language) } }
     }
@@ -216,13 +201,10 @@ class CategoryRepoImpl constructor(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingOrders(RemoteKeyUtil.getOrderRemoteKey(kingdomType, null)) },
             remoteMediator = OrderRemoteMediator(
-                db = db,
+                config = remoteMediatorConfig,
                 kingdomType = kingdomType,
                 classId = null,
-                categoryRemoteSource = categoryRemoteSource,
-                targetItemId = targetItemId,
-                readCounter = readCounter,
-                appPreferences = appPreferences
+                targetItemId = targetItemId
             )
         ).flow.map { items -> items.map { it.toOrder(language) } }
     }
@@ -238,12 +220,9 @@ class CategoryRepoImpl constructor(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingHabitats(RemoteKeyUtil.getHabitatRemoteKey(kingdomType)) },
             remoteMediator = HabitatRemoteMediator(
-                db = db,
+                config = remoteMediatorConfig,
                 kingdomType = kingdomType,
-                categoryRemoteSource = categoryRemoteSource,
-                targetItemId = targetItemId,
-                readCounter = readCounter,
-                appPreferences = appPreferences
+                targetItemId = targetItemId
             )
         ).flow.map { items -> items.map { it.toHabitatCategory(language) } }
     }
@@ -259,13 +238,10 @@ class CategoryRepoImpl constructor(
             config = getPagingConfig(pageSize = pageSize),
             pagingSourceFactory = { categoryDao.getPagingFamilies(RemoteKeyUtil.getFamilyRemoteKey(kingdomType, null)) },
             remoteMediator = FamilyRemoteMediator(
-                db = db,
+                config = remoteMediatorConfig,
                 kingdomType = kingdomType,
                 orderId = null,
-                categoryRemoteSource = categoryRemoteSource,
-                targetItemId = targetItemId,
-                readCounter = readCounter,
-                appPreferences = appPreferences
+                targetItemId = targetItemId
             )
         ).flow.map { items -> items.map { it.toFamily(language) } }
     }

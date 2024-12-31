@@ -15,14 +15,11 @@ import com.masterplus.animals.core.shared_features.database.entity_helper.Family
 import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 
 class FamilyRemoteMediator(
-    db: AppDatabase,
+    config: RemoteMediatorConfig,
+    targetItemId: Int? = null,
     private val kingdomType: KingdomType,
     private val orderId: Int?,
-    private val categoryRemoteSource: CategoryRemoteSource,
-    readCounter: ServerReadCounter,
-    appPreferences: AppPreferences,
-    targetItemId: Int? = null,
-): BaseRemoteMediator<FamilyWithImageEmbedded>(db, readCounter, appPreferences, targetItemId) {
+): BaseRemoteMediator<FamilyWithImageEmbedded>(config, targetItemId) {
 
     override val saveRemoteKey: String
         get() = RemoteKeyUtil.getFamilyRemoteKey(
