@@ -73,7 +73,7 @@ fun ImageWithTitle(
         useTransition = model.imageUrl != null && useTransition,
         transitionKey = TransitionImageType.fromCategoryType(model.categoryType)?.let {
             TransitionImageKey(
-                id = model.id ?: 0,
+                id = model.id,
                 imageType = it,
                 kingdomType = model.kingdomType
             )

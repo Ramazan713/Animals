@@ -5,6 +5,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +15,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +36,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +55,7 @@ import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
+import com.masterplus.animals.core.extentions.isPrependItemLoading
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.TopBarType
@@ -72,6 +81,8 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_s
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListBottomItemMenu
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListTopBarItemMenu
+import com.masterplus.animals.features.category_list.presentation.components.CategoryItemShipper
+import com.valentinilk.shimmer.shimmer
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
@@ -161,6 +172,13 @@ fun CategoryListPage(
                 }
             }
         ) {
+
+            if(pagingItems.isPrependItemLoading()){
+                item {
+                    SharedCircularProgress(modifier = Modifier.fillMaxWidth())
+                }
+            }
+
             PrependErrorHandlerComponent(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -196,7 +214,10 @@ fun CategoryListPage(
                             ))
                         }
                     )
+                }else{
+                    CategoryItemShipper()
                 }
+
             }
 
             AppendErrorHandlerComponent(
@@ -262,6 +283,8 @@ fun CategoryListPage(
     }
 
 }
+
+
 
 @Composable
 private fun HeaderImage(

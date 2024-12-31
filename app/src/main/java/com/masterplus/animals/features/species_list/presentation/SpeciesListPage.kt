@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -17,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +39,7 @@ import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
+import com.masterplus.animals.core.extentions.isPrependItemLoading
 import com.masterplus.animals.core.extentions.visibleMiddleItemId
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
@@ -71,8 +70,10 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_s
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListBottomItemMenu
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListTopItemMenu
 import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
+import com.masterplus.animals.features.species_list.presentation.components.SpeciesCardShimmer
 import com.masterplus.animals.features.species_list.presentation.navigation.SpeciesListRoute
 import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 fun SpeciesListPageRoot(
@@ -206,6 +207,12 @@ fun SpeciesListPage(
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)
             ) {
 
+                if(pagingItems.isPrependItemLoading()){
+                    item {
+                        SharedCircularProgress(modifier = Modifier.fillMaxWidth())
+                    }
+                }
+
                 PrependErrorHandlerComponent(
                     modifier = Modifier.fillMaxWidth(),
                     pagingItems = pagingItems,
@@ -243,8 +250,9 @@ fun SpeciesListPage(
                             },
                         )
                     }else{
-                        Text("Loading", modifier = Modifier.height(130.dp))
+                        SpeciesCardShimmer()
                     }
+
                 }
 
                 AppendErrorHandlerComponent(
@@ -303,6 +311,8 @@ fun SpeciesListPage(
         }
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable

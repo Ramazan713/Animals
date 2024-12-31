@@ -123,6 +123,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.datetime)
     implementation(libs.lib.zoomable)
+    implementation(libs.compose.shimmer)
 
     implementation(libs.bundles.paging)
     implementation(libs.bundles.datastore)
