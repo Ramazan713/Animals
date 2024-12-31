@@ -20,9 +20,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.R
+import com.masterplus.animals.core.data.mediators.RemoteMediatorError
 import com.masterplus.animals.core.domain.models.Item
-import com.masterplus.animals.core.extentions.hasLimitException
-import com.masterplus.animals.core.extentions.isEmptyResult
+import com.masterplus.animals.core.extentions.getAnyExceptionOrNull
 import com.masterplus.animals.core.extentions.visibleMiddleItemId
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle
@@ -55,24 +55,21 @@ fun <T: Item> AutoSavePointHandler(
                     currentOnInitPosResponse?.invoke(pos)
                     return@EventHandler
                 }
-                if(pagingItems.hasLimitException()){
-                    onAction(AutoSavePointAction.ShowDialog(AutoSavePointDialogEvent.ShowAdRequired))
+                val error = pagingItems.getAnyExceptionOrNull()
+                if(error != null){
+                    if(error is RemoteMediatorError.ReadLimitExceededException){
+                        onAction(AutoSavePointAction.ShowDialog(AutoSavePointDialogEvent.ShowAdRequired))
+                    }
                 }else{
                     pagingItems.refresh()
                 }
             }
-            AutoSavePointEvent.RetryPagingAfterAd -> {
+            AutoSavePointEvent.RetryPaging -> {
                 pagingItems.retry()
             }
             AutoSavePointEvent.ShowAd -> {
                 onAction(AutoSavePointAction.SuccessShowAd)
             }
-        }
-    }
-
-    LaunchedEffect(pagingItems.loadState, pagingItems.itemCount){
-        if(pagingItems.hasLimitException() && pagingItems.isEmptyResult()){
-            onAction(AutoSavePointAction.ShowDialog(AutoSavePointDialogEvent.ShowAdRequired))
         }
     }
 

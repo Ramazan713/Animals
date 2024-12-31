@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -46,6 +48,7 @@ fun SharedLoadingLazyVerticalGrid(
     horizontalSpaceBy: Dp = 8.dp,
     isEmptyResult: Boolean = false,
     emptyMessage: String = stringResource(id = R.string.not_fount_any_result),
+    emptyContent: @Composable ((BoxScope.() -> Unit))? = null,
     stickHeaderContent:  (LazyGridScope.() -> Unit)? = null,
     content:  LazyGridScope.() -> Unit,
 ) {
@@ -85,17 +88,20 @@ fun SharedLoadingLazyVerticalGrid(
                 ) {
                     Box(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .height(100.dp)
+                            .heightIn(min = 100.dp)
                             .zIndex(2f)
                             .align(Alignment.Center),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            emptyMessage,
-                            style = MaterialTheme.typography.bodyLarge,
-                            textAlign = TextAlign.Center,
-                        )
+                        if(emptyContent != null){
+                            emptyContent()
+                        }else{
+                            Text(
+                                emptyMessage,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }

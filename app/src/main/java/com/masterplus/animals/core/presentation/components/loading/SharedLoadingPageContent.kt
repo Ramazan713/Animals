@@ -33,6 +33,7 @@ fun SharedLoadingPageContent(
     isEmptyResult: Boolean = false,
     overlayLoading: Boolean = false,
     emptyMessage: String = stringResource(id = R.string.not_fount_any_result),
+    emptyContent: @Composable ((BoxScope.() -> Unit))? = null,
     content: @Composable (BoxScope.() -> Unit)
 ) {
     val showContent by remember(overlayLoading, isLoading, isEmptyResult) {
@@ -68,13 +69,16 @@ fun SharedLoadingPageContent(
                     .align(Alignment.Center),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    emptyMessage,
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
+                if(emptyContent != null){
+                    emptyContent()
+                }else{
+                    Text(
+                        emptyMessage,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-
         }
 
         if (showContent) {

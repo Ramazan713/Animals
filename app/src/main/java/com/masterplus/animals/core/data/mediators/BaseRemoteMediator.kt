@@ -5,7 +5,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.extensions.toRemoteLoadType
 import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.ContentType
@@ -13,29 +12,36 @@ import com.masterplus.animals.core.domain.enums.RemoteLoadType
 import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.models.Item
 import com.masterplus.animals.core.domain.utils.DefaultResult
-import com.masterplus.animals.core.domain.utils.ReadLimitExceededException
-import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
-import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity.RemoteKeyEntity
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import java.io.IOException
 
+
+sealed class RemoteMediatorError: Exception(){
+    data object ReadLimitExceededException: RemoteMediatorError() {
+        private fun readResolve(): Any = ReadLimitExceededException
+    }
+    data object NoInternetConnectionException: RemoteMediatorError() {
+        private fun readResolve(): Any = NoInternetConnectionException
+    }
+}
 
 abstract class BaseRemoteMediator<T: Item>(
     config: RemoteMediatorConfig,
     targetItemId: Int?
 ): BaseRemoteMediator2<T, T>(config, targetItemId)
 
+
 @OptIn(ExperimentalPagingApi::class)
 abstract class BaseRemoteMediator2<T: Item, D: Item>(
-    private val config: RemoteMediatorConfig,
+    config: RemoteMediatorConfig,
     private val targetItemId: Int?
 ): RemoteMediator<Int, T>() {
 
-    protected val db: AppDatabase = config.db
-    private val readCounter: ServerReadCounter = config.readCounter
-    private val appPreferences: AppPreferences = config.appPreferences
-    protected val categoryRemoteSource: CategoryRemoteSource = config.categoryRemoteSource
+    protected val db = config.db
+    protected val categoryRemoteSource = config.categoryRemoteSource
+    private val readCounter = config.readCounter
+    private val appPreferences = config.appPreferences
+    private val connectivityObserver = config.connectivityObserver
 
     abstract val saveRemoteKey: String
     abstract val contentType: ContentType
@@ -86,8 +92,11 @@ abstract class BaseRemoteMediator2<T: Item, D: Item>(
                     key
                 }
             }
+            if(!connectivityObserver.hasConnection()){
+                return MediatorResult.Error(RemoteMediatorError.NoInternetConnectionException)
+            }
             if(checkReadExceedLimit()){
-                return MediatorResult.Error(ReadLimitExceededException)
+                return MediatorResult.Error(RemoteMediatorError.ReadLimitExceededException)
             }
             val dataResponse = fetchData(
                 loadKey = loadKey,

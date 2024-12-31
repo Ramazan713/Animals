@@ -5,7 +5,7 @@ sealed interface AutoSavePointEvent {
         val pos: Int?
     ): AutoSavePointEvent
 
-    data object RetryPagingAfterAd: AutoSavePointEvent
+    data object RetryPaging: AutoSavePointEvent
 
     data object ShowAd: AutoSavePointEvent
 }

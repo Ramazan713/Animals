@@ -34,10 +34,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.masterplus.animals.R
+import com.masterplus.animals.core.data.mediators.RemoteMediatorError
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
@@ -51,12 +53,15 @@ import com.masterplus.animals.core.presentation.components.TopBarType
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingLazyVerticalGrid
+import com.masterplus.animals.core.presentation.components.paging.AppendErrorHandlerComponent
+import com.masterplus.animals.core.presentation.components.paging.PagingEmptyComponent
+import com.masterplus.animals.core.presentation.components.paging.PrependErrorHandlerComponent
 import com.masterplus.animals.core.presentation.selections.ShowSelectBottomMenuItems
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
-import com.masterplus.animals.core.shared_features.ad.presentation.components.ContinueWithAdButton
+import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
@@ -126,6 +131,14 @@ fun CategoryListPage(
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp),
             state = lazyListState,
             isLoading = pagingItems.isLoading() || autoSavePointState.loadingSavePointPos || state.isLoading,
+            emptyContent = {
+                PagingEmptyComponent(
+                    pagingItems = pagingItems,
+                    onWatchAd = {
+                        onAutoSavePointAction(AutoSavePointAction.ShowAd)
+                    }
+                )
+            },
             stickHeaderContent = {
                 item(
                     span = { GridItemSpan(maxLineSpan) }
@@ -148,8 +161,11 @@ fun CategoryListPage(
                 }
             }
         ) {
-
-            ContinueWithAdButton(
+            PrependErrorHandlerComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                ,
                 pagingItems = pagingItems,
                 onWatchAd = {
                     onAutoSavePointAction(AutoSavePointAction.ShowAd)
@@ -183,7 +199,11 @@ fun CategoryListPage(
                 }
             }
 
-            ContinueWithAdButton(
+            AppendErrorHandlerComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                ,
                 pagingItems = pagingItems,
                 onWatchAd = {
                     onAutoSavePointAction(AutoSavePointAction.ShowAd)
@@ -354,9 +374,11 @@ private fun CategoryListPagePreview1() {
         onAction = {},
         pagingItems = getPreviewLazyPagingData<CategoryData>(
             items = listOf(
-                SampleDatas.categoryData
+                SampleDatas.categoryData, SampleDatas.categoryData.copy(id = 5)
             ),
-//            sourceLoadStates = previewPagingLoadStates(append = LoadState.Loading),
+            sourceLoadStates = previewPagingLoadStates(
+                prepend = LoadState.Error(RemoteMediatorError.NoInternetConnectionException)
+            ),
 //            mediatorLoadStates = previewPagingLoadStates(append = LoadState.Loading)
         ),
         onNavigateBack = {

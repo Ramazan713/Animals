@@ -28,10 +28,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import com.masterplus.animals.core.data.mediators.RemoteMediatorError
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
@@ -44,11 +46,14 @@ import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.paging.AppendErrorHandlerComponent
+import com.masterplus.animals.core.presentation.components.paging.PagingEmptyComponent
+import com.masterplus.animals.core.presentation.components.paging.PrependErrorHandlerComponent
 import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
-import com.masterplus.animals.core.shared_features.ad.presentation.components.ContinueWithAdButton
+import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
@@ -183,6 +188,14 @@ fun SpeciesListPage(
                 .fillMaxSize(),
             isLoading = pagingItems.isLoading() || autoSavePointState.loadingSavePointPos,
             isEmptyResult = pagingItems.isEmptyResult(),
+            emptyContent = {
+                PagingEmptyComponent(
+                    pagingItems = pagingItems,
+                    onWatchAd = {
+                        onAutoSavePointAction(AutoSavePointAction.ShowAd)
+                    }
+                )
+            },
             overlayLoading = true
         ) {
             LazyColumn(
@@ -193,7 +206,8 @@ fun SpeciesListPage(
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)
             ) {
 
-                ContinueWithAdButton(
+                PrependErrorHandlerComponent(
+                    modifier = Modifier.fillMaxWidth(),
                     pagingItems = pagingItems,
                     onWatchAd = {
                         onAutoSavePointAction(AutoSavePointAction.ShowAd)
@@ -233,7 +247,8 @@ fun SpeciesListPage(
                     }
                 }
 
-                ContinueWithAdButton(
+                AppendErrorHandlerComponent(
+                    modifier = Modifier.fillMaxWidth(),
                     pagingItems = pagingItems,
                     onWatchAd = {
                         onAutoSavePointAction(AutoSavePointAction.ShowAd)
@@ -306,8 +321,15 @@ fun SpeciesListPagePreview() {
         ),
         onNavigateToSpeciesDetail = {x,y ->},
         pagingItems = getPreviewLazyPagingData(
-            items = listOf(SampleDatas.generateSpeciesDetail(id = 1), SampleDatas.generateSpeciesDetail(id = 2), SampleDatas.generateSpeciesDetail(id = 3)),
-//            sourceLoadStates = previewPagingLoadStates(refresh = LoadState.Loading, append = LoadState.Loading),
+            items = listOf(
+                SampleDatas.generateSpeciesDetail(id = 1),
+//                SampleDatas.generateSpeciesDetail(id = 2),
+//                SampleDatas.generateSpeciesDetail(id = 3)
+            ),
+            sourceLoadStates = previewPagingLoadStates(
+                refresh = LoadState.Error(RemoteMediatorError.ReadLimitExceededException),
+//                append = LoadState.Error(RemoteMediatorError.ReadLimitExceededException)
+            ),
         ),
         onNavigateToCategorySearch = {},
         onAutoSavePointAction = {},

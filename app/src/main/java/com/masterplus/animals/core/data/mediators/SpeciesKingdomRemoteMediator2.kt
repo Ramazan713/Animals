@@ -16,7 +16,6 @@ import com.masterplus.animals.core.data.mapper.toSpeciesImageWithMetadataEmbedde
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.KingdomType
-import com.masterplus.animals.core.domain.utils.ReadLimitExceededException
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.entity.RemoteKeyEntity
@@ -79,7 +78,7 @@ class SpeciesKingdomRemoteMediator2(
             }
             val counter = serverReadCounter.contentCountersFlow.firstOrNull() ?: 0
             if(counter > appPreferences.getItem(KPref.readExceedLimit)){
-                return MediatorResult.Error(ReadLimitExceededException)
+                return MediatorResult.Error(RemoteMediatorError.ReadLimitExceededException)
             }
             val dataResponse = categoryRemoteSource.getSpeciesByKingdom(
                 kingdomType = kingdom,

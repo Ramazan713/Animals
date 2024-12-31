@@ -1,5 +1,6 @@
 package com.masterplus.animals.core.extentions
 
+import android.os.LimitExceededException
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridLayoutInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -13,8 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.masterplus.animals.core.data.mediators.RemoteMediatorError
 import com.masterplus.animals.core.domain.models.Item
-import com.masterplus.animals.core.domain.utils.ReadLimitExceededException
 
 @Composable
 fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(pos: Int): Int?{
@@ -37,17 +38,19 @@ fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyGridState: LazyGridState
     return visibleMiddleItemId(visibleMiddlePos)
 }
 
-fun <T: Any>LazyPagingItems<T>.hasLimitException(): Boolean{
-    val append = loadState.append
-    val prepend = loadState.prepend
-    val refresh = loadState.refresh
-
-    val isAppendError = append is LoadState.Error && append.error is ReadLimitExceededException
-    val isPrependError = prepend is LoadState.Error && prepend.error is ReadLimitExceededException
-    val isRefreshError = refresh is LoadState.Error && refresh.error is ReadLimitExceededException
-
-    return isRefreshError || isPrependError || isAppendError
+fun LoadState.getExceptionOrNull(): RemoteMediatorError?{
+    if (this is LoadState.Error && this.error is RemoteMediatorError){
+        return this.error as RemoteMediatorError
+    }
+    return null
 }
+
+fun <T: Any>LazyPagingItems<T>.getAnyExceptionOrNull(): RemoteMediatorError?{
+    return listOf(loadState.append, loadState.prepend, loadState.refresh)
+        .map { it.getExceptionOrNull() }
+        .firstNotNullOfOrNull { it }
+}
+
 
 fun <T: Any>LazyPagingItems<T>.isLoading(): Boolean{
     val isLocalRefresh = loadState.source.refresh is LoadState.Loading
