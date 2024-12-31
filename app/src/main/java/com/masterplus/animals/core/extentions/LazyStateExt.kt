@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.extentions
 
-import android.os.LimitExceededException
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridLayoutInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -12,74 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.masterplus.animals.core.data.mediators.RemoteMediatorError
 import com.masterplus.animals.core.domain.models.Item
-
-@Composable
-fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(pos: Int): Int?{
-    return remember(pos) {
-        derivedStateOf {
-            if(pos >= itemCount) null else peek(pos)?.id
-        }
-    }.value
-}
-
-@Composable
-fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyListState: LazyListState): Int?{
-    val visibleMiddlePos = lazyListState.visibleMiddlePosition()
-    return visibleMiddleItemId(visibleMiddlePos)
-}
-
-@Composable
-fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyGridState: LazyGridState): Int?{
-    val visibleMiddlePos = lazyGridState.visibleMiddlePosition()
-    return visibleMiddleItemId(visibleMiddlePos)
-}
-
-fun LoadState.getExceptionOrNull(): RemoteMediatorError?{
-    if (this is LoadState.Error && this.error is RemoteMediatorError){
-        return this.error as RemoteMediatorError
-    }
-    return null
-}
-
-fun <T: Any>LazyPagingItems<T>.getAnyExceptionOrNull(): RemoteMediatorError?{
-    return listOf(loadState.append, loadState.prepend, loadState.refresh)
-        .map { it.getExceptionOrNull() }
-        .firstNotNullOfOrNull { it }
-}
-
-
-fun <T: Any>LazyPagingItems<T>.isLoading(): Boolean{
-    val isLocalRefresh = loadState.source.refresh is LoadState.Loading
-//    val isRemoteRefresh = loadState.mediator?.refresh is LoadState.Loading
-    val isRefresh = loadState.refresh is LoadState.Loading
-    return isLocalRefresh || isRefresh
-}
-
-fun <T: Any>LazyPagingItems<T>.isAppendItemLoading(): Boolean{
-    val isLocalAppend = loadState.source.append is LoadState.Loading
-//    val isRemoteAppend = loadState.mediator?.append is LoadState.Loading
-    val isAppend = loadState.append is LoadState.Loading
-    return isLocalAppend || isAppend
-}
-
-fun <T: Any>LazyPagingItems<T>.isPrependItemLoading(): Boolean{
-    val isLocalPrepend = loadState.source.prepend is LoadState.Loading
-//    val isRemotePrepend = loadState.mediator?.prepend is LoadState.Loading
-    val isPrepend = loadState.prepend is LoadState.Loading
-    return isLocalPrepend || isPrepend
-}
-
-fun <T: Any>LazyPagingItems<T>.isAnyItemLoading(): Boolean{
-    return isAppendItemLoading() || isPrependItemLoading()
-}
-
-fun <T: Any>LazyPagingItems<T>.isEmptyResult(): Boolean{
-    return itemCount == 0 && !isAnyItemLoading()
-}
 
 
 @Composable
@@ -107,6 +40,27 @@ fun LazyStaggeredGridState.visibleMiddlePosition(): Int{
             (firstVisibleItemIndex + (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0)) / 2
         }
     }.value
+}
+
+@Composable
+fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(pos: Int): Int?{
+    return remember(pos) {
+        derivedStateOf {
+            if(pos >= itemCount) null else peek(pos)?.id
+        }
+    }.value
+}
+
+@Composable
+fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyListState: LazyListState): Int?{
+    val visibleMiddlePos = lazyListState.visibleMiddlePosition()
+    return visibleMiddleItemId(visibleMiddlePos)
+}
+
+@Composable
+fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyGridState: LazyGridState): Int?{
+    val visibleMiddlePos = lazyGridState.visibleMiddlePosition()
+    return visibleMiddleItemId(visibleMiddlePos)
 }
 
 
