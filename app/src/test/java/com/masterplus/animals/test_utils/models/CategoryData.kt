@@ -7,7 +7,7 @@ import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 
 fun categoryData(
-    id: Int? = 1,
+    id: Int = 1,
     image: ImageWithMetadata? = SampleDatas.imageWithMetadata,
     title: String = "Category $id",
     categoryType: CategoryType = CategoryType.Class,

@@ -55,7 +55,8 @@ class CategoryRepoFake: CategoryRepo{
         classId: Int,
         pageSize: Int,
         language: LanguageEnum,
-        kingdomType: KingdomType
+        kingdomType: KingdomType,
+        targetItemId: Int?
     ): Flow<PagingData<OrderModel>> {
         val filteredOrders = fakeOrders.filter { it.classId == classId && it.kingdomType == kingdomType }
         val fakePagingSource = FakePagingSource(filteredOrders)
@@ -66,19 +67,30 @@ class CategoryRepoFake: CategoryRepo{
         orderId: Int,
         pageSize: Int,
         language: LanguageEnum,
-        kingdomType: KingdomType
+        kingdomType: KingdomType,
+        targetItemId: Int?
     ): Flow<PagingData<FamilyModel>> {
         val filteredFamilies = fakeFamilies.filter { it.orderId == orderId }
         val fakePagingSource = FakePagingSource(filteredFamilies)
         return Pager(PagingConfig(pageSize = pageSize)) { fakePagingSource }.flow
     }
 
-    override fun getPagingClasses(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<ClassModel>> {
+    override fun getPagingClasses(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int?
+    ): Flow<PagingData<ClassModel>> {
         val fakePagingSource = FakePagingSource(fakeClasses)
         return Pager(PagingConfig(pageSize = pageSize)) { fakePagingSource }.flow
     }
 
-    override fun getPagingOrders(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<OrderModel>> {
+    override fun getPagingOrders(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int?
+    ): Flow<PagingData<OrderModel>> {
         val fakePagingSource = FakePagingSource(fakeOrders)
         return Pager(PagingConfig(pageSize = pageSize)) { fakePagingSource }.flow
     }
@@ -86,13 +98,19 @@ class CategoryRepoFake: CategoryRepo{
     override fun getPagingHabitats(
         pageSize: Int,
         language: LanguageEnum,
-        kingdomType: KingdomType
+        kingdomType: KingdomType,
+        targetItemId: Int?
     ): Flow<PagingData<HabitatCategoryModel>> {
         val fakePagingSource = FakePagingSource(fakeHabitats)
         return Pager(PagingConfig(pageSize = pageSize)) { fakePagingSource }.flow
     }
 
-    override fun getPagingFamilies(pageSize: Int, language: LanguageEnum, kingdomType: KingdomType): Flow<PagingData<FamilyModel>> {
+    override fun getPagingFamilies(
+        pageSize: Int,
+        language: LanguageEnum,
+        kingdomType: KingdomType,
+        targetItemId: Int?
+    ): Flow<PagingData<FamilyModel>> {
         val fakePagingSource = FakePagingSource(fakeFamilies)
         return Pager(PagingConfig(pageSize = pageSize)) { fakePagingSource }.flow
     }
