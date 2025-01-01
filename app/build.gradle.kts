@@ -35,8 +35,11 @@ android {
         }
         resourceConfigurations += arrayOf("tr","en")
 
+        buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["INTERSTITIAL_TEST_AD_ID"]}\"")
+        buildConfigField("String","REWARDED_AD_ID","\"${keystoreProperties["REWARDED_TEST_AD_ID"]}\"")
         buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_CLIENT_ID"]}\"")
         manifestPlaceholders["crashlyticsCollectionEnabled"] = true
+        manifestPlaceholders["ADMOB_APP_ID"] = "${keystoreProperties["ADMOB_APP_ID"]}"
     }
 
     buildTypes {
@@ -46,6 +49,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["INTERSTITIAL_AD_ID"]}\"")
+            buildConfigField("String","REWARDED_AD_ID","\"${keystoreProperties["REWARDED_AD_ID"]}\"")
         }
         debug {
             manifestPlaceholders["crashlyticsCollectionEnabled"] = false
@@ -124,6 +129,7 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.lib.zoomable)
     implementation(libs.compose.shimmer)
+    implementation(libs.admob.ads)
 
     implementation(libs.bundles.paging)
     implementation(libs.bundles.datastore)

@@ -11,6 +11,8 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import com.google.firebase.appcheck.ktx.appCheck
 import com.google.firebase.ktx.Firebase
 import com.masterplus.animals.core.data.di.coreDataModule
+import com.masterplus.animals.core.shared_features.ad.data.di.adDataModule
+import com.masterplus.animals.core.shared_features.ad.presentation.di.adPresentationModule
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.di.addSpeciesToListModule
 import com.masterplus.animals.core.shared_features.analytics.data.di.analyticsDataModule
 import com.masterplus.animals.core.shared_features.auth.data.di.authDataModule
@@ -63,7 +65,7 @@ class AnimalsApp: Application(), SingletonImageLoader.Factory {
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule,
                 authDataModule, authDomainModule, authPresentationModule, settingsPresentationModule,
                 searchPresentationModule, searchDataModule, searchDomainModule,
-                translationDataModule, translationPresentationModule,
+                translationDataModule, translationPresentationModule, adDataModule, adPresentationModule,
                 backupDataModule, backupPresentationModule, analyticsDataModule, appDataModule
             )
         }

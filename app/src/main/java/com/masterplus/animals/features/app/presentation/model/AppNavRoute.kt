@@ -47,6 +47,8 @@ sealed class AppNavRoute(
 
 }
 
+val x = listOf(PlantRoute, ShowListRoute)
+
 val kBottomBarRoutes = listOf(
    AppNavRoute.Animal,  AppNavRoute.Plant, AppNavRoute.Lists
 )
