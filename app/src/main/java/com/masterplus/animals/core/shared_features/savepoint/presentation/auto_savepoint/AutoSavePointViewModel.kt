@@ -2,9 +2,7 @@ package com.masterplus.animals.core.shared_features.savepoint.presentation.auto_
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.repo.ConnectivityObserver
-import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.preferences.domain.SettingsPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
@@ -16,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,9 +22,8 @@ class AutoSavePointViewModel(
     private val upsertAutoMode: SavePointUpsertAutoModeUseCase,
     private val settingsPreferences: SettingsPreferences,
     private val savePointRepo: SavePointRepo,
-    private val readCounter: ServerReadCounter,
     private val savePointPosRepo: SavePointPosRepo,
-    private val connectivityObserver: ConnectivityObserver
+    connectivityObserver: ConnectivityObserver
 ): ViewModel(){
 
     private val _state = MutableStateFlow(AutoSavePointState())
@@ -115,7 +111,6 @@ class AutoSavePointViewModel(
 
             AutoSavePointAction.SuccessShowAd -> {
                 viewModelScope.launch {
-                    readCounter.resetCounter(ContentType.Content)
                     _state.update { it.copy(
                         uiEvent = AutoSavePointEvent.RetryPaging
                     ) }

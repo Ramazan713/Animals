@@ -7,6 +7,8 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.features.species_list.presentation.SpeciesListPageRoot
 import kotlinx.serialization.Serializable
 
@@ -38,7 +40,9 @@ fun NavGraphBuilder.speciesList(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
-    onNavigateToSavePointSpeciesSettings: () -> Unit
+    onNavigateToSavePointSpeciesSettings: () -> Unit,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
 ){
     composable<SpeciesListRoute> {
         NavAnimatedVisibilityProvider(
@@ -48,7 +52,9 @@ fun NavGraphBuilder.speciesList(
                 onNavigateBack = onNavigateBack,
                 onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
                 onNavigateToCategorySearch = onNavigateToCategorySearch,
-                onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings
+                onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings,
+                onAdAction = onAdAction,
+                adUiResult = adUiResult
             )
         }
     }

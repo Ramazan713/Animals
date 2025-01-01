@@ -9,6 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryListWithDetail
 import com.masterplus.animals.features.category_list.presentation.navigation.navigateToCategoryList
@@ -46,6 +48,8 @@ import com.masterplus.animals.features.species_list.presentation.navigation.spec
 @Composable
 fun AppNavHost(
     navHostController: NavHostController,
+    onAdAction: (AdAction) -> Unit,
+    adUiResult: AdUiResult?,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -154,7 +158,9 @@ fun AppNavHost(
             },
             onNavigateToSavePointCategorySettings = {
                 navHostController.navigateToSavePointCategorySettings()
-            }
+            },
+            onAdAction = onAdAction,
+            adUiResult = adUiResult,
         )
 
         categoryListWithDetail(
@@ -172,7 +178,9 @@ fun AppNavHost(
             },
             onNavigateToSavePointCategorySettings = {
                 navHostController.navigateToSavePointCategorySettings()
-            }
+            },
+            onAdAction = onAdAction,
+            adUiResult = adUiResult,
         )
 
         speciesList(
@@ -187,7 +195,9 @@ fun AppNavHost(
             },
             onNavigateToSavePointSpeciesSettings = {
                 navHostController.navigateToSavePointSpeciesSettings()
-            }
+            },
+            onAdAction = onAdAction,
+            adUiResult = adUiResult,
         )
 
         speciesDetail(

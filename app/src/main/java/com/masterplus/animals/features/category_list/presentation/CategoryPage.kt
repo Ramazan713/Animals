@@ -5,9 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,11 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,8 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,6 +63,9 @@ import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiEvent
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
@@ -82,7 +77,6 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_s
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListBottomItemMenu
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListTopBarItemMenu
 import com.masterplus.animals.features.category_list.presentation.components.CategoryItemShipper
-import com.valentinilk.shimmer.shimmer
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
@@ -101,6 +95,8 @@ fun CategoryListPage(
     onItemClick: (CategoryData) -> Unit,
     onNavigateToCategorySearch: () -> Unit,
     onNavigateToSavePointCategorySettings: () -> Unit,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
     initPos: Int = 0
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -116,7 +112,9 @@ fun CategoryListPage(
         itemInitPos = initPos,
         lazyListState = lazyListState,
         topBarScrollBehaviour = topBarScrollBehaviour,
-        pagingItems = pagingItems
+        pagingItems = pagingItems,
+        onAdAction = onAdAction,
+        adUiResult = adUiResult,
     )
 
     Scaffold(
@@ -413,7 +411,9 @@ private fun CategoryListPagePreview1() {
         autoSavePointState = AutoSavePointState(),
         onAutoSavePointAction = {},
         onDestination = {SampleDatas.sampleDestination},
-        onNavigateToSavePointCategorySettings = {}
+        onNavigateToSavePointCategorySettings = {},
+        onAdAction = {},
+        adUiResult = null
     )
 }
 

@@ -53,6 +53,9 @@ import com.masterplus.animals.core.presentation.transition.renderInSharedTransit
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiEvent
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
@@ -83,7 +86,9 @@ fun SpeciesListPageRoot(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
-    onNavigateToSavePointSpeciesSettings: () -> Unit
+    onNavigateToSavePointSpeciesSettings: () -> Unit,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
 ) {
     val args = viewModel.args
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -107,6 +112,8 @@ fun SpeciesListPageRoot(
         },
         autoSavePointState = autoSavePointState,
         onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings,
+        onAdAction = onAdAction,
+        adUiResult = adUiResult,
     )
 }
 
@@ -128,6 +135,8 @@ fun SpeciesListPage(
     onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: () -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val lazyListState = rememberLazyListState()
@@ -147,6 +156,8 @@ fun SpeciesListPage(
         topBarScrollBehaviour = topBarScrollBehaviour,
         lazyListState = lazyListState,
         pagingItems = pagingItems,
+        onAdAction = onAdAction,
+        adUiResult = adUiResult,
     )
 
 
@@ -345,5 +356,7 @@ fun SpeciesListPagePreview() {
         onAutoSavePointAction = {},
         autoSavePointState = AutoSavePointState(),
         onNavigateToSavePointSpeciesSettings = {},
+        adUiResult = null,
+        onAdAction = {}
     )
 }

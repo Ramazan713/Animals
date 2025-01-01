@@ -11,6 +11,9 @@ import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler
 import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiEvent
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointViewModel
 import com.masterplus.animals.features.category_list.presentation.CategoryListPage
@@ -37,6 +40,8 @@ fun NavGraphBuilder.categoryList(
     onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, KingdomType) -> Unit,
     onNavigateToSavePointCategorySettings: () -> Unit,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
 ){
     composable<CategoryListRoute> {
         val viewModel: CategoryListViewModel = koinViewModel()
@@ -81,7 +86,9 @@ fun NavGraphBuilder.categoryList(
                         returnAll = false
                     )
                 },
-                onNavigateToSavePointCategorySettings = onNavigateToSavePointCategorySettings
+                onNavigateToSavePointCategorySettings = onNavigateToSavePointCategorySettings,
+                onAdAction = onAdAction,
+                adUiResult = adUiResult,
             )
         }
 

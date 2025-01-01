@@ -12,8 +12,10 @@ fun AdMobHandler(
 ){
     val context = LocalContext.current
     val adMobInterstitial = remember { AdMobInterstitial(context) }
+    val adMobRewarded = remember { AdMobRewarded(context) }
 
     EventHandler(event = adUiEventState) { event->
+        onAdAction(AdAction.ClearUiEvent)
         when(event){
             is AdUiEvent.CheckInterstitialAdShowStatus -> {
                 adMobInterstitial.showAd()
@@ -23,7 +25,20 @@ fun AdMobHandler(
                     onAdAction(AdAction.ResetCounter)
                 }
             }
+            is AdUiEvent.LoadRewordedAd -> {
+                adMobRewarded.loadAd(
+                    onAdShowed = {
+                        onAdAction(AdAction.ResetReadCounter(event.contentType))
+                    }
+                )
+            }
+            is AdUiEvent.ShowRewordedAd -> {
+                adMobRewarded.showOrLoadAd(
+                    onAdShowed = {
+                        onAdAction(AdAction.ResetReadCounter(event.contentType))
+                    }
+                )
+            }
         }
-        onAdAction(AdAction.ClearUiEvent)
     }
 }

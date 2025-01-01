@@ -5,8 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.shared_features.ad.domain.repo.InterstitialAdRepo
-import com.masterplus.animals.features.app.presentation.model.kBottomBarRoutes
+import com.masterplus.animals.core.shared_features.ad.domain.repo.ReadCounterRewardAdRepo
 import com.masterplus.animals.features.category_list.presentation.navigation.CategoryListRoute
 import com.masterplus.animals.features.category_list.presentation.navigation.CategoryListWithDetailRoute
 import com.masterplus.animals.features.search.presentation.navigation.SearchCategoryRoute
@@ -20,9 +21,11 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class AdViewModel(
-    private val interstitialAdRepo: InterstitialAdRepo
+    private val interstitialAdRepo: InterstitialAdRepo,
+    private val readCounterRewardAdRepo: ReadCounterRewardAdRepo
 ): ViewModel(){
 
     private val _state = MutableStateFlow(AdState())
@@ -40,6 +43,29 @@ class AdViewModel(
                 interstitialAdRepo.stopConsumeSeconds()
             }
             .launchIn(viewModelScope)
+
+        readCounterRewardAdRepo
+            .contentShowAdFlow
+            .distinctUntilChanged()
+            .filter { it }
+            .onEach {
+                _state.update { it.copy(
+                    uiEvent = AdUiEvent.LoadRewordedAd(ContentType.Content)
+                ) }
+            }
+            .launchIn(viewModelScope)
+
+        readCounterRewardAdRepo
+            .categoryShowAdFlow
+            .distinctUntilChanged()
+            .filter { it }
+            .onEach {
+                _state.update { it.copy(
+                    uiEvent = AdUiEvent.LoadRewordedAd(ContentType.Category)
+                ) }
+            }
+            .launchIn(viewModelScope)
+
     }
 
     fun onAction(action: AdAction){
@@ -61,6 +87,11 @@ class AdViewModel(
             AdAction.ClearUiEvent -> {
                 _state.update { it.copy(uiEvent = null) }
             }
+            AdAction.ClearUiResult -> {
+                _state.update { it.copy(
+                    uiResult = null
+                ) }
+            }
             AdAction.ResetCounter -> {
                 interstitialAdRepo.resetValues()
             }
@@ -74,7 +105,20 @@ class AdViewModel(
                 }
             }
 
+            is AdAction.RequestShowRewardAd -> {
+                _state.update { it.copy(
+                    uiEvent = AdUiEvent.ShowRewordedAd(action.contentType)
+                ) }
+            }
 
+            is AdAction.ResetReadCounter -> {
+                viewModelScope.launch {
+                    _state.update { it.copy(
+                        uiResult = AdUiResult.OnShowingRewardSuccess
+                    ) }
+                    readCounterRewardAdRepo.resetCounter(action.contentType)
+                }
+            }
         }
     }
 

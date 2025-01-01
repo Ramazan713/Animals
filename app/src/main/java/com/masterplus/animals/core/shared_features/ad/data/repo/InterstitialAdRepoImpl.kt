@@ -92,7 +92,6 @@ class InterstitialAdRepoImpl(
 
 
     private fun checkThreshold(consumedSeconds: Int, openingCounter: Int, thresholdValues: ThresholdValues): Boolean{
-        println("AppXXX checkThreshold: consumedSeconds: $consumedSeconds :$openingCounter")
         return openingCounter >= thresholdValues.thresholdOpeningCount ||
                 consumedSeconds >= thresholdValues.thresholdConsumeSeconds
     }

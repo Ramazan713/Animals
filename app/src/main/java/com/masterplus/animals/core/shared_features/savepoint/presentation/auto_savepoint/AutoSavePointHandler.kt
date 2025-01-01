@@ -26,6 +26,8 @@ import com.masterplus.animals.core.extentions.getAnyExceptionOrNull
 import com.masterplus.animals.core.extentions.visibleMiddleItemId
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import kotlinx.coroutines.launch
@@ -41,7 +43,9 @@ fun <T: Item> AutoSavePointHandler(
     onItemPosId: () -> Int?,
     itemInitPos: Int = 0,
     pagingItems: LazyPagingItems<T>,
-    onInitPosResponse: ((Int) -> Unit)? = null
+    onInitPosResponse: ((Int) -> Unit)? = null,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
 ) {
     val currentOnInitPosResponse by rememberUpdatedState(onInitPosResponse)
     val currentOnDestination by rememberUpdatedState(onDestination)
@@ -67,11 +71,21 @@ fun <T: Item> AutoSavePointHandler(
             AutoSavePointEvent.RetryPaging -> {
                 pagingItems.retry()
             }
-            AutoSavePointEvent.ShowAd -> {
+            is AutoSavePointEvent.ShowAd -> {
+                onAdAction(AdAction.RequestShowRewardAd(contentType.toContentType()))
+            }
+        }
+    }
+
+    EventHandler(adUiResult) { adResult ->
+        onAdAction(AdAction.ClearUiResult)
+        when(adResult){
+            AdUiResult.OnShowingRewardSuccess -> {
                 onAction(AutoSavePointAction.SuccessShowAd)
             }
         }
     }
+
 
     LaunchedEffect(itemInitPos, contentType) {
         onAction(AutoSavePointAction.LoadSavePoint(
@@ -125,7 +139,7 @@ fun <T: Item> AutoSavePointHandler(
                     confirmButton = {
                         FilledTonalButton(
                             onClick = {
-                                onAction(AutoSavePointAction.ShowAd)
+                                onAdAction(AdAction.RequestShowRewardAd(contentType.toContentType()))
                                 close()
                             }
                         ) {
@@ -152,6 +166,8 @@ private fun <T: Item> AutoSavePointHandler(
     scrollToPos: suspend (Int) -> Unit,
     itemInitPos: Int = 0,
     pagingItems: LazyPagingItems<T>,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
 ){
     val scope = rememberCoroutineScope()
     val configuration = LocalConfiguration.current
@@ -169,6 +185,8 @@ private fun <T: Item> AutoSavePointHandler(
         state = state,
         itemInitPos = itemInitPos,
         pagingItems = pagingItems,
+        onAdAction = onAdAction,
+        adUiResult = adUiResult,
         onInitPosResponse = {pos ->
             scope.launch {
                 val itemSize = ceil(configuration.screenHeightDp / 180f).toInt() - 2
@@ -190,10 +208,12 @@ fun <T: Item> AutoSavePointHandler(
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
     itemInitPos: Int = 0,
     lazyListState: LazyListState,
     pagingItems: LazyPagingItems<T>,
-    topBarScrollBehaviour: TopAppBarScrollBehavior? = null
+    topBarScrollBehaviour: TopAppBarScrollBehavior? = null,
 ){
     val itemPosId = pagingItems.visibleMiddleItemId(lazyListState)
     AutoSavePointHandler(
@@ -205,8 +225,9 @@ fun <T: Item> AutoSavePointHandler(
         itemInitPos = itemInitPos,
         topBarScrollBehaviour = topBarScrollBehaviour,
         pagingItems = pagingItems,
+        onAdAction = onAdAction,
+        adUiResult = adUiResult,
         scrollToPos = { pos ->
-            println("AppXXXX: pos: $pos")
             lazyListState.scrollToItem(pos)
         }
     )
@@ -219,6 +240,8 @@ fun <T: Item> AutoSavePointHandler(
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
     itemInitPos: Int = 0,
     lazyListState: LazyGridState,
     pagingItems: LazyPagingItems<T>,
@@ -234,6 +257,8 @@ fun <T: Item> AutoSavePointHandler(
         itemInitPos = itemInitPos,
         pagingItems = pagingItems,
         topBarScrollBehaviour = topBarScrollBehaviour,
+        onAdAction = onAdAction,
+        adUiResult = adUiResult,
         scrollToPos = { pos ->
             lazyListState.scrollToItem(pos)
         }

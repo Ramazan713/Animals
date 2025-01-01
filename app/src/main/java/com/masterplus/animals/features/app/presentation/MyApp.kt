@@ -115,7 +115,9 @@ fun MyApp(
                 ) {
                     AppNavHost(
                         navHostController = navHostController,
-                        modifier = Modifier.padding(paddings)
+                        modifier = Modifier.padding(paddings),
+                        onAdAction = adViewModel::onAction,
+                        adUiResult = adState.uiResult
                     )
                 }
             }
