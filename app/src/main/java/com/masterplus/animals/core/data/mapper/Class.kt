@@ -19,7 +19,8 @@ fun ClassWithImageEmbedded.toClass(
             className = if(language.isEn) class_en else class_tr,
             phylumId = phylum_id,
             image = image?.toImageWithMetadata(),
-            kingdomType = KingdomType.fromKingdomId(kingdom_id)
+            kingdomType = KingdomType.fromKingdomId(kingdom_id),
+            orderKey = order_key
         )
     }
 }
@@ -34,7 +35,8 @@ fun ClassEntity.toClass(
         className = if(language.isEn) class_en else class_tr,
         phylumId = phylum_id,
         image = null,
-        kingdomType = KingdomType.fromKingdomId(kingdom_id)
+        kingdomType = KingdomType.fromKingdomId(kingdom_id),
+        orderKey = order_key
     )
 }
 
@@ -46,6 +48,7 @@ fun ClassModel.toCategoryData(): CategoryData {
         title = scientificName,
         secondaryTitle = className,
         categoryType = CategoryType.Class,
-        kingdomType = kingdomType
+        kingdomType = kingdomType,
+        orderKey = orderKey
     )
 }

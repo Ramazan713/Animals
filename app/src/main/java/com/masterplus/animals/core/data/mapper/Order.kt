@@ -18,7 +18,8 @@ fun OrderWithImageEmbedded.toOrder(
             order = if(language.isEn) order_en else order_tr,
             classId = class_id,
             image = image?.toImageWithMetadata(),
-            kingdomType = KingdomType.fromKingdomId(kingdom_id)
+            kingdomType = KingdomType.fromKingdomId(kingdom_id),
+            orderKey = order_key
         )
     }
 }
@@ -33,7 +34,8 @@ fun OrderEntity.toOrder(
         order = if(language.isEn) order_en else order_tr,
         classId = class_id,
         image = null,
-        kingdomType = KingdomType.fromKingdomId(kingdom_id)
+        kingdomType = KingdomType.fromKingdomId(kingdom_id),
+        orderKey = order_key
     )
 }
 
@@ -45,6 +47,7 @@ fun OrderModel.toCategoryData(): CategoryData {
         title = scientificName,
         secondaryTitle = order,
         categoryType = CategoryType.Order,
-        kingdomType = kingdomType
+        kingdomType = kingdomType,
+        orderKey = orderKey
     )
 }

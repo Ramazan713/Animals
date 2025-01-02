@@ -6,6 +6,7 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 
 data class CategoryData(
     override val id: Int,
+    val orderKey: Int,
     val image: ImageWithMetadata?,
     val title: String,
     val categoryType: CategoryType,

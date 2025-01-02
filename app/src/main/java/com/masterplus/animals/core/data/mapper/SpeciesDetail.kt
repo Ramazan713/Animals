@@ -22,7 +22,8 @@ fun SpeciesDetailEmbedded.toSpeciesListDetail(
             isFavorited = listsIsRemovable.any { !it },
             isListSelected = listsIsRemovable.any { it },
             images = images.map { it.toSpeciesImageModel() },
-            kingdomType = KingdomType.fromKingdomId(kingdom_id)
+            kingdomType = KingdomType.fromKingdomId(kingdom_id),
+            orderKey = order_key
         )
     }
 }

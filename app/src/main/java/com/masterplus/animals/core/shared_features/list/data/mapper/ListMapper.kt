@@ -34,6 +34,7 @@ fun ListModel.toCategoryData(): CategoryData {
         image = null,
         title = name,
         categoryType = CategoryType.List,
-        kingdomType = KingdomType.DEFAULT
+        kingdomType = KingdomType.DEFAULT,
+        orderKey = pos
     )
 }

@@ -42,7 +42,8 @@ fun ClassDto.toClassEntity(label: String): ClassEntity{
         scientific_name = scientific_name,
         created_at = "",
         updated_at = "",
-        label = label
+        label = label,
+        order_key = pos
     )
 }
 
@@ -58,7 +59,8 @@ fun FamilyDto.toFamilyEntity(label: String): FamilyEntity {
         image_id = image?.id,
         created_at = "",
         updated_at = "",
-        label = label
+        label = label,
+        order_key = pos
     )
 }
 
@@ -99,7 +101,8 @@ fun PhylumDto.toPhylumEntity(label: String): PhylumEntity {
         phylum_tr = phylum_tr,
         scientific_name = scientific_name,
         image_id = image?.id,
-        label = label
+        label = label,
+        order_key = pos
     )
 }
 
@@ -122,7 +125,8 @@ fun OrderDto.toOrderEntity(label: String): OrderEntity {
         image_id = image?.id,
         created_at = "",
         updated_at = "",
-        label = label
+        label = label,
+        order_key = pos
     )
 }
 

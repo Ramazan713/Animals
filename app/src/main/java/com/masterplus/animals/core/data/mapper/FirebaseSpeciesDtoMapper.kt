@@ -69,7 +69,8 @@ fun SpeciesDto.toSpeciesEntity(label: String): SpeciesEntity{
         order_id = order_id,
         class_id = class_id,
         phylum_id = phylum_id,
-        label = label
+        label = label,
+        order_key = pos
     )
 }
 

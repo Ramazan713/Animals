@@ -54,7 +54,6 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
-import com.masterplus.animals.core.shared_features.ad.presentation.AdUiEvent
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
@@ -241,7 +240,7 @@ fun SpeciesListPage(
                     if(item != null){
                         SpeciesCard(
                             species = item,
-                            orderNum = "${index + 1} - ${item.id}",
+                            orderNum = "${item.orderKey}",
                             isFavorited = item.isFavorited,
                             onClick = {
                                 onNavigateToSpeciesDetail(item.id, state.listIdControl)

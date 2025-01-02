@@ -2,7 +2,6 @@ package com.masterplus.animals.core.shared_features.database.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "Families",
@@ -18,6 +17,7 @@ import androidx.room.PrimaryKey
 data class FamilyEntity(
     val id: Int,
     val label: String,
+    val order_key: Int,
     val scientific_name: String,
     val family_en: String,
     val family_tr: String,

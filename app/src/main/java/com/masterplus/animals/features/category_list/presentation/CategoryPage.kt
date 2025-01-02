@@ -64,7 +64,6 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
-import com.masterplus.animals.core.shared_features.ad.presentation.AdUiEvent
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
@@ -199,7 +198,7 @@ fun CategoryListPage(
                         modifier = Modifier
                             .fillMaxWidth(),
                         model = item,
-                        order = index + 1,
+                        order = item.orderKey,
                         useTransition = true,
                         onClick = {
                             onItemClick(item)

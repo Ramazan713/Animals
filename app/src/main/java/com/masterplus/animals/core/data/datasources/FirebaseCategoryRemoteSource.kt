@@ -267,7 +267,7 @@ class FirebaseCategoryRemoteSource(
             Firebase.firestore.collection("Habitats")
                 //TODO: add filter with kingdomId
 //                .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
-                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit, orderByKey = "id")
                 .get(sourceType.toFirebaseSource())
                 .await()
         }
@@ -301,7 +301,7 @@ class FirebaseCategoryRemoteSource(
         ) {
             Firebase.firestore.collection("Habitats")
                 .whereIn("id", itemIds)
-                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit, orderByKey = "id")
                 .get(sourceType.toFirebaseSource())
                 .await()
         }
@@ -349,10 +349,11 @@ class FirebaseCategoryRemoteSource(
 private fun Query.customBuild(
     loadKey: Int?,
     loadType: RemoteLoadType,
-    limit: Int
+    limit: Int,
+    orderByKey: String = "pos"
 ): Query{
     val baseQuery = this
-        .orderBy("id",if(loadType.orderDirection.isDescending)Query.Direction.DESCENDING else Query.Direction.ASCENDING)
+        .orderBy(orderByKey,if(loadType.orderDirection.isDescending)Query.Direction.DESCENDING else Query.Direction.ASCENDING)
     val finalQuery = when {
         loadType.isRefresh -> baseQuery.startAt(loadKey)
         loadKey != null -> baseQuery.startAfter(loadKey)

@@ -2,11 +2,13 @@ package com.masterplus.animals.core.data.dtos
 
 import ImageDto
 import com.masterplus.animals.core.domain.models.Item
+import com.masterplus.animals.core.domain.models.ItemOrder
 
 
 data class SpeciesDto(
-    override val id: Int = 0,
+    val id: Int = 0,
     val scientific_name: String = "",
+    val pos: Int = 0,
     val name_en: String = "",
     val name_tr: String = "",
     val family_id: Int = 0,
@@ -21,7 +23,10 @@ data class SpeciesDto(
     val habitats: List<Int> = emptyList(),
     val animalia: SpeciesAnimalDto? = null,
     val plantae: SpeciesPlantDto? = null
-): Item
+): ItemOrder{
+    override val orderKey: Int
+        get() = pos
+}
 
 data class SpeciesAnimalDto(
     val en: SpeciesAnimalEnDto = SpeciesAnimalEnDto(),

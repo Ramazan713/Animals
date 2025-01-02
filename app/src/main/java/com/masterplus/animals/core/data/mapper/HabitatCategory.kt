@@ -37,6 +37,7 @@ fun HabitatCategoryModel.toCategoryData(): CategoryData {
         image = image,
         title = habitatCategory,
         categoryType = CategoryType.Habitat,
-        kingdomType = KingdomType.DEFAULT
+        kingdomType = KingdomType.DEFAULT,
+        orderKey = id
     )
 }

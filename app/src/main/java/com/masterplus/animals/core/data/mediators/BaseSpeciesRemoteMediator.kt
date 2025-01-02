@@ -8,8 +8,9 @@ import com.masterplus.animals.core.data.mapper.toSpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.data.mapper.toSpeciesImageWithMetadataEmbedded
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.models.Item
+import com.masterplus.animals.core.domain.models.ItemOrder
 
-abstract class BaseSpeciesRemoteMediator<T: Item>(
+abstract class BaseSpeciesRemoteMediator<T: ItemOrder>(
     config: RemoteMediatorConfig,
     targetItemId: Int?
 ): BaseRemoteMediator2<T, SpeciesDto>(config, targetItemId) {

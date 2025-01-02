@@ -4,6 +4,7 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 
 data class SpeciesListDetail(
     override val id: Int,
+    val orderKey: Int,
     val introduction: String,
     val kingdomType: KingdomType,
     val name: String,

@@ -2,6 +2,7 @@ data class ClassDto(
     val class_en: String = "",
     val class_tr: String = "",
     val id: Int = 0,
+    val pos: Int = 0,
     val image: ImageDto? = null,
     val kingdom_id: Int = 0,
     val phylum_id: Int = 0,
@@ -12,6 +13,7 @@ data class FamilyDto(
     val family_en: String = "",
     val family_tr: String = "",
     val id: Int = 0,
+    val pos: Int = 0,
     val kingdom_id: Int = 0,
     val order_id: Int = 0,
     val scientific_name: String = "",
@@ -28,6 +30,7 @@ data class HabitatCategoryDto(
 data class PhylumDto(
     val id: Int = 0,
     val kingdom_id: Int = 0,
+    val pos: Int = 0,
     val phylum_en: String = "",
     val phylum_tr: String = "",
     val scientific_name: String = "",
@@ -37,6 +40,7 @@ data class PhylumDto(
 data class OrderDto(
     val class_id: Int = 0,
     val id: Int = 0,
+    val pos: Int = 0,
     val kingdom_id: Int = 0,
     val order_en: String = "",
     val order_tr: String = "",

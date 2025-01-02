@@ -17,6 +17,7 @@ fun PhylumWithImageEmbedded.toPhylumModel(
             phylum = if(language.isEn) phylum_en else phylum_tr,
             kingdomType = KingdomType.fromKingdomId(kingdom_id),
             image = image?.toImageWithMetadata(),
+            orderKey = order_key
         )
     }
 }
@@ -30,5 +31,6 @@ fun PhylumEntity.toPhylumModel(
         phylum = if(language.isEn) phylum_en else phylum_tr,
         kingdomType = KingdomType.fromKingdomId(kingdom_id),
         image = null,
+        orderKey = order_key
     )
 }

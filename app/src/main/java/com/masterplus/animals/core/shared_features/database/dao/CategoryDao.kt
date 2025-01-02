@@ -117,31 +117,39 @@ interface CategoryDao {
 
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         select * from classes where label = :label
-        order by id asc limit :limit
-    """)
+        order by order_key asc limit :limit
+    """
+    )
     suspend fun getClasses(limit: Int, label: String): List<ClassWithImageEmbedded>
 
     @Transaction
-    @Query("""
-        select * from classes where label = :label  order by id asc
-    """)
+    @Query(
+        """
+        select * from classes where label = :label order by order_key asc
+    """
+    )
     fun getPagingClasses(label: String): PagingSource<Int, ClassWithImageEmbedded>
 
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         select * from families where label = :label
-        order by id asc limit :limit
-    """)
+        order by order_key asc limit :limit
+    """
+    )
     suspend fun getFamilies(limit: Int, label: String): List<FamilyWithImageEmbedded>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         select * from families where label = :label
-        order by id asc
-    """)
+        order by order_key asc
+    """
+    )
     fun getPagingFamilies(label: String): PagingSource<Int, FamilyWithImageEmbedded>
 
 
@@ -153,18 +161,22 @@ interface CategoryDao {
 
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         select * from orders where label = :label
-        order by id asc limit :limit
-    """)
+        order by order_key asc limit :limit
+    """
+    )
     suspend fun getOrders(limit: Int, label: String): List<OrderWithImageEmbedded>
 
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         select * from orders where label = :label
-        order by id asc
-    """)
+        order by order_key asc
+    """
+    )
     fun getPagingOrders(label: String): PagingSource<Int, OrderWithImageEmbedded>
 
     @Transaction

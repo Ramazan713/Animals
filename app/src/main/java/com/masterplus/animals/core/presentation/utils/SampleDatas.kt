@@ -87,7 +87,8 @@ object SampleDatas {
         id = 2,
         image = imageWithMetadata,
         categoryType = CategoryType.Class,
-        kingdomType = KingdomType.DEFAULT
+        kingdomType = KingdomType.DEFAULT,
+        orderKey = 1
     )
 
     val sampleDestination = SavePointDestination.All(KingdomType.Animals)
@@ -98,6 +99,7 @@ object SampleDatas {
         phylum = "Arthropoda",
         kingdomType = KingdomType.Animals,
         image = imageWithMetadata,
+        orderKey = 1
     )
     val classModel = ClassModel(
         id = 2,
@@ -106,6 +108,7 @@ object SampleDatas {
         phylumId = 2,
         image = imageWithMetadata,
         kingdomType = KingdomType.Animals,
+        orderKey = 1
     )
     val order = OrderModel(
         id = 2,
@@ -114,6 +117,7 @@ object SampleDatas {
         classId = 2,
         image = imageWithMetadata,
         kingdomType = KingdomType.Animals,
+        orderKey = 1
     )
 
     val family = FamilyModel(
@@ -123,6 +127,7 @@ object SampleDatas {
         orderId = 2,
         image = imageWithMetadata,
         kingdomType = KingdomType.Animals,
+        orderKey = 1
     )
 
 
@@ -136,7 +141,8 @@ object SampleDatas {
         kingdomType = KingdomType.Animals,
         orderId = 1,
         phylumId = 1,
-        classId = 1
+        classId = 1,
+        orderKey = 1
     )
 
     val habitatCategory = HabitatCategoryModel(
@@ -298,7 +304,8 @@ object SampleDatas {
             habitatCategoryIds = listOf(habitatCategoryId),
             recognitionAndInteraction = 1,
             familyId = 1,
-            kingdomType = KingdomType.DEFAULT
+            kingdomType = KingdomType.DEFAULT,
+            orderKey = 1
         )
     }
 

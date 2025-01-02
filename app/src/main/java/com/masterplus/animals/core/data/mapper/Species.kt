@@ -19,6 +19,7 @@ fun SpeciesEntity.toSpecies(
         kingdomType = KingdomType.fromKingdomId(kingdom_id),
         orderId = order_id,
         phylumId = phylum_id,
-        classId = class_id
+        classId = class_id,
+        orderKey = order_key
     )
 }

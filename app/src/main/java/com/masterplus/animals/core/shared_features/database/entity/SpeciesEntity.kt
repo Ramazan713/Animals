@@ -9,6 +9,7 @@ import androidx.room.Entity
 data class SpeciesEntity(
     val id: Int,
     val label: String,
+    val order_key: Int,
     val scientific_name: String = "",
     val name_en: String = "",
     val name_tr: String = "",

@@ -4,6 +4,7 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 
 data class FamilyModel(
     val id: Int,
+    val orderKey: Int,
     val scientificName: String,
     val family: String,
     val orderId: Int,

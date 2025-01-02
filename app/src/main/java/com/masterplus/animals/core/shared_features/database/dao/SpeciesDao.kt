@@ -24,16 +24,20 @@ interface SpeciesDao {
     suspend fun getSpeciesPosByLabel(itemId: Int, label: String): Int?
 
     @Transaction
-    @Query("""
-        select * from species where label = :label order by id
-    """)
+    @Query(
+        """
+        select * from species where label = :label order by order_key
+    """
+    )
     fun getPagingSpeciesByLabel(label: String): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         select distinct S.* from species S, ListSpecies LA 
-        where S.id = LA.speciesId and LA.listId = :listId group by S.id order by S.id
-    """)
+        where S.id = LA.speciesId and LA.listId = :listId group by S.id order by S.order_key
+    """
+    )
     fun getPagingSpeciesByListId(listId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
 

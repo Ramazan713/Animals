@@ -11,6 +11,7 @@ import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.RemoteLoadType
 import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.models.Item
+import com.masterplus.animals.core.domain.models.ItemOrder
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.shared_features.database.entity.RemoteKeyEntity
 import java.io.IOException
@@ -25,14 +26,14 @@ sealed class RemoteMediatorError: Exception(){
     }
 }
 
-abstract class BaseRemoteMediator<T: Item>(
+abstract class BaseRemoteMediator<T: ItemOrder>(
     config: RemoteMediatorConfig,
     targetItemId: Int?
 ): BaseRemoteMediator2<T, T>(config, targetItemId)
 
 
 @OptIn(ExperimentalPagingApi::class)
-abstract class BaseRemoteMediator2<T: Item, D: Item>(
+abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
     config: RemoteMediatorConfig,
     private val targetItemId: Int?
 ): RemoteMediator<Int, T>() {
@@ -137,25 +138,25 @@ abstract class BaseRemoteMediator2<T: Item, D: Item>(
 
     open fun getNextKey(items: List<D>, loadType: LoadType,  remoteKey: RemoteKeyEntity?): String? {
         return when (loadType) {
-            LoadType.REFRESH, LoadType.APPEND -> items.lastOrNull()?.id?.toString()
+            LoadType.REFRESH, LoadType.APPEND -> items.lastOrNull()?.orderKey?.toString()
             else -> remoteKey?.nextKey
         }
     }
 
     open fun getPrevKey(items: List<D>, loadType: LoadType,  remoteKey: RemoteKeyEntity?): String? {
         return when (loadType) {
-            LoadType.REFRESH, LoadType.PREPEND -> items.firstOrNull()?.id?.toString()
+            LoadType.REFRESH, LoadType.PREPEND -> items.firstOrNull()?.orderKey?.toString()
             else -> remoteKey?.prevKey
         }
     }
 
     private fun getRemoteKeyForFirstItem(state: PagingState<Int, T>, remoteKey: RemoteKeyEntity?): Int? {
         return state.pages.firstOrNull { it.data.isNotEmpty() }
-            ?.data?.firstOrNull()?.id ?: remoteKey?.nextKey?.toIntOrNull()
+            ?.data?.firstOrNull()?.orderKey ?: remoteKey?.nextKey?.toIntOrNull()
     }
 
     private fun getRemoteKeyForLastItem(state: PagingState<Int, T>, remoteKey: RemoteKeyEntity?): Int? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }
-            ?.data?.lastOrNull()?.id ?: remoteKey?.nextKey?.toIntOrNull()
+            ?.data?.lastOrNull()?.orderKey ?: remoteKey?.nextKey?.toIntOrNull()
     }
 }

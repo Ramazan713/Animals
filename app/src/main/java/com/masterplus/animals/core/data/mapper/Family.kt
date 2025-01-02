@@ -19,7 +19,8 @@ fun FamilyWithImageEmbedded.toFamily(
             family = if(language.isEn) family_en else family_tr,
             orderId = order_id,
             image = image?.toImageWithMetadata(),
-            kingdomType = KingdomType.fromKingdomId(kingdom_id)
+            kingdomType = KingdomType.fromKingdomId(kingdom_id),
+            orderKey = order_key
         )
     }
 }
@@ -34,7 +35,8 @@ fun FamilyEntity.toFamily(
         family = if(language.isEn) family_en else family_tr,
         orderId = order_id,
         image = null,
-        kingdomType = KingdomType.fromKingdomId(kingdom_id)
+        kingdomType = KingdomType.fromKingdomId(kingdom_id),
+        orderKey = order_key
     )
 }
 
@@ -46,6 +48,7 @@ fun FamilyModel.toCategoryData(): CategoryData {
         title = scientificName,
         secondaryTitle = family,
         categoryType = CategoryType.Family,
-        kingdomType = kingdomType
+        kingdomType = kingdomType,
+        orderKey = orderKey
     )
 }
