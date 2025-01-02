@@ -14,14 +14,18 @@ class ReadCounterRewardAdRepoImpl(
     private val appConfigPreferences: AppConfigPreferences
 ): ReadCounterRewardAdRepo {
 
-    private val readExceedLimitFlow = appConfigPreferences.dataFlow
-        .map { it.readExceedLimit }
+    private val readContentExceedLimitFlow = appConfigPreferences.dataFlow
+        .map { it.pagination.readContentExceedLimit }
+        .distinctUntilChanged()
+
+    private val readCategoryExceedLimitFlow = appConfigPreferences.dataFlow
+        .map { it.pagination.readCategoryExceedLimit }
         .distinctUntilChanged()
 
     override val categoryShowAdFlow: Flow<Boolean>
         get() = combine(
             readCounter.categoryCountersFlow,
-            readExceedLimitFlow
+            readCategoryExceedLimitFlow
         ){categoryCounters, readExceedLimit ->
             categoryCounters >= readExceedLimit
         }
@@ -29,13 +33,14 @@ class ReadCounterRewardAdRepoImpl(
     override val contentShowAdFlow: Flow<Boolean>
         get() = combine(
             readCounter.contentCountersFlow,
-            readExceedLimitFlow
+            readContentExceedLimitFlow
         ){contentCounters,  readExceedLimit ->
             contentCounters >= readExceedLimit
         }
 
     override suspend fun resetCounter(contentType: ContentType) {
-        val readExceedLimit = appConfigPreferences.getData().readExceedLimit
+        val paginationData = appConfigPreferences.getData().pagination
+        val readExceedLimit = if(contentType.isContent) paginationData.readContentExceedLimit else paginationData.readCategoryExceedLimit
         readCounter.addCounter(contentType, -readExceedLimit)
     }
 

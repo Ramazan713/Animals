@@ -48,7 +48,7 @@ class SpeciesListViewModel(
 
     private val _targetItemIdFlow = MutableStateFlow<Int?>(null)
     private val speciesPageSizeFlow = appConfigPreferences.dataFlow
-        .map { it.speciesPageSize }.distinctUntilChanged()
+        .map { it.pagination.speciesPageSize }.distinctUntilChanged()
 
 
     val pagingItems = combine(

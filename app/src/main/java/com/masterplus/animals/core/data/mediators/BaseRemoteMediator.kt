@@ -135,7 +135,9 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
 
     open suspend fun checkReadExceedLimit(): Boolean{
         val counter = readCounter.getCounter(contentType)
-        return counter > appConfigPreferences.getData().readExceedLimit
+        val paginationData = appConfigPreferences.getData().pagination
+        val readExceedLimit = if(contentType.isContent) paginationData.readContentExceedLimit else paginationData.readCategoryExceedLimit
+        return counter > readExceedLimit
     }
 
     open fun getNextKey(items: List<D>, loadType: LoadType,  remoteKey: RemoteKeyEntity?): Pair<String?, Boolean> {
@@ -152,15 +154,5 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
             LoadType.REFRESH, LoadType.PREPEND -> items.firstOrNull()?.orderKey?.toString()
             else -> remoteKey?.prevKey
         }
-    }
-
-    private fun getRemoteKeyForFirstItem(state: PagingState<Int, T>, remoteKey: RemoteKeyEntity?): Int? {
-        return state.pages.firstOrNull { it.data.isNotEmpty() }
-            ?.data?.firstOrNull()?.orderKey ?: remoteKey?.nextKey?.toIntOrNull()
-    }
-
-    private fun getRemoteKeyForLastItem(state: PagingState<Int, T>, remoteKey: RemoteKeyEntity?): Int? {
-        return state.pages.lastOrNull { it.data.isNotEmpty() }
-            ?.data?.lastOrNull()?.orderKey ?: remoteKey?.nextKey?.toIntOrNull()
     }
 }

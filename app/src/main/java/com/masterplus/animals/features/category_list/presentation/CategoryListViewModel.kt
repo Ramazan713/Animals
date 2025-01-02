@@ -37,7 +37,7 @@ class CategoryListViewModel(
 
     private val _targetItemIdFlow = MutableStateFlow<Int?>(null)
     private val categoryPageSizeFlow = appConfigPreferences.dataFlow
-        .map { it.categoryPageSize }.distinctUntilChanged()
+        .map { it.pagination.categoryPageSize }.distinctUntilChanged()
 
     private val _state = MutableStateFlow(CategoryState(
         kingdomType = args.kingdomType,

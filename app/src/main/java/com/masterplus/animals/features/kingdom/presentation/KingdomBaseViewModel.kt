@@ -13,7 +13,6 @@ import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
 import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
@@ -51,7 +50,7 @@ abstract class KingdomBaseViewModel(
             KingdomAction.ClearMessage -> _state.update { it.copy(message = null) }
             is KingdomAction.RetryCategory -> {
                 viewModelScope.launch {
-                    val pageSize = appConfigPreferences.getData().homeCategoryPageSize
+                    val pageSize = appConfigPreferences.getData().pagination.homeCategoryPageSize
                     val lang = state.value.languageEnum
                     when(action.categoryType){
                         CategoryType.Habitat -> loadHabits(lang, pageSize)
@@ -84,7 +83,7 @@ abstract class KingdomBaseViewModel(
                     isLoading = false,
                     languageEnum = language
                 ) }
-                val pageSize = appConfigPreferences.getData().homeCategoryPageSize
+                val pageSize = appConfigPreferences.getData().pagination.homeCategoryPageSize
                 viewModelScope.launch {
                     val jobs = listOf(
                         async { loadHabits(language,pageSize) },

@@ -27,14 +27,14 @@ class InterstitialAdRepoImpl(
 
     private val timerEnabledFlow = MutableStateFlow(false)
     private val consumeIntervalSecondsFlow = appConfigPreferences.dataFlow
-        .map { it.consumeIntervalSeconds }
+        .map { it.ad.consumeIntervalSeconds }
         .distinctUntilChanged()
     private val thresholdValuesFlow = appConfigPreferences
         .dataFlow
         .map {
             ThresholdValues(
-                thresholdOpeningCount = it.thresholdOpeningCount,
-                thresholdConsumeSeconds = it.thresholdConsumeSeconds
+                thresholdOpeningCount = it.ad.thresholdOpeningCount,
+                thresholdConsumeSeconds = it.ad.thresholdConsumeSeconds
             )
         }
         .distinctUntilChanged()

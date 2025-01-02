@@ -7,10 +7,21 @@ import javax.inject.Singleton
 
 @Serializable
 data class AppConfigData(
+    val pagination: ConfigPagination = ConfigPagination(),
+    val ad: ConfigAd = ConfigAd()
+)
+
+@Serializable
+data class ConfigPagination(
     val speciesPageSize: Int = 20,
     val categoryPageSize: Int = 20,
     val homeCategoryPageSize: Int = 8,
-    val readExceedLimit: Int = 150,
+    val readContentExceedLimit: Int = 100,
+    val readCategoryExceedLimit: Int = 50,
+)
+
+@Serializable
+data class ConfigAd(
     val thresholdOpeningCount: Int = 15,
     val consumeIntervalSeconds: Int = 4,
     val thresholdConsumeSeconds: Int = 80

@@ -10,6 +10,8 @@ import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.preferences.data.get
 import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
+import com.masterplus.animals.core.shared_features.preferences.domain.model.ConfigAd
+import com.masterplus.animals.core.shared_features.preferences.domain.model.ConfigPagination
 import com.masterplus.animals.core.shared_features.remote_config.domain.repo.RemoteConfigRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
@@ -53,16 +55,22 @@ class RemoteConfigRepoImpl(
         val speciesPageSize = remoteConfig.getValue("speciesPageSize").asString().toIntOrNull()
         val categoryPageSize = remoteConfig.getValue("categoryPageSize").asString().toIntOrNull()
         val homeCategoryPageSize = remoteConfig.getValue("homeCategoryPageSize").asString().toIntOrNull()
-        val readExceedLimit = remoteConfig.getValue("readExceedLimit").asString().toIntOrNull()
+        val readContentExceedLimit = remoteConfig.getValue("readContentExceedLimit").asString().toIntOrNull()
+        val readCategoryExceedLimit = remoteConfig.getValue("readCategoryExceedLimit").asString().toIntOrNull()
 
         appConfigPreferences.updateData { it.copy(
-            consumeIntervalSeconds = consumeIntervalSeconds ?: it.consumeIntervalSeconds,
-            thresholdConsumeSeconds = thresholdConsumeSeconds ?: it.thresholdConsumeSeconds,
-            thresholdOpeningCount = thresholdOpeningCount ?: it.thresholdOpeningCount,
-            speciesPageSize = speciesPageSize ?: it.speciesPageSize,
-            categoryPageSize = categoryPageSize ?: it.categoryPageSize,
-            homeCategoryPageSize = homeCategoryPageSize ?: it.homeCategoryPageSize,
-            readExceedLimit = readExceedLimit ?: it.readExceedLimit
+            ad = ConfigAd(
+                consumeIntervalSeconds = consumeIntervalSeconds ?: it.ad.consumeIntervalSeconds,
+                thresholdConsumeSeconds = thresholdConsumeSeconds ?: it.ad.thresholdConsumeSeconds,
+                thresholdOpeningCount = thresholdOpeningCount ?: it.ad.thresholdOpeningCount,
+            ),
+            pagination = ConfigPagination(
+                speciesPageSize = speciesPageSize ?: it.pagination.speciesPageSize,
+                categoryPageSize = categoryPageSize ?: it.pagination.categoryPageSize,
+                homeCategoryPageSize = homeCategoryPageSize ?: it.pagination.homeCategoryPageSize,
+                readContentExceedLimit = readContentExceedLimit ?: it.pagination.readContentExceedLimit,
+                readCategoryExceedLimit = readCategoryExceedLimit ?: it.pagination.readCategoryExceedLimit
+            ),
         ) }
     }
 
