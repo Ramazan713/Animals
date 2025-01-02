@@ -1,24 +1,21 @@
 package com.masterplus.animals.core.shared_features.ad.data.repo
 
-import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.shared_features.ad.domain.repo.ReadCounterRewardAdRepo
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
-import com.masterplus.animals.core.shared_features.preferences.data.get
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
+import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class ReadCounterRewardAdRepoImpl(
     private val readCounter: ServerReadCounter,
-    private val appPreferences: AppPreferences
+    private val appConfigPreferences: AppConfigPreferences
 ): ReadCounterRewardAdRepo {
 
-    private val readExceedLimitFlow = appPreferences.dataFlow
-        .map { it[KPref.readExceedLimit] }
+    private val readExceedLimitFlow = appConfigPreferences.dataFlow
+        .map { it.readExceedLimit }
         .distinctUntilChanged()
 
     override val categoryShowAdFlow: Flow<Boolean>
@@ -38,7 +35,7 @@ class ReadCounterRewardAdRepoImpl(
         }
 
     override suspend fun resetCounter(contentType: ContentType) {
-        val readExceedLimit = appPreferences.getItem(KPref.readExceedLimit)
+        val readExceedLimit = appConfigPreferences.getData().readExceedLimit
         readCounter.addCounter(contentType, -readExceedLimit)
     }
 

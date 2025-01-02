@@ -6,11 +6,9 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.masterplus.animals.core.data.extensions.toRemoteLoadType
-import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.RemoteLoadType
 import com.masterplus.animals.core.domain.enums.RemoteSourceType
-import com.masterplus.animals.core.domain.models.Item
 import com.masterplus.animals.core.domain.models.ItemOrder
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.shared_features.database.entity.RemoteKeyEntity
@@ -41,7 +39,7 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
     protected val db = config.db
     protected val categoryRemoteSource = config.categoryRemoteSource
     private val readCounter = config.readCounter
-    private val appPreferences = config.appPreferences
+    private val appConfigPreferences = config.appConfigPreferences
     private val connectivityObserver = config.connectivityObserver
 
     abstract val saveRemoteKey: String
@@ -133,7 +131,7 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
 
     open suspend fun checkReadExceedLimit(): Boolean{
         val counter = readCounter.getCounter(contentType)
-        return counter > appPreferences.getItem(KPref.readExceedLimit)
+        return counter > appConfigPreferences.getData().readExceedLimit
     }
 
     open fun getNextKey(items: List<D>, loadType: LoadType,  remoteKey: RemoteKeyEntity?): String? {

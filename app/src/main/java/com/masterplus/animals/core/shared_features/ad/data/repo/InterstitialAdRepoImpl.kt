@@ -3,6 +3,7 @@ package com.masterplus.animals.core.shared_features.ad.data.repo
 import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.shared_features.ad.domain.repo.InterstitialAdRepo
 import com.masterplus.animals.core.shared_features.preferences.data.get
+import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -18,22 +19,22 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 class InterstitialAdRepoImpl(
-    appPreferences: AppPreferences
+    appConfigPreferences: AppConfigPreferences
 ): InterstitialAdRepo {
 
     private val consumeSecondsFlow = MutableStateFlow(0)
     private val openingCounterFlow = MutableStateFlow(0)
 
     private val timerEnabledFlow = MutableStateFlow(false)
-    private val consumeIntervalSecondsFlow = appPreferences.dataFlow
-        .map { it[KPref.consumeIntervalSeconds] }
+    private val consumeIntervalSecondsFlow = appConfigPreferences.dataFlow
+        .map { it.consumeIntervalSeconds }
         .distinctUntilChanged()
-    private val thresholdValuesFlow = appPreferences
+    private val thresholdValuesFlow = appConfigPreferences
         .dataFlow
         .map {
             ThresholdValues(
-                thresholdOpeningCount = it[KPref.thresholdOpeningCount],
-                thresholdConsumeSeconds = it[KPref.thresholdConsumeSeconds]
+                thresholdOpeningCount = it.thresholdOpeningCount,
+                thresholdConsumeSeconds = it.thresholdConsumeSeconds
             )
         }
         .distinctUntilChanged()

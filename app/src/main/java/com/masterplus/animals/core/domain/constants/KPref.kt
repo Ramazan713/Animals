@@ -6,16 +6,8 @@ object KPref {
 
     val backupMetaCounter = PrefKey("backupMetaCounter",0L)
     val inAppReviewDay = PrefKey("inAppReviewDay",0L)
-    val thresholdOpeningCount = PrefKey("thresholdOpeningCount",15)
-    val consumeIntervalSeconds = PrefKey("consumeIntervalSeconds",4)
-    val thresholdConsumeSeconds = PrefKey("thresholdConsumeSeconds",80)
 
     val contentReadCounter = PrefKey("contentReadCounter",0)
     val categoryReadCounter = PrefKey("categoryReadCounter",0)
     val lastUpdatedReadCounter = PrefKey("lastUpdatedReadCounter","")
-
-    val speciesPageSize = PrefKey("speciesPageSize",20)
-    val categoryPageSize = PrefKey("categoryPageSize",20)
-    val homeCategoryPageSize = PrefKey("homeCategoryPageSize",8)
-    val readExceedLimit = PrefKey("readExceedLimit",150)
 }

@@ -6,14 +6,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.utils.UiText
-import com.masterplus.animals.core.shared_features.preferences.data.get
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
+import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
@@ -39,7 +37,7 @@ class SpeciesListViewModel(
     private val speciesRepo: SpeciesRepo,
     private val categoryRepo: CategoryRepo,
     private val savePointRepo: SavePointRepo,
-    private val appPreferences: AppPreferences,
+    appConfigPreferences: AppConfigPreferences,
     translationRepo: TranslationRepo,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -49,7 +47,8 @@ class SpeciesListViewModel(
     val state = _state.asStateFlow()
 
     private val _targetItemIdFlow = MutableStateFlow<Int?>(null)
-    private val speciesPageSizeFlow = appPreferences.dataFlow.map { it[KPref.speciesPageSize] }.distinctUntilChanged()
+    private val speciesPageSizeFlow = appConfigPreferences.dataFlow
+        .map { it.speciesPageSize }.distinctUntilChanged()
 
 
     val pagingItems = combine(

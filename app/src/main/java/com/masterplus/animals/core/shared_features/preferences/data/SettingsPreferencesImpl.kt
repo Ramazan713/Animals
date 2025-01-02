@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class SettingsPreferencesImpl @Inject constructor(
+class SettingsPreferencesImpl(
     private val pref: DataStore<SettingsData>
 ): SettingsPreferences {
 

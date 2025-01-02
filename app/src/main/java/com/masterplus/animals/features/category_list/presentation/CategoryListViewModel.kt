@@ -8,12 +8,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toCategoryData
-import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.repo.CategoryRepo
-import com.masterplus.animals.core.shared_features.preferences.data.get
-import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
+import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.category_list.presentation.navigation.CategoryListRoute
@@ -31,14 +29,15 @@ import kotlinx.coroutines.flow.update
 class CategoryListViewModel(
     savedStateHandle: SavedStateHandle,
     private val categoryRepo: CategoryRepo,
-    private val translationRepo: TranslationRepo,
-    private val appPreferences: AppPreferences
+    translationRepo: TranslationRepo,
+    appConfigPreferences: AppConfigPreferences
 ): ViewModel() {
 
     val args = savedStateHandle.toRoute<CategoryListRoute>()
 
     private val _targetItemIdFlow = MutableStateFlow<Int?>(null)
-    private val categoryPageSizeFlow = appPreferences.dataFlow.map { it[KPref.categoryPageSize] }.distinctUntilChanged()
+    private val categoryPageSizeFlow = appConfigPreferences.dataFlow
+        .map { it.categoryPageSize }.distinctUntilChanged()
 
     private val _state = MutableStateFlow(CategoryState(
         kingdomType = args.kingdomType,
