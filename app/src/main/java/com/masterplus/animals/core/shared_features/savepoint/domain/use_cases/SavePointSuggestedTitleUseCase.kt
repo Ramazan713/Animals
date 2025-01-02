@@ -5,8 +5,6 @@ import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.StringProvider
 import com.masterplus.animals.core.domain.utils.DateTimeFormatUtils
 import com.masterplus.animals.core.domain.utils.UiText
-import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
-import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo

@@ -18,7 +18,7 @@ sealed interface EditSavePointAction{
 
     data class AddSavePoint(
         val title: String,
-        val itemId: Int,
+        val orderKey: Int,
         val currentDateTime: LocalDateTime
     ): EditSavePointAction
 

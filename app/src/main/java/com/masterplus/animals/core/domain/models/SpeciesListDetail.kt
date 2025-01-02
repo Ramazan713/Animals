@@ -3,8 +3,8 @@ package com.masterplus.animals.core.domain.models
 import com.masterplus.animals.core.domain.enums.KingdomType
 
 data class SpeciesListDetail(
-    override val id: Int,
-    val orderKey: Int,
+    val id: Int,
+    override val orderKey: Int,
     val introduction: String,
     val kingdomType: KingdomType,
     val name: String,
@@ -15,6 +15,6 @@ data class SpeciesListDetail(
     val images: List<SpeciesImageModel>,
     val isFavorited: Boolean,
     val isListSelected: Boolean,
-): Item{
+): ItemOrder{
     val imageUrls get() = images.map { it.image.imageUrl }
 }

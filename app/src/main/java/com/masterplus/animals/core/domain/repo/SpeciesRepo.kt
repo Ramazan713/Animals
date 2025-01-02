@@ -37,6 +37,4 @@ interface SpeciesRepo {
     suspend fun getSpeciesById(speciesId: Int, lang: LanguageEnum): SpeciesModel?
 
     suspend fun checkSpeciesDetailData(species: SpeciesModel): EmptyDefaultResult
-
-    suspend fun getSpeciesPosByLabel(itemId: Int, label: String): Int?
 }

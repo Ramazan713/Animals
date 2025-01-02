@@ -47,7 +47,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun EditSavePointDialog(
     loadParam: EditSavePointLoadParam,
-    itemId: Int,
+    orderKey: Int,
     onClosed: () -> Unit,
     onNavigateLoad: (SavePoint) -> Unit,
     editViewModel: EditSavePointViewModel = koinViewModel()
@@ -55,7 +55,7 @@ fun EditSavePointDialog(
     val state by editViewModel.state.collectAsStateWithLifecycle()
     EditSavePointDialog(
         loadParam = loadParam,
-        itemId = itemId,
+        orderKey = orderKey,
         onClosed = onClosed,
         onNavigateLoad = onNavigateLoad,
         state = state,
@@ -68,7 +68,7 @@ fun EditSavePointDialog(
 @Composable
 fun EditSavePointDialog(
     loadParam: EditSavePointLoadParam,
-    itemId: Int,
+    orderKey: Int,
     onClosed: () -> Unit,
     onNavigateLoad: (SavePoint) -> Unit,
     state: EditSavePointState,
@@ -173,7 +173,7 @@ fun EditSavePointDialog(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ){
                 Button(
-                    onClick = { onAction(EditSavePointAction.OverrideSavePoint(itemId)) },
+                    onClick = { onAction(EditSavePointAction.OverrideSavePoint(orderKey)) },
                     modifier = Modifier.weight(1f),
                     enabled = state.currentSelectedSavePoint != null,
                 ) {
@@ -198,7 +198,7 @@ fun EditSavePointDialog(
             ShowDialog(
                 event = dialogEvent,
                 onAction = onAction,
-                itemId = itemId
+                orderKey = orderKey
             )
         }
     }
@@ -209,7 +209,7 @@ fun EditSavePointDialog(
 @ExperimentalComposeUiApi
 @Composable
 private fun ShowDialog(
-    itemId: Int,
+    orderKey: Int,
     event: EditSavePointDialogEvent,
     onAction: (EditSavePointAction)->Unit,
 ){
@@ -241,7 +241,7 @@ private fun ShowDialog(
                     onAction(EditSavePointAction.AddSavePoint(
                         title = newTitle,
                         currentDateTime = event.currentDateTime,
-                        itemId = itemId
+                        orderKey = orderKey
                     ))
                 },
                 onClosed = close
@@ -262,7 +262,7 @@ private fun EditSavePointPagePreview() {
             destinationId = null,
             kingdomType = KingdomType.Animals
         ),
-        itemId = 1,
+        orderKey = 1,
         onClosed = {  },
         onNavigateLoad = {  },
         state = EditSavePointState(savePoints = listOf(

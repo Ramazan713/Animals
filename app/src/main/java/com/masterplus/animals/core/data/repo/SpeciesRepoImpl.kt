@@ -203,9 +203,4 @@ class SpeciesRepoImpl(
         }
 
     }
-
-    override suspend fun getSpeciesPosByLabel(itemId: Int, label: String): Int? {
-        speciesDao.getSpeciesByIdAndLabel(itemId, label) ?: return null
-        return speciesDao.getSpeciesPosByLabel(itemId, label)
-    }
 }

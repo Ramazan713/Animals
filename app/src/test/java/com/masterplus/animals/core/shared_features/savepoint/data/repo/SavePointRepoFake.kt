@@ -21,7 +21,7 @@ class FakeSavePointRepo : SavePointRepo {
     override suspend fun insertSavePoint(
         title: String,
         destination: SavePointDestination,
-        itemId: Int,
+        orderKey: Int,
         contentType: SavePointContentType,
         saveMode: SavePointSaveMode,
         dateTime: LocalDateTime?
@@ -30,7 +30,7 @@ class FakeSavePointRepo : SavePointRepo {
             id = savePointsMutable.size + 1,
             title = title,
             contentType = contentType,
-            itemId = itemId,
+            orderKey = orderKey,
             destination = destination,
             modifiedTime = dateTime ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
             kingdomType = destination.kingdomType,
@@ -40,9 +40,9 @@ class FakeSavePointRepo : SavePointRepo {
         savePointsMutable.add(savePoint)
     }
 
-    override suspend fun updateSavePointPos(id: Int, itemId: Int) {
+    override suspend fun updateSavePointPos(id: Int, orderKey: Int) {
         val savePoint = savePointsMutable.find { it.id == id }
-        savePoint?.itemId = itemId
+        savePoint?.orderKey = orderKey
     }
 
     override suspend fun updateSavePointTitle(id: Int, title: String) {

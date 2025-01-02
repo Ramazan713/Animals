@@ -33,6 +33,8 @@ val databaseModule = module {
 
     single { get<AppDatabase>().savePointDao }
 
+    single { get<AppDatabase>().savePointPosDao }
+
     single { get<AppDatabase>().speciesDao }
 
     single { get<AppDatabase>().searchCategoryDao }

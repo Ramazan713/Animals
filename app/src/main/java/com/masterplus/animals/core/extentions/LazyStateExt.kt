@@ -12,7 +12,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.paging.compose.LazyPagingItems
-import com.masterplus.animals.core.domain.models.Item
+import com.masterplus.animals.core.domain.models.ItemOrder
 
 
 @Composable
@@ -43,24 +43,24 @@ fun LazyStaggeredGridState.visibleMiddlePosition(): Int{
 }
 
 @Composable
-fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(pos: Int): Int?{
+fun <T: ItemOrder>LazyPagingItems<T>.visibleMiddleItemOrderKey(pos: Int): Int?{
     return remember(pos) {
         derivedStateOf {
-            if(pos >= itemCount) null else peek(pos)?.id
+            if(pos >= itemCount) null else peek(pos)?.orderKey
         }
     }.value
 }
 
 @Composable
-fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyListState: LazyListState): Int?{
+fun <T: ItemOrder>LazyPagingItems<T>.visibleMiddleItemOrderKey(lazyListState: LazyListState): Int?{
     val visibleMiddlePos = lazyListState.visibleMiddlePosition()
-    return visibleMiddleItemId(visibleMiddlePos)
+    return visibleMiddleItemOrderKey(visibleMiddlePos)
 }
 
 @Composable
-fun <T: Item>LazyPagingItems<T>.visibleMiddleItemId(lazyGridState: LazyGridState): Int?{
+fun <T: ItemOrder>LazyPagingItems<T>.visibleMiddleItemOrderKey(lazyGridState: LazyGridState): Int?{
     val visibleMiddlePos = lazyGridState.visibleMiddlePosition()
-    return visibleMiddleItemId(visibleMiddlePos)
+    return visibleMiddleItemOrderKey(visibleMiddlePos)
 }
 
 

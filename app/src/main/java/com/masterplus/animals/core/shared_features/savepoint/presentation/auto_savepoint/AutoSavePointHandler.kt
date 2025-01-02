@@ -21,9 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.R
 import com.masterplus.animals.core.data.mediators.RemoteMediatorError
-import com.masterplus.animals.core.domain.models.Item
+import com.masterplus.animals.core.domain.models.ItemOrder
 import com.masterplus.animals.core.extentions.getAnyExceptionOrNull
-import com.masterplus.animals.core.extentions.visibleMiddleItemId
+import com.masterplus.animals.core.extentions.visibleMiddleItemOrderKey
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
@@ -35,12 +35,12 @@ import kotlin.math.ceil
 
 
 @Composable
-fun <T: Item> AutoSavePointHandler(
+fun <T: ItemOrder> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
-    onItemPosId: () -> Int?,
+    onItemOrderKey: () -> Int?,
     itemInitPos: Int = 0,
     pagingItems: LazyPagingItems<T>,
     onInitPosResponse: ((Int) -> Unit)? = null,
@@ -105,11 +105,11 @@ fun <T: Item> AutoSavePointHandler(
     ListenEventLifecycle(
         keys = arrayOf(contentType),
         onStop = {
-            onItemPosId()?.let { itemId ->
+            onItemOrderKey()?.let { orderKey ->
                 onAction(AutoSavePointAction.UpsertSavePoint(
                     destination = currentOnDestination(),
                     contentType = contentType,
-                    itemId = itemId
+                    orderKey = orderKey
                 ))
             }
         }
@@ -156,12 +156,12 @@ fun <T: Item> AutoSavePointHandler(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun <T: Item> AutoSavePointHandler(
+private fun <T: ItemOrder> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
-    onItemPosId: () -> Int?,
+    onItemOrderKey: () -> Int?,
     topBarScrollBehaviour: TopAppBarScrollBehavior?,
     scrollToPos: suspend (Int) -> Unit,
     itemInitPos: Int = 0,
@@ -181,7 +181,7 @@ private fun <T: Item> AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        onItemPosId = onItemPosId,
+        onItemOrderKey = onItemOrderKey,
         state = state,
         itemInitPos = itemInitPos,
         pagingItems = pagingItems,
@@ -203,7 +203,7 @@ private fun <T: Item> AutoSavePointHandler(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T: Item> AutoSavePointHandler(
+fun <T: ItemOrder> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
@@ -215,12 +215,12 @@ fun <T: Item> AutoSavePointHandler(
     pagingItems: LazyPagingItems<T>,
     topBarScrollBehaviour: TopAppBarScrollBehavior? = null,
 ){
-    val itemPosId = pagingItems.visibleMiddleItemId(lazyListState)
+    val itemOrderKey = pagingItems.visibleMiddleItemOrderKey(lazyListState)
     AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        onItemPosId = { itemPosId },
+        onItemOrderKey = { itemOrderKey },
         state = state,
         itemInitPos = itemInitPos,
         topBarScrollBehaviour = topBarScrollBehaviour,
@@ -235,7 +235,7 @@ fun <T: Item> AutoSavePointHandler(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T: Item> AutoSavePointHandler(
+fun <T: ItemOrder> AutoSavePointHandler(
     state: AutoSavePointState,
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
@@ -247,12 +247,12 @@ fun <T: Item> AutoSavePointHandler(
     pagingItems: LazyPagingItems<T>,
     topBarScrollBehaviour: TopAppBarScrollBehavior? = null
 ){
-    val itemPosId = pagingItems.visibleMiddleItemId(lazyListState)
+    val itemPosId = pagingItems.visibleMiddleItemOrderKey(lazyListState)
     AutoSavePointHandler(
         contentType = contentType,
         onDestination = onDestination,
         onAction = onAction,
-        onItemPosId = { itemPosId },
+        onItemOrderKey = { itemPosId },
         state = state,
         itemInitPos = itemInitPos,
         pagingItems = pagingItems,

@@ -6,7 +6,7 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 interface SavePointPosRepo {
 
     suspend fun getItemPos(
-        itemId: Int,
+        orderKey: Int,
         destination: SavePointDestination,
         contentType: SavePointContentType
     ): Int?

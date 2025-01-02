@@ -47,7 +47,7 @@ class SavePointUpsertAutoModeUseCaseTest {
 
         useCase.invoke(
             destination = destination,
-            itemId = itemId,
+            orderKey = itemId,
             contentType = SavePointContentType.Content
         )
 
@@ -67,7 +67,7 @@ class SavePointUpsertAutoModeUseCaseTest {
         assertThat(returnedSavePoint!!.saveMode).isEqualTo(SavePointSaveMode.Auto)
         assertThat(returnedSavePoint.destination).isEqualTo(destination)
         assertThat(returnedSavePoint.contentType).isEqualTo(contentType)
-        assertThat(returnedSavePoint.itemId).isEqualTo(itemId)
+        assertThat(returnedSavePoint.orderKey).isEqualTo(itemId)
         assertThat(returnedSavePoint.title).isEqualTo(suggestedTitle)
     }
 
@@ -79,7 +79,7 @@ class SavePointUpsertAutoModeUseCaseTest {
 
         savePointRepo.insertSavePoint(
             destination = destination,
-            itemId = itemId,
+            orderKey = itemId,
             saveMode = SavePointSaveMode.Auto,
             title = "fake title",
             contentType = contentType
@@ -89,7 +89,7 @@ class SavePointUpsertAutoModeUseCaseTest {
 
         useCase.invoke(
             destination = destination,
-            itemId = updatedItemId,
+            orderKey = updatedItemId,
             contentType = contentType
         )
 
@@ -103,7 +103,7 @@ class SavePointUpsertAutoModeUseCaseTest {
         assertThat(returnedSavePoint!!.saveMode).isEqualTo(SavePointSaveMode.Auto)
         assertThat(returnedSavePoint.destination).isEqualTo(destination)
         assertThat(returnedSavePoint.contentType).isEqualTo(contentType)
-        assertThat(returnedSavePoint.itemId).isEqualTo(updatedItemId)
+        assertThat(returnedSavePoint.orderKey).isEqualTo(updatedItemId)
     }
 
 }

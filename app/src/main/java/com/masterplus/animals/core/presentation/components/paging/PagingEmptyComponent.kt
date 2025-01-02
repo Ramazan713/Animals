@@ -21,11 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.R
 import com.masterplus.animals.core.data.mediators.RemoteMediatorError
-import com.masterplus.animals.core.domain.models.Item
 import com.masterplus.animals.core.extentions.getAnyExceptionOrNull
 
 @Composable
-fun <T: Item> PagingEmptyComponent(
+fun <T: Any> PagingEmptyComponent(
     pagingItems: LazyPagingItems<T>,
     onWatchAd: () -> Unit,
     modifier: Modifier = Modifier

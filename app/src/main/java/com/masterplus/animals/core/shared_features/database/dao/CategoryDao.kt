@@ -32,9 +32,6 @@ interface CategoryDao {
     """)
     suspend fun getPhylumWithId2(phylumId: Int, label: String): PhylumEntity?
 
-    @Query("SELECT COUNT(*) FROM phylums WHERE id < :itemId and label = :label")
-    suspend fun getPhylumPosByLabel(itemId: Int, label: String): Int?
-
 
 
     @Transaction
@@ -53,9 +50,6 @@ interface CategoryDao {
     """)
     suspend fun getClassWithId2(classId: Int, label: String): ClassEntity?
 
-    @Query("SELECT COUNT(*) FROM classes WHERE id < :itemId and label = :label")
-    suspend fun getClassPosByLabel(itemId: Int, label: String): Int?
-
 
     @Transaction
     @Query("""
@@ -73,8 +67,6 @@ interface CategoryDao {
     """)
     suspend fun getOrderWithId2(orderId: Int, label: String): OrderEntity?
 
-    @Query("SELECT COUNT(*) FROM orders WHERE id < :itemId and label = :label")
-    suspend fun getOrderPosByLabel(itemId: Int, label: String): Int?
 
     @Transaction
     @Query("""
@@ -92,9 +84,6 @@ interface CategoryDao {
     """)
     suspend fun getFamilyWithId2(familyId: Int, label: String): FamilyEntity?
 
-    @Query("SELECT COUNT(*) FROM families WHERE id < :itemId and label = :label")
-    suspend fun getFamilyPosByLabel(itemId: Int, label: String): Int?
-
 
     @Transaction
     @Query("""
@@ -111,9 +100,6 @@ interface CategoryDao {
         select * from habitatcategories where id = :habitatCategoryId and label = :label limit 1
     """)
     suspend fun getHabitatCategoryWithId2(habitatCategoryId: Int, label: String): HabitatCategoryEntity?
-
-    @Query("SELECT COUNT(*) FROM habitatcategories WHERE id < :itemId and label = :label")
-    suspend fun getHabitatPosByLabel(itemId: Int, label: String): Int?
 
 
     @Transaction

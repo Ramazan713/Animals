@@ -214,7 +214,7 @@ private fun SavePointInfoItem(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "pos: ${savePoint.itemId + 1}",
+                text = "key: ${savePoint.orderKey}",
                 style = MaterialTheme.typography.bodyMedium,
             )
 
@@ -232,7 +232,7 @@ private fun SavePointInfoItem(
         }
     }else{
         Text(
-            text = "pos: ${savePoint.itemId + 1}",
+            text = "key: ${savePoint.orderKey}",
             style = MaterialTheme.typography.bodyMedium
         )
 

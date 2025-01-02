@@ -76,7 +76,7 @@ fun ListSpeciesBackup.toListSpeciesEntity(): ListSpeciesEntity{
 fun SavePointEntity.toSavePointBackup(): SavePointBackup {
     return SavePointBackup(
         id = id,
-        itemId = itemId,
+        itemId = orderKey,
         saveKey = saveKey,
         destinationId = destinationId,
         saveModeId = saveModeId,
@@ -93,7 +93,7 @@ fun SavePointEntity.toSavePointBackup(): SavePointBackup {
 fun SavePointBackup.toSavePointEntity(): SavePointEntity{
     return SavePointEntity(
         id = id,
-        itemId = itemId,
+        orderKey = itemId,
         saveKey = saveKey,
         destinationId = destinationId,
         saveModeId = saveModeId,

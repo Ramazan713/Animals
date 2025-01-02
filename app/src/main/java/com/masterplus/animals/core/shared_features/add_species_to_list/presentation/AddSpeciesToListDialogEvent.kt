@@ -4,6 +4,7 @@ sealed interface AddSpeciesToListDialogEvent {
 
     data class ShowItemBottomMenu(
         val speciesId: Int,
+        val orderKey: Int,
         val speciesName: String,
         val posIndex: Int
     ): AddSpeciesToListDialogEvent

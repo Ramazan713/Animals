@@ -48,7 +48,7 @@ import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.isPrependItemLoading
-import com.masterplus.animals.core.extentions.visibleMiddlePosition
+import com.masterplus.animals.core.extentions.visibleMiddleItemOrderKey
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.TopBarType
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
@@ -101,7 +101,7 @@ fun CategoryListPage(
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     val lazyListState = rememberLazyGridState()
-    val middlePos = lazyListState.visibleMiddlePosition()
+    val middleOrderKey = pagingItems.visibleMiddleItemOrderKey(lazyListState)
 
     AutoSavePointHandler(
         contentType = SavePointContentType.Category,
@@ -125,7 +125,7 @@ fun CategoryListPage(
                 subTitle = state.subTitle,
                 onNavigateToCategorySearch = onNavigateToCategorySearch,
                 onAction = onAction,
-                listMiddlePos = { middlePos },
+                listMiddleOrderKey = { middleOrderKey },
                 onNavigateToSavePointCategorySettings = onNavigateToSavePointCategorySettings
             )
         }
@@ -249,12 +249,12 @@ fun CategoryListPage(
                         kingdomType = state.kingdomType,
                         contentType = SavePointContentType.Category,
                     ),
-                    itemId = dialogEvent.itemId,
+                    orderKey = dialogEvent.orderKey,
                     onClosed = close,
                     onNavigateLoad = { savepoint ->
-                        onAction(CategoryAction.SetPagingTargetId(savepoint.itemId))
+                        onAction(CategoryAction.SetPagingTargetId(savepoint.orderKey))
                         onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByItemId(
-                            itemId = savepoint.itemId,
+                            orderKey = savepoint.orderKey,
                         ))
                     }
                 )
@@ -263,13 +263,13 @@ fun CategoryListPage(
             is CategoryListDialogEvent.ShowBottomSheet -> {
                 ShowSelectBottomMenuItems(
                     items = CategoryListBottomItemMenu.entries,
-                    title = stringResource(R.string.n_for_number_word, dialogEvent.item.id + 1, dialogEvent.item.title),
+                    title = stringResource(R.string.n_for_number_word, dialogEvent.item.orderKey, dialogEvent.item.title),
                     onClose = close,
                     onClickItem = { menuItem ->
                         when(menuItem){
                             CategoryListBottomItemMenu.Savepoint -> {
                                 onAction(CategoryAction.ShowDialog(CategoryListDialogEvent.ShowEditSavePoint(
-                                    itemId = dialogEvent.item.id
+                                    orderKey = dialogEvent.item.orderKey
                                 )))
                             }
                         }
@@ -336,7 +336,7 @@ private fun GetTopBar(
     onNavigateToSavePointCategorySettings: () -> Unit,
     title: String,
     subTitle: String?,
-    listMiddlePos: () -> Int
+    listMiddleOrderKey: () -> Int?
 ) {
     DefaultTopBar(
         topBarType = TopBarType.LARGE,
@@ -366,9 +366,11 @@ private fun GetTopBar(
         onMenuItemClick = { menuItem ->
             when(menuItem){
                 CategoryListTopBarItemMenu.Savepoint -> {
-                    onAction(CategoryAction.ShowDialog(CategoryListDialogEvent.ShowEditSavePoint(
-                        itemId = listMiddlePos()
-                    )))
+                    onAction(CategoryAction.ShowDialog(listMiddleOrderKey()?.let {
+                        CategoryListDialogEvent.ShowEditSavePoint(
+                            orderKey = it
+                        )
+                    }))
                 }
                 CategoryListTopBarItemMenu.SavePointSettings -> onNavigateToSavePointCategorySettings()
             }

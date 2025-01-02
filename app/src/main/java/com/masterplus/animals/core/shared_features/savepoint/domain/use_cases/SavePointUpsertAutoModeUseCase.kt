@@ -13,7 +13,7 @@ class SavePointUpsertAutoModeUseCase(
     suspend operator fun invoke(
         destination: SavePointDestination,
         contentType: SavePointContentType,
-        itemId: Int
+        orderKey: Int
     ){
         val saveMode = SavePointSaveMode.Auto
         val savePoint = savePointRepo.getSavePointByQuery(
@@ -22,7 +22,7 @@ class SavePointUpsertAutoModeUseCase(
             destination = destination
         )
         if(savePoint != null){
-            savePointRepo.updateSavePointPos(savePoint.id ?: 0, itemId)
+            savePointRepo.updateSavePointPos(savePoint.id ?: 0, orderKey)
         }else{
             val title = suggestedTitleUseCase(
                 destinationTypeId = destination.destinationTypeId,
@@ -33,7 +33,7 @@ class SavePointUpsertAutoModeUseCase(
             savePointRepo.insertSavePoint(
                 title = title,
                 destination = destination,
-                itemId = itemId,
+                orderKey = orderKey,
                 saveMode = saveMode,
                 contentType = contentType
             )

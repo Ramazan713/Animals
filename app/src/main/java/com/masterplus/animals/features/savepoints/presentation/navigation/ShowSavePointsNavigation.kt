@@ -5,7 +5,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
-import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.features.savepoints.presentation.show_savepoints.ShowSavePointsPageRoot
 import kotlinx.serialization.Serializable
@@ -45,7 +44,7 @@ fun NavGraphBuilder.showSavePoints(
                     savepoint.destination.toCategoryType() ?: CategoryType.Order,
                     savepoint.destination.destinationId,
                     KingdomType.Animals,
-                    savepoint.itemId,
+                    savepoint.orderKey,
                 )
             }
         )

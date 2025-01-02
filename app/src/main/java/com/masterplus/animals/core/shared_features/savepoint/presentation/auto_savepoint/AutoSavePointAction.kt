@@ -13,7 +13,7 @@ sealed interface AutoSavePointAction {
     data class UpsertSavePoint(
         val destination: SavePointDestination,
         val contentType: SavePointContentType,
-        val itemId: Int
+        val orderKey: Int
     ): AutoSavePointAction
 
     data class LoadSavePoint(
@@ -25,7 +25,7 @@ sealed interface AutoSavePointAction {
     data object ClearUiEvent: AutoSavePointAction
 
     data class RequestNavigateToPosByItemId(
-        val itemId: Int,
+        val orderKey: Int,
     ): AutoSavePointAction
 
     data object ShowAd: AutoSavePointAction

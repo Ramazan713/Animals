@@ -49,7 +49,7 @@ class AutoSavePointViewModel(
                     if(!checkSaveSavePoint(action.contentType)) return@launch
                     upsertAutoMode(
                         destination = action.destination,
-                        itemId = action.itemId,
+                        orderKey = action.orderKey,
                         contentType = action.contentType
                     )
                 }
@@ -77,7 +77,7 @@ class AutoSavePointViewModel(
                     _state.update { state ->
                         state.copy(
                             uiEvent = if(savePoint == null) null else AutoSavePointEvent.LoadItemPos(
-                                pos = savePoint.itemId
+                                pos = savePoint.orderKey
                             ),
                             loadingSavePointPos = false,
                             isInitLoaded = true
@@ -94,7 +94,7 @@ class AutoSavePointViewModel(
                 viewModelScope.launch {
                     val config = _state.value.config ?: return@launch
                     val pos = savePointPosRepo.getItemPos(
-                        itemId = action.itemId,
+                        orderKey = action.orderKey,
                         contentType = config.contentType,
                         destination = config.destination
                     )

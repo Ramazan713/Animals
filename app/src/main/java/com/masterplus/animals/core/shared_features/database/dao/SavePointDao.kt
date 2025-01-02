@@ -136,7 +136,7 @@ interface SavePointDao {
 
     @Query(
         """
-        update savepoints set itemId = :itemId where id = :id
+        update savepoints set orderKey = :itemId where id = :id
     """
     )
     suspend fun updateSavePointItemId(id: Int, itemId: Int)

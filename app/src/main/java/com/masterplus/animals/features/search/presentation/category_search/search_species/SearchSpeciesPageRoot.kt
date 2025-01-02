@@ -15,6 +15,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
+import com.masterplus.animals.core.extentions.isEmptyResult
+import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.utils.SampleDatas
@@ -61,7 +63,7 @@ fun SearchSpeciesPageRoot(
                 .fillMaxWidth()
                 .weight(1f),
             onItemClick = {
-                onNavigateToSpeciesDetail(it.id ?: 0)
+                onNavigateToSpeciesDetail(it.id)
             }
         )
     }
@@ -79,9 +81,9 @@ private fun SearchResultLazyColumn(
 ) {
     SharedLoadingPageContent(
         modifier = modifier,
-        isLoading = searchResults.loadState.refresh is LoadState.Loading,
+        isLoading = searchResults.isLoading(),
         overlayLoading = true,
-        isEmptyResult = searchResults.itemCount == 0
+        isEmptyResult = searchResults.isEmptyResult()
     ){
         LazyColumn(
             contentPadding = contentPaddings,
@@ -113,7 +115,8 @@ private fun SearchResultLazyColumn(
                                 AddSpeciesToListDialogEvent.ShowItemBottomMenu(
                                     speciesId = item.id,
                                     speciesName = item.name,
-                                    posIndex = index
+                                    posIndex = index,
+                                    orderKey = item.orderKey
                                 )))
                         },
                     )

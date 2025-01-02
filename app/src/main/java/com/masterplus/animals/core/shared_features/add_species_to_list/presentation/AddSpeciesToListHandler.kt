@@ -36,7 +36,7 @@ fun <T: IMenuItemEnum> AddSpeciesToListHandler(
     state: AddSpeciesToListState,
     onAction: (AddSpeciesToListAction) -> Unit,
     bottomMenuItems: List<T>,
-    onBottomMenuItemClick: (T, SpeciesId, Int) -> Unit,
+    onBottomMenuItemClick: (T, Int, Int) -> Unit,
     listIdControl: Int?
 ) {
 
@@ -52,12 +52,12 @@ fun <T: IMenuItemEnum> AddSpeciesToListHandler(
             is AddSpeciesToListDialogEvent.ShowItemBottomMenu -> {
                 ShowBottomMenuWithSelectList(
                     items = bottomMenuItems,
-                    title = stringResource(id = R.string.n_for_number_word,dialogEvent.posIndex + 1, dialogEvent.speciesName),
+                    title = stringResource(id = R.string.n_for_number_word,dialogEvent.orderKey, dialogEvent.speciesName),
                     speciesId = dialogEvent.speciesId,
                     onClose = close,
                     listIdControl = state.listIdControl,
                     onClickItem = { menuItem ->
-                        onBottomMenuItemClick.invoke(menuItem, dialogEvent.speciesId, dialogEvent.posIndex)
+                        onBottomMenuItemClick.invoke(menuItem, dialogEvent.orderKey, dialogEvent.posIndex)
                     }
                 )
             }

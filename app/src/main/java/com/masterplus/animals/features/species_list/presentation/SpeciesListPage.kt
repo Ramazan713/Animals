@@ -40,7 +40,7 @@ import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.isPrependItemLoading
-import com.masterplus.animals.core.extentions.visibleMiddleItemId
+import com.masterplus.animals.core.extentions.visibleMiddleItemOrderKey
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
@@ -139,7 +139,7 @@ fun SpeciesListPage(
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val lazyListState = rememberLazyListState()
-    val middleItemId = pagingItems.visibleMiddleItemId(lazyListState)
+    val middleOrderKey = pagingItems.visibleMiddleItemOrderKey(lazyListState)
     val middlePos = lazyListState.visibleMiddlePosition()
 
     AutoSavePointHandler(
@@ -170,9 +170,9 @@ fun SpeciesListPage(
                 onMenuItemClick = { menuItem ->
                     when(menuItem){
                         SpeciesListTopItemMenu.Savepoint -> {
-                            onAction(SpeciesListAction.ShowDialog(middleItemId?.let { middleItemId->
+                            onAction(SpeciesListAction.ShowDialog(middleOrderKey?.let { middleOrderKey->
                                 SpeciesListDialogEvent.ShowEditSavePoint(
-                                    itemId = middleItemId,
+                                    orderKey = middleOrderKey,
                                     posIndex = middlePos
                                 )
                             }))
@@ -255,7 +255,8 @@ fun SpeciesListPage(
                                 onAddSpeciesAction(AddSpeciesToListAction.ShowDialog(AddSpeciesToListDialogEvent.ShowItemBottomMenu(
                                     speciesId = item.id,
                                     speciesName = item.name,
-                                    posIndex = index
+                                    posIndex = index,
+                                    orderKey = item.orderKey
                                 )))
                             },
                         )
@@ -287,10 +288,10 @@ fun SpeciesListPage(
         onAction = onAddSpeciesAction,
         listIdControl = state.listIdControl,
         bottomMenuItems = SpeciesListBottomItemMenu.entries,
-        onBottomMenuItemClick = { menuItem, itemId, pos ->
+        onBottomMenuItemClick = { menuItem, orderKey, pos ->
             when(menuItem){
                 SpeciesListBottomItemMenu.Savepoint -> {
-                    onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(pos, itemId)))
+                    onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(pos, orderKey)))
                 }
             }
         }
@@ -308,12 +309,12 @@ fun SpeciesListPage(
                         destinationId = args.categoryItemId,
                         kingdomType = args.kingdomType
                     ),
-                    itemId = dialogEvent.itemId,
+                    orderKey = dialogEvent.orderKey,
                     onClosed = close,
                     onNavigateLoad = { savepoint ->
-                        onAction(SpeciesListAction.SetPagingTargetId(savepoint.itemId))
+                        onAction(SpeciesListAction.SetPagingTargetId(savepoint.orderKey))
                         onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByItemId(
-                            itemId = savepoint.itemId,
+                            orderKey = savepoint.orderKey,
                         ))
                     }
                 )

@@ -20,9 +20,6 @@ interface SpeciesDao {
     @Query("select * from species where id = :id and label = :label limit 1")
     suspend fun getSpeciesByIdAndLabel(id: Int, label: String): SpeciesEntity?
 
-    @Query("SELECT COUNT(*) FROM species WHERE id < :itemId and label = :label")
-    suspend fun getSpeciesPosByLabel(itemId: Int, label: String): Int?
-
     @Transaction
     @Query(
         """

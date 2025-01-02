@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
@@ -32,7 +31,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -94,7 +92,7 @@ class SpeciesListViewModel(
                             destinationId = args.categoryItemId,
                             kingdomType = args.kingdomType
                         ),
-                        itemId = action.posIndex,
+                        orderKey = action.posIndex,
                         saveMode = SavePointSaveMode.Manuel,
                         contentType = SavePointContentType.Content
                     )

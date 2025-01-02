@@ -20,8 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.core.data.mediators.RemoteMediatorError
-import com.masterplus.animals.core.domain.models.Item
-import com.masterplus.animals.core.extentions.getAnyExceptionOrNull
 import com.masterplus.animals.core.extentions.getExceptionOrNull
 
 
@@ -55,7 +53,7 @@ private fun PagingErrorComponent(
     }
 }
 
-fun <T: Item> LazyListScope.AppendErrorHandlerComponent(
+fun <T: Any> LazyListScope.AppendErrorHandlerComponent(
     pagingItems: LazyPagingItems<T>,
     onWatchAd: () -> Unit,
     modifier: Modifier = Modifier
@@ -73,7 +71,7 @@ fun <T: Item> LazyListScope.AppendErrorHandlerComponent(
     }
 }
 
-fun <T: Item> LazyListScope.PrependErrorHandlerComponent(
+fun <T: Any> LazyListScope.PrependErrorHandlerComponent(
     pagingItems: LazyPagingItems<T>,
     onWatchAd: () -> Unit,
     modifier: Modifier = Modifier
@@ -92,7 +90,7 @@ fun <T: Item> LazyListScope.PrependErrorHandlerComponent(
 
 
 
-fun <T: Item> LazyGridScope.AppendErrorHandlerComponent(
+fun <T: Any> LazyGridScope.AppendErrorHandlerComponent(
     pagingItems: LazyPagingItems<T>,
     onWatchAd: () -> Unit,
     modifier: Modifier = Modifier
@@ -113,7 +111,7 @@ fun <T: Item> LazyGridScope.AppendErrorHandlerComponent(
 }
 
 
-fun <T: Item> LazyGridScope.PrependErrorHandlerComponent(
+fun <T: Any> LazyGridScope.PrependErrorHandlerComponent(
     pagingItems: LazyPagingItems<T>,
     onWatchAd: () -> Unit,
     modifier: Modifier = Modifier

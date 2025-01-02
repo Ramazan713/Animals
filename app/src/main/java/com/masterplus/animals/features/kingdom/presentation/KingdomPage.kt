@@ -48,7 +48,6 @@ import com.masterplus.animals.core.presentation.transition.animateEnterExitForTr
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
-import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toCategoryType
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItem
 import com.masterplus.animals.core.shared_features.savepoint.presentation.components.SavePointItemDefaults
 import com.masterplus.animals.features.kingdom.presentation.navigation.ItemId
@@ -362,7 +361,7 @@ private fun SavePointSection(
                         onNavigateToSpeciesList(
                             savePoint.destination.toCategoryType() ?: CategoryType.Order,
                             savePoint.destination.destinationId,
-                            savePoint.itemId
+                            savePoint.orderKey
                         )
                     }
                 )
