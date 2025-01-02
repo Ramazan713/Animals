@@ -31,6 +31,7 @@ interface CategoryRemoteSource {
 
     suspend fun getSpeciesCategories(
         categoryType: CategoryType,
+        kingdomType: KingdomType,
         itemId: Int,
         loadKey: Int?,
         limit: Int,

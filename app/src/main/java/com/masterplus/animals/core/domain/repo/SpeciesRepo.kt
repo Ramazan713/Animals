@@ -30,7 +30,7 @@ interface SpeciesRepo {
         itemId: Int,
         pageSize: Int,
         language: LanguageEnum,
-        kingdom: KingdomType?,
+        kingdom: KingdomType,
         targetItemId: Int? = null
     ): Flow<PagingData<SpeciesListDetail>>
 

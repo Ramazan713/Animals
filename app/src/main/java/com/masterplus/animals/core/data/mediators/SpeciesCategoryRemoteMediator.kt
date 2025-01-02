@@ -3,6 +3,7 @@ package com.masterplus.animals.core.data.mediators
 import com.masterplus.animals.core.data.dtos.SpeciesDto
 import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.enums.RemoteLoadType
 import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.utils.DefaultResult
@@ -12,6 +13,7 @@ class SpeciesCategoryRemoteMediator(
     config: RemoteMediatorConfig,
     targetItemId: Int? = null,
     private val categoryType: CategoryType,
+    private val kingdomType: KingdomType,
     private val itemId: Int,
 ): BaseSpeciesRemoteMediator<SpeciesDetailEmbedded>(config, targetItemId) {
     override val saveRemoteKey: String
@@ -32,7 +34,8 @@ class SpeciesCategoryRemoteMediator(
             limit = limit,
             loadKey = loadKey,
             loadType = loadType,
-            sourceType = sourceType
+            sourceType = sourceType,
+            kingdomType = kingdomType
         )
     }
 }

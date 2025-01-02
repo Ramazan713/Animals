@@ -34,7 +34,6 @@ import com.masterplus.animals.core.shared_features.database.entity.SavePointEnti
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
-import com.masterplus.animals.core.shared_features.database.view.HabitatKingdomView
 import com.masterplus.animals.core.shared_features.database.view.ListViewEntity
 import com.masterplus.trdictionary.core.data.local.services.ListViewDao
 
@@ -48,7 +47,7 @@ import com.masterplus.trdictionary.core.data.local.services.ListViewDao
         BackupMetaEntity::class, RemoteKeyEntity::class
     ],
     views = [
-        ListViewEntity::class, HabitatKingdomView::class
+        ListViewEntity::class
     ]
 )
 abstract class AppDatabase: RoomDatabase() {

@@ -53,6 +53,7 @@ class FirebaseCategoryRemoteSource(
 
     override suspend fun getSpeciesCategories(
         categoryType: CategoryType,
+        kingdomType: KingdomType,
         itemId: Int,
         loadKey: Int?,
         limit: Int,
@@ -63,7 +64,9 @@ class FirebaseCategoryRemoteSource(
             CategoryType.Class -> Filter.equalTo("class_id", itemId)
             CategoryType.Order -> Filter.equalTo("order_id", itemId)
             CategoryType.Family -> Filter.equalTo("family_id", itemId)
-            CategoryType.Habitat -> Filter.arrayContains("habitats", itemId)
+            CategoryType.Habitat -> {
+                Filter.and(Filter.arrayContains("habitats", itemId), Filter.equalTo("kingdom_id", kingdomType.kingdomId))
+            }
             else -> null
         }
         return execute(
@@ -71,8 +74,18 @@ class FirebaseCategoryRemoteSource(
             orderDirection = loadType.orderDirection,
             mapper = { items -> items.map { it.toObject<SpeciesDto>() } }
         )   {
-            Firebase.firestore.collection("Species")
-                .where(filter!!)
+            var query: Query = Firebase.firestore.collection("Species")
+            query = when(categoryType){
+                CategoryType.Class -> query.where(Filter.equalTo("class_id", itemId))
+                CategoryType.Order -> query.where(Filter.equalTo("order_id", itemId))
+                CategoryType.Family -> query.where(Filter.equalTo("family_id", itemId))
+                CategoryType.Habitat -> {
+                    query.where(Filter.arrayContains("habitats", itemId))
+                        .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
+                }
+                else -> query
+            }
+            query
                 .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
                 .get(sourceType.toFirebaseSource())
                 .await()
@@ -265,8 +278,7 @@ class FirebaseCategoryRemoteSource(
             mapper = { items -> items.map { it.toObject<HabitatCategoryDto>()} }
         ){
             Firebase.firestore.collection("Habitats")
-                //TODO: add filter with kingdomId
-//                .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
+                .where(Filter.arrayContains("kingdom_ids", kingdomType.kingdomId))
                 .customBuild(loadKey = loadKey, loadType = loadType, limit = limit, orderByKey = "id")
                 .get(sourceType.toFirebaseSource())
                 .await()

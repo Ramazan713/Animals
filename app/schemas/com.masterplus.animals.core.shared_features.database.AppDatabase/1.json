@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e529b3c3dd81bba94ee72ae34d5daa13",
+    "identityHash": "1baa21f5738fe16a59e780d1dff01317",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -1843,15 +1843,11 @@
       {
         "viewName": "listViews",
         "createSql": "CREATE VIEW `${VIEW_NAME}` AS select L.id, L.name, L.isRemovable, L.isArchive, L.pos listPos,\n     count(LS.speciesId) itemCounts, ifnull(max(LS.pos),0) contentMaxPos \n     from Lists L left join ListSpecies LS on  L.id = LS.listId\n     group by L.id"
-      },
-      {
-        "viewName": "HabitatKingdomView",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT hc.*, s.kingdom_id FROM HabitatCategories hc\n        JOIN SpeciesHabitatCategories shc ON hc.id = shc.category_id\n        JOIN Species s ON shc.species_id = s.id"
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e529b3c3dd81bba94ee72ae34d5daa13')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1baa21f5738fe16a59e780d1dff01317')"
     ]
   }
 }

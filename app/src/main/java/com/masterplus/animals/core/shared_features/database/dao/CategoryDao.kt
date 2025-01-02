@@ -181,7 +181,7 @@ interface CategoryDao {
 
     @Transaction
     @Query("""
-        select * from habitatkingdomview where label = :label order by id asc
+        select * from habitatcategories where label = :label order by id asc
     """)
     fun getPagingHabitats(label: String): PagingSource<Int, HabitatWithImageEmbedded>
 

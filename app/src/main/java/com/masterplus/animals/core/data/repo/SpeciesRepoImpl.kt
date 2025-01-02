@@ -98,7 +98,7 @@ class SpeciesRepoImpl(
         itemId: Int,
         pageSize: Int,
         language: LanguageEnum,
-        kingdom: KingdomType?,
+        kingdom: KingdomType,
         targetItemId: Int?
     ): Flow<PagingData<SpeciesListDetail>> {
         return Pager(
@@ -113,7 +113,8 @@ class SpeciesRepoImpl(
                 config = remoteMediatorConfig,
                 categoryType = categoryType,
                 itemId = itemId,
-                targetItemId = targetItemId
+                targetItemId = targetItemId,
+                kingdomType = kingdom
             )
         ).flow.map { items ->
             items.map { it.toSpeciesListDetail(language) }
