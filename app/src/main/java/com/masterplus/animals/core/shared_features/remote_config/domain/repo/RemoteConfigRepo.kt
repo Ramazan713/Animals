@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 
 interface RemoteConfigRepo {
 
-    fun handleUpdates(scope: CoroutineScope)
+    suspend fun init()
 
+    fun handleUpdates(scope: CoroutineScope)
 }

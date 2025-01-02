@@ -16,4 +16,22 @@ interface RemoteKeyDao {
 
     @Query("DELETE FROM remote_keys WHERE label = :query")
     suspend fun deleteByQuery(query: String)
+
+
+    @Query("""
+        update remote_keys set shouldRefresh = :shouldRefresh where label = :label
+    """)
+    suspend fun setShouldRefresh(label: String, shouldRefresh: Boolean)
+
+    @Query("""
+        update remote_keys set isNextKeyEnd = :nextKeyEnd
+    """)
+    suspend fun setAllNextKeyEnd(nextKeyEnd: Boolean)
+
+    @Query("""
+        update remote_keys set shouldRefresh = :shouldRefresh
+    """)
+    suspend fun setAllShouldRefresh(shouldRefresh: Boolean)
+
+
 }

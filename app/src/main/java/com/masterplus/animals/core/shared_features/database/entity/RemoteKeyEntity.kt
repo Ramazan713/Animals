@@ -10,5 +10,7 @@ data class RemoteKeyEntity(
     @PrimaryKey(autoGenerate = false)
     val label: String,
     val nextKey: String?,
-    val prevKey: String?
+    val prevKey: String?,
+    val isNextKeyEnd: Boolean = false,
+    val shouldRefresh: Boolean = false
 )

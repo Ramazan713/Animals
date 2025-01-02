@@ -11,6 +11,8 @@ interface AppPreferences {
 
     val dataFlow: Flow<Preferences>
 
+    suspend fun getData(): Preferences
+
     suspend fun edit(transform: suspend (MutablePreferences) -> Unit)
 
     suspend fun <T> getItem(key: Preferences.Key<T>, defaultValue: T): T

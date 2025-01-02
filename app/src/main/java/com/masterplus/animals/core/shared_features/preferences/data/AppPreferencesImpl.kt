@@ -27,6 +27,10 @@ class AppPreferencesImpl @Inject constructor(
     override val dataFlow: Flow<Preferences>
         get() = pref.data
 
+    override suspend fun getData(): Preferences {
+        return pref.data.first()
+    }
+
 
     override suspend fun <T> getItem(key: Preferences.Key<T>, defaultValue: T): T {
         return pref.data.first()[key] ?: defaultValue
