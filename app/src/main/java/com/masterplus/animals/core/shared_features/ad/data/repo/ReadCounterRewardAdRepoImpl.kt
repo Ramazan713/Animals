@@ -9,11 +9,12 @@ import com.masterplus.animals.core.shared_features.preferences.domain.AppPrefere
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class ReadCounterRewardAdRepoImpl(
     private val readCounter: ServerReadCounter,
-    appPreferences: AppPreferences
+    private val appPreferences: AppPreferences
 ): ReadCounterRewardAdRepo {
 
     private val readExceedLimitFlow = appPreferences.dataFlow
@@ -37,7 +38,8 @@ class ReadCounterRewardAdRepoImpl(
         }
 
     override suspend fun resetCounter(contentType: ContentType) {
-        readCounter.resetCounter(contentType)
+        val readExceedLimit = appPreferences.getItem(KPref.readExceedLimit)
+        readCounter.addCounter(contentType, -readExceedLimit)
     }
 
 }
