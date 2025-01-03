@@ -8,6 +8,7 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 
 fun categoryData(
     id: Int = 1,
+    orderKey: Int = 1,
     image: ImageWithMetadata? = SampleDatas.imageWithMetadata,
     title: String = "Category $id",
     categoryType: CategoryType = CategoryType.Class,
@@ -15,6 +16,6 @@ fun categoryData(
     kingdomType: KingdomType = KingdomType.DEFAULT
 ): CategoryData {
     return CategoryData(
-        id, image, title, categoryType, kingdomType, secondaryTitle
+        id, orderKey, image, title, categoryType, kingdomType, secondaryTitle
     )
 }

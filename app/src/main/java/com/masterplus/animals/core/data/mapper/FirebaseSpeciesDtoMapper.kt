@@ -64,13 +64,11 @@ fun SpeciesDto.toSpeciesEntity(label: String): SpeciesEntity{
         introduction_tr = introduction_tr,
         recognition_and_interaction = recognition_and_interaction,
         scientific_name = scientific_name,
-        updated_at = "",
-        created_at = "",
         order_id = order_id,
         class_id = class_id,
         phylum_id = phylum_id,
         label = label,
-        order_key = pos
+        order_key = order_key
     )
 }
 

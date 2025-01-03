@@ -8,7 +8,7 @@ import com.masterplus.animals.core.domain.models.ItemOrder
 data class SpeciesDto(
     val id: Int = 0,
     val scientific_name: String = "",
-    val pos: Int = 0,
+    val order_key: Int = 0,
     val name_en: String = "",
     val name_tr: String = "",
     val family_id: Int = 0,
@@ -25,7 +25,7 @@ data class SpeciesDto(
     val plantae: SpeciesPlantDto? = null
 ): ItemOrder{
     override val orderKey: Int
-        get() = pos
+        get() = order_key
 }
 
 data class SpeciesAnimalDto(

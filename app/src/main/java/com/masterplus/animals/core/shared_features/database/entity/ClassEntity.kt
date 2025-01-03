@@ -23,7 +23,5 @@ data class ClassEntity(
     val class_tr: String,
     val phylum_id: Int,
     val kingdom_id: Int,
-    val image_id: Int?,
-    val created_at: String,
-    val updated_at: String
+    val image_id: Int?
 )

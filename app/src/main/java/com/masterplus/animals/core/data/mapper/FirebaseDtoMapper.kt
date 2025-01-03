@@ -40,10 +40,8 @@ fun ClassDto.toClassEntity(label: String): ClassEntity{
         image_id = image?.id,
         kingdom_id = kingdom_id,
         scientific_name = scientific_name,
-        created_at = "",
-        updated_at = "",
         label = label,
-        order_key = pos
+        order_key = order_key
     )
 }
 
@@ -57,10 +55,8 @@ fun FamilyDto.toFamilyEntity(label: String): FamilyEntity {
         order_id = order_id,
         scientific_name = scientific_name,
         image_id = image?.id,
-        created_at = "",
-        updated_at = "",
         label = label,
-        order_key = pos
+        order_key = order_key
     )
 }
 
@@ -102,7 +98,7 @@ fun PhylumDto.toPhylumEntity(label: String): PhylumEntity {
         scientific_name = scientific_name,
         image_id = image?.id,
         label = label,
-        order_key = pos
+        order_key = order_key
     )
 }
 
@@ -123,10 +119,8 @@ fun OrderDto.toOrderEntity(label: String): OrderEntity {
         order_tr = order_tr,
         scientific_name = scientific_name,
         image_id = image?.id,
-        created_at = "",
-        updated_at = "",
         label = label,
-        order_key = pos
+        order_key = order_key
     )
 }
 
@@ -159,9 +153,7 @@ fun ImageDto.toImageEntity(): ImageEntity{
     return ImageEntity(
         id = id,
         image_url = image_url,
-        image_path = image_path,
-        created_at = "",
-        updated_at = ""
+        image_path = image_path
     )
 }
 

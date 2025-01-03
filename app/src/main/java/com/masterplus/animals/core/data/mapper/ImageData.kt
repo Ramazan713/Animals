@@ -36,9 +36,7 @@ fun ImageEntity.toImageData(): ImageData {
     return ImageData(
         id = this.id,
         imagePath = this.image_path,
-        imageUrl = this.image_url,
-        createdAt = this.created_at,
-        updatedAt = this.updated_at
+        imageUrl = this.image_url
     )
 }
 

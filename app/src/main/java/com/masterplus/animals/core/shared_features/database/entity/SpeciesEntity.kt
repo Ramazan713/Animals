@@ -20,9 +20,7 @@ data class SpeciesEntity(
     val kingdom_id: Int,
     val introduction_en: String = "",
     val introduction_tr: String = "",
-    val recognition_and_interaction: Int?,
-    val updated_at: String,
-    val created_at: String
+    val recognition_and_interaction: Int?
 )
 
 

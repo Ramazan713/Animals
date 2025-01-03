@@ -362,7 +362,7 @@ private fun Query.customBuild(
     loadKey: Int?,
     loadType: RemoteLoadType,
     limit: Int,
-    orderByKey: String = "pos"
+    orderByKey: String = "order_key"
 ): Query{
     val baseQuery = this
         .orderBy(orderByKey,if(loadType.orderDirection.isDescending)Query.Direction.DESCENDING else Query.Direction.ASCENDING)

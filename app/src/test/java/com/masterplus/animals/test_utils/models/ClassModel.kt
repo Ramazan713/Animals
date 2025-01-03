@@ -7,6 +7,7 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 
 fun classModel(
     id: Int = 1,
+    orderKey: Int = 1,
     scientificName: String = "Scientific Name $id",
     className: String = "Class Name $id",
     phylumId: Int = 1,
@@ -14,6 +15,6 @@ fun classModel(
     image: ImageWithMetadata? = SampleDatas.imageWithMetadata
 ): ClassModel {
     return ClassModel(
-        id, scientificName, className, phylumId, kingdomType, image
+        id, orderKey, scientificName, className, phylumId, kingdomType, image
     )
 }

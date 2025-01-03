@@ -11,25 +11,25 @@ interface RemoteKeyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(remoteKey: RemoteKeyEntity)
 
-    @Query("SELECT * FROM remote_keys WHERE label = :query")
+    @Query("SELECT * FROM remotekeys WHERE label = :query")
     suspend fun remoteKeyByQuery(query: String): RemoteKeyEntity?
 
-    @Query("DELETE FROM remote_keys WHERE label = :query")
+    @Query("DELETE FROM remotekeys WHERE label = :query")
     suspend fun deleteByQuery(query: String)
 
 
     @Query("""
-        update remote_keys set shouldRefresh = :shouldRefresh where label = :label
+        update remotekeys set should_refresh = :shouldRefresh where label = :label
     """)
     suspend fun setShouldRefresh(label: String, shouldRefresh: Boolean)
 
     @Query("""
-        update remote_keys set isNextKeyEnd = :nextKeyEnd
+        update remotekeys set is_next_key_end = :nextKeyEnd
     """)
     suspend fun setAllNextKeyEnd(nextKeyEnd: Boolean)
 
     @Query("""
-        update remote_keys set shouldRefresh = :shouldRefresh
+        update remotekeys set should_refresh = :shouldRefresh
     """)
     suspend fun setAllShouldRefresh(shouldRefresh: Boolean)
 

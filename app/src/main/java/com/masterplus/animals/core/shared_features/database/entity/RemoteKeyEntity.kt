@@ -4,13 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "remote_keys",
+    tableName = "RemoteKeys",
 )
 data class RemoteKeyEntity(
     @PrimaryKey(autoGenerate = false)
     val label: String,
-    val nextKey: String?,
-    val prevKey: String?,
-    val isNextKeyEnd: Boolean = false,
-    val shouldRefresh: Boolean = false
+    val next_key: String?,
+    val prev_key: String?,
+    val is_next_key_end: Boolean = false,
+    val should_refresh: Boolean = false
 )

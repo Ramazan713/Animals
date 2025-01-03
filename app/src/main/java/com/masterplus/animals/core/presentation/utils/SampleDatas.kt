@@ -41,9 +41,7 @@ object SampleDatas {
     val image = ImageData(
         id = 1,
         imageUrl = imageUrl,
-        imagePath = "image_path",
-        createdAt = "",
-        updatedAt = ""
+        imagePath = "image_path"
     )
 
     val imageWithMetadata = ImageWithMetadata(

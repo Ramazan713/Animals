@@ -51,8 +51,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.classEntity?.id?.toString(),
-                prevKey = items.firstOrNull()?.classEntity?.id?.toString()
+                next_key = items.lastOrNull()?.classEntity?.id?.toString(),
+                prev_key = items.firstOrNull()?.classEntity?.id?.toString()
             ))
             categoryDao.insertClassesWithImages(items)
         }
@@ -83,8 +83,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.phylum?.id?.toString(),
-                prevKey = items.firstOrNull()?.phylum?.id?.toString()
+                next_key = items.lastOrNull()?.phylum?.id?.toString(),
+                prev_key = items.firstOrNull()?.phylum?.id?.toString()
             ))
             categoryDao.insertPhylumWithImages(items)
         }
@@ -118,8 +118,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.order?.id?.toString(),
-                prevKey = items.firstOrNull()?.order?.id?.toString()
+                next_key = items.lastOrNull()?.order?.id?.toString(),
+                prev_key = items.firstOrNull()?.order?.id?.toString()
             ))
             categoryDao.insertOrdersWithImages(items)
         }
@@ -153,8 +153,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.family?.id?.toString(),
-                prevKey = items.firstOrNull()?.family?.id?.toString()
+                next_key = items.lastOrNull()?.family?.id?.toString(),
+                prev_key = items.firstOrNull()?.family?.id?.toString()
             ))
             categoryDao.insertFamiliesWithImages(items)
         }
@@ -185,8 +185,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                nextKey = items.lastOrNull()?.habitat?.id?.toString(),
-                prevKey = items.firstOrNull()?.habitat?.id?.toString()
+                next_key = items.lastOrNull()?.habitat?.id?.toString(),
+                prev_key = items.firstOrNull()?.habitat?.id?.toString()
             ))
             categoryDao.insertHabitatsWithImages(items)
         }
@@ -196,7 +196,7 @@ class FirebaseCategoryRemoteRepo(
 
     private suspend fun getRemoteKey(saveKey: String, loadType: RemoteLoadType): Int? {
         return if(loadType.isRefresh) null else {
-            remoteKeyDao.remoteKeyByQuery(saveKey)?.nextKey?.toIntOrNull()
+            remoteKeyDao.remoteKeyByQuery(saveKey)?.next_key?.toIntOrNull()
         }
     }
 }

@@ -60,7 +60,7 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
 
     override suspend fun initialize(): InitializeAction {
         val remoteKey = db.remoteKeyDao.remoteKeyByQuery(saveRemoteKey)
-        if(remoteKey?.shouldRefresh == true){
+        if(remoteKey?.should_refresh == true){
             return InitializeAction.LAUNCH_INITIAL_REFRESH
         }
         return InitializeAction.SKIP_INITIAL_REFRESH
@@ -82,13 +82,13 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
                     }
                 }
                 LoadType.PREPEND ->{
-                    remoteKey?.prevKey?.toIntOrNull() ?: return MediatorResult.Success(
+                    remoteKey?.prev_key?.toIntOrNull() ?: return MediatorResult.Success(
                         endOfPaginationReached = true
                     )
                 }
                 LoadType.APPEND -> {
-                    val key = remoteKey?.nextKey?.toIntOrNull()
-                    if(remoteKey != null && (remoteKey.isNextKeyEnd || remoteKey.nextKey == null))return MediatorResult.Success(
+                    val key = remoteKey?.next_key?.toIntOrNull()
+                    if(remoteKey != null && (remoteKey.is_next_key_end || remoteKey.next_key == null))return MediatorResult.Success(
                         endOfPaginationReached = true
                     )
                     key
@@ -115,9 +115,9 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
                 val prevKey = getPrevKey(dataResponse, loadType, remoteKey)
                 val updatedRemoteKey = RemoteKeyEntity(
                     label = saveRemoteKey,
-                    nextKey = nextKey,
-                    prevKey = prevKey,
-                    isNextKeyEnd = isNextKeyEnd
+                    next_key = nextKey,
+                    prev_key = prevKey,
+                    is_next_key_end = isNextKeyEnd
                 )
                 db.remoteKeyDao.insertOrReplace(updatedRemoteKey)
                 insertData(dataResponse)
@@ -144,15 +144,15 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
         val newNextKey = items.lastOrNull()?.orderKey?.toString()
         val isNextKeyEnd = newNextKey == null
         return when (loadType) {
-            LoadType.REFRESH, LoadType.APPEND -> Pair(newNextKey ?: remoteKey?.nextKey, isNextKeyEnd)
-            else -> Pair(remoteKey?.nextKey, false)
+            LoadType.REFRESH, LoadType.APPEND -> Pair(newNextKey ?: remoteKey?.next_key, isNextKeyEnd)
+            else -> Pair(remoteKey?.next_key, false)
         }
     }
 
     open fun getPrevKey(items: List<D>, loadType: LoadType,  remoteKey: RemoteKeyEntity?): String? {
         return when (loadType) {
             LoadType.REFRESH, LoadType.PREPEND -> items.firstOrNull()?.orderKey?.toString()
-            else -> remoteKey?.prevKey
+            else -> remoteKey?.prev_key
         }
     }
 }

@@ -11,9 +11,7 @@ data class ImageWithMetadata(
 data class ImageData(
     val id: Int?,
     val imagePath: String,
-    val imageUrl: String,
-    val createdAt: String,
-    val updatedAt: String
+    val imageUrl: String
 )
 
 
