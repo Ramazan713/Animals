@@ -11,3 +11,6 @@
 local.properties
 *.hprof
 keystore.properties
+
+google-services.json
+*.db

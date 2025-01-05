@@ -37,24 +37,50 @@ android {
 
         buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["INTERSTITIAL_TEST_AD_ID"]}\"")
         buildConfigField("String","REWARDED_AD_ID","\"${keystoreProperties["REWARDED_TEST_AD_ID"]}\"")
-        buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_CLIENT_ID"]}\"")
+        buildConfigField("String","APP_CHECK_DEBUG_TOKEN","\"${keystoreProperties["APP_CHECK_DEBUG_TOKEN"]}\"")
         manifestPlaceholders["crashlyticsCollectionEnabled"] = true
         manifestPlaceholders["ADMOB_APP_ID"] = "${keystoreProperties["ADMOB_APP_ID"]}"
     }
 
+    signingConfigs {
+
+        create("release"){
+            keyAlias = "${keystoreProperties["RELEASE_KEY_ALIAS"]}"
+            keyPassword = "${keystoreProperties["RELEASE_KEY_PASSWORD"]}"
+            storeFile = file(keystoreProperties["RELEASE_STORE_FILE"]!!)
+            storePassword = "${keystoreProperties["RELEASE_STORE_PASSWORD"]}"
+        }
+
+        create("staging"){
+            keyAlias = "${keystoreProperties["STAGING_KEY_ALIAS"]}"
+            keyPassword = "${keystoreProperties["STAGING_KEY_PASSWORD"]}"
+            storeFile = file(keystoreProperties["STAGING_STORE_FILE"]!!)
+            storePassword = "${keystoreProperties["STAGING_STORE_PASSWORD"]}"
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
+            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_PROD_CLIENT_ID"]}\"")
             buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["INTERSTITIAL_AD_ID"]}\"")
             buildConfigField("String","REWARDED_AD_ID","\"${keystoreProperties["REWARDED_AD_ID"]}\"")
         }
         debug {
+            applicationIdSuffix = ".debug"
             manifestPlaceholders["crashlyticsCollectionEnabled"] = false
-            buildConfigField("String","APP_CHECK_DEBUG_TOKEN","\"${keystoreProperties["APP_CHECK_DEBUG_TOKEN"]}\"")
+            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_DEV_CLIENT_ID"]}\"")
+        }
+
+        create("staging"){
+            signingConfig = signingConfigs.getByName("staging")
+            applicationIdSuffix = ".staging"
+            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_DEV_CLIENT_ID"]}\"")
         }
     }
     compileOptions {

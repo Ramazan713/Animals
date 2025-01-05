@@ -12,7 +12,8 @@ import com.masterplus.animals.BuildConfig
 
 
 fun initAppCheck(context: Context){
-    if(BuildConfig.DEBUG){
+    val debugTypes = listOf("debug", "staging")
+    if(debugTypes.contains(BuildConfig.BUILD_TYPE)){
         setAppCheckDebugKey(context)
         Firebase.appCheck.installAppCheckProviderFactory(
             DebugAppCheckProviderFactory.getInstance(),

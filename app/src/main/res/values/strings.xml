@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Animals</string>
+    <string name="app_name_debug">Animals Debug</string>
+    <string name="app_name_staging">Animals Staging</string>
     <string name="save_point">Kayıt noktası</string>
     <string name="settings">Ayarlar</string>
     <string name="rename">Yeniden adlandır</string>
