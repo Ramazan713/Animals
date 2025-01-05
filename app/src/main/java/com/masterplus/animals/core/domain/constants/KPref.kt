@@ -3,6 +3,7 @@ package com.masterplus.animals.core.domain.constants
 import com.masterplus.animals.core.shared_features.preferences.domain.model.PrefKey
 
 object KPref {
+    val checkInitLang = PrefKey("checkInitLang", false)
 
     val backupMetaCounter = PrefKey("backupMetaCounter",0L)
     val inAppReviewDay = PrefKey("inAppReviewDay",0L)
