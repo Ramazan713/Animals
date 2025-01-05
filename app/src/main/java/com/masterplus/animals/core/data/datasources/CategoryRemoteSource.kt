@@ -1,23 +1,17 @@
 package com.masterplus.animals.core.data.datasources
 
-import ClassDto
-import FamilyDto
-import HabitatCategoryDto
-import OrderDto
-import PhylumDto
+
+import com.masterplus.animals.core.data.dtos.ClassDto
+import com.masterplus.animals.core.data.dtos.FamilyDto
+import com.masterplus.animals.core.data.dtos.HabitatCategoryDto
+import com.masterplus.animals.core.data.dtos.OrderDto
+import com.masterplus.animals.core.data.dtos.PhylumDto
 import com.masterplus.animals.core.data.dtos.SpeciesDto
-import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
-import com.masterplus.animals.core.domain.enums.OrderDirection
 import com.masterplus.animals.core.domain.enums.RemoteLoadType
 import com.masterplus.animals.core.domain.enums.RemoteSourceType
 import com.masterplus.animals.core.domain.utils.DefaultResult
-import com.masterplus.animals.core.shared_features.database.entity_helper.ClassWithImageEmbedded
-import com.masterplus.animals.core.shared_features.database.entity_helper.FamilyWithImageEmbedded
-import com.masterplus.animals.core.shared_features.database.entity_helper.HabitatWithImageEmbedded
-import com.masterplus.animals.core.shared_features.database.entity_helper.OrderWithImageEmbedded
-import com.masterplus.animals.core.shared_features.database.entity_helper.PhylumWithImageEmbedded
 
 interface CategoryRemoteSource {
 

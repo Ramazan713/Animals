@@ -1,10 +1,11 @@
 package com.masterplus.animals.core.data.dtos
 
-import ImageDto
-import com.masterplus.animals.core.domain.models.Item
+import androidx.annotation.Keep
 import com.masterplus.animals.core.domain.models.ItemOrder
+import kotlinx.serialization.Serializable
 
-
+@Keep
+@Serializable
 data class SpeciesDto(
     val id: Int = 0,
     val scientific_name: String = "",
@@ -28,16 +29,22 @@ data class SpeciesDto(
         get() = order_key
 }
 
+@Keep
+@Serializable
 data class SpeciesAnimalDto(
     val en: SpeciesAnimalEnDto = SpeciesAnimalEnDto(),
     val tr: SpeciesAnimalTrDto = SpeciesAnimalTrDto()
 )
 
+@Keep
+@Serializable
 data class SpeciesPlantDto(
     val en: SpeciesPlantEnDto = SpeciesPlantEnDto(),
     val tr: SpeciesPlantTrDto = SpeciesPlantTrDto()
 )
 
+@Keep
+@Serializable
 data class SpeciesAnimalEnDto(
     val size_c_en: String? = null,
     val weight_c_en: String? = null,
@@ -70,6 +77,8 @@ data class SpeciesAnimalEnDto(
     val role_in_ecosystem_en: String? = null
 )
 
+@Keep
+@Serializable
 data class SpeciesAnimalTrDto(
     val size_c_tr: String? = null,
     val weight_c_tr: String? = null,
@@ -102,6 +111,8 @@ data class SpeciesAnimalTrDto(
     val role_in_ecosystem_tr: String? = null
 )
 
+@Keep
+@Serializable
 data class SpeciesPlantEnDto(
     val size_c_en: String? = null,
     val color_c_en: String? = null,
@@ -132,6 +143,8 @@ data class SpeciesPlantEnDto(
     val interesting_and_fun_facts_en: String? = null
 )
 
+@Keep
+@Serializable
 data class SpeciesPlantTrDto(
     val size_c_tr: String? = null,
     val color_c_tr: String? = null,

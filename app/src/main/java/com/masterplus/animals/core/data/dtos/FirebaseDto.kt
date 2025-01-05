@@ -1,3 +1,10 @@
+package com.masterplus.animals.core.data.dtos
+
+import androidx.annotation.Keep
+import kotlinx.serialization.Serializable
+
+@Keep
+@Serializable
 data class ClassDto(
     val class_en: String = "",
     val class_tr: String = "",
@@ -9,6 +16,8 @@ data class ClassDto(
     val scientific_name: String = ""
 )
 
+@Keep
+@Serializable
 data class FamilyDto(
     val family_en: String = "",
     val family_tr: String = "",
@@ -20,6 +29,8 @@ data class FamilyDto(
     val image: ImageDto? = null,
 )
 
+@Keep
+@Serializable
 data class HabitatCategoryDto(
     val habitat_category_en: String = "",
     val habitat_category_tr: String = "",
@@ -27,6 +38,8 @@ data class HabitatCategoryDto(
     val image: ImageDto? = null,
 )
 
+@Keep
+@Serializable
 data class PhylumDto(
     val id: Int = 0,
     val kingdom_id: Int = 0,
@@ -37,6 +50,8 @@ data class PhylumDto(
     val image: ImageDto? = null,
 )
 
+@Keep
+@Serializable
 data class OrderDto(
     val class_id: Int = 0,
     val id: Int = 0,
@@ -50,6 +65,8 @@ data class OrderDto(
 
 
 
+@Keep
+@Serializable
 data class ImageDto(
     val id: Int = 0,
     val image_path: String = "",
@@ -58,6 +75,8 @@ data class ImageDto(
     val image_order: Int? = null
 )
 
+@Keep
+@Serializable
 data class MetadataDto(
     val artist_name: String = "",
     val date_time_original: String = "",

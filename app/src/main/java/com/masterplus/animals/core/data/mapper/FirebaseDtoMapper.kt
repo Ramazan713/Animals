@@ -1,12 +1,12 @@
 package com.masterplus.animals.core.data.mapper
 
-import ClassDto
-import FamilyDto
-import HabitatCategoryDto
-import ImageDto
-import MetadataDto
-import OrderDto
-import PhylumDto
+import com.masterplus.animals.core.data.dtos.ClassDto
+import com.masterplus.animals.core.data.dtos.FamilyDto
+import com.masterplus.animals.core.data.dtos.HabitatCategoryDto
+import com.masterplus.animals.core.data.dtos.ImageDto
+import com.masterplus.animals.core.data.dtos.MetadataDto
+import com.masterplus.animals.core.data.dtos.OrderDto
+import com.masterplus.animals.core.data.dtos.PhylumDto
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity

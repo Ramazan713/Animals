@@ -1,10 +1,5 @@
 package com.masterplus.animals.core.data.datasources
 
-import ClassDto
-import FamilyDto
-import HabitatCategoryDto
-import OrderDto
-import PhylumDto
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
@@ -12,6 +7,11 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
+import com.masterplus.animals.core.data.dtos.ClassDto
+import com.masterplus.animals.core.data.dtos.FamilyDto
+import com.masterplus.animals.core.data.dtos.HabitatCategoryDto
+import com.masterplus.animals.core.data.dtos.OrderDto
+import com.masterplus.animals.core.data.dtos.PhylumDto
 import com.masterplus.animals.core.data.dtos.SpeciesDto
 import com.masterplus.animals.core.data.extensions.toFirebaseSource
 import com.masterplus.animals.core.domain.enums.CategoryType
