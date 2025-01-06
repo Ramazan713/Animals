@@ -69,6 +69,7 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_s
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointState
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointViewModel
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
+import com.masterplus.animals.core.shared_features.select_font_size.presentation.ShowSelectFontSizeDia
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListBottomItemMenu
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListTopItemMenu
 import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
@@ -178,6 +179,9 @@ fun SpeciesListPage(
                             }))
                         }
                         SpeciesListTopItemMenu.SavePointSettings -> onNavigateToSavePointSpeciesSettings()
+                        SpeciesListTopItemMenu.SelectFontSize -> {
+                            onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowSelectFontSize))
+                        }
                     }
                 },
                 actions = {
@@ -318,6 +322,10 @@ fun SpeciesListPage(
                         ))
                     }
                 )
+            }
+
+            SpeciesListDialogEvent.ShowSelectFontSize -> {
+                ShowSelectFontSizeDia(onClose = close)
             }
         }
     }

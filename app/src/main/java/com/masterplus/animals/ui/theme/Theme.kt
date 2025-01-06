@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.masterplus.animals.core.shared_features.select_font_size.domain.enums.FontSizeEnum
 import com.masterplus.animals.core.shared_features.theme.domain.models.ThemeModel
 import com.masterplus.animals.core.shared_features.theme.presentation.ThemeViewModel
 import com.masterplus.animals.core.shared_features.theme.presentation.extensions.getLightThemeScheme
@@ -56,6 +57,7 @@ private val LightColorScheme = lightColorScheme(
 fun AnimalsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     themeViewModel: ThemeViewModel = koinViewModel(),
+    fontSizeEnum: FontSizeEnum = FontSizeEnum.DEFAULT,
     content: @Composable () -> Unit
 ){
     val state by themeViewModel.state.collectAsState()
@@ -63,7 +65,8 @@ fun AnimalsTheme(
     AnimalsTheme(
         darkTheme = darkTheme,
         state = state,
-        content = content
+        content = content,
+        fontSizeEnum = fontSizeEnum
     )
 }
 
@@ -71,6 +74,7 @@ fun AnimalsTheme(
 fun AnimalsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     state: ThemeModel,
+    fontSizeEnum: FontSizeEnum = FontSizeEnum.DEFAULT,
     content: @Composable () -> Unit
 ) {
     val colorScheme = state.getThemeScheme(darkColorScheme = DarkColorScheme, lightColorScheme = LightColorScheme)
@@ -92,7 +96,7 @@ fun AnimalsTheme(
     ){
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = Typography,
+            typography = Typography.scaleFontSizes(fontSizeEnum),
             content = content
         )
     }

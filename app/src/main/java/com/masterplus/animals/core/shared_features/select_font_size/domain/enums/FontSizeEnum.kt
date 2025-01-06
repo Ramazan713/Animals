@@ -21,33 +21,39 @@ import com.masterplus.animals.core.shared_features.preferences.domain.model.IEnu
 enum class FontSizeEnum(
     override val keyValue: Int,
     val extra: Int,
+    val scale: Float,
     val description: UiText
 ): IEnumPrefValue {
 
     Small(
         keyValue = 1,
         description = UiText.Text("Küçük"),
-        extra = -2
+        extra = -2,
+        scale = 0.9f
     ),
     Medium(
         keyValue = 2,
         description = UiText.Text("Orta"),
-        extra = 0
+        extra = 0,
+        scale = 1.0f
     ),
     Large(
         keyValue = 3,
         description = UiText.Text("Büyük"),
-        extra = 2
+        extra = 2,
+        scale = 1.15f
     ),
     Large2X(
         keyValue = 4,
         description = UiText.Text("2X Büyük"),
-        extra = 4
+        extra = 4,
+        scale = 1.3f
     ),
     Large3X(
         keyValue = 5,
         description = UiText.Text("3X Büyük"),
-        extra = 6
+        extra = 6,
+        scale = 1.45f
     );
 
     companion object {

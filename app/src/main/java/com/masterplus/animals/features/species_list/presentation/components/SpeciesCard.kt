@@ -298,7 +298,7 @@ private fun GetContent(
         }
         Text(
             text = speciesDescription,
-            style = MaterialTheme.typography.bodySmall.copy(
+            style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
             overflow = TextOverflow.Ellipsis,

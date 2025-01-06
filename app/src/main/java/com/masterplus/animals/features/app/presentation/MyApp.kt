@@ -39,12 +39,10 @@ import org.koin.androidx.compose.koinViewModel
 )
 @Composable
 fun MyApp(
-    viewModel: AppViewModel = koinViewModel(),
+    appState: AppState,
     adViewModel: AdViewModel = koinViewModel(),
     navHostController: NavHostController = rememberNavController()
 ) {
-
-    val appState by viewModel.state.collectAsStateWithLifecycle()
     val adState by adViewModel.state.collectAsStateWithLifecycle()
 
     val backStackEntry by navHostController.currentBackStackEntryAsState()

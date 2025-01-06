@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.core.domain.repo.ConnectivityObserver
 import com.masterplus.animals.core.shared_features.remote_config.domain.repo.RemoteConfigRepo
+import com.masterplus.animals.core.shared_features.select_font_size.domain.repo.SelectFontSizeRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class AppViewModel(
     private val networkObserver: ConnectivityObserver,
-    private val remoteConfigRepo: RemoteConfigRepo
+    private val remoteConfigRepo: RemoteConfigRepo,
+    private val fontSizeRepo: SelectFontSizeRepo
 ): ViewModel() {
 
     private val _state = MutableStateFlow(AppState())
@@ -33,6 +35,13 @@ class AppViewModel(
 
         remoteConfigRepo
             .handleUpdates(viewModelScope)
+
+        fontSizeRepo
+            .fontSizeFlow
+            .onEach { fontSizeEnum ->
+                _state.update { it.copy(fontSizeEnum = fontSizeEnum) }
+            }
+            .launchIn(viewModelScope)
     }
 
 }

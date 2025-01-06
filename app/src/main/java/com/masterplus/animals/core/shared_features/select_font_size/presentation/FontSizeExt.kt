@@ -7,9 +7,10 @@ import com.masterplus.animals.core.shared_features.select_font_size.domain.enums
 
 
 @Composable
-fun TextStyle.addFontSize(fontSizeEnum: FontSizeEnum): TextStyle{
+fun TextStyle.scaleFontSize(fontSizeEnum: FontSizeEnum): TextStyle{
     return copy(
-        fontSize = (fontSize.value + fontSizeEnum.extra).sp
+        fontSize = (fontSize.value * fontSizeEnum.scale).sp,
+        lineHeight = (lineHeight.value * (1 + (fontSizeEnum.scale - 1) / 2)).sp
     )
 }
 

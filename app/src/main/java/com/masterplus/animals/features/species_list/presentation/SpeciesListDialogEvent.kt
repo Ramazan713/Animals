@@ -5,4 +5,6 @@ sealed interface SpeciesListDialogEvent {
         val posIndex: Int,
         val orderKey: Int,
     ): SpeciesListDialogEvent
+
+    data object ShowSelectFontSize: SpeciesListDialogEvent
 }
