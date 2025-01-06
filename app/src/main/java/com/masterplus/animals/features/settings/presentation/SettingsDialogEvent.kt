@@ -16,6 +16,7 @@ sealed interface SettingsDialogEvent {
 
     data object ShowSelectLanguage: SettingsDialogEvent
 
+    data object SelectFontSize: SettingsDialogEvent
 
     data object ShowSelectBackup: SettingsDialogEvent
 

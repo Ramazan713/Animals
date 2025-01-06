@@ -1,6 +1,7 @@
 package com.masterplus.animals.features.settings.presentation.sections
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FontDownload
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.runtime.Composable
@@ -39,6 +40,15 @@ fun GeneralSettingSection(
                     SettingsAction.ShowDialog(SettingsDialogEvent.ShowSelectLanguage))
             },
             imageVector = Icons.Default.Language,
+        )
+
+        SettingItem(
+            title = "Yazı Boyutu",
+            subTitle = state.fontSizeEnum.description.asString(),
+            onClick = {
+                onAction(SettingsAction.ShowDialog(SettingsDialogEvent.SelectFontSize))
+            },
+            imageVector = Icons.Default.FontDownload,
         )
 
         if(state.themeModel.enabledDynamicColor){

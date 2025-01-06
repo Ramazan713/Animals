@@ -1,6 +1,7 @@
 package com.masterplus.animals.core.shared_features.preferences.domain.model
 
 import com.masterplus.animals.core.shared_features.preferences.domain.BaseAppSerializer
+import com.masterplus.animals.core.shared_features.select_font_size.domain.enums.FontSizeEnum
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import kotlinx.serialization.KSerializer
@@ -13,7 +14,8 @@ data class SettingsData(
     val themeEnum: ThemeEnum = ThemeEnum.defaultValue,
     val languageEnum: LanguageEnum = LanguageEnum.defaultValue,
     val savePointsSettingsData: SavePointSettingsData = SavePointSettingsData(),
-    val showBackupSectionForLogin: Boolean = true
+    val showBackupSectionForLogin: Boolean = true,
+    val fontSizeEnum: FontSizeEnum = FontSizeEnum.DEFAULT
 )
 
 @Serializable

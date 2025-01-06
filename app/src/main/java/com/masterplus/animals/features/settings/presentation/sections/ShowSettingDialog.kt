@@ -20,6 +20,7 @@ import com.masterplus.animals.core.shared_features.auth.presentation.ShowDeleteA
 import com.masterplus.animals.core.shared_features.auth.presentation.ShowQuestionReAuthenticateDia
 import com.masterplus.animals.core.shared_features.backup.presentation.backup_select.ShowCloudSelectBackupDia
 import com.masterplus.animals.core.shared_features.backup.presentation.cloud_backup.ShowCloudSetting
+import com.masterplus.animals.core.shared_features.select_font_size.presentation.ShowSelectFontSizeDia
 import com.masterplus.animals.core.shared_features.theme.domain.enums.ThemeEnum
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.features.settings.presentation.SettingsAction
@@ -171,6 +172,12 @@ fun ShowSettingDialog(
                 title = stringResource(R.string.question_reset_default_values),
                 onApproved = { onAction(SettingsAction.ResetDefaultValues)},
                 onClosed = close,
+            )
+        }
+
+        SettingsDialogEvent.SelectFontSize -> {
+            ShowSelectFontSizeDia(
+                onClose = close
             )
         }
     }

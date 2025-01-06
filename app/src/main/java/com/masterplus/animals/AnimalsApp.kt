@@ -29,6 +29,8 @@ import com.masterplus.animals.core.shared_features.remote_config.data.di.remoteC
 import com.masterplus.animals.core.shared_features.savepoint.data.di.savePointDataModule
 import com.masterplus.animals.core.shared_features.savepoint.domain.di.savePointDomainModule
 import com.masterplus.animals.core.shared_features.savepoint.presentation.di.sharedSavePointPresentationModule
+import com.masterplus.animals.core.shared_features.select_font_size.data.di.selectFontSizeDataModule
+import com.masterplus.animals.core.shared_features.select_font_size.presentation.di.selectFontSizePresentationModule
 import com.masterplus.animals.core.shared_features.theme.data.di.themeDataModule
 import com.masterplus.animals.core.shared_features.theme.presentation.di.themePresentationModule
 import com.masterplus.animals.core.shared_features.translation.data.di.translationDataModule
@@ -59,8 +61,8 @@ class AnimalsApp: Application(), SingletonImageLoader.Factory {
         startKoin {
             androidContext(this@AnimalsApp)
             modules(
-                databaseModule,  coreDataModule, themeDataModule, themePresentationModule,
-                categoryListPresentationModule, speciesListPresentationModule, addSpeciesToListModule,
+                databaseModule,  coreDataModule, themeDataModule, themePresentationModule, selectFontSizePresentationModule,
+                categoryListPresentationModule, speciesListPresentationModule, addSpeciesToListModule, selectFontSizeDataModule,
                 speciesDetailPresentationModule, preferencesDataModule, kingdomPresentationModule, kingdomDataModule,
                 listDataModule, showListPresentationModule, sharedListPresentationModule, listDomainModule,
                 savePointDataModule, savePointDomainModule, sharedSavePointPresentationModule, savePointsPresentationModule,
