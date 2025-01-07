@@ -1,4 +1,4 @@
-package com.masterplus.animals.features.species_list.presentation.components
+package com.masterplus.animals.core.presentation.components
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
@@ -34,10 +34,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
-import com.masterplus.animals.core.presentation.components.OrderText
 import com.masterplus.animals.core.presentation.components.image.TransitionImage
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType

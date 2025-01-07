@@ -72,8 +72,8 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_s
 import com.masterplus.animals.core.shared_features.select_font_size.presentation.ShowSelectFontSizeDia
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListBottomItemMenu
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListTopItemMenu
-import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
-import com.masterplus.animals.features.species_list.presentation.components.SpeciesCardShimmer
+import com.masterplus.animals.core.presentation.components.SpeciesCard
+import com.masterplus.animals.core.presentation.components.SpeciesCardShimmer
 import com.masterplus.animals.features.species_list.presentation.navigation.SpeciesListRoute
 import org.koin.androidx.compose.koinViewModel
 

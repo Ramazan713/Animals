@@ -1,4 +1,4 @@
-package com.masterplus.animals.features.species_list.presentation.components
+package com.masterplus.animals.core.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

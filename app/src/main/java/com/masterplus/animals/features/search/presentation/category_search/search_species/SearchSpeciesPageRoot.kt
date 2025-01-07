@@ -11,14 +11,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
+import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
+import com.masterplus.animals.core.extentions.isPrependItemLoading
+import com.masterplus.animals.core.presentation.components.SpeciesCard
+import com.masterplus.animals.core.presentation.components.SpeciesCardShimmer
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.paging.AppendErrorHandlerComponent
+import com.masterplus.animals.core.presentation.components.paging.PagingEmptyComponent
+import com.masterplus.animals.core.presentation.components.paging.PrependErrorHandlerComponent
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
@@ -28,7 +36,6 @@ import com.masterplus.animals.core.shared_features.add_species_to_list.presentat
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListViewModel
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchPage
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchState
-import com.masterplus.animals.features.species_list.presentation.components.SpeciesCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -83,17 +90,36 @@ private fun SearchResultLazyColumn(
         modifier = modifier,
         isLoading = searchResults.isLoading(),
         overlayLoading = true,
-        isEmptyResult = searchResults.isEmptyResult()
+        isEmptyResult = searchResults.isEmptyResult(),
+        emptyContent = {
+            PagingEmptyComponent(
+                pagingItems = searchResults,
+                onWatchAd = { }
+            )
+        },
     ){
         LazyColumn(
             contentPadding = contentPaddings,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            if(searchResults.isPrependItemLoading()){
+                item {
+                    SharedCircularProgress(modifier = Modifier.fillMaxWidth())
+                }
+            }
+
+            PrependErrorHandlerComponent(
+                modifier = Modifier.fillMaxWidth(),
+                pagingItems = searchResults,
+                onWatchAd = { }
+            )
+
             items(
                 count = searchResults.itemCount,
-                key = { searchResults[it]?.id ?: it },
+                key = searchResults.itemKey { it.id },
+                contentType = searchResults.itemContentType { "MyPagingSearchList" }
             ) { index ->
                 val item = searchResults[index]
                 if (item != null) {
@@ -120,9 +146,17 @@ private fun SearchResultLazyColumn(
                                 )))
                         },
                     )
+                }else{
+                    SpeciesCardShimmer()
                 }
             }
-            if (searchResults.loadState.append is LoadState.Loading) {
+            AppendErrorHandlerComponent(
+                modifier = Modifier.fillMaxWidth(),
+                pagingItems = searchResults,
+                onWatchAd = { }
+            )
+
+            if(searchResults.isAppendItemLoading()){
                 item {
                     SharedCircularProgress(modifier = Modifier.fillMaxWidth())
                 }

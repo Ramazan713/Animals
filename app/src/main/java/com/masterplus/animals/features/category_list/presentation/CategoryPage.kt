@@ -75,7 +75,7 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_s
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListBottomItemMenu
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListTopBarItemMenu
-import com.masterplus.animals.features.category_list.presentation.components.CategoryItemShipper
+import com.masterplus.animals.core.presentation.components.CategoryItemShipper
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,

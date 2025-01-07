@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,15 +12,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.extentions.isAppendItemLoading
+import com.masterplus.animals.core.extentions.isEmptyResult
+import com.masterplus.animals.core.extentions.isLoading
+import com.masterplus.animals.core.extentions.isPrependItemLoading
+import com.masterplus.animals.core.presentation.components.CategoryItemShipper
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.paging.AppendErrorHandlerComponent
+import com.masterplus.animals.core.presentation.components.paging.PagingEmptyComponent
+import com.masterplus.animals.core.presentation.components.paging.PrependErrorHandlerComponent
 import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
@@ -74,9 +84,15 @@ private fun SearchResultLazyColumn(
 ) {
     SharedLoadingPageContent(
         modifier = modifier,
-        isLoading = searchResults.loadState.refresh is LoadState.Loading,
+        isLoading = searchResults.isLoading(),
         overlayLoading = true,
-        isEmptyResult = searchResults.itemCount == 0
+        isEmptyResult = searchResults.isEmptyResult(),
+        emptyContent = {
+            PagingEmptyComponent(
+                pagingItems = searchResults,
+                onWatchAd = { }
+            )
+        },
     ){
         LazyColumn(
             contentPadding = contentPaddings,
@@ -84,9 +100,24 @@ private fun SearchResultLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            if(searchResults.isPrependItemLoading()){
+                item {
+                    SharedCircularProgress(modifier = Modifier.fillMaxWidth())
+                }
+            }
+
+            PrependErrorHandlerComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                ,
+                pagingItems = searchResults,
+                onWatchAd = { }
+            )
             items(
                 count = searchResults.itemCount,
-                key = { searchResults[it]?.id ?: it },
+                key = searchResults.itemKey { it.id },
+                contentType = searchResults.itemContentType { "MyPagingSearchCategoryPage" }
             ) { index ->
                 val item = searchResults[index]
                 if (item != null) {
@@ -100,9 +131,20 @@ private fun SearchResultLazyColumn(
                             onItemClick(item)
                         }
                     )
+                }else{
+                    CategoryItemShipper()
                 }
             }
-            if (searchResults.loadState.append is LoadState.Loading) {
+            AppendErrorHandlerComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                ,
+                pagingItems = searchResults,
+                onWatchAd = { }
+            )
+
+            if(searchResults.isAppendItemLoading()){
                 item {
                     SharedCircularProgress(modifier = Modifier.fillMaxWidth())
                 }
