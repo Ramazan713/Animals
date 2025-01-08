@@ -1,6 +1,6 @@
 package com.masterplus.animals.core.presentation.components
 
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,16 +24,104 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.extentions.isAnyLoading
+import com.masterplus.animals.core.extentions.isEmptyResult
+import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
-import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.utils.SampleDatas
+
+
+@Composable
+fun ImageCategoryDataRow(
+    title: String,
+    pagingItems: LazyPagingItems<CategoryData>,
+    modifier: Modifier = Modifier,
+    showMore: Boolean = false,
+    showMoreItem: Boolean = showMore,
+    onClickMore: (() -> Unit)? = null,
+    onClickItem: (CategoryData) -> Unit,
+    imageSize: DpSize = DpSize(150.dp, 180.dp),
+    contentPaddings: PaddingValues = PaddingValues(),
+    useTransition: Boolean = false,
+    emptyContent: @Composable (() -> Unit)? = null,
+){
+    val isLoading = pagingItems.isAnyLoading()
+    ImageCategoryDataRow(
+        title = title,
+        modifier = modifier,
+        showMore = showMore,
+        onClickMore = onClickMore,
+        contentPaddings = contentPaddings,
+        isLoading = isLoading
+    ){ showMoreBtn ->
+        val showEmptyContent = !isLoading && pagingItems.isEmptyResult()
+        Box(
+            modifier = Modifier.wrapContentSize()
+        ) {
+            AnimatedVisibility(showEmptyContent) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .zIndex(3f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    emptyContent?.invoke()
+                }
+            }
+
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = contentPaddings
+            ) {
+                items(
+                    count = pagingItems.itemCount,
+                    key = pagingItems.itemKey { it.id },
+                    contentType = pagingItems.itemContentType {  }
+                ){ index ->
+                    val item = pagingItems[index]
+                    if(item != null){
+                        ImageWithTitle(
+                            modifier = Modifier
+                                .animateItem(),
+                            model = item,
+                            size = imageSize,
+                            useTransition = useTransition,
+                            onClick = {
+                                onClickItem(item)
+                            }
+                        )
+                    }else{
+                        CategoryItemShipper()
+                    }
+                }
+
+                item {
+                    AnimatedVisibility(
+                        !showEmptyContent && showMoreItem
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .height(imageSize.height)
+                        ) {
+                            showMoreBtn()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 @Composable
@@ -62,7 +150,7 @@ fun ImageCategoryDataRow(
         Box(
             modifier = Modifier.wrapContentSize()
         ) {
-            if(showEmptyContent){
+            AnimatedVisibility(showEmptyContent) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -83,6 +171,7 @@ fun ImageCategoryDataRow(
                     key = { it.id ?: it.title }
                 ){ item ->
                     ImageWithTitle(
+                        modifier = Modifier.animateItem(),
                         model = item,
                         size = imageSize,
                         useTransition = useTransition,
@@ -93,7 +182,9 @@ fun ImageCategoryDataRow(
                 }
 
                 item {
-                    if(!showEmptyContent){
+                    AnimatedVisibility(
+                        !showEmptyContent
+                    ) {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier.height(imageSize.height)
@@ -133,7 +224,7 @@ fun ImageCategoryDataRow(
                 modifier = Modifier
                     .padding(4.dp)
             )
-            if(showMore){
+            AnimatedVisibility(showMore) {
                 Spacer(modifier = Modifier.width(12.dp))
                 TextButton(
                     onClick = { onClickMore?.invoke() }

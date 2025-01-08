@@ -26,9 +26,9 @@ class SearchRepoImpl(
     private val searchSpeciesDao: SearchSpeciesDao,
     private val getQueryUseCase: GetSearchQueryUseCase,
 ): SearchRepo {
-    override fun searchSpeciesWithCategory(
+
+    override fun searchSpecies(
         query: String,
-        categoryType: CategoryType,
         language: LanguageEnum
     ): Flow<PagingData<SpeciesListDetail>> {
         val pagingConfig = PagingConfig(pageSize = 10)

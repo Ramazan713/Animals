@@ -46,7 +46,7 @@ class SearchSpeciesViewModel(
         return if(args.categoryItemId != null){
             searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = query, itemId = args.categoryItemId, language = languageEnum)
         }else{
-            searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = query, language = languageEnum)
+            searchRepo.searchSpecies(query = query, language = languageEnum)
         }
     }
 

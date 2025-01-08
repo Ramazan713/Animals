@@ -1,40 +1,30 @@
-package com.masterplus.animals.features.search.presentation.category_search
-
+package com.masterplus.animals.features.search.presentation.app_search
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AdsClick
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.masterplus.animals.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.extentions.clearFocusOnTap
-import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
 import com.masterplus.animals.core.presentation.dialogs.LoadingDialog
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
@@ -42,21 +32,45 @@ import com.masterplus.animals.core.shared_features.ad.presentation.AdMobResultHa
 import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.ad.presentation.dialogs.ShowAdRequiredDia
-import com.masterplus.animals.features.search.domain.enums.SearchType
-import com.masterplus.animals.features.search.presentation.components.HistoryItem
 import com.masterplus.animals.features.search.presentation.components.SearchField
 import com.masterplus.animals.features.search.presentation.components.SearchFilterRow
 import com.masterplus.animals.features.search.presentation.components.SearchHistoryColumn
-
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun CategorySearchPage(
-    state: CategorySearchState,
-    onAction: (CategorySearchAction) -> Unit,
+fun AppSearchPageRoot(
     adState: AdState,
     onAdAction: (AdAction) -> Unit,
-    onNavigateBack: () -> Unit,
-    searchResultContent: @Composable (ColumnScope.(PaddingValues) -> Unit)
+    viewModel: AppSearchViewModel = koinViewModel(),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val classPagingData = viewModel.classResultsPaging.collectAsLazyPagingItems()
+    val orderPagingData = viewModel.orderResultsPaging.collectAsLazyPagingItems()
+    val speciesPagingData = viewModel.speciesResultsPaging.collectAsLazyPagingItems()
+    val familyPagingData = viewModel.familyResultsPaging.collectAsLazyPagingItems()
+
+    AppSearchPage(
+        state = state,
+        onAction = viewModel::onAction,
+        adState = adState,
+        onAdAction = onAdAction,
+        classPagingData = classPagingData,
+        orderPagingData = orderPagingData,
+        familyPagingData = familyPagingData,
+        speciesPagingData = speciesPagingData
+    )
+}
+
+@Composable
+fun AppSearchPage(
+    state: AppSearchState,
+    onAction: (AppSearchAction) -> Unit,
+    adState: AdState,
+    onAdAction: (AdAction) -> Unit,
+    classPagingData: LazyPagingItems<CategoryData>,
+    orderPagingData: LazyPagingItems<CategoryData>,
+    familyPagingData: LazyPagingItems<CategoryData>,
+    speciesPagingData: LazyPagingItems<CategoryData>
 ) {
 
     val contentPadding = PaddingValues(
@@ -71,16 +85,19 @@ fun CategorySearchPage(
     ) { adResult ->
         when(adResult){
             is AdUiResult.OnShowingRewardSuccess -> {
-                onAction(CategorySearchAction.AdShowedSuccess)
+                onAction(AppSearchAction.AdShowedSuccess)
             }
         }
     }
 
     ShowLifecycleToastMessage(state.message) {
-        onAction(CategorySearchAction.ClearMessage)
+        onAction(AppSearchAction.ClearMessage)
     }
+    
+    
+    Scaffold(
 
-    Scaffold { paddings ->
+    ) { paddings ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,21 +105,20 @@ fun CategorySearchPage(
                 .padding(horizontal = 12.dp)
                 .semantics { isTraversalGroup = true }
                 .clearFocusOnTap()
-        ) {
+        ){
             GetSearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 state = state,
                 onAction = onAction,
-                onNavigateBack = onNavigateBack
             )
 
             SearchFilterRow(
                 modifier = Modifier,
                 selectedSearchType = state.searchType,
                 onSelectSearchType = { searchType ->
-                    onAction(CategorySearchAction.SelectSearchType(searchType))
+                    onAction(AppSearchAction.SelectSearchType(searchType))
                 },
                 onRemainingSearchableCount = { state.remainingSearchableCount }
             )
@@ -111,35 +127,40 @@ fun CategorySearchPage(
                 visible = state.query.isBlank()
             ) {
                 SearchHistoryColumn(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.fillMaxSize(),
                     histories = state.histories,
                     isLoading = state.historyLoading,
                     contentPaddings = contentPadding,
                     onHistoryClick = { history ->
-                        onAction(CategorySearchAction.SearchQuery(history.content))
+                        onAction(AppSearchAction.SearchQuery(history.content))
                     },
                     onDeleteHistoryClick = { history ->
-                        onAction(CategorySearchAction.DeleteHistory(history))
+                        onAction(AppSearchAction.DeleteHistory(history))
                     }
                 )
             }
-
             AnimatedVisibility(
-                visible = state.query.isNotBlank()
+                visible = state.query.isNotBlank(),
+                modifier = Modifier.weight(1f)
             ) {
-                searchResultContent(contentPadding)
+                SearchResultPageContent(
+                    contentPadding = contentPadding,
+                    modifier = Modifier.fillMaxSize(),
+                    classPagingData = classPagingData,
+                    orderPagingData = orderPagingData,
+                    familyPagingData = familyPagingData,
+                    speciesPagingData = speciesPagingData
+                )
             }
         }
     }
 
-
-
     state.dialogEvent?.let { dialogEvent ->
         val close = remember { {
-            onAction(CategorySearchAction.ShowDialog(null))
+            onAction(AppSearchAction.ShowDialog(null))
         } }
         when(dialogEvent){
-            CategorySearchDialogEvent.ShowAdRequired -> {
+            AppSearchDialogEvent.ShowAdRequired -> {
                 ShowAdRequiredDia(
                     onDismiss = close,
                     onApproved = {
@@ -154,37 +175,31 @@ fun CategorySearchPage(
     if(adState.loadingRewardAd.isLoading && adState.loadingRewardAd.label == state.adLabel){
         LoadingDialog()
     }
-
 }
 
 
 @Composable
 private fun GetSearchBar(
-    state: CategorySearchState,
-    onAction: (CategorySearchAction) -> Unit,
-    onNavigateBack: () -> Unit,
+    state: AppSearchState,
+    onAction: (AppSearchAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val placeholder = state.titleForPlaceHolder?.asString()?.let { titleForPlaceHolder ->
-        stringResource(id = R.string.n_search_in, titleForPlaceHolder)
-    } ?: "Ara"
     SearchField(
         modifier = modifier,
         query = state.query,
-        onValueChange = { onAction(CategorySearchAction.SearchQuery(it)) },
-        onBackPressed = onNavigateBack,
+        onValueChange = { onAction(AppSearchAction.SearchQuery(it)) },
         onSearch = {
             if(state.searchType.isServer){
-                onAction(CategorySearchAction.SearchRemote)
+                onAction(AppSearchAction.SearchRemote)
             }else{
-                onAction(CategorySearchAction.InsertHistory(state.query))
+                onAction(AppSearchAction.InsertHistory(state.query))
             }
         },
         onClear = {
-            onAction(CategorySearchAction.InsertHistory(state.query))
-            onAction(CategorySearchAction.SearchQuery(""))
+            onAction(AppSearchAction.InsertHistory(state.query))
+            onAction(AppSearchAction.SearchQuery(""))
         },
-        placeholder = placeholder,
+        placeholder = "Ara",
         searchType = state.searchType,
         isSearching = state.isRemoteSearching
     )
@@ -192,20 +207,11 @@ private fun GetSearchBar(
 
 @Preview(showBackground = true)
 @Composable
-private fun CategorySearchPagePreview() {
-    CategorySearchPage(
-        onAdAction = {},
-        adState = AdState(),
-        state = CategorySearchState(
-            searchType = SearchType.Server
-        ),
-        onAction = {},
-        onNavigateBack = {},
-        searchResultContent = {
-
-        }
-    )
+private fun AppSearchPreview(modifier: Modifier = Modifier) {
+//    AppSearchPage(
+//        state = AppSearchState(),
+//        onAction = {},
+//        adState = AdState(),
+//        onAdAction = {}
+//    )
 }
-
-
-

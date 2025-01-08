@@ -22,6 +22,10 @@ fun <T: Any> LazyPagingItems<T>.isEmptyResult(): Boolean{
     return itemCount == 0 && !isAnyItemLoading()
 }
 
+fun <T: Any> LazyPagingItems<T>.isNotEmptyResult(): Boolean{
+    return !isEmptyResult()
+}
+
 
 
 fun <T: Any> LazyPagingItems<T>.isAppendItemLoading(): Boolean{
@@ -45,4 +49,8 @@ fun <T: Any> LazyPagingItems<T>.isLoading(): Boolean{
 
 fun <T: Any> LazyPagingItems<T>.isAnyItemLoading(): Boolean{
     return isAppendItemLoading() || isPrependItemLoading()
+}
+
+fun <T: Any> LazyPagingItems<T>.isAnyLoading(): Boolean{
+    return isAnyItemLoading() || isLoading()
 }

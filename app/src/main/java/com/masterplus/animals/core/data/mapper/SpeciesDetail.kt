@@ -1,6 +1,8 @@
 package com.masterplus.animals.core.data.mapper
 
+import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesDetailEmbedded
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
@@ -26,4 +28,16 @@ fun SpeciesDetailEmbedded.toSpeciesListDetail(
             orderKey = order_key
         )
     }
+}
+
+fun SpeciesListDetail.toCategoryData(): CategoryData{
+    return CategoryData(
+        id = id,
+        title = scientificName,
+        categoryType = CategoryType.Order,
+        kingdomType = kingdomType,
+        orderKey = orderKey,
+        image = images.firstOrNull()?.image,
+        secondaryTitle = name
+    )
 }

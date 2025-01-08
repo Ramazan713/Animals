@@ -24,6 +24,8 @@ import com.masterplus.animals.features.list.presentation.navigation.navigateToAr
 import com.masterplus.animals.features.list.presentation.navigation.showList
 import com.masterplus.animals.features.savepoints.presentation.navigation.navigateToShowSavePoints
 import com.masterplus.animals.features.savepoints.presentation.navigation.showSavePoints
+import com.masterplus.animals.features.search.presentation.navigation.AppSearchRoute
+import com.masterplus.animals.features.search.presentation.navigation.appSearch
 import com.masterplus.animals.features.search.presentation.navigation.navigateToSearchCategory
 import com.masterplus.animals.features.search.presentation.navigation.navigateToSearchSpecies
 import com.masterplus.animals.features.search.presentation.navigation.searchCategory
@@ -99,6 +101,11 @@ fun AppNavHost(
             onNavigateToSettings = {
                 navHostController.navigateToSettings()
             }
+        )
+
+        appSearch(
+            adState = adState,
+            onAdAction = onAdAction
         )
 
         settings(
