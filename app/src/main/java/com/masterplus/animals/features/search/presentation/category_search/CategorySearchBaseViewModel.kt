@@ -9,6 +9,7 @@ import com.masterplus.animals.core.shared_features.translation.domain.enums.Lang
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
 import com.masterplus.animals.features.search.domain.repo.HistoryRepo
+import com.masterplus.animals.features.search.domain.repo.SearchAdRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +29,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 abstract class CategorySearchBaseViewModel<T: Any>(
     private val historyRepo: HistoryRepo,
-    private val translationRepo: TranslationRepo
+    private val translationRepo: TranslationRepo,
+    private val searchAdRepo: SearchAdRepo
 ): ViewModel() {
 
     abstract val historyType: HistoryType
@@ -61,8 +63,8 @@ abstract class CategorySearchBaseViewModel<T: Any>(
                     message = error.text
                 ) }
             }
-            response.onSuccess {
-                _state.update { it.copy(remainingSearchableCount = it.remainingSearchableCount - 1) }
+            response.onSuccessAsync {
+                searchAdRepo.decreaseCategoryAd()
             }
             _state.update { it.copy(isRemoteSearching = false) }
             response.getSuccessData ?: emptyFlow()
@@ -83,6 +85,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
     init {
         listenHistories()
         listenInsertHistory()
+        listenData()
     }
 
     protected abstract fun getLocalSearchResultFlow(
@@ -138,13 +141,24 @@ abstract class CategorySearchBaseViewModel<T: Any>(
             }
 
             CategorySearchAction.AdShowedSuccess -> {
-                _state.update { it.copy(remainingSearchableCount = 2) }
-                serverSearchedQueryFlow.value = _state.value.query
+                viewModelScope.launch {
+                    searchAdRepo.resetCategoryAd()
+                    serverSearchedQueryFlow.value = _state.value.query
+                }
             }
             is CategorySearchAction.ShowDialog -> {
                 _state.update { it.copy(dialogEvent = action.dialogEvent) }
             }
         }
+    }
+
+    private fun listenData(){
+        searchAdRepo
+            .remainingCategoryAdCount
+            .onEach { remainingCategoryAdCount->
+                _state.update { it.copy(remainingSearchableCount = remainingCategoryAdCount) }
+            }
+            .launchIn(viewModelScope)
     }
 
 

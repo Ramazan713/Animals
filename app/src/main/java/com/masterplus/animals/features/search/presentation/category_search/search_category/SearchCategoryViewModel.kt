@@ -12,6 +12,7 @@ import com.masterplus.animals.core.shared_features.translation.domain.enums.Lang
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
 import com.masterplus.animals.features.search.domain.repo.HistoryRepo
+import com.masterplus.animals.features.search.domain.repo.SearchAdRepo
 import com.masterplus.animals.features.search.domain.repo.SearchRemoteRepo
 import com.masterplus.animals.features.search.domain.repo.SearchRepo
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchBaseViewModel
@@ -25,10 +26,11 @@ class SearchCategoryViewModel(
     private val searchRepo: SearchRepo,
     private val categoryRepo: CategoryRepo,
     private val searchRemoteRepo: SearchRemoteRepo,
+    searchAdRepo: SearchAdRepo,
     translationRepo: TranslationRepo,
     historyRepo: HistoryRepo,
     savedStateHandle: SavedStateHandle
-): CategorySearchBaseViewModel<CategoryData>(historyRepo, translationRepo) {
+): CategorySearchBaseViewModel<CategoryData>(historyRepo, translationRepo, searchAdRepo) {
 
     val args = savedStateHandle.toRoute<SearchCategoryRoute>()
 

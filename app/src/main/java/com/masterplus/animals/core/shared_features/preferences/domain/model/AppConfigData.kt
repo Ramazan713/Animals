@@ -24,7 +24,11 @@ data class ConfigPagination(
 data class ConfigAd(
     val thresholdOpeningCount: Int = 15,
     val consumeIntervalSeconds: Int = 4,
-    val thresholdConsumeSeconds: Int = 80
+    val thresholdConsumeSeconds: Int = 80,
+    val rewardCategorySearchCount: Int = 2,
+    val initRemainingCategorySearchCount: Int = 0,
+    val rewardAppSearchCount: Int = 2,
+    val initRemainingAppSearchCount: Int = 0
 )
 
 @Singleton
