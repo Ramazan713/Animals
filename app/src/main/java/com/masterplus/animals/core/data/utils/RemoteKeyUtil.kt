@@ -6,6 +6,19 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 object RemoteKeyUtil {
     const val DEFAULT = "default"
 
+    fun getRemoteKeyWithCategoryTypeSearchKey(
+        query: String,
+        categoryType: CategoryType,
+        kingdomType: KingdomType,
+        parentItemId: Int?
+    ): String{
+        return getRemoteKeyWithCategoryType(
+            categoryType = categoryType,
+            kingdomType = kingdomType,
+            parentItemId = parentItemId
+        ) + "-Search-$query"
+    }
+
     fun getRemoteKeyWithCategoryType(
         categoryType: CategoryType,
         kingdomType: KingdomType,
@@ -18,6 +31,17 @@ object RemoteKeyUtil {
             CategoryType.Family -> getFamilyRemoteKey(kingdomType, parentItemId)
             CategoryType.List -> DEFAULT
         }
+    }
+
+    fun getSpeciesCategorySearchKey(
+        categoryType: CategoryType,
+        itemId: Int?,
+        query: String
+    ): String{
+        return getSpeciesCategoryRemoteKey(
+            categoryType = categoryType,
+            itemId = itemId
+        ) + "-Search-$query"
     }
 
     fun getSpeciesCategoryRemoteKey(

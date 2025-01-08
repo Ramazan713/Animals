@@ -1,7 +1,10 @@
 package com.masterplus.animals.features.search.presentation.components
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
 import com.masterplus.animals.core.presentation.components.DefaultToolTip
+import com.masterplus.animals.features.search.domain.enums.SearchType
 
 
 @Composable
@@ -48,11 +52,13 @@ fun SearchField(
     query: String,
     onValueChange: (String) -> Unit,
     onClear: () -> Unit,
+    onSearch: () -> Unit,
+    searchType: SearchType,
     modifier: Modifier = Modifier,
     placeholder: String = "text",
     showNavigateBack: Boolean = true,
     onBackPressed: (() -> Unit)? = null,
-    onSearch: (() -> Unit)? = null,
+
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -125,18 +131,48 @@ fun SearchField(
                            )
                        }
                    }
-                   SuffixClearIcon(
-                       onClick = {
-                           focusRequester.requestFocus()
-                           onClear()
-                       }
-                   )
+
+
+                   AnimatedVisibility(searchType.isServer) {
+                       SearchTextIconButton(
+                           onClick = onSearch
+                       )
+                   }
+                   AnimatedVisibility(searchType.isLocal) {
+                       SuffixClearIcon(
+                           onClick = {
+                               focusRequester.requestFocus()
+                               onClear()
+                           }
+                       )
+                   }
+
+
                }
            }
        )
     }
 }
 
+@Composable
+private fun SearchTextIconButton(
+    onClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.medium)
+            .clickable { onClick() }
+            .padding(horizontal = 8.dp, vertical = 12.dp)
+    ) {
+        Icon(
+            Icons.Default.Search,
+            contentDescription = "Ara"
+        )
+        Text("Search")
+    }
+}
 
 
 @Composable
@@ -197,7 +233,8 @@ private fun SearchFieldPreview() {
             onSearch = {},
             onClear = {},
             onValueChange = {},
-            query = ""
+            query = "",
+            searchType = SearchType.Local
         )
     }
 }

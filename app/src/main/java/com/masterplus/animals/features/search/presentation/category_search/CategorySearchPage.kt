@@ -6,12 +6,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
 import com.masterplus.animals.core.extentions.clearFocusOnTap
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
+import com.masterplus.animals.core.presentation.utils.EventHandler
+import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
+import com.masterplus.animals.features.search.domain.enums.SearchType
 import com.masterplus.animals.features.search.presentation.components.HistoryItem
 import com.masterplus.animals.features.search.presentation.components.SearchField
 
@@ -37,6 +44,10 @@ fun CategorySearchPage(
         bottom = 16.dp,
         top = 16.dp
     )
+
+    ShowLifecycleToastMessage(state.message) {
+        onAction(CategorySearchAction.ClearMessage)
+    }
 
     Scaffold { paddings ->
         Column(
@@ -55,6 +66,12 @@ fun CategorySearchPage(
                 onAction = onAction,
                 onNavigateBack = onNavigateBack
             )
+
+            GetSearchFilters(
+                state = state,
+                onAction = onAction
+            )
+
             AnimatedVisibility(
                 visible = state.query.isBlank()
             ) {
@@ -76,6 +93,27 @@ fun CategorySearchPage(
 }
 
 @Composable
+fun GetSearchFilters(
+    state: CategorySearchState,
+    onAction: (CategorySearchAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        SearchType.entries.forEach { searchType ->
+            FilterChip(
+                selected = state.searchType == searchType,
+                onClick = { onAction(CategorySearchAction.SelectSearchType(searchType)) },
+                label = { Text(searchType.title.asString()) },
+                leadingIcon = { searchType.iconInfo?.imageVector?.let { Icon(it, contentDescription = null) } }
+            )
+        }
+    }
+}
+
+@Composable
 private fun GetSearchBar(
     state: CategorySearchState,
     onAction: (CategorySearchAction) -> Unit,
@@ -92,12 +130,16 @@ private fun GetSearchBar(
         onBackPressed = onNavigateBack,
         onSearch = {
             onAction(CategorySearchAction.InsertHistory(state.query))
+            if(state.searchType.isServer){
+                onAction(CategorySearchAction.SearchRemote)
+            }
         },
         onClear = {
             onAction(CategorySearchAction.InsertHistory(state.query))
             onAction(CategorySearchAction.SearchQuery(""))
         },
-        placeholder = placeholder
+        placeholder = placeholder,
+        searchType = state.searchType
     )
 }
 

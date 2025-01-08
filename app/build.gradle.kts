@@ -38,6 +38,8 @@ android {
         buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["INTERSTITIAL_TEST_AD_ID"]}\"")
         buildConfigField("String","REWARDED_AD_ID","\"${keystoreProperties["REWARDED_TEST_AD_ID"]}\"")
         buildConfigField("String","APP_CHECK_DEBUG_TOKEN","\"${keystoreProperties["APP_CHECK_DEBUG_TOKEN"]}\"")
+        buildConfigField("String","ALGOLIA_APP_ID","\"${keystoreProperties["ALGOLIA_DEV_APP_ID"]}\"")
+        buildConfigField("String","ALGOLIA_API_KEY","\"${keystoreProperties["ALGOLIA_DEV_API_KEY"]}\"")
         manifestPlaceholders["crashlyticsCollectionEnabled"] = true
         manifestPlaceholders["ADMOB_APP_ID"] = "${keystoreProperties["ADMOB_APP_ID"]}"
     }
@@ -70,6 +72,8 @@ android {
             buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_PROD_CLIENT_ID"]}\"")
             buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["INTERSTITIAL_AD_ID"]}\"")
             buildConfigField("String","REWARDED_AD_ID","\"${keystoreProperties["REWARDED_AD_ID"]}\"")
+            buildConfigField("String","ALGOLIA_APP_ID","\"${keystoreProperties["ALGOLIA_PROD_APP_ID"]}\"")
+            buildConfigField("String","ALGOLIA_API_KEY","\"${keystoreProperties["ALGOLIA_PROD_API_KEY"]}\"")
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -160,6 +164,8 @@ dependencies {
     implementation(libs.lib.zoomable)
     implementation(libs.compose.shimmer)
     implementation(libs.admob.ads)
+    implementation(libs.algoliasearch)
+    implementation(libs.ktor.client)
 
     implementation(libs.bundles.paging)
     implementation(libs.bundles.datastore)

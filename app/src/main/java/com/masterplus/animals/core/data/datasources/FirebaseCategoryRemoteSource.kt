@@ -60,15 +60,6 @@ class FirebaseCategoryRemoteSource(
         sourceType: RemoteSourceType,
         loadType: RemoteLoadType
     ): DefaultResult<List<SpeciesDto>> {
-        val filter = when(categoryType){
-            CategoryType.Class -> Filter.equalTo("class_id", itemId)
-            CategoryType.Order -> Filter.equalTo("order_id", itemId)
-            CategoryType.Family -> Filter.equalTo("family_id", itemId)
-            CategoryType.Habitat -> {
-                Filter.and(Filter.arrayContains("habitats", itemId), Filter.equalTo("kingdom_id", kingdomType.kingdomId))
-            }
-            else -> null
-        }
         return execute(
             contentType = ContentType.Content,
             orderDirection = loadType.orderDirection,
@@ -97,16 +88,19 @@ class FirebaseCategoryRemoteSource(
         loadKey: Int?,
         limit: Int,
         sourceType: RemoteSourceType,
-        loadType: RemoteLoadType
+        loadType: RemoteLoadType,
+        orderByKey: String?,
+        incrementCounter: Boolean
     ): DefaultResult<List<SpeciesDto>> {
         return execute(
             contentType = ContentType.Content,
             orderDirection = loadType.orderDirection,
+            incrementCounter = incrementCounter,
             mapper = { items -> items.map { it.toObject<SpeciesDto>() } }
         )   {
             Firebase.firestore.collection("Species")
                 .whereIn("id", itemIds)
-                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
+                .customBuild(loadKey = loadKey, loadType = loadType, limit = limit, orderByKey = orderByKey)
                 .get(sourceType.toFirebaseSource())
                 .await()
         }
@@ -128,6 +122,24 @@ class FirebaseCategoryRemoteSource(
                 .where(Filter.equalTo("kingdom_id", kingdomType.kingdomId))
                 .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
                 .get(sourceType.toFirebaseSource())
+                .await()
+        }
+    }
+
+    override suspend fun getPhylums(
+        itemIds: List<Int>,
+        orderByKey: String?,
+        incrementCounter: Boolean
+    ): DefaultResult<List<PhylumDto>> {
+        return execute(
+            contentType = ContentType.Category,
+            incrementCounter = incrementCounter,
+            mapper = { items -> items.map { it.toObject<PhylumDto>() } }
+        )   {
+            Firebase.firestore.collection("Phylums")
+                .whereIn("id", itemIds)
+                .customBuild(limit = itemIds.size, orderByKey = orderByKey)
+                .get()
                 .await()
         }
     }
@@ -173,6 +185,24 @@ class FirebaseCategoryRemoteSource(
         }
     }
 
+    override suspend fun getClasses(
+        itemIds: List<Int>,
+        orderByKey: String?,
+        incrementCounter: Boolean
+    ): DefaultResult<List<ClassDto>> {
+        return execute(
+            contentType = ContentType.Category,
+            incrementCounter = incrementCounter,
+            mapper = { items -> items.map { it.toObject<ClassDto>() } }
+        )   {
+            Firebase.firestore.collection("Classes")
+                .whereIn("id", itemIds)
+                .customBuild(limit = itemIds.size, orderByKey = orderByKey)
+                .get()
+                .await()
+        }
+    }
+
     override suspend fun getClassById(
         itemId: Int,
         sourceType: RemoteSourceType
@@ -212,6 +242,24 @@ class FirebaseCategoryRemoteSource(
         }
     }
 
+    override suspend fun getOrders(
+        itemIds: List<Int>,
+        orderByKey: String?,
+        incrementCounter: Boolean
+    ): DefaultResult<List<OrderDto>> {
+        return execute(
+            contentType = ContentType.Category,
+            incrementCounter = incrementCounter,
+            mapper = { items -> items.map { it.toObject<OrderDto>() } }
+        )   {
+            Firebase.firestore.collection("Orders")
+                .whereIn("id", itemIds)
+                .customBuild(limit = itemIds.size, orderByKey = orderByKey)
+                .get()
+                .await()
+        }
+    }
+
     override suspend fun getOrderById(
         itemId: Int,
         sourceType: RemoteSourceType
@@ -247,6 +295,24 @@ class FirebaseCategoryRemoteSource(
             query
                 .customBuild(loadKey = loadKey, loadType = loadType, limit = limit)
                 .get(sourceType.toFirebaseSource())
+                .await()
+        }
+    }
+
+    override suspend fun getFamilies(
+        itemIds: List<Int>,
+        orderByKey: String?,
+        incrementCounter: Boolean
+    ): DefaultResult<List<FamilyDto>> {
+        return execute(
+            contentType = ContentType.Category,
+            incrementCounter = incrementCounter,
+            mapper = { items -> items.map { it.toObject<FamilyDto>() } }
+        )   {
+            Firebase.firestore.collection("Families")
+                .whereIn("id", itemIds)
+                .customBuild(limit = itemIds.size, orderByKey = orderByKey)
+                .get()
                 .await()
         }
     }
@@ -321,19 +387,21 @@ class FirebaseCategoryRemoteSource(
 
     private suspend inline fun <reified T> execute(
         contentType: ContentType,
-        orderDirection: OrderDirection,
+        orderDirection: OrderDirection = OrderDirection.ASCENDING,
+        incrementCounter: Boolean = true,
         crossinline mapper: suspend (List<QueryDocumentSnapshot>) -> T,
         crossinline execute: suspend () -> QuerySnapshot
     ): Result<T, ErrorText> {
         return safeCall {
             val result = execute()
-            val isFromCache = result.metadata.isFromCache
-            val counter: Int = when{
+            if(incrementCounter){
+                val isFromCache = result.metadata.isFromCache
+                val counter: Int = when{
 //                isFromCache -> 0
-                else -> maxOf(result.size(), 1)
+                    else -> maxOf(result.size(), 1)
+                }
+                serverReadCounter.addCounter(contentType, counter)
             }
-            serverReadCounter.addCounter(contentType, counter)
-
             if(orderDirection.isDescending){
                 mapper(result.reversed())
             }else{
@@ -359,13 +427,18 @@ class FirebaseCategoryRemoteSource(
 
 
 private fun Query.customBuild(
-    loadKey: Int?,
-    loadType: RemoteLoadType,
     limit: Int,
-    orderByKey: String = "order_key"
+    loadKey: Int? = null,
+    loadType: RemoteLoadType = RemoteLoadType.APPEND,
+    orderByKey: String? = "order_key"
 ): Query{
-    val baseQuery = this
-        .orderBy(orderByKey,if(loadType.orderDirection.isDescending)Query.Direction.DESCENDING else Query.Direction.ASCENDING)
+    var baseQuery = this
+
+    if(orderByKey != null){
+        baseQuery = baseQuery
+            .orderBy(orderByKey,if(loadType.orderDirection.isDescending)Query.Direction.DESCENDING else Query.Direction.ASCENDING)
+    }
+
     val finalQuery = when {
         loadType.isRefresh -> baseQuery.startAt(loadKey)
         loadKey != null -> baseQuery.startAfter(loadKey)

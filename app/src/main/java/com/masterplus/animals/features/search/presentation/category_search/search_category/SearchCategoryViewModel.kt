@@ -3,53 +3,66 @@ package com.masterplus.animals.features.search.presentation.category_search.sear
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import androidx.paging.cachedIn
+import androidx.paging.PagingData
+import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.repo.CategoryRepo
+import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
 import com.masterplus.animals.features.search.domain.repo.HistoryRepo
+import com.masterplus.animals.features.search.domain.repo.SearchRemoteRepo
 import com.masterplus.animals.features.search.domain.repo.SearchRepo
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchBaseViewModel
 import com.masterplus.animals.features.search.presentation.navigation.SearchCategoryRoute
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 class SearchCategoryViewModel(
     private val searchRepo: SearchRepo,
     private val categoryRepo: CategoryRepo,
-    private val translationRepo: TranslationRepo,
-    private val historyRepo: HistoryRepo,
+    private val searchRemoteRepo: SearchRemoteRepo,
+    translationRepo: TranslationRepo,
+    historyRepo: HistoryRepo,
     savedStateHandle: SavedStateHandle
-): CategorySearchBaseViewModel(historyRepo, translationRepo) {
+): CategorySearchBaseViewModel<CategoryData>(historyRepo, translationRepo) {
 
     val args = savedStateHandle.toRoute<SearchCategoryRoute>()
 
     override val historyType: HistoryType
         get() = HistoryType.Category
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val searchResults = _state.map { it.query }
-        .debounce(300L)
-        .filter { it.isNotBlank() }
-        .distinctUntilChanged()
-        .flatMapLatest {
-            val language = translationRepo.getLanguage()
-            if(args.categoryItemId != null){
-                searchRepo.searchCategory(categoryType = args.categoryType, query = it, itemId = args.categoryItemId, language =  language)
-            }else{
-                searchRepo.searchCategory(categoryType = args.categoryType, query = it, language = language)
-            }
+    override fun getLocalSearchResultFlow(
+        query: String,
+        languageEnum: LanguageEnum,
+        pageSize: Int
+    ): Flow<PagingData<CategoryData>> {
+        return if(args.categoryItemId != null){
+            searchRepo.searchCategory(categoryType = args.categoryType, query = query, itemId = args.categoryItemId, language =  languageEnum)
+        }else{
+            searchRepo.searchCategory(categoryType = args.categoryType, query = query, language = languageEnum)
         }
-        .cachedIn(viewModelScope)
+    }
+
+    override suspend fun getServerSearchResultFlow(
+        query: String,
+        languageEnum: LanguageEnum,
+        localPageSize: Int,
+        responsePageSize: Int
+    ): DefaultResult<Flow<PagingData<CategoryData>>> {
+        return searchRemoteRepo.searchCategories(
+            query = query,
+            categoryType = args.categoryType,
+            parentItemId = args.categoryItemId,
+            kingdomType = args.kingdomType,
+            language = languageEnum,
+            localPageSize = localPageSize,
+            responsePageSize = responsePageSize
+        )
+    }
 
     init {
         translationRepo

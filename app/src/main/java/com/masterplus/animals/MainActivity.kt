@@ -12,6 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.coroutineScope
+import com.algolia.client.api.SearchClient
+import com.algolia.client.model.search.SearchForHits
+import com.algolia.client.model.search.SearchMethodParams
 import com.google.android.gms.ads.MobileAds
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle

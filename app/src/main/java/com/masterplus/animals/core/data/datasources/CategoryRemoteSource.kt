@@ -38,7 +38,9 @@ interface CategoryRemoteSource {
         loadKey: Int?,
         limit: Int,
         sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
-        loadType: RemoteLoadType = RemoteLoadType.APPEND
+        loadType: RemoteLoadType = RemoteLoadType.APPEND,
+        orderByKey: String? = "order_key",
+        incrementCounter: Boolean = true
     ): DefaultResult<List<SpeciesDto>>
 
     suspend fun getPhylums(
@@ -47,6 +49,12 @@ interface CategoryRemoteSource {
         limit: Int,
         sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
         loadType: RemoteLoadType = RemoteLoadType.APPEND
+    ): DefaultResult<List<PhylumDto>>
+
+    suspend fun getPhylums(
+        itemIds: List<Int>,
+        orderByKey: String? = "order_key",
+        incrementCounter: Boolean = true
     ): DefaultResult<List<PhylumDto>>
 
     suspend fun getPhylumById(
@@ -64,6 +72,12 @@ interface CategoryRemoteSource {
         loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): DefaultResult<List<ClassDto>>
 
+    suspend fun getClasses(
+        itemIds: List<Int>,
+        orderByKey: String? = "order_key",
+        incrementCounter: Boolean = true
+    ): DefaultResult<List<ClassDto>>
+
     suspend fun getClassById(
         itemId: Int,
         sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
@@ -78,6 +92,12 @@ interface CategoryRemoteSource {
         loadType: RemoteLoadType = RemoteLoadType.APPEND
     ): DefaultResult<List<OrderDto>>
 
+    suspend fun getOrders(
+        itemIds: List<Int>,
+        orderByKey: String? = "order_key",
+        incrementCounter: Boolean = true
+    ): DefaultResult<List<OrderDto>>
+
     suspend fun getOrderById(
         itemId: Int,
         sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
@@ -90,6 +110,12 @@ interface CategoryRemoteSource {
         limit: Int,
         sourceType: RemoteSourceType = RemoteSourceType.DEFAULT,
         loadType: RemoteLoadType = RemoteLoadType.APPEND
+    ): DefaultResult<List<FamilyDto>>
+
+    suspend fun getFamilies(
+        itemIds: List<Int>,
+        orderByKey: String? = "order_key",
+        incrementCounter: Boolean = true
     ): DefaultResult<List<FamilyDto>>
 
     suspend fun getFamilyById(
