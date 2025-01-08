@@ -15,5 +15,9 @@ sealed interface CategorySearchAction {
 
     data class SelectSearchType(val searchType: SearchType): CategorySearchAction
 
+    data class ShowDialog(val dialogEvent: CategorySearchDialogEvent? = null): CategorySearchAction
+
+    data object AdShowedSuccess: CategorySearchAction
+
     data object ClearMessage: CategorySearchAction
 }

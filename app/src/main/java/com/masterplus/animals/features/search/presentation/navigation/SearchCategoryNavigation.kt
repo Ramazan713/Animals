@@ -6,6 +6,8 @@ import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.features.search.presentation.category_search.search_category.SearchCategoryPageRoot
 import kotlinx.serialization.Serializable
 
@@ -32,12 +34,16 @@ fun NavController.navigateToSearchCategory(
 }
 
 fun NavGraphBuilder.searchCategory(
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, KingdomType) -> Unit,
     onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
 ){
     composable<SearchCategoryRoute> {
         SearchCategoryPageRoot(
+            adUiResult = adUiResult,
+            onAdAction = onAdAction,
             onNavigateBack = onNavigateBack,
             onNavigateToSpeciesList = onNavigateToSpeciesList,
             onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail

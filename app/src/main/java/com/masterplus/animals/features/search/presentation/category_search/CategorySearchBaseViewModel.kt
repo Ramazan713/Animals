@@ -53,7 +53,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
     private val serverSearchResultFlow = serverSearchedQueryFlow
         .filter { it.isNotBlank() }
         .flatMapLatest { query ->
-            println("AppXXX errorTest: $query")
+            _state.update { it.copy(isRemoteSearching = true) }
             val language = translationRepo.getLanguage()
             val response = getServerSearchResultFlow(query = query, languageEnum = language, localPageSize = 20, responsePageSize = 10,)
             response.getFailureError?.let { error ->
@@ -61,6 +61,10 @@ abstract class CategorySearchBaseViewModel<T: Any>(
                     message = error.text
                 ) }
             }
+            response.onSuccess {
+                _state.update { it.copy(remainingSearchableCount = it.remainingSearchableCount - 1) }
+            }
+            _state.update { it.copy(isRemoteSearching = false) }
             response.getSuccessData ?: emptyFlow()
         }
         .cachedIn(viewModelScope)
@@ -120,12 +124,25 @@ abstract class CategorySearchBaseViewModel<T: Any>(
             }
 
             CategorySearchAction.SearchRemote -> {
-                println("AppxXXX SearchRemote action")
+                if(_state.value.remainingSearchableCount <= 0){
+                    _state.update { it.copy(
+                        dialogEvent = CategorySearchDialogEvent.ShowAdRequired
+                    ) }
+                    return
+                }
                 serverSearchedQueryFlow.value = _state.value.query
             }
 
             CategorySearchAction.ClearMessage -> {
                 _state.update { it.copy(message = null) }
+            }
+
+            CategorySearchAction.AdShowedSuccess -> {
+                _state.update { it.copy(remainingSearchableCount = 2) }
+                serverSearchedQueryFlow.value = _state.value.query
+            }
+            is CategorySearchAction.ShowDialog -> {
+                _state.update { it.copy(dialogEvent = action.dialogEvent) }
             }
         }
     }

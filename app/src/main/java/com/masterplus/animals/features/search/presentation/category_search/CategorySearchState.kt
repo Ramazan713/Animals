@@ -6,10 +6,13 @@ import com.masterplus.animals.features.search.domain.models.History
 
 data class CategorySearchState(
     val searchType: SearchType = SearchType.Local,
+    val remainingSearchableCount: Int = 0,
+    val isRemoteSearching: Boolean = false,
     val resultLoading: Boolean = false,
     val historyLoading: Boolean = false,
     val query: String = "",
     val titleForPlaceHolder: UiText? = null,
     val histories: List<History> = emptyList(),
-    val message: UiText? = null
+    val message: UiText? = null,
+    val dialogEvent: CategorySearchDialogEvent? = null
 )

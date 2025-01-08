@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +33,8 @@ import com.masterplus.animals.core.presentation.components.paging.PrependErrorHa
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
@@ -40,6 +45,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchSpeciesPageRoot(
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
     viewModel: SearchSpeciesViewModel = koinViewModel(),
@@ -58,11 +65,14 @@ fun SearchSpeciesPageRoot(
     )
 
     CategorySearchPage(
+        adUiResult = adUiResult,
+        onAdAction = onAdAction,
         state = state,
         onAction = viewModel::onAction,
         onNavigateBack = onNavigateBack
     ){
         SearchResultLazyColumn(
+            state = state,
             contentPaddings = it,
             searchResults = searchResults,
             onAddSpeciesAction = addSpeciesToListViewModel::onAction,
@@ -80,15 +90,21 @@ fun SearchSpeciesPageRoot(
 
 @Composable
 private fun SearchResultLazyColumn(
+    state: CategorySearchState,
     contentPaddings: PaddingValues,
     searchResults: LazyPagingItems<SpeciesListDetail>,
     onAddSpeciesAction: (AddSpeciesToListAction) -> Unit,
     onItemClick: (SpeciesListDetail) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val isSearching by remember(state.searchType, state.isRemoteSearching, searchResults.loadState) {
+        derivedStateOf {
+            (searchResults.isLoading() && state.searchType.isLocal) || (state.isRemoteSearching && state.searchType.isServer)
+        }
+    }
     SharedLoadingPageContent(
         modifier = modifier,
-        isLoading = searchResults.isLoading(),
+        isLoading = isSearching,
         overlayLoading = true,
         isEmptyResult = searchResults.isEmptyResult(),
         emptyContent = {
@@ -174,6 +190,8 @@ private fun SearchCategoryPagePreview() {
         ),
         onAction = {},
         onNavigateBack = {},
+        adUiResult = null,
+        onAdAction = {},
         searchResultContent = {
             SearchResultLazyColumn(
                 contentPaddings = it,
@@ -182,7 +200,8 @@ private fun SearchCategoryPagePreview() {
                     sourceLoadStates = previewPagingLoadStates()
                 ),
                 onAddSpeciesAction = {},
-                onItemClick = {}
+                onItemClick = {},
+                state = CategorySearchState(),
             )
         }
     )

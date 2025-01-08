@@ -5,6 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.features.search.presentation.category_search.search_species.SearchSpeciesPageRoot
 import kotlinx.serialization.Serializable
 
@@ -28,11 +30,15 @@ fun NavController.navigateToSearchSpecies(
 }
 
 fun NavGraphBuilder.searchSpecies(
+    adUiResult: AdUiResult?,
+    onAdAction: (AdAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
 ){
     composable<SearchSpeciesRoute> {
         SearchSpeciesPageRoot(
+            adUiResult = adUiResult,
+            onAdAction = onAdAction,
             onNavigateBack = onNavigateBack,
             onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
         )

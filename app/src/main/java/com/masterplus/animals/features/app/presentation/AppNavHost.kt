@@ -225,6 +225,8 @@ fun AppNavHost(
             onNavigateToCategoryListWithDetail = { categoryType, itemId, kingdomType ->
                 navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)
             },
+            adUiResult = adUiResult,
+            onAdAction = onAdAction
         )
 
         searchSpecies(
@@ -234,6 +236,8 @@ fun AppNavHost(
             onNavigateToSpeciesDetail = { itemId ->
                 navHostController.navigateToSpeciesDetail(itemId)
             },
+            adUiResult = adUiResult,
+            onAdAction = onAdAction
         )
     }
 }

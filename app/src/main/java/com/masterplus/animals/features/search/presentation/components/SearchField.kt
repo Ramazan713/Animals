@@ -1,6 +1,7 @@
 package com.masterplus.animals.features.search.presentation.components
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -58,7 +60,7 @@ fun SearchField(
     placeholder: String = "text",
     showNavigateBack: Boolean = true,
     onBackPressed: (() -> Unit)? = null,
-
+    isSearching: Boolean = false
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -135,7 +137,8 @@ fun SearchField(
 
                    AnimatedVisibility(searchType.isServer) {
                        SearchTextIconButton(
-                           onClick = onSearch
+                           onClick = onSearch,
+                           isSearching = isSearching
                        )
                    }
                    AnimatedVisibility(searchType.isLocal) {
@@ -156,22 +159,38 @@ fun SearchField(
 
 @Composable
 private fun SearchTextIconButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isSearching: Boolean
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
-            .clip(MaterialTheme.shapes.medium)
-            .clickable { onClick() }
-            .padding(horizontal = 8.dp, vertical = 12.dp)
-    ) {
-        Icon(
-            Icons.Default.Search,
-            contentDescription = "Ara"
-        )
-        Text("Search")
+    AnimatedContent(
+        targetState = isSearching,
+        label = "searching"
+    ) { searching->
+        if(searching){
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+            )
+        }else{
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable(
+                        enabled = !isSearching
+                    ) { onClick() }
+                    .padding(horizontal = 8.dp, vertical = 12.dp)
+            ) {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = "Ara"
+                )
+                Text("Search")
+            }
+        }
     }
+
 }
 
 
@@ -234,7 +253,8 @@ private fun SearchFieldPreview() {
             onClear = {},
             onValueChange = {},
             query = "",
-            searchType = SearchType.Local
+            searchType = SearchType.Server,
+            isSearching = true
         )
     }
 }
