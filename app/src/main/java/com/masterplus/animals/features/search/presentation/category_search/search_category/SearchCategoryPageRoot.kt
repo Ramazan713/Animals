@@ -37,6 +37,7 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchPage
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchState
@@ -44,7 +45,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchCategoryPageRoot(
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, KingdomType) -> Unit,
@@ -56,7 +57,7 @@ fun SearchCategoryPageRoot(
     val searchResults = viewModel.searchResults.collectAsLazyPagingItems()
 
     CategorySearchPage(
-        adUiResult = adUiResult,
+        adState = adState,
         onAdAction = onAdAction,
         state = state,
         onAction = viewModel::onAction,
@@ -177,7 +178,7 @@ private fun SearchCategoryPagePreview() {
             query = "a"
         ),
         onAction = {},
-        adUiResult = null,
+        adState = AdState(),
         onAdAction = {},
         onNavigateBack = {},
         searchResultContent = {

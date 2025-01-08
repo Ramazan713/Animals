@@ -161,7 +161,6 @@ abstract class CategorySearchBaseViewModel<T: Any>(
             .launchIn(viewModelScope)
     }
 
-
     private fun listenHistories(){
         translationRepo
             .getFlowLanguage()

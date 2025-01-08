@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.domain.constants.K
+import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.ad.domain.repo.InterstitialAdRepo
 import com.masterplus.animals.core.shared_features.ad.domain.repo.ReadCounterRewardAdRepo
 import com.masterplus.animals.features.category_list.presentation.navigation.CategoryListRoute
@@ -50,7 +51,7 @@ class AdViewModel(
             .filter { it }
             .onEach {
                 _state.update { it.copy(
-                    uiEvent = AdUiEvent.LoadRewordedAd(ContentType.Content)
+                    uiEvent = AdUiEvent.LoadRewordedAd(K.AUTO_SAVEPOINT_AD_LABEL)
                 ) }
             }
             .launchIn(viewModelScope)
@@ -61,7 +62,7 @@ class AdViewModel(
             .filter { it }
             .onEach {
                 _state.update { it.copy(
-                    uiEvent = AdUiEvent.LoadRewordedAd(ContentType.Category)
+                    uiEvent = AdUiEvent.LoadRewordedAd(K.AUTO_SAVEPOINT_AD_LABEL)
                 ) }
             }
             .launchIn(viewModelScope)
@@ -107,17 +108,33 @@ class AdViewModel(
 
             is AdAction.RequestShowRewardAd -> {
                 _state.update { it.copy(
-                    uiEvent = AdUiEvent.ShowRewordedAd(action.contentType)
+                    uiEvent = AdUiEvent.ShowRewordedAd(action.label),
+                    loadingRewardAd = it.loadingRewardAd.copy(
+                        isLoading = false,
+                        label = action.label,
+                        error = null
+                    )
                 ) }
             }
 
-            is AdAction.ResetReadCounter -> {
+            is AdAction.OnSuccessShowingRewardAd -> {
                 viewModelScope.launch {
                     _state.update { it.copy(
-                        uiResult = AdUiResult.OnShowingRewardSuccess
+                        uiResult = AdUiResult.OnShowingRewardSuccess(action.label)
                     ) }
-                    readCounterRewardAdRepo.resetCounter(action.contentType)
                 }
+            }
+
+            is AdAction.OnRewardAdError -> {
+                _state.update { it.copy(loadingRewardAd = it.loadingRewardAd.copy(
+                    error = UiText.Text(action.error)
+                )) }
+            }
+            AdAction.OnRewardAdLoaded -> {
+                _state.update { it.copy(loadingRewardAd = it.loadingRewardAd.copy(isLoading = false)) }
+            }
+            AdAction.OnRewardAdLoading -> {
+                _state.update { it.copy(loadingRewardAd = it.loadingRewardAd.copy(isLoading = true)) }
             }
         }
     }

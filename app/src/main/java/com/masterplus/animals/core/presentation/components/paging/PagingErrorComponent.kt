@@ -17,6 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.core.data.mediators.RemoteMediatorError
@@ -37,7 +38,10 @@ private fun PagingErrorComponent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
             ) {
                 Icon(Icons.Default.SignalWifiOff, contentDescription = null)
-                Text("İnternet bağlantınız bulunmamaktadır")
+                Text(
+                    "İnternet bağlantınız bulunmamaktadır",
+                    textAlign = TextAlign.Center
+                )
             }
         }
         RemoteMediatorError.ReadLimitExceededException -> {
@@ -47,7 +51,10 @@ private fun PagingErrorComponent(
             ) {
                 Icon(Icons.Default.AdsClick, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Devam etmek için reklam izleminiz gerekiyor")
+                Text(
+                    "Devam etmek için reklam izleminiz gerekiyor",
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }

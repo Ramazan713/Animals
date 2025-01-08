@@ -12,7 +12,7 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.presentation.handlers.categoryNavigateHandler
 import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
-import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_savepoint.AutoSavePointViewModel
 import com.masterplus.animals.features.category_list.presentation.CategoryListPage
@@ -45,7 +45,7 @@ fun NavGraphBuilder.categoryListWithDetail(
     onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int, KingdomType) -> Unit,
     onNavigateToSavePointCategorySettings: () -> Unit,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
 ){
     composable<CategoryListWithDetailRoute> {
@@ -93,7 +93,7 @@ fun NavGraphBuilder.categoryListWithDetail(
                 },
                 onNavigateToSavePointCategorySettings = onNavigateToSavePointCategorySettings,
                 onAdAction = onAdAction,
-                adUiResult = adUiResult,
+                adState = adState
             )
         }
     }

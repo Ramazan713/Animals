@@ -4,11 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,22 +13,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
-import com.masterplus.animals.R
 import com.masterplus.animals.core.data.mediators.RemoteMediatorError
+import com.masterplus.animals.core.domain.constants.K
 import com.masterplus.animals.core.domain.models.ItemOrder
 import com.masterplus.animals.core.extentions.getAnyExceptionOrNull
 import com.masterplus.animals.core.extentions.visibleMiddleItemOrderKey
+import com.masterplus.animals.core.presentation.dialogs.LoadingDialog
 import com.masterplus.animals.core.presentation.utils.EventHandler
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdMobResultHandler
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
+import com.masterplus.animals.core.shared_features.ad.presentation.dialogs.ShowAdRequiredDia
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
-
 
 @Composable
 fun <T: ItemOrder> AutoSavePointHandler(
@@ -44,11 +42,12 @@ fun <T: ItemOrder> AutoSavePointHandler(
     itemInitPos: Int = 0,
     pagingItems: LazyPagingItems<T>,
     onInitPosResponse: ((Int) -> Unit)? = null,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
 ) {
     val currentOnInitPosResponse by rememberUpdatedState(onInitPosResponse)
     val currentOnDestination by rememberUpdatedState(onDestination)
+
 
     EventHandler(state.uiEvent) { uiEvent ->
         onAction(AutoSavePointAction.ClearUiEvent)
@@ -72,20 +71,27 @@ fun <T: ItemOrder> AutoSavePointHandler(
                 pagingItems.retry()
             }
             is AutoSavePointEvent.ShowAd -> {
-                onAdAction(AdAction.RequestShowRewardAd(contentType.toContentType()))
+                onAdAction(AdAction.RequestShowRewardAd(K.AUTO_SAVEPOINT_AD_LABEL))
             }
         }
     }
 
-    EventHandler(adUiResult) { adResult ->
-        onAdAction(AdAction.ClearUiResult)
-        when(adResult){
-            AdUiResult.OnShowingRewardSuccess -> {
-                onAction(AutoSavePointAction.SuccessShowAd)
+    AdMobResultHandler(
+        adUiResult = adState.uiResult,
+        onAdAction = onAdAction,
+        label = K.AUTO_SAVEPOINT_AD_LABEL,
+        onSafeAdResult = { result ->
+            when(result){
+                is AdUiResult.OnShowingRewardSuccess -> {
+                    onAction(AutoSavePointAction.SuccessShowAd(contentType = contentType.toContentType()))
+                }
             }
         }
-    }
+    )
 
+    if(adState.loadingRewardAd.isLoading && adState.loadingRewardAd.label == K.AUTO_SAVEPOINT_AD_LABEL){
+        LoadingDialog()
+    }
 
     LaunchedEffect(itemInitPos, contentType) {
         onAction(AutoSavePointAction.LoadSavePoint(
@@ -121,31 +127,12 @@ fun <T: ItemOrder> AutoSavePointHandler(
         } }
         when(dialogEvent){
             is AutoSavePointDialogEvent.ShowAdRequired -> {
-                AlertDialog(
-                    onDismissRequest = close,
-                    title = {
-                        Text("Kayıt yükleme limitine ulaştınız")
+                ShowAdRequiredDia(
+                    onDismiss = close,
+                    onApproved = {
+                        onAdAction(AdAction.RequestShowRewardAd(K.AUTO_SAVEPOINT_AD_LABEL))
                     },
-                    text = {
-                        Text("Devam etmek için reklam izlemeniz gerekmektedir")
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = close,
-                        ){
-                            Text(stringResource(R.string.cancel))
-                        }
-                    },
-                    confirmButton = {
-                        FilledTonalButton(
-                            onClick = {
-                                onAdAction(AdAction.RequestShowRewardAd(contentType.toContentType()))
-                                close()
-                            }
-                        ) {
-                            Text("Onayla")
-                        }
-                    }
+                    title = "Kayıt yükleme limitine ulaştınız"
                 )
             }
         }
@@ -166,7 +153,7 @@ private fun <T: ItemOrder> AutoSavePointHandler(
     scrollToPos: suspend (Int) -> Unit,
     itemInitPos: Int = 0,
     pagingItems: LazyPagingItems<T>,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
 ){
     val scope = rememberCoroutineScope()
@@ -186,7 +173,7 @@ private fun <T: ItemOrder> AutoSavePointHandler(
         itemInitPos = itemInitPos,
         pagingItems = pagingItems,
         onAdAction = onAdAction,
-        adUiResult = adUiResult,
+        adState = adState,
         onInitPosResponse = {pos ->
             scope.launch {
                 val itemSize = ceil(configuration.screenHeightDp / 180f).toInt() - 2
@@ -208,7 +195,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
     itemInitPos: Int = 0,
     lazyListState: LazyListState,
@@ -226,7 +213,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
         topBarScrollBehaviour = topBarScrollBehaviour,
         pagingItems = pagingItems,
         onAdAction = onAdAction,
-        adUiResult = adUiResult,
+        adState = adState,
         scrollToPos = { pos ->
             lazyListState.scrollToItem(pos)
         }
@@ -240,7 +227,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
     onAction: (AutoSavePointAction) -> Unit,
     onDestination: () -> SavePointDestination,
     contentType: SavePointContentType,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
     itemInitPos: Int = 0,
     lazyListState: LazyGridState,
@@ -258,7 +245,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
         pagingItems = pagingItems,
         topBarScrollBehaviour = topBarScrollBehaviour,
         onAdAction = onAdAction,
-        adUiResult = adUiResult,
+        adState = adState,
         scrollToPos = { pos ->
             lazyListState.scrollToItem(pos)
         }

@@ -7,6 +7,7 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.features.search.presentation.category_search.search_category.SearchCategoryPageRoot
 import kotlinx.serialization.Serializable
@@ -34,7 +35,7 @@ fun NavController.navigateToSearchCategory(
 }
 
 fun NavGraphBuilder.searchCategory(
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesList: (CategoryType, Int?, KingdomType) -> Unit,
@@ -42,7 +43,7 @@ fun NavGraphBuilder.searchCategory(
 ){
     composable<SearchCategoryRoute> {
         SearchCategoryPageRoot(
-            adUiResult = adUiResult,
+            adState = adState,
             onAdAction = onAdAction,
             onNavigateBack = onNavigateBack,
             onNavigateToSpeciesList = onNavigateToSpeciesList,

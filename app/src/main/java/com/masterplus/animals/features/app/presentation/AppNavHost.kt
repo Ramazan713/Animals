@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryList
 import com.masterplus.animals.features.category_list.presentation.navigation.categoryListWithDetail
@@ -49,7 +50,7 @@ import com.masterplus.animals.features.species_list.presentation.navigation.spec
 fun AppNavHost(
     navHostController: NavHostController,
     onAdAction: (AdAction) -> Unit,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -160,7 +161,7 @@ fun AppNavHost(
                 navHostController.navigateToSavePointCategorySettings()
             },
             onAdAction = onAdAction,
-            adUiResult = adUiResult,
+            adState = adState
         )
 
         categoryListWithDetail(
@@ -180,7 +181,7 @@ fun AppNavHost(
                 navHostController.navigateToSavePointCategorySettings()
             },
             onAdAction = onAdAction,
-            adUiResult = adUiResult,
+            adState = adState
         )
 
         speciesList(
@@ -197,7 +198,7 @@ fun AppNavHost(
                 navHostController.navigateToSavePointSpeciesSettings()
             },
             onAdAction = onAdAction,
-            adUiResult = adUiResult,
+            adState = adState
         )
 
         speciesDetail(
@@ -225,7 +226,7 @@ fun AppNavHost(
             onNavigateToCategoryListWithDetail = { categoryType, itemId, kingdomType ->
                 navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)
             },
-            adUiResult = adUiResult,
+            adState = adState,
             onAdAction = onAdAction
         )
 
@@ -236,7 +237,7 @@ fun AppNavHost(
             onNavigateToSpeciesDetail = { itemId ->
                 navHostController.navigateToSpeciesDetail(itemId)
             },
-            adUiResult = adUiResult,
+            adState = adState,
             onAdAction = onAdAction
         )
     }

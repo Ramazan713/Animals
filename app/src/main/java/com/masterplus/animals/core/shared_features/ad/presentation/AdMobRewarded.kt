@@ -17,57 +17,75 @@ class AdMobRewarded(
     private var rewarded: RewardedAd? = null
 
     fun showOrLoadAd(
-        onAdShowed: () -> Unit
+        onAdShowed: () -> Unit,
+        onAddError: ((String) -> Unit)? = null,
+        onAdLoading: (() -> Unit)? = null,
+        onAdLoaded: (() -> Unit)? = null
     ){
         if(rewarded != null){
             showAd(rewarded, onAdShowed)
         }else{
             loadAd(
                 onAdShowed = onAdShowed,
-                onAddLoaded = {ad ->
+                onAdLoaded = { ad ->
+                    onAdLoaded?.invoke()
                     showAd(
-                        rewarded = ad,
-                        onAdShowed = onAdShowed
+                        rewarded = ad
                     )
-                }
+                },
+                onAddError = onAddError,
+                onAdLoading = onAdLoading,
             )
         }
     }
 
     private fun showAd(
         rewarded: RewardedAd?,
-        onAdShowed: () -> Unit
+        onAdShowed: (() -> Unit)? = null
     ){
         rewarded?.show(context as Activity, OnUserEarnedRewardListener { rewardItem ->
-            onAdShowed()
+            onAdShowed?.invoke()
         })
     }
 
     fun loadAd(
-        onAdShowed: () -> Unit
+        onAddError: ((String) -> Unit)? = null,
+        onAdLoading: (() -> Unit)? = null,
+        onAdLoaded: (() -> Unit)? = null
     ){
-        loadAd(onAdShowed = onAdShowed, onAddLoaded = {})
+        loadAd(
+            onAddError = onAddError,
+            onAdLoading = onAdLoading,
+            onAdLoaded = {
+                onAdLoaded?.invoke()
+            },
+            onAdShowed = {}
+        )
     }
 
     private fun loadAd(
-        onAdShowed: () -> Unit,
-        onAddLoaded: ((RewardedAd) -> Unit)? = null,
+        onAdShowed: (() -> Unit)? = null,
+        onAdLoaded: ((RewardedAd) -> Unit)? = null,
+        onAddError: ((String) -> Unit)? = null,
+        onAdLoading: (() -> Unit)? = null,
     ){
         if(rewarded != null) return
 
         val adRequest = AdRequest.Builder().build()
+        onAdLoading?.invoke()
 
         RewardedAd.load(context, BuildConfig.REWARDED_AD_ID,
             adRequest, object : RewardedAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
+                    onAddError?.invoke(adError.message)
                     rewarded = null
                 }
 
                 override fun onAdLoaded(rewardedAd: RewardedAd) {
                     rewarded = rewardedAd
-                    onAddLoaded?.invoke(rewardedAd)
+                    onAdLoaded?.invoke(rewardedAd)
                     adCallback {
-                        onAdShowed()
+                        onAdShowed?.invoke()
                     }
                 }
             })

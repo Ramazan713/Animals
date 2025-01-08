@@ -1,7 +1,6 @@
 package com.masterplus.animals.core.shared_features.ad.presentation
 
 import androidx.navigation.NavDestination
-import com.masterplus.animals.core.domain.enums.ContentType
 
 sealed interface AdAction {
 
@@ -10,14 +9,19 @@ sealed interface AdAction {
     ): AdAction
 
     data class RequestShowRewardAd(
-        val contentType: ContentType,
+        val label: String
+    ): AdAction
+
+    data object OnRewardAdLoading: AdAction
+    data object OnRewardAdLoaded: AdAction
+    data class OnRewardAdError(val error: String): AdAction
+    data class OnSuccessShowingRewardAd(
+        val label: String
     ): AdAction
 
     data object ResetCounter: AdAction
 
-    data class ResetReadCounter(
-        val contentType: ContentType
-    ): AdAction
+
 
     data object ClearUiEvent: AdAction
 

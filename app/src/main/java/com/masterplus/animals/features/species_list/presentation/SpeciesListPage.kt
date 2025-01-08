@@ -43,6 +43,8 @@ import com.masterplus.animals.core.extentions.isPrependItemLoading
 import com.masterplus.animals.core.extentions.visibleMiddleItemOrderKey
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
+import com.masterplus.animals.core.presentation.components.SpeciesCard
+import com.masterplus.animals.core.presentation.components.SpeciesCardShimmer
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.components.paging.AppendErrorHandlerComponent
@@ -54,7 +56,7 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
-import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
@@ -72,8 +74,6 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_s
 import com.masterplus.animals.core.shared_features.select_font_size.presentation.ShowSelectFontSizeDia
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListBottomItemMenu
 import com.masterplus.animals.features.species_list.domain.enums.SpeciesListTopItemMenu
-import com.masterplus.animals.core.presentation.components.SpeciesCard
-import com.masterplus.animals.core.presentation.components.SpeciesCardShimmer
 import com.masterplus.animals.features.species_list.presentation.navigation.SpeciesListRoute
 import org.koin.androidx.compose.koinViewModel
 
@@ -87,7 +87,7 @@ fun SpeciesListPageRoot(
     onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
 ) {
     val args = viewModel.args
@@ -113,7 +113,7 @@ fun SpeciesListPageRoot(
         autoSavePointState = autoSavePointState,
         onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings,
         onAdAction = onAdAction,
-        adUiResult = adUiResult,
+        adState = adState
     )
 }
 
@@ -135,7 +135,7 @@ fun SpeciesListPage(
     onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
     onNavigateToCategorySearch: () -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -157,7 +157,7 @@ fun SpeciesListPage(
         lazyListState = lazyListState,
         pagingItems = pagingItems,
         onAdAction = onAdAction,
-        adUiResult = adUiResult,
+        adState = adState
     )
 
 
@@ -364,7 +364,7 @@ fun SpeciesListPagePreview() {
         onAutoSavePointAction = {},
         autoSavePointState = AutoSavePointState(),
         onNavigateToSavePointSpeciesSettings = {},
-        adUiResult = null,
+        adState = AdState(),
         onAdAction = {}
     )
 }

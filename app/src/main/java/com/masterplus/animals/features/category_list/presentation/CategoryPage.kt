@@ -76,6 +76,7 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_s
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListBottomItemMenu
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListTopBarItemMenu
 import com.masterplus.animals.core.presentation.components.CategoryItemShipper
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
@@ -94,7 +95,7 @@ fun CategoryListPage(
     onItemClick: (CategoryData) -> Unit,
     onNavigateToCategorySearch: () -> Unit,
     onNavigateToSavePointCategorySettings: () -> Unit,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
     initPos: Int = 0
 ) {
@@ -113,7 +114,7 @@ fun CategoryListPage(
         topBarScrollBehaviour = topBarScrollBehaviour,
         pagingItems = pagingItems,
         onAdAction = onAdAction,
-        adUiResult = adUiResult,
+        adState = adState
     )
 
     Scaffold(
@@ -414,7 +415,7 @@ private fun CategoryListPagePreview1() {
         onDestination = {SampleDatas.sampleDestination},
         onNavigateToSavePointCategorySettings = {},
         onAdAction = {},
-        adUiResult = null
+        adState = AdState()
     )
 }
 

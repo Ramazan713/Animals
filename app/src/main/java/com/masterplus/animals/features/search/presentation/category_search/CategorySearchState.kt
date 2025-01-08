@@ -14,5 +14,6 @@ data class CategorySearchState(
     val titleForPlaceHolder: UiText? = null,
     val histories: List<History> = emptyList(),
     val message: UiText? = null,
-    val dialogEvent: CategorySearchDialogEvent? = null
+    val dialogEvent: CategorySearchDialogEvent? = null,
+    val adLabel: String = "CategorySearchAdLabel"
 )

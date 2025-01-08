@@ -26,16 +26,21 @@ fun AdMobHandler(
                 }
             }
             is AdUiEvent.LoadRewordedAd -> {
-                adMobRewarded.loadAd(
-                    onAdShowed = {
-                        onAdAction(AdAction.ResetReadCounter(event.contentType))
-                    }
-                )
+                adMobRewarded.loadAd()
             }
             is AdUiEvent.ShowRewordedAd -> {
                 adMobRewarded.showOrLoadAd(
                     onAdShowed = {
-                        onAdAction(AdAction.ResetReadCounter(event.contentType))
+                        onAdAction(AdAction.OnSuccessShowingRewardAd(event.label))
+                    },
+                    onAddError = {
+                        onAdAction(AdAction.OnRewardAdError(it))
+                    },
+                    onAdLoaded = {
+                        onAdAction(AdAction.OnRewardAdLoaded)
+                    },
+                    onAdLoading = {
+                        onAdAction(AdAction.OnRewardAdLoading)
                     }
                 )
             }

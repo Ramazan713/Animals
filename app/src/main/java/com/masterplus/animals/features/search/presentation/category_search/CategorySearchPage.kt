@@ -2,7 +2,6 @@ package com.masterplus.animals.features.search.presentation.category_search
 
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -15,12 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AdsClick
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,20 +27,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
-import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.extentions.clearFocusOnTap
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
-import com.masterplus.animals.core.presentation.utils.EventHandler
+import com.masterplus.animals.core.presentation.dialogs.LoadingDialog
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdMobResultHandler
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
+import com.masterplus.animals.core.shared_features.ad.presentation.dialogs.ShowAdRequiredDia
 import com.masterplus.animals.features.search.domain.enums.SearchType
 import com.masterplus.animals.features.search.presentation.components.HistoryItem
 import com.masterplus.animals.features.search.presentation.components.SearchField
@@ -51,7 +51,7 @@ import com.masterplus.animals.features.search.presentation.components.SearchFiel
 fun CategorySearchPage(
     state: CategorySearchState,
     onAction: (CategorySearchAction) -> Unit,
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
     onNavigateBack: () -> Unit,
     searchResultContent: @Composable (ColumnScope.(PaddingValues) -> Unit)
@@ -62,10 +62,13 @@ fun CategorySearchPage(
         top = 16.dp
     )
 
-    EventHandler(adUiResult) { adResult ->
-        onAdAction(AdAction.ClearUiResult)
+    AdMobResultHandler(
+        adUiResult = adState.uiResult,
+        onAdAction = onAdAction,
+        label = state.adLabel
+    ) { adResult ->
         when(adResult){
-            AdUiResult.OnShowingRewardSuccess -> {
+            is AdUiResult.OnShowingRewardSuccess -> {
                 onAction(CategorySearchAction.AdShowedSuccess)
             }
         }
@@ -117,40 +120,27 @@ fun CategorySearchPage(
         }
     }
 
+
+
     state.dialogEvent?.let { dialogEvent ->
         val close = remember { {
             onAction(CategorySearchAction.ShowDialog(null))
         } }
         when(dialogEvent){
             CategorySearchDialogEvent.ShowAdRequired -> {
-                AlertDialog(
-                    onDismissRequest = close,
-                    title = {
-                        Text("Kayıt yükleme limitine ulaştınız")
+                ShowAdRequiredDia(
+                    onDismiss = close,
+                    onApproved = {
+                        onAdAction(AdAction.RequestShowRewardAd(state.adLabel))
                     },
-                    text = {
-                        Text("Devam etmek için reklam izlemeniz gerekmektedir")
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = close,
-                        ){
-                            Text(stringResource(R.string.cancel))
-                        }
-                    },
-                    confirmButton = {
-                        FilledTonalButton(
-                            onClick = {
-                                onAdAction(AdAction.RequestShowRewardAd(ContentType.Category))
-                                close()
-                            }
-                        ) {
-                            Text("Onayla")
-                        }
-                    }
+                    title = "Arama limitine ulaştınız"
                 )
             }
         }
+    }
+
+    if(adState.loadingRewardAd.isLoading && adState.loadingRewardAd.label == state.adLabel){
+        LoadingDialog()
     }
 
 }
@@ -264,7 +254,7 @@ private fun HistoryLazyColumn(
 private fun CategorySearchPagePreview() {
     CategorySearchPage(
         onAdAction = {},
-        adUiResult = null,
+        adState = AdState(),
         state = CategorySearchState(
             searchType = SearchType.Server
         ),

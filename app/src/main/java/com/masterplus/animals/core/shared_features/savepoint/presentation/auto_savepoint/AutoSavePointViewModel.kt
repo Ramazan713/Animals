@@ -3,6 +3,7 @@ package com.masterplus.animals.core.shared_features.savepoint.presentation.auto_
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.core.domain.repo.ConnectivityObserver
+import com.masterplus.animals.core.shared_features.ad.domain.repo.ReadCounterRewardAdRepo
 import com.masterplus.animals.core.shared_features.preferences.domain.SettingsPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
@@ -23,6 +24,7 @@ class AutoSavePointViewModel(
     private val settingsPreferences: SettingsPreferences,
     private val savePointRepo: SavePointRepo,
     private val savePointPosRepo: SavePointPosRepo,
+    private val readCounterRewardAdRepo: ReadCounterRewardAdRepo,
     connectivityObserver: ConnectivityObserver
 ): ViewModel(){
 
@@ -109,8 +111,9 @@ class AutoSavePointViewModel(
                 ) }
             }
 
-            AutoSavePointAction.SuccessShowAd -> {
+            is AutoSavePointAction.SuccessShowAd -> {
                 viewModelScope.launch {
+                    readCounterRewardAdRepo.resetCounter(action.contentType)
                     _state.update { it.copy(
                         uiEvent = AutoSavePointEvent.RetryPaging
                     ) }

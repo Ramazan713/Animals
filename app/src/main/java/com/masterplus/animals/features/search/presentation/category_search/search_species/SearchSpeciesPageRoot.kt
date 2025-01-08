@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -34,7 +33,7 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
-import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListAction
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListDialogEvent
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
@@ -45,7 +44,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchSpeciesPageRoot(
-    adUiResult: AdUiResult?,
+    adState: AdState,
     onAdAction: (AdAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int) -> Unit,
@@ -65,7 +64,7 @@ fun SearchSpeciesPageRoot(
     )
 
     CategorySearchPage(
-        adUiResult = adUiResult,
+        adState = adState,
         onAdAction = onAdAction,
         state = state,
         onAction = viewModel::onAction,
@@ -190,7 +189,7 @@ private fun SearchCategoryPagePreview() {
         ),
         onAction = {},
         onNavigateBack = {},
-        adUiResult = null,
+        adState = AdState(),
         onAdAction = {},
         searchResultContent = {
             SearchResultLazyColumn(
