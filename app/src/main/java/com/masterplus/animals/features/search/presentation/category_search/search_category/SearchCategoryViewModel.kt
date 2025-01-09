@@ -8,6 +8,7 @@ import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
@@ -29,8 +30,9 @@ class SearchCategoryViewModel(
     searchAdRepo: SearchAdRepo,
     translationRepo: TranslationRepo,
     historyRepo: HistoryRepo,
-    savedStateHandle: SavedStateHandle
-): CategorySearchBaseViewModel<CategoryData>(historyRepo, translationRepo, searchAdRepo) {
+    appConfigPreferences: AppConfigPreferences,
+    savedStateHandle: SavedStateHandle,
+): CategorySearchBaseViewModel<CategoryData>(historyRepo, translationRepo, searchAdRepo, appConfigPreferences) {
 
     val args = savedStateHandle.toRoute<SearchCategoryRoute>()
 
@@ -43,9 +45,20 @@ class SearchCategoryViewModel(
         pageSize: Int
     ): Flow<PagingData<CategoryData>> {
         return if(args.categoryItemId != null){
-            searchRepo.searchCategory(categoryType = args.categoryType, query = query, itemId = args.categoryItemId, language =  languageEnum)
+            searchRepo.searchCategory(
+                categoryType = args.categoryType,
+                query = query,
+                itemId = args.categoryItemId,
+                language = languageEnum,
+                pageSize = pageSize
+            )
         }else{
-            searchRepo.searchCategory(categoryType = args.categoryType, query = query, language = languageEnum)
+            searchRepo.searchCategory(
+                categoryType = args.categoryType,
+                query = query,
+                language = languageEnum,
+                pageSize = pageSize
+            )
         }
     }
 

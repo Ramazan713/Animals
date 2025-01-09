@@ -29,9 +29,10 @@ class SearchRepoImpl(
 
     override fun searchSpecies(
         query: String,
+        pageSize: Int,
         language: LanguageEnum
     ): Flow<PagingData<SpeciesListDetail>> {
-        val pagingConfig = PagingConfig(pageSize = 10)
+        val pagingConfig = PagingConfig(pageSize = pageSize)
         val queryResult = getQueryUseCase(query)
 
         return Pager(
@@ -48,11 +49,12 @@ class SearchRepoImpl(
 
     override fun searchSpeciesWithCategory(
         query: String,
+        pageSize: Int,
         categoryType: CategoryType,
         itemId: Int,
         language: LanguageEnum
     ): Flow<PagingData<SpeciesListDetail>> {
-        val pagingConfig = PagingConfig(pageSize = 10)
+        val pagingConfig = PagingConfig(pageSize = pageSize)
         val queryResult = getQueryUseCase(query)
         val queryInLike = queryResult.queryInLike
         val queryForOrder = queryResult.queryForOrder
@@ -89,10 +91,11 @@ class SearchRepoImpl(
 
     override fun searchCategory(
         query: String,
+        pageSize: Int,
         categoryType: CategoryType,
         language: LanguageEnum
     ): Flow<PagingData<CategoryData>> {
-        val pagingConfig = PagingConfig(pageSize = 10)
+        val pagingConfig = PagingConfig(pageSize = pageSize)
         val queryResult = getQueryUseCase(query)
         val queryInLike = queryResult.queryInLike
         val queryForOrder = queryResult.queryForOrder
@@ -131,11 +134,12 @@ class SearchRepoImpl(
 
     override fun searchCategory(
         query: String,
+        pageSize: Int,
         categoryType: CategoryType,
         itemId: Int,
         language: LanguageEnum
     ): Flow<PagingData<CategoryData>> {
-        val pagingConfig = PagingConfig(pageSize = 10)
+        val pagingConfig = PagingConfig(pageSize = pageSize)
         val queryResult = getQueryUseCase(query)
         val queryInLike = queryResult.queryInLike
         val queryForOrder = queryResult.queryForOrder

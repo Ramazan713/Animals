@@ -9,12 +9,33 @@ import kotlinx.coroutines.flow.Flow
 
 interface SearchRepo {
 
-    fun searchSpecies(query: String, language: LanguageEnum): Flow<PagingData<SpeciesListDetail>>
+    fun searchSpecies(
+        query: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<SpeciesListDetail>>
 
-    fun searchSpeciesWithCategory(query: String, categoryType: CategoryType, itemId: Int, language: LanguageEnum): Flow<PagingData<SpeciesListDetail>>
+    fun searchSpeciesWithCategory(
+        query: String,
+        pageSize: Int,
+        categoryType: CategoryType,
+        itemId: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<SpeciesListDetail>>
 
-    fun searchCategory(query: String, categoryType: CategoryType, language: LanguageEnum): Flow<PagingData<CategoryData>>
+    fun searchCategory(
+        query: String,
+        pageSize: Int,
+        categoryType: CategoryType,
+        language: LanguageEnum
+    ): Flow<PagingData<CategoryData>>
 
-    fun searchCategory(query: String, categoryType: CategoryType, itemId: Int, language: LanguageEnum): Flow<PagingData<CategoryData>>
+    fun searchCategory(
+        query: String,
+        pageSize: Int,
+        categoryType: CategoryType,
+        itemId: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<CategoryData>>
 
 }

@@ -14,7 +14,7 @@ interface SearchRemoteRepo {
 
     suspend fun searchAll(
         query: String,
-        pageSize: Int,
+        responsePageSize: Int,
         languageEnum: LanguageEnum
     ): EmptyDefaultResult
 

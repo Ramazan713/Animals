@@ -9,6 +9,7 @@ import com.masterplus.animals.core.data.utils.RemoteKeyUtil
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
+import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
 import com.masterplus.animals.features.search.domain.repo.HistoryRepo
@@ -16,6 +17,7 @@ import com.masterplus.animals.features.search.domain.repo.SearchAdRepo
 import com.masterplus.animals.features.search.domain.repo.SearchRemoteRepo
 import com.masterplus.animals.features.search.domain.repo.SearchRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -37,7 +39,8 @@ class AppSearchViewModel(
     private val searchRepo: SearchRepo,
     private val categoryRepo: CategoryRepo,
     private val speciesRepo: SpeciesRepo,
-    private val searchRemoteRepo: SearchRemoteRepo
+    private val searchRemoteRepo: SearchRemoteRepo,
+    private val appConfigPreferences: AppConfigPreferences
 ): ViewModel(){
 
     private val serverSearchedQueryFlow = MutableStateFlow("")
@@ -62,29 +65,40 @@ class AppSearchViewModel(
         .map { RemoteKeyUtil.getAppSearchKey(it) }
         .distinctUntilChanged()
 
+    private val localPageSizeFlow = appConfigPreferences.dataFlow
+        .map { it.pagination.searchAppLocalPageSize }
+        .distinctUntilChanged()
+
+    private val responsePageSizeFlow = appConfigPreferences.dataFlow
+        .map { it.pagination.searchAppResponsePageSize }
+        .distinctUntilChanged()
+    
+
     private val localBaseSearchQueryFlow = combine(
         queryBaseFlow,
-        translationRepo.getFlowLanguage()
-    ){query, language ->
-        Pair(query, language)
+        translationRepo.getFlowLanguage(),
+        localPageSizeFlow
+    ){query, language, localPageSize ->
+        Triple(query, language, localPageSize)
     }.distinctUntilChanged()
 
     private val remoteBaseSearchQueryFlow = combine(
         queryRemoteKeyFlow,
-        translationRepo.getFlowLanguage()
-    ){key, language ->
-        Pair(key, language)
+        translationRepo.getFlowLanguage(),
+        responsePageSizeFlow
+    ){key, language, responsePageSize ->
+        Triple(key, language, responsePageSize)
     }.distinctUntilChanged()
 
 
     private val classLocalResultFlow = localBaseSearchQueryFlow
-        .flatMapLatest { pair ->
-            searchRepo.searchCategory(query = pair.first, language = pair.second, categoryType = CategoryType.Class)
+        .flatMapLatest { triple ->
+            searchRepo.searchCategory(query = triple.first, language = triple.second, categoryType = CategoryType.Class, pageSize = triple.third)
         }.cachedIn(viewModelScope)
 
     private val classRemoteResultFlow = remoteBaseSearchQueryFlow
-        .flatMapLatest { pair ->
-            categoryRepo.getLocalPagingClasses(label = pair.first, language = pair.second, pageSize = 10)
+        .flatMapLatest { triple ->
+            categoryRepo.getLocalPagingClasses(label = triple.first, language = triple.second, pageSize = triple.third)
                 .map { items -> items.map { it.toCategoryData() } }
         }.cachedIn(viewModelScope)
 
@@ -96,13 +110,13 @@ class AppSearchViewModel(
 
 
     private val orderLocalResultFlow = localBaseSearchQueryFlow
-        .flatMapLatest { pair ->
-            searchRepo.searchCategory(query = pair.first, language = pair.second, categoryType = CategoryType.Order)
+        .flatMapLatest { triple ->
+            searchRepo.searchCategory(query = triple.first, language = triple.second, categoryType = CategoryType.Order, pageSize = triple.third)
         }.cachedIn(viewModelScope)
 
     private val orderRemoteResultFlow = remoteBaseSearchQueryFlow
-        .flatMapLatest { pair ->
-            categoryRepo.getLocalPagingOrders(label = pair.first, language = pair.second, pageSize = 10)
+        .flatMapLatest { triple ->
+            categoryRepo.getLocalPagingOrders(label = triple.first, language = triple.second, pageSize = triple.third)
                 .map { items -> items.map { it.toCategoryData() } }
         }.cachedIn(viewModelScope)
 
@@ -113,13 +127,13 @@ class AppSearchViewModel(
         .cachedIn(viewModelScope)
 
     private val familyLocalResultFlow = localBaseSearchQueryFlow
-        .flatMapLatest { pair ->
-            searchRepo.searchCategory(query = pair.first, language = pair.second, categoryType = CategoryType.Family)
+        .flatMapLatest { triple ->
+            searchRepo.searchCategory(query = triple.first, language = triple.second, categoryType = CategoryType.Family, pageSize = triple.third)
         }.cachedIn(viewModelScope)
 
     private val familyRemoteResultFlow = remoteBaseSearchQueryFlow
-        .flatMapLatest { pair ->
-            categoryRepo.getLocalPagingFamilies(label = pair.first, language = pair.second, pageSize = 10)
+        .flatMapLatest { triple ->
+            categoryRepo.getLocalPagingFamilies(label = triple.first, language = triple.second, pageSize = triple.third)
                 .map { items -> items.map { it.toCategoryData() } }
         }.cachedIn(viewModelScope)
 
@@ -131,13 +145,13 @@ class AppSearchViewModel(
 
 
     private val speciesLocalResultFlow = localBaseSearchQueryFlow
-        .flatMapLatest { pair ->
-            searchRepo.searchSpecies(query = pair.first, language = pair.second)
+        .flatMapLatest { triple ->
+            searchRepo.searchSpecies(query = triple.first, language = triple.second, pageSize = triple.third)
         }.cachedIn(viewModelScope)
 
     private val speciesRemoteResultFlow = remoteBaseSearchQueryFlow
-        .flatMapLatest { pair ->
-            speciesRepo.getLocalPagingSpecies(label = pair.first, language = pair.second, pageSize = 10)
+        .flatMapLatest { triple ->
+            speciesRepo.getLocalPagingSpecies(label = triple.first, language = triple.second, pageSize = triple.third)
         }.cachedIn(viewModelScope)
 
     val speciesResultsPaging = searchTypeFlow
@@ -211,15 +225,16 @@ class AppSearchViewModel(
         combine(
             serverSearchedQueryFlow
                 .filter { it.isNotBlank() },
-            translationRepo.getFlowLanguage()
-        ){ query, language ->
-            Pair(query, language)
-        }.onEach { pair ->
+            translationRepo.getFlowLanguage(),
+            responsePageSizeFlow
+        ){ query, language, responsePageSize ->
+            Triple(query, language, responsePageSize)
+        }.onEach { triple ->
             _state.update { it.copy(isRemoteSearching = true) }
             val response = searchRemoteRepo.searchAll(
-                query = pair.first,
-                pageSize = 10,
-                languageEnum = pair.second
+                query = triple.first,
+                responsePageSize = triple.third,
+                languageEnum = triple.second
             )
             response.onFailure { error ->
                 _state.update { it.copy(message = error.text) }
@@ -261,6 +276,7 @@ class AppSearchViewModel(
             .launchIn(viewModelScope)
     }
 
+    @OptIn(FlowPreview::class)
     private fun listenInsertHistory(){
         _state
             .filter { it.searchType.isLocal }

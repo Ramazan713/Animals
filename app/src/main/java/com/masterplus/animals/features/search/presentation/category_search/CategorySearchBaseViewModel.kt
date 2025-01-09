@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.masterplus.animals.core.domain.utils.DefaultResult
+import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
@@ -15,6 +16,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
@@ -30,7 +32,8 @@ import kotlinx.coroutines.launch
 abstract class CategorySearchBaseViewModel<T: Any>(
     private val historyRepo: HistoryRepo,
     private val translationRepo: TranslationRepo,
-    private val searchAdRepo: SearchAdRepo
+    private val searchAdRepo: SearchAdRepo,
+    private val appConfigPreferences: AppConfigPreferences
 ): ViewModel() {
 
     abstract val historyType: HistoryType
@@ -40,36 +43,51 @@ abstract class CategorySearchBaseViewModel<T: Any>(
     protected val _state = MutableStateFlow(CategorySearchState())
     val state = _state.asStateFlow()
 
+    private val localPageSizeFlow = appConfigPreferences.dataFlow
+        .map { it.pagination.searchCategoryLocalPageSize }
+        .distinctUntilChanged()
+
+    private val responsePageSizeFlow = appConfigPreferences.dataFlow
+        .map { it.pagination.searchCategoryResponsePageSize }
+        .distinctUntilChanged()
 
     private val localSearchResultFlow = _state
         .map { it.query }
         .debounce(300L)
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
-        .flatMapLatest { query ->
+        .combine(localPageSizeFlow){ query, pageSize ->
+            Pair(query, pageSize)
+        }
+        .flatMapLatest { pair ->
             val language = translationRepo.getLanguage()
-            getLocalSearchResultFlow(query = query, languageEnum = language, pageSize = 20)
+            getLocalSearchResultFlow(query = pair.first, languageEnum = language, pageSize = pair.second)
         }
         .cachedIn(viewModelScope)
 
-    private val serverSearchResultFlow = serverSearchedQueryFlow
-        .filter { it.isNotBlank() }
-        .flatMapLatest { query ->
-            _state.update { it.copy(isRemoteSearching = true) }
-            val language = translationRepo.getLanguage()
-            val response = getServerSearchResultFlow(query = query, languageEnum = language, localPageSize = 20, responsePageSize = 10,)
-            response.getFailureError?.let { error ->
-                _state.update { it.copy(
-                    message = error.text
-                ) }
-            }
-            response.onSuccessAsync {
-                searchAdRepo.decreaseCategoryAd()
-            }
-            _state.update { it.copy(isRemoteSearching = false) }
-            response.getSuccessData ?: emptyFlow()
+    private val serverSearchResultFlow = combine(
+        serverSearchedQueryFlow.filter { it.isNotBlank() },
+        localPageSizeFlow,
+        responsePageSizeFlow
+    ){ query, localPageSize, responsePageSize->
+        Triple(query, localPageSize, responsePageSize)
+    }
+    .flatMapLatest { triple ->
+        _state.update { it.copy(isRemoteSearching = true) }
+        val language = translationRepo.getLanguage()
+        val response = getServerSearchResultFlow(query = triple.first, languageEnum = language, localPageSize = triple.second, responsePageSize = triple.third,)
+        response.getFailureError?.let { error ->
+            _state.update { it.copy(
+                message = error.text
+            ) }
         }
-        .cachedIn(viewModelScope)
+        response.onSuccessAsync {
+            searchAdRepo.decreaseCategoryAd()
+        }
+        _state.update { it.copy(isRemoteSearching = false) }
+        response.getSuccessData ?: emptyFlow()
+    }
+    .cachedIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val searchResults = _state

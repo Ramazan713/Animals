@@ -49,13 +49,13 @@ class SearchRemoteRepoImpl(
 
     override suspend fun searchAll(
         query: String,
-        pageSize: Int,
+        responsePageSize: Int,
         languageEnum: LanguageEnum
     ): EmptyDefaultResult {
         if(!connectivityObserver.hasConnection()){
             return Result.errorWithResource(R.string.check_your_connection)
         }
-        val indexResponse = searchSpeciesIndexService.searchAll(query = query, pageSize = pageSize, languageEnum = languageEnum)
+        val indexResponse = searchSpeciesIndexService.searchAll(query = query, pageSize = responsePageSize, languageEnum = languageEnum)
         val successSearchResults = indexResponse.getSuccessData ?: return indexResponse.asEmptyResult()
         return coroutineScope {
             val allJobs = successSearchResults.map { searchResult ->

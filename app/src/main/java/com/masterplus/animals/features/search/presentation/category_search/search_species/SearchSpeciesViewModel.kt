@@ -9,6 +9,7 @@ import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
@@ -30,8 +31,9 @@ class SearchSpeciesViewModel(
     searchAdRepo: SearchAdRepo,
     translationRepo: TranslationRepo,
     historyRepo: HistoryRepo,
+    appConfigPreferences: AppConfigPreferences,
     savedStateHandle: SavedStateHandle
-): CategorySearchBaseViewModel<SpeciesListDetail>(historyRepo, translationRepo, searchAdRepo) {
+): CategorySearchBaseViewModel<SpeciesListDetail>(historyRepo, translationRepo, searchAdRepo, appConfigPreferences) {
 
     val args = savedStateHandle.toRoute<SearchSpeciesRoute>()
 
@@ -44,9 +46,19 @@ class SearchSpeciesViewModel(
         pageSize: Int
     ): Flow<PagingData<SpeciesListDetail>> {
         return if(args.categoryItemId != null){
-            searchRepo.searchSpeciesWithCategory(categoryType = args.categoryType, query = query, itemId = args.categoryItemId, language = languageEnum)
+            searchRepo.searchSpeciesWithCategory(
+                categoryType = args.categoryType,
+                query = query,
+                itemId = args.categoryItemId,
+                language = languageEnum,
+                pageSize = pageSize
+            )
         }else{
-            searchRepo.searchSpecies(query = query, language = languageEnum)
+            searchRepo.searchSpecies(
+                query = query,
+                language = languageEnum,
+                pageSize = pageSize
+            )
         }
     }
 

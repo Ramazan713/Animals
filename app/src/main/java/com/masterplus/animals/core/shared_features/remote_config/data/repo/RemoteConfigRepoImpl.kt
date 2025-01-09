@@ -57,19 +57,35 @@ class RemoteConfigRepoImpl(
         val homeCategoryPageSize = remoteConfig.getValue("homeCategoryPageSize").asString().toIntOrNull()
         val readContentExceedLimit = remoteConfig.getValue("readContentExceedLimit").asString().toIntOrNull()
         val readCategoryExceedLimit = remoteConfig.getValue("readCategoryExceedLimit").asString().toIntOrNull()
+        val searchCategoryLocalPageSize = remoteConfig.getValue("searchCategoryLocalPageSize").asString().toIntOrNull()
+        val searchCategoryResponsePageSize = remoteConfig.getValue("searchCategoryResponsePageSize").asString().toIntOrNull()
+        val searchAppLocalPageSize = remoteConfig.getValue("searchAppLocalPageSize").asString().toIntOrNull()
+        val searchAppResponsePageSize = remoteConfig.getValue("searchAppResponsePageSize").asString().toIntOrNull()
+        val rewardCategorySearchCount = remoteConfig.getValue("rewardCategorySearchCount").asString().toIntOrNull()
+        val initRemainingCategorySearchCount = remoteConfig.getValue("initRemainingCategorySearchCount").asString().toIntOrNull()
+        val rewardAppSearchCount = remoteConfig.getValue("rewardAppSearchCount").asString().toIntOrNull()
+        val initRemainingAppSearchCount = remoteConfig.getValue("initRemainingAppSearchCount").asString().toIntOrNull()
 
         appConfigPreferences.updateData { it.copy(
             ad = ConfigAd(
                 consumeIntervalSeconds = consumeIntervalSeconds ?: it.ad.consumeIntervalSeconds,
                 thresholdConsumeSeconds = thresholdConsumeSeconds ?: it.ad.thresholdConsumeSeconds,
                 thresholdOpeningCount = thresholdOpeningCount ?: it.ad.thresholdOpeningCount,
+                rewardCategorySearchCount = rewardCategorySearchCount ?: it.ad.rewardCategorySearchCount,
+                initRemainingCategorySearchCount = initRemainingCategorySearchCount ?: it.ad.initRemainingCategorySearchCount,
+                rewardAppSearchCount = rewardAppSearchCount ?: it.ad.rewardAppSearchCount,
+                initRemainingAppSearchCount = initRemainingAppSearchCount ?: it.ad.initRemainingAppSearchCount,
             ),
             pagination = ConfigPagination(
                 speciesPageSize = speciesPageSize ?: it.pagination.speciesPageSize,
                 categoryPageSize = categoryPageSize ?: it.pagination.categoryPageSize,
                 homeCategoryPageSize = homeCategoryPageSize ?: it.pagination.homeCategoryPageSize,
                 readContentExceedLimit = readContentExceedLimit ?: it.pagination.readContentExceedLimit,
-                readCategoryExceedLimit = readCategoryExceedLimit ?: it.pagination.readCategoryExceedLimit
+                readCategoryExceedLimit = readCategoryExceedLimit ?: it.pagination.readCategoryExceedLimit,
+                searchCategoryLocalPageSize = searchCategoryLocalPageSize ?: it.pagination.searchCategoryLocalPageSize,
+                searchCategoryResponsePageSize = searchCategoryResponsePageSize ?: it.pagination.searchCategoryResponsePageSize,
+                searchAppLocalPageSize = searchAppLocalPageSize ?: it.pagination.searchAppLocalPageSize,
+                searchAppResponsePageSize = searchAppResponsePageSize ?: it.pagination.searchAppResponsePageSize
             ),
         ) }
     }
