@@ -11,6 +11,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface SpeciesRepo {
 
+    fun getLocalPagingSpecies(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum,
+    ): Flow<PagingData<SpeciesListDetail>>
+
     fun getPagingSpeciesWithKingdom(
         pageSize: Int,
         language: LanguageEnum,

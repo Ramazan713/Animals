@@ -3,16 +3,12 @@ package com.masterplus.animals.features.search.presentation.app_search
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.core.domain.models.CategoryData
-import com.masterplus.animals.core.extentions.isAnyItemLoading
-import com.masterplus.animals.core.extentions.isAnyLoading
-import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isNotEmptyResult
 import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
 
@@ -27,6 +23,7 @@ fun SearchResultPageContent(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
+    //TODO: Add Empty Component
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = contentPadding,

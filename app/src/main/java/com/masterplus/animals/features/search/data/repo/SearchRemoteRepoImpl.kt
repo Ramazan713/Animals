@@ -20,13 +20,18 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.utils.DefaultResult
+import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
 import com.masterplus.animals.core.domain.utils.Result
+import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.domain.utils.map
 import com.masterplus.animals.core.shared_features.database.AppDatabase
 import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.features.search.domain.repo.SearchRemoteRepo
 import com.masterplus.animals.features.search.domain.service.SearchSpeciesIndexService
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -39,6 +44,66 @@ class SearchRemoteRepoImpl(
     private val speciesDao: SpeciesDao,
     private val db: AppDatabase
 ): SearchRemoteRepo {
+
+    override suspend fun searchAll(
+        query: String,
+        pageSize: Int,
+        languageEnum: LanguageEnum
+    ): EmptyDefaultResult {
+        val indexResponse = searchSpeciesIndexService.searchAll(query = query, pageSize = pageSize, languageEnum = languageEnum)
+        val successSearchResults = indexResponse.getSuccessData ?: return indexResponse.asEmptyResult()
+        return coroutineScope {
+            val allJobs = successSearchResults.map { searchResult ->
+                async<EmptyDefaultResult> {
+                    val indexIds = searchResult.ids.mapNotNull { it.toIntOrNull() }
+                    if(indexIds.isEmpty()) return@async Result.Success(Unit)
+                    val label = RemoteKeyUtil.getAppSearchKey(query)
+                    when(searchResult.type){
+                        SearchSpeciesIndexService.Companion.SearchAllResultType.Species -> {
+                            val speciesResponse = categoryRemoteSource.getSpecies(
+                                itemIds = indexIds,
+                                loadKey = null,
+                                limit = indexIds.size,
+                                incrementCounter = false,
+                                orderByKey = null,
+                            )
+                            val speciesData = speciesResponse.getSuccessData?.let { data ->
+                                data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
+                            } ?: return@async speciesResponse.asEmptyResult()
+                            insertSpeciesHelper.insertSpecies(speciesData, label)
+                            speciesResponse.asEmptyResult()
+                        }
+                        SearchSpeciesIndexService.Companion.SearchAllResultType.Classes -> {
+                            val itemsResponse = categoryRemoteSource.getClasses(itemIds = indexIds, orderByKey = null, incrementCounter = false)
+                            val itemsData = itemsResponse.getSuccessData?.let { data ->
+                                data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
+                            } ?:  return@async itemsResponse.asEmptyResult()
+                            db.categoryDao.insertClassesWithImages(itemsData.map { it.toClassWithImageEmbedded(label) })
+                            itemsResponse.asEmptyResult()
+                        }
+                        SearchSpeciesIndexService.Companion.SearchAllResultType.Orders -> {
+                            val itemsResponse = categoryRemoteSource.getOrders(itemIds = indexIds, orderByKey = null, incrementCounter = false)
+                            val itemsData = itemsResponse.getSuccessData?.let { data ->
+                                data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
+                            } ?: return@async itemsResponse.asEmptyResult()
+                            db.categoryDao.insertOrdersWithImages(itemsData.map { it.toOrderWithImageEmbedded(label) })
+                            itemsResponse.asEmptyResult()
+                        }
+                        SearchSpeciesIndexService.Companion.SearchAllResultType.Families -> {
+                            val itemsResponse = categoryRemoteSource.getFamilies(itemIds = indexIds, orderByKey = null, incrementCounter = false)
+                            val itemsData = itemsResponse.getSuccessData?.let { data ->
+                                data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
+                            } ?: return@async itemsResponse.asEmptyResult()
+                            db.categoryDao.insertFamiliesWithImages(itemsData.map { it.toFamilyWithImageEmbedded(label) })
+                            itemsResponse.asEmptyResult()
+                        }
+                    }
+                }
+            }.awaitAll()
+            return@coroutineScope allJobs.find { it.getFailureError != null } ?: Result.Success(Unit)
+        }
+
+    }
 
     override suspend fun searchSpeciesWithCategory(
         query: String,

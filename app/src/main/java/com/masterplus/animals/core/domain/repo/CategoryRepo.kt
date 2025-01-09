@@ -9,7 +9,6 @@ import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.domain.utils.DefaultResult
-import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import kotlinx.coroutines.flow.Flow
 
@@ -77,4 +76,23 @@ interface CategoryRepo {
         targetItemId: Int? = null
     ): Flow<PagingData<HabitatCategoryModel>>
 
+
+
+    fun getLocalPagingClasses(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum,
+    ): Flow<PagingData<ClassModel>>
+
+    fun getLocalPagingFamilies(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum,
+    ): Flow<PagingData<FamilyModel>>
+
+    fun getLocalPagingOrders(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<OrderModel>>
 }

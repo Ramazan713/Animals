@@ -6,6 +6,12 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 object RemoteKeyUtil {
     const val DEFAULT = "default"
 
+    fun getAppSearchKey(
+        query: String
+    ): String{
+        return "AppSearchKey-$query"
+    }
+
     fun getRemoteKeyWithCategoryTypeSearchKey(
         query: String,
         categoryType: CategoryType,

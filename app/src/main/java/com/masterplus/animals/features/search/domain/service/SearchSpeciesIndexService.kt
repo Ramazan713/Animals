@@ -7,6 +7,12 @@ import com.masterplus.animals.core.shared_features.translation.domain.enums.Lang
 
 interface SearchSpeciesIndexService {
 
+    suspend fun searchAll(
+        query: String,
+        pageSize: Int,
+        languageEnum: LanguageEnum
+    ): DefaultResult<List<SearchAllResult>>
+
     suspend fun searchSpecies(
         query: String,
         categoryItemId: Int?,
@@ -24,4 +30,15 @@ interface SearchSpeciesIndexService {
         kingdomType: KingdomType,
         languageEnum: LanguageEnum
     ): DefaultResult<List<String>>
+
+
+    companion object{
+        enum class SearchAllResultType{
+            Species, Classes, Orders, Families,
+        }
+        data class SearchAllResult(
+            val ids: List<String>,
+            val type: SearchAllResultType
+        )
+    }
 }

@@ -227,6 +227,39 @@ class CategoryRepoImpl(
         ).flow.map { items -> items.map { it.toHabitatCategory(language) } }
     }
 
+    override fun getLocalPagingClasses(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<ClassModel>> {
+        return Pager(
+            config = getPagingConfig(pageSize = pageSize),
+            pagingSourceFactory = { categoryDao.getPagingClasses(label) },
+        ).flow.map { items -> items.map { it.toClass(language) } }
+    }
+
+    override fun getLocalPagingFamilies(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<FamilyModel>> {
+        return Pager(
+            config = getPagingConfig(pageSize = pageSize),
+            pagingSourceFactory = { categoryDao.getPagingFamilies(label) },
+        ).flow.map { items -> items.map { it.toFamily(language) } }
+    }
+
+    override fun getLocalPagingOrders(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<OrderModel>> {
+        return Pager(
+            config = getPagingConfig(pageSize = pageSize),
+            pagingSourceFactory = { categoryDao.getPagingOrders(label) },
+        ).flow.map { items -> items.map { it.toOrder(language) } }
+    }
+
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagingFamilies(
         pageSize: Int,

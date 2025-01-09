@@ -2,8 +2,13 @@ package com.masterplus.animals.features.search.data.service
 
 import com.algolia.client.api.SearchClient
 import com.algolia.client.model.search.FacetFilters
+import com.algolia.client.model.search.SearchForFacetValuesResponse
+import com.algolia.client.model.search.SearchForHits
+import com.algolia.client.model.search.SearchMethodParams
 import com.algolia.client.model.search.SearchParams
 import com.algolia.client.model.search.SearchParamsObject
+import com.algolia.client.model.search.SearchResponse
+import com.algolia.client.model.search.SearchResult
 import com.masterplus.animals.BuildConfig
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
@@ -18,6 +23,88 @@ class AlgoliaSearchSpeciesIndexService: SearchSpeciesIndexService {
         BuildConfig.ALGOLIA_APP_ID,
         BuildConfig.ALGOLIA_API_KEY
     )
+
+    override suspend fun searchAll(
+        query: String,
+        pageSize: Int,
+        languageEnum: LanguageEnum
+    ): DefaultResult<List<SearchSpeciesIndexService.Companion.SearchAllResult>> {
+        val name = if(languageEnum.isTr) "name_tr" else "name_en"
+        return safeCall {
+            val response = client.search(
+                searchMethodParams = SearchMethodParams(
+                    requests = listOf(
+                        SearchForHits(
+                            indexName = SPECIES_INDEX_NAME,
+                            hitsPerPage = pageSize,
+                            query = query,
+                            restrictSearchableAttributes = listOf("scientific_name",name)
+                        ),
+                        SearchForHits(
+                            indexName = CLASSES_INDEX_NAME,
+                            hitsPerPage = pageSize,
+                            query = query,
+                            restrictSearchableAttributes = getCategorySearchableAttributes(
+                                categoryType = CategoryType.Class,
+                                languageEnum = languageEnum
+                            )
+                        ),
+                        SearchForHits(
+                            indexName = ORDERS_INDEX_NAME,
+                            hitsPerPage = pageSize,
+                            query = query,
+                            restrictSearchableAttributes = getCategorySearchableAttributes(
+                                categoryType = CategoryType.Order,
+                                languageEnum = languageEnum
+                            )
+                        ),
+                        SearchForHits(
+                            indexName = FAMILIES_INDEX_NAME,
+                            hitsPerPage = pageSize,
+                            query = query,
+                            restrictSearchableAttributes = getCategorySearchableAttributes(
+                                categoryType = CategoryType.Family,
+                                languageEnum = languageEnum
+                            )
+                        )
+                    )
+                )
+            )
+            val dataMap = mapOf<String,MutableList<String>>(
+                SPECIES_INDEX_NAME to mutableListOf(),
+                CLASSES_INDEX_NAME to mutableListOf(),
+                ORDERS_INDEX_NAME to mutableListOf(),
+                FAMILIES_INDEX_NAME to mutableListOf()
+            )
+            response.results.forEach { searchResult ->
+                when(searchResult){
+                    is SearchForFacetValuesResponse -> Unit
+                    is SearchResponse -> dataMap[searchResult.index]?.addAll(searchResult.hits.map { it.objectID })
+                    is SearchResult.SearchForFacetValuesResponseValue -> Unit
+                    is SearchResult.SearchResponseValue -> dataMap[searchResult.value.index]?.addAll(searchResult.value.hits.map { it.objectID })
+                }
+            }
+            listOf(
+                SearchSpeciesIndexService.Companion.SearchAllResult(
+                    ids = dataMap[SPECIES_INDEX_NAME].orEmpty(),
+                    type = SearchSpeciesIndexService.Companion.SearchAllResultType.Species
+                ),
+                SearchSpeciesIndexService.Companion.SearchAllResult(
+                    ids = dataMap[CLASSES_INDEX_NAME].orEmpty(),
+                    type = SearchSpeciesIndexService.Companion.SearchAllResultType.Classes
+                ),
+                SearchSpeciesIndexService.Companion.SearchAllResult(
+                    ids = dataMap[ORDERS_INDEX_NAME].orEmpty(),
+                    type = SearchSpeciesIndexService.Companion.SearchAllResultType.Orders
+                ),
+                SearchSpeciesIndexService.Companion.SearchAllResult(
+                    ids = dataMap[FAMILIES_INDEX_NAME].orEmpty(),
+                    type = SearchSpeciesIndexService.Companion.SearchAllResultType.Families
+                )
+            )
+        }
+    }
+
     override suspend fun searchSpecies(
         query: String,
         categoryItemId: Int?,

@@ -175,6 +175,9 @@ fun AppSearchPage(
     if(adState.loadingRewardAd.isLoading && adState.loadingRewardAd.label == state.adLabel){
         LoadingDialog()
     }
+    if(state.isRemoteSearching && state.searchType.isServer){
+        LoadingDialog()
+    }
 }
 
 

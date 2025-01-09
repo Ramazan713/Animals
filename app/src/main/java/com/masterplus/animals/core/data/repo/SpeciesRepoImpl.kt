@@ -47,6 +47,20 @@ class SpeciesRepoImpl(
     private val categoryRemoteSource: CategoryRemoteSource,
     private val remoteMediatorConfig: RemoteMediatorConfig
 ): SpeciesRepo {
+    override fun getLocalPagingSpecies(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<SpeciesListDetail>> {
+        return Pager(
+            config = getPagingConfig(pageSize),
+            pagingSourceFactory = {
+                speciesDao.getPagingSpeciesByLabel(label)
+            }
+        ).flow.map { items ->
+            items.map { it.toSpeciesListDetail(language) }
+        }
+    }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagingSpeciesWithKingdom(
