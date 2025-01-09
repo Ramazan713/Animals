@@ -43,6 +43,7 @@ class ConnectivityObserverImpl(
                     trySend(false)
                 }
             }
+            send(hasConnection())
             connectivityManager.registerDefaultNetworkCallback(callback)
             awaitClose {
                 connectivityManager.unregisterNetworkCallback(callback)

@@ -126,4 +126,5 @@
     <string name="reset_default_setting">Varsayılan ayarlara dön</string>
     <string name="delete_all_data">Tüm verileri sil</string>
     <string name="question_reset_default_values">Varsayılan ayarlara dönmek istediğinize emin misiniz?</string>
+    <string name="check_your_connection">İnternet bağlantınızı kontrol edin</string>
 </resources>

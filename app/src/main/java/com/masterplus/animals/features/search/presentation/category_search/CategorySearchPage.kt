@@ -67,12 +67,14 @@ fun CategorySearchPage(
     AdMobResultHandler(
         adUiResult = adState.uiResult,
         onAdAction = onAdAction,
-        label = state.adLabel
+        label = state.adLabel,
+        showErrorMessage = true
     ) { adResult ->
         when(adResult){
             is AdUiResult.OnShowingRewardSuccess -> {
                 onAction(CategorySearchAction.AdShowedSuccess)
             }
+            else -> Unit
         }
     }
 

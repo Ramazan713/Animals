@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.constants.K
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.shared_features.ad.domain.repo.InterstitialAdRepo
@@ -126,9 +127,16 @@ class AdViewModel(
             }
 
             is AdAction.OnRewardAdError -> {
-                _state.update { it.copy(loadingRewardAd = it.loadingRewardAd.copy(
-                    error = UiText.Text(action.error)
-                )) }
+                _state.update { it.copy(
+                    loadingRewardAd = it.loadingRewardAd.copy(
+                        error = UiText.Text(action.error),
+                        isLoading = false
+                    ),
+                    uiResult = AdUiResult.OnShowingRewardFailed(
+                        label = it.loadingRewardAd.label,
+                        error = UiText.Resource(R.string.something_went_wrong)
+                    )
+                ) }
             }
             AdAction.OnRewardAdLoaded -> {
                 _state.update { it.copy(loadingRewardAd = it.loadingRewardAd.copy(isLoading = false)) }

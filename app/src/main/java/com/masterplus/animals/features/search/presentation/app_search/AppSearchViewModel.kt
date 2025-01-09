@@ -187,6 +187,7 @@ class AppSearchViewModel(
                     ) }
                     return
                 }
+                serverSearchedQueryFlow.value = ""
                 serverSearchedQueryFlow.value = _state.value.query
             }
 
@@ -213,23 +214,22 @@ class AppSearchViewModel(
             translationRepo.getFlowLanguage()
         ){ query, language ->
             Pair(query, language)
-        }.distinctUntilChanged()
-            .onEach { pair ->
-                _state.update { it.copy(isRemoteSearching = true) }
-                val response = searchRemoteRepo.searchAll(
-                    query = pair.first,
-                    pageSize = 10,
-                    languageEnum = pair.second
-                )
-                response.onFailure { error ->
-                    _state.update { it.copy(message = error.text) }
-                }
-                response.onSuccessAsync {
-                    searchAdRepo.decreaseAppAd()
-                }
-                _state.update { it.copy(isRemoteSearching = false) }
+        }.onEach { pair ->
+            _state.update { it.copy(isRemoteSearching = true) }
+            val response = searchRemoteRepo.searchAll(
+                query = pair.first,
+                pageSize = 10,
+                languageEnum = pair.second
+            )
+            response.onFailure { error ->
+                _state.update { it.copy(message = error.text) }
             }
-            .launchIn(viewModelScope)
+            response.onSuccessAsync {
+                searchAdRepo.decreaseAppAd()
+            }
+            _state.update { it.copy(isRemoteSearching = false) }
+        }
+        .launchIn(viewModelScope)
 
         searchAdRepo
             .remainingAppAdCount

@@ -90,12 +90,14 @@ fun AppSearchPage(
     AdMobResultHandler(
         adUiResult = adState.uiResult,
         onAdAction = onAdAction,
-        label = state.adLabel
+        label = state.adLabel,
+        showErrorMessage = true
     ) { adResult ->
         when(adResult){
             is AdUiResult.OnShowingRewardSuccess -> {
                 onAction(AppSearchAction.AdShowedSuccess)
             }
+            else -> Unit
         }
     }
 

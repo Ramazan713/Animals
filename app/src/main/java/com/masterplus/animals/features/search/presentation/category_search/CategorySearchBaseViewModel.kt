@@ -133,6 +133,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
                     ) }
                     return
                 }
+                serverSearchedQueryFlow.value = ""
                 serverSearchedQueryFlow.value = _state.value.query
             }
 

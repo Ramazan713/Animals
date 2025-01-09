@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.masterplus.animals.R
 import com.masterplus.animals.core.data.datasources.CategoryRemoteSource
 import com.masterplus.animals.core.data.helpers.InsertFirebaseSpeciesHelper
 import com.masterplus.animals.core.data.mapper.toCategoryData
@@ -19,6 +20,7 @@ import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
+import com.masterplus.animals.core.domain.repo.ConnectivityObserver
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
 import com.masterplus.animals.core.domain.utils.Result
@@ -41,7 +43,7 @@ class SearchRemoteRepoImpl(
     private val categoryRemoteSource: CategoryRemoteSource,
     private val searchSpeciesIndexService: SearchSpeciesIndexService,
     private val insertSpeciesHelper: InsertFirebaseSpeciesHelper,
-    private val speciesDao: SpeciesDao,
+    private val connectivityObserver: ConnectivityObserver,
     private val db: AppDatabase
 ): SearchRemoteRepo {
 
@@ -50,6 +52,9 @@ class SearchRemoteRepoImpl(
         pageSize: Int,
         languageEnum: LanguageEnum
     ): EmptyDefaultResult {
+        if(!connectivityObserver.hasConnection()){
+            return Result.errorWithResource(R.string.check_your_connection)
+        }
         val indexResponse = searchSpeciesIndexService.searchAll(query = query, pageSize = pageSize, languageEnum = languageEnum)
         val successSearchResults = indexResponse.getSuccessData ?: return indexResponse.asEmptyResult()
         return coroutineScope {
@@ -114,6 +119,9 @@ class SearchRemoteRepoImpl(
         language: LanguageEnum,
         kingdomType: KingdomType
     ): DefaultResult<Flow<PagingData<SpeciesListDetail>>> {
+        if(!connectivityObserver.hasConnection()){
+            return Result.errorWithResource(R.string.check_your_connection)
+        }
         val label = RemoteKeyUtil.getSpeciesCategorySearchKey(query = query, categoryType = categoryType, itemId = categoryItemId)
 
         val indexResponse = searchSpeciesIndexService.searchSpecies(
@@ -152,6 +160,9 @@ class SearchRemoteRepoImpl(
         language: LanguageEnum,
         kingdomType: KingdomType
     ): DefaultResult<Flow<PagingData<CategoryData>>> {
+        if(!connectivityObserver.hasConnection()){
+            return Result.errorWithResource(R.string.check_your_connection)
+        }
         val label = RemoteKeyUtil.getRemoteKeyWithCategoryTypeSearchKey(
             query = query,
             categoryType = categoryType,
@@ -225,7 +236,7 @@ class SearchRemoteRepoImpl(
     ): DefaultResult<Flow<PagingData<SpeciesListDetail>>>{
         val flowData = Pager(
             config = PagingConfig(pageSize = localPageSize),
-            pagingSourceFactory = { speciesDao.getPagingSpeciesByLabel(label) }
+            pagingSourceFactory = { db.speciesDao.getPagingSpeciesByLabel(label) }
         ).flow.map { items -> items.map { it.toSpeciesListDetail(language) } }
         return Result.Success(flowData)
     }

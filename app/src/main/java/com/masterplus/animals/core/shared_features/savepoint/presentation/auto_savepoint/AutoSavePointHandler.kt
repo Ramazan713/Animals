@@ -85,6 +85,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
                 is AdUiResult.OnShowingRewardSuccess -> {
                     onAction(AutoSavePointAction.SuccessShowAd(contentType = contentType.toContentType()))
                 }
+                else -> Unit
             }
         }
     )
