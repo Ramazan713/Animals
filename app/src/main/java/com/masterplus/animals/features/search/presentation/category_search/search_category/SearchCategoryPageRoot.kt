@@ -143,6 +143,7 @@ private fun SearchResultLazyColumn(
                             .animateItem(),
                         model = item,
                         order = index + 1,
+                        useTransition = true,
                         onClick = {
                             onItemClick(item)
                         }

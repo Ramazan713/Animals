@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,7 +33,6 @@ import androidx.paging.compose.itemKey
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.extentions.isAnyLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
-import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
 import com.masterplus.animals.core.presentation.utils.SampleDatas
@@ -67,7 +65,7 @@ fun ImageCategoryDataRow(
         Box(
             modifier = Modifier.wrapContentSize()
         ) {
-            AnimatedVisibility(showEmptyContent) {
+            DefaultAnimatedVisibility(showEmptyContent) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -106,7 +104,7 @@ fun ImageCategoryDataRow(
                 }
 
                 item {
-                    AnimatedVisibility(
+                    DefaultAnimatedVisibility(
                         !showEmptyContent && showMoreItem
                     ) {
                         Box(
@@ -150,7 +148,7 @@ fun ImageCategoryDataRow(
         Box(
             modifier = Modifier.wrapContentSize()
         ) {
-            AnimatedVisibility(showEmptyContent) {
+            DefaultAnimatedVisibility(showEmptyContent) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -182,7 +180,7 @@ fun ImageCategoryDataRow(
                 }
 
                 item {
-                    AnimatedVisibility(
+                    DefaultAnimatedVisibility(
                         !showEmptyContent
                     ) {
                         Box(
@@ -224,7 +222,7 @@ fun ImageCategoryDataRow(
                 modifier = Modifier
                     .padding(4.dp)
             )
-            AnimatedVisibility(showMore) {
+            DefaultAnimatedVisibility(showMore) {
                 Spacer(modifier = Modifier.width(12.dp))
                 TextButton(
                     onClick = { onClickMore?.invoke() }

@@ -1,31 +1,16 @@
 package com.masterplus.animals.features.search.presentation.category_search
 
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AdsClick
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
@@ -34,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
 import com.masterplus.animals.core.extentions.clearFocusOnTap
-import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.dialogs.LoadingDialog
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
@@ -43,7 +27,6 @@ import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.ad.presentation.dialogs.ShowAdRequiredDia
 import com.masterplus.animals.features.search.domain.enums.SearchType
-import com.masterplus.animals.features.search.presentation.components.HistoryItem
 import com.masterplus.animals.features.search.presentation.components.SearchField
 import com.masterplus.animals.features.search.presentation.components.SearchFilterRow
 import com.masterplus.animals.features.search.presentation.components.SearchHistoryColumn
@@ -108,28 +91,26 @@ fun CategorySearchPage(
                 },
                 onRemainingSearchableCount = { state.remainingSearchableCount }
             )
-
-            AnimatedVisibility(
-                visible = state.query.isBlank()
-            ) {
-                SearchHistoryColumn(
-                    modifier = Modifier.weight(1f),
-                    histories = state.histories,
-                    isLoading = state.historyLoading,
-                    contentPaddings = contentPadding,
-                    onHistoryClick = { history ->
-                        onAction(CategorySearchAction.SearchQuery(history.content))
-                    },
-                    onDeleteHistoryClick = { history ->
-                        onAction(CategorySearchAction.DeleteHistory(history))
-                    }
-                )
-            }
-
-            AnimatedVisibility(
-                visible = state.query.isNotBlank()
-            ) {
-                searchResultContent(contentPadding)
+            Crossfade(
+                state.query.isBlank(),
+                label = "PageContent"
+            ) { isQueryEmpty ->
+                if(isQueryEmpty){
+                    SearchHistoryColumn(
+                        modifier = Modifier.weight(1f),
+                        histories = state.histories,
+                        isLoading = state.historyLoading,
+                        contentPaddings = contentPadding,
+                        onHistoryClick = { history ->
+                            onAction(CategorySearchAction.SearchQuery(history.content))
+                        },
+                        onDeleteHistoryClick = { history ->
+                            onAction(CategorySearchAction.DeleteHistory(history))
+                        }
+                    )
+                }else{
+                    searchResultContent(contentPadding)
+                }
             }
         }
     }

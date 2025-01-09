@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.enums.KingdomType
+import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
 import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
@@ -42,12 +43,16 @@ fun NavGraphBuilder.searchCategory(
     onNavigateToCategoryListWithDetail: (CategoryType, Int, KingdomType) -> Unit,
 ){
     composable<SearchCategoryRoute> {
-        SearchCategoryPageRoot(
-            adState = adState,
-            onAdAction = onAdAction,
-            onNavigateBack = onNavigateBack,
-            onNavigateToSpeciesList = onNavigateToSpeciesList,
-            onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
-        )
+        NavAnimatedVisibilityProvider(
+            scope = this
+        ){
+            SearchCategoryPageRoot(
+                adState = adState,
+                onAdAction = onAdAction,
+                onNavigateBack = onNavigateBack,
+                onNavigateToSpeciesList = onNavigateToSpeciesList,
+                onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
+            )
+        }
     }
 }

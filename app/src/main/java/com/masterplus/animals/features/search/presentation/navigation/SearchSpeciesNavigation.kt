@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.ContentType
+import com.masterplus.animals.core.presentation.transition.NavAnimatedVisibilityProvider
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
 import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
@@ -37,11 +38,15 @@ fun NavGraphBuilder.searchSpecies(
     onNavigateToSpeciesDetail: (Int) -> Unit,
 ){
     composable<SearchSpeciesRoute> {
-        SearchSpeciesPageRoot(
-            adState = adState,
-            onAdAction = onAdAction,
-            onNavigateBack = onNavigateBack,
-            onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
-        )
+        NavAnimatedVisibilityProvider(
+            scope = this
+        ){
+            SearchSpeciesPageRoot(
+                adState = adState,
+                onAdAction = onAdAction,
+                onNavigateBack = onNavigateBack,
+                onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
+            )
+        }
     }
 }

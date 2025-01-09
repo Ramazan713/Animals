@@ -2,6 +2,7 @@ package com.masterplus.animals.features.kingdom.presentation
 
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -161,6 +162,7 @@ fun KingdomPage(
 
                 item {
                     ImageCategoryDataRow(
+                        modifier = Modifier.animateItem(),
                         contentPaddings = contentPaddings,
                         title = "Yaşam Alanları",
                         items = state.habitats.categoryDataList,
@@ -183,6 +185,7 @@ fun KingdomPage(
 
                 item {
                     ImageCategoryDataRow(
+                        modifier = Modifier.animateItem(),
                         contentPaddings = contentPaddings,
                         title = "Sınıflar",
                         items = state.classes.categoryDataList,
@@ -205,6 +208,7 @@ fun KingdomPage(
 
                 item {
                     ImageCategoryDataRow(
+                        modifier = Modifier.animateItem(),
                         contentPaddings = contentPaddings,
                         title = "Takımlar",
                         items = state.orders.categoryDataList,
@@ -227,6 +231,7 @@ fun KingdomPage(
 
                 item {
                     ImageCategoryDataRow(
+                        modifier = Modifier.animateItem(),
                         contentPaddings = contentPaddings,
                         title = "Familyalar",
                         items = state.families.categoryDataList,

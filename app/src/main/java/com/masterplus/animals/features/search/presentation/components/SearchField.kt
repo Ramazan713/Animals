@@ -3,6 +3,7 @@ package com.masterplus.animals.features.search.presentation.components
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
+import com.masterplus.animals.core.presentation.components.DefaultAnimatedVisibility
 import com.masterplus.animals.core.presentation.components.DefaultToolTip
 import com.masterplus.animals.features.search.domain.enums.SearchType
 
@@ -133,8 +135,6 @@ fun SearchField(
                            )
                        }
                    }
-
-
                    AnimatedVisibility(searchType.isServer) {
                        SearchTextIconButton(
                            onClick = onSearch,
@@ -149,8 +149,6 @@ fun SearchField(
                            }
                        )
                    }
-
-
                }
            }
        )

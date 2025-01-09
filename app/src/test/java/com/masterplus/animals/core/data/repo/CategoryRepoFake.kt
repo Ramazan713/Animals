@@ -105,6 +105,30 @@ class CategoryRepoFake: CategoryRepo{
         return Pager(PagingConfig(pageSize = pageSize)) { fakePagingSource }.flow
     }
 
+    override fun getLocalPagingClasses(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<ClassModel>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLocalPagingFamilies(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<FamilyModel>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLocalPagingOrders(
+        label: String,
+        pageSize: Int,
+        language: LanguageEnum
+    ): Flow<PagingData<OrderModel>> {
+        TODO("Not yet implemented")
+    }
+
     override fun getPagingFamilies(
         pageSize: Int,
         language: LanguageEnum,

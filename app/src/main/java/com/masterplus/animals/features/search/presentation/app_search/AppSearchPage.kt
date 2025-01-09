@@ -1,6 +1,6 @@
 package com.masterplus.animals.features.search.presentation.app_search
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -135,39 +135,38 @@ fun AppSearchPage(
                 onRemainingSearchableCount = { state.remainingSearchableCount }
             )
 
-            AnimatedVisibility(
-                visible = state.query.isBlank()
-            ) {
-                SearchHistoryColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    histories = state.histories,
-                    isLoading = state.historyLoading,
-                    contentPaddings = lazyHorizontalPaddings + lazyVerticalPaddings,
-                    onHistoryClick = { history ->
-                        onAction(AppSearchAction.SearchQuery(history.content))
-                    },
-                    onDeleteHistoryClick = { history ->
-                        onAction(AppSearchAction.DeleteHistory(history))
-                    }
-                )
-            }
-            AnimatedVisibility(
-                visible = state.query.isNotBlank(),
-                modifier = Modifier.weight(1f)
-            ) {
-                SearchResultPageContent(
-                    contentPaddings = lazyVerticalPaddings,
-                    lazyItemContentPaddings = lazyHorizontalPaddings,
-                    modifier = Modifier.fillMaxSize(),
-                    classPagingData = classPagingData,
-                    orderPagingData = orderPagingData,
-                    familyPagingData = familyPagingData,
-                    speciesPagingData = speciesPagingData,
-                    state = state,
-                    onNavigateToSpeciesList = onNavigateToSpeciesList,
-                    onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
-                    onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
-                )
+            Crossfade(
+                state.query.isBlank(),
+                label = "PageContent"
+            ) { isQueryEmpty ->
+                if(isQueryEmpty){
+                    SearchHistoryColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        histories = state.histories,
+                        isLoading = state.historyLoading,
+                        contentPaddings = lazyHorizontalPaddings + lazyVerticalPaddings,
+                        onHistoryClick = { history ->
+                            onAction(AppSearchAction.SearchQuery(history.content))
+                        },
+                        onDeleteHistoryClick = { history ->
+                            onAction(AppSearchAction.DeleteHistory(history))
+                        }
+                    )
+                }else{
+                    SearchResultPageContent(
+                        contentPaddings = lazyVerticalPaddings,
+                        lazyItemContentPaddings = lazyHorizontalPaddings,
+                        modifier = Modifier.fillMaxSize(),
+                        classPagingData = classPagingData,
+                        orderPagingData = orderPagingData,
+                        familyPagingData = familyPagingData,
+                        speciesPagingData = speciesPagingData,
+                        state = state,
+                        onNavigateToSpeciesList = onNavigateToSpeciesList,
+                        onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
+                        onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
+                    )
+                }
             }
         }
     }
@@ -227,7 +226,7 @@ private fun GetSearchBar(
 private fun AppSearchPreview(modifier: Modifier = Modifier) {
     AppSearchPage(
         state = AppSearchState(
-            query = "",
+            query = "a",
             histories = listOf(
                 SampleDatas.history
             )

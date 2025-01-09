@@ -1,6 +1,5 @@
 package com.masterplus.animals.features.search.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,8 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.masterplus.animals.core.presentation.components.DefaultAnimatedVisibility
 import com.masterplus.animals.features.search.domain.enums.SearchType
-import com.masterplus.animals.features.search.presentation.category_search.CategorySearchAction
 
 @Composable
 fun SearchFilterRow(
@@ -38,7 +37,7 @@ fun SearchFilterRow(
             )
         }
         Spacer(Modifier.weight(1f))
-        AnimatedVisibility(
+        DefaultAnimatedVisibility(
             selectedSearchType.isServer
         ) {
             Row(

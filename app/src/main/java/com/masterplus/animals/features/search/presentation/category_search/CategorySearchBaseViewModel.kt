@@ -189,7 +189,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
             .filter { it.searchType.isLocal }
             .map { it.query.trim() }
             .debounce(3000L)
-            .filter { it.isNotBlank() && it.length > 2 }
+            .filter { it.isNotBlank() && it.length >= 2 }
             .distinctUntilChanged()
             .onEach { query ->
                 insertHistory(query)
@@ -197,7 +197,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
             .launchIn(viewModelScope)
 
         serverSearchedQueryFlow
-            .filter { it.isNotBlank() && it.length > 2 }
+            .filter { it.isNotBlank() && it.length >= 2 }
             .distinctUntilChanged()
             .onEach { query ->
                 insertHistory(query)
