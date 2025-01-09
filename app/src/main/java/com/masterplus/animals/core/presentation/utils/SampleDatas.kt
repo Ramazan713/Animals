@@ -27,6 +27,8 @@ import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePo
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.SavePoint
+import com.masterplus.animals.features.search.domain.enums.HistoryType
+import com.masterplus.animals.features.search.domain.models.History
 import com.masterplus.animals.features.settings.presentation.link_accounts.models.LinkAccountModel
 import com.masterplus.animals.features.species_detail.presentation.models.TitleContentModel
 import com.masterplus.animals.features.species_detail.presentation.models.TitleSectionModel
@@ -77,6 +79,13 @@ object SampleDatas {
         subTitle = "Sub Title",
         id = 2,
         image = imageWithMetadata
+    )
+
+    val history = History(
+        id = 1,
+        "history a",
+        modifiedDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+        historyType = HistoryType.App
     )
 
     val categoryData = CategoryData(

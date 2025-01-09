@@ -1,20 +1,16 @@
 package com.masterplus.animals.features.search.presentation.app_search
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,11 +18,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.extentions.clearFocusOnTap
-import com.masterplus.animals.core.presentation.components.ImageCategoryDataRow
+import com.masterplus.animals.core.extentions.plus
 import com.masterplus.animals.core.presentation.dialogs.LoadingDialog
+import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
+import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
 import com.masterplus.animals.core.shared_features.ad.presentation.AdMobResultHandler
 import com.masterplus.animals.core.shared_features.ad.presentation.AdState
@@ -41,6 +41,9 @@ import org.koin.androidx.compose.koinViewModel
 fun AppSearchPageRoot(
     adState: AdState,
     onAdAction: (AdAction) -> Unit,
+    onNavigateToCategoryListWithDetail: (CategoryType, KingdomType, Int) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, KingdomType, Int?, Int) -> Unit,
+    onNavigateToSpeciesDetail: (Int) -> Unit,
     viewModel: AppSearchViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -57,7 +60,10 @@ fun AppSearchPageRoot(
         classPagingData = classPagingData,
         orderPagingData = orderPagingData,
         familyPagingData = familyPagingData,
-        speciesPagingData = speciesPagingData
+        speciesPagingData = speciesPagingData,
+        onNavigateToSpeciesList = onNavigateToSpeciesList,
+        onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
+        onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
     )
 }
 
@@ -67,16 +73,19 @@ fun AppSearchPage(
     onAction: (AppSearchAction) -> Unit,
     adState: AdState,
     onAdAction: (AdAction) -> Unit,
+    onNavigateToCategoryListWithDetail: (CategoryType, KingdomType, Int) -> Unit,
+    onNavigateToSpeciesList: (CategoryType, KingdomType, Int?, Int) -> Unit,
+    onNavigateToSpeciesDetail: (Int) -> Unit,
     classPagingData: LazyPagingItems<CategoryData>,
     orderPagingData: LazyPagingItems<CategoryData>,
     familyPagingData: LazyPagingItems<CategoryData>,
     speciesPagingData: LazyPagingItems<CategoryData>
 ) {
 
-    val contentPadding = PaddingValues(
-        bottom = 16.dp,
-        top = 16.dp
-    )
+    val itemContentPaddings = PaddingValues(horizontal = 12.dp)
+    val lazyHorizontalPaddings = PaddingValues(horizontal = 12.dp)
+    val lazyVerticalPaddings = PaddingValues(bottom = 16.dp, top = 16.dp)
+
 
     AdMobResultHandler(
         adUiResult = adState.uiResult,
@@ -102,20 +111,21 @@ fun AppSearchPage(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddings)
-                .padding(horizontal = 12.dp)
                 .semantics { isTraversalGroup = true }
                 .clearFocusOnTap()
         ){
             GetSearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(itemContentPaddings)
                     .padding(vertical = 8.dp),
                 state = state,
                 onAction = onAction,
             )
 
             SearchFilterRow(
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(itemContentPaddings),
                 selectedSearchType = state.searchType,
                 onSelectSearchType = { searchType ->
                     onAction(AppSearchAction.SelectSearchType(searchType))
@@ -130,7 +140,7 @@ fun AppSearchPage(
                     modifier = Modifier.fillMaxSize(),
                     histories = state.histories,
                     isLoading = state.historyLoading,
-                    contentPaddings = contentPadding,
+                    contentPaddings = lazyHorizontalPaddings + lazyVerticalPaddings,
                     onHistoryClick = { history ->
                         onAction(AppSearchAction.SearchQuery(history.content))
                     },
@@ -144,12 +154,17 @@ fun AppSearchPage(
                 modifier = Modifier.weight(1f)
             ) {
                 SearchResultPageContent(
-                    contentPadding = contentPadding,
+                    contentPaddings = lazyVerticalPaddings,
+                    lazyItemContentPaddings = lazyHorizontalPaddings,
                     modifier = Modifier.fillMaxSize(),
                     classPagingData = classPagingData,
                     orderPagingData = orderPagingData,
                     familyPagingData = familyPagingData,
-                    speciesPagingData = speciesPagingData
+                    speciesPagingData = speciesPagingData,
+                    state = state,
+                    onNavigateToSpeciesList = onNavigateToSpeciesList,
+                    onNavigateToSpeciesDetail = onNavigateToSpeciesDetail,
+                    onNavigateToCategoryListWithDetail = onNavigateToCategoryListWithDetail
                 )
             }
         }
@@ -173,9 +188,6 @@ fun AppSearchPage(
     }
 
     if(adState.loadingRewardAd.isLoading && adState.loadingRewardAd.label == state.adLabel){
-        LoadingDialog()
-    }
-    if(state.isRemoteSearching && state.searchType.isServer){
         LoadingDialog()
     }
 }
@@ -211,10 +223,25 @@ private fun GetSearchBar(
 @Preview(showBackground = true)
 @Composable
 private fun AppSearchPreview(modifier: Modifier = Modifier) {
-//    AppSearchPage(
-//        state = AppSearchState(),
-//        onAction = {},
-//        adState = AdState(),
-//        onAdAction = {}
-//    )
+    AppSearchPage(
+        state = AppSearchState(
+            query = "",
+            histories = listOf(
+                SampleDatas.history
+            )
+        ),
+        onAction = {},
+        adState = AdState(),
+        onAdAction = {},
+        onNavigateToSpeciesList = {x,y,z,t->},
+        onNavigateToSpeciesDetail = {},
+        onNavigateToCategoryListWithDetail = {x,y,z->},
+        speciesPagingData = getPreviewLazyPagingData(listOf(
+            SampleDatas.categoryData,SampleDatas.categoryData.copy(id = 3), SampleDatas.categoryData.copy(id = 4),
+            SampleDatas.categoryData.copy(id = 5)
+        )),
+        familyPagingData = getPreviewLazyPagingData(listOf(SampleDatas.categoryData)),
+        classPagingData = getPreviewLazyPagingData(listOf()),
+        orderPagingData = getPreviewLazyPagingData(listOf()),
+    )
 }

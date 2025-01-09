@@ -68,7 +68,6 @@ fun AppNavHost(
                 navHostController.navigateToCategoryListWithDetail(categoryType, itemId, KingdomType.Animals)
             },
             onNavigateToSpeciesList = { categoryType, itemId, pos ->
-
                 navHostController.navigateToSpeciesList(categoryType, itemId, KingdomType.Animals, pos)
             },
             onNavigateToShowSavePoints = {
@@ -105,7 +104,16 @@ fun AppNavHost(
 
         appSearch(
             adState = adState,
-            onAdAction = onAdAction
+            onAdAction = onAdAction,
+            onNavigateToCategoryListWithDetail = { categoryType, kingdomType, itemId ->
+                navHostController.navigateToCategoryListWithDetail(categoryType, itemId, kingdomType)
+            },
+            onNavigateToSpeciesList = { categoryType, kingdomType, itemId, pos ->
+                navHostController.navigateToSpeciesList(categoryType, itemId, kingdomType, pos)
+            },
+            onNavigateToSpeciesDetail = { itemId ->
+                navHostController.navigateToSpeciesDetail(itemId)
+            },
         )
 
         settings(

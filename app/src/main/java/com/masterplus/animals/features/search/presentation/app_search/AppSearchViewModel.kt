@@ -266,7 +266,7 @@ class AppSearchViewModel(
             .filter { it.searchType.isLocal }
             .map { it.query.trim() }
             .debounce(3000L)
-            .filter { it.isNotBlank() && it.length > 2 }
+            .filter { it.isNotBlank() && it.length >= 2 }
             .distinctUntilChanged()
             .onEach { query ->
                 insertHistory(query)
@@ -274,7 +274,7 @@ class AppSearchViewModel(
             .launchIn(viewModelScope)
 
         serverSearchedQueryFlow
-            .filter { it.isNotBlank() && it.length > 2 }
+            .filter { it.isNotBlank() && it.length >= 2 }
             .distinctUntilChanged()
             .onEach { query ->
                 insertHistory(query)
