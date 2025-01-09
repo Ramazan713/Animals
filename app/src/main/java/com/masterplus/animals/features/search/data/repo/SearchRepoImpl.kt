@@ -10,6 +10,7 @@ import com.masterplus.animals.core.data.mapper.toFamily
 import com.masterplus.animals.core.data.mapper.toOrder
 import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
 import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.shared_features.database.dao.SearchCategoryDao
@@ -51,6 +52,7 @@ class SearchRepoImpl(
         query: String,
         pageSize: Int,
         categoryType: CategoryType,
+        kingdomType: KingdomType,
         itemId: Int,
         language: LanguageEnum
     ): Flow<PagingData<SpeciesListDetail>> {
@@ -64,6 +66,7 @@ class SearchRepoImpl(
             pagingSourceFactory = {
                 when(categoryType){
                     CategoryType.Habitat -> {
+                        //TODO: Add kingdomType for searching Habitats
                         if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByHabitatCategoryId(itemId, queryInLike, queryForOrder) else
                             searchSpeciesDao.searchPagingSpeciesTrByHabitatCategoryId(itemId, queryInLike, queryForOrder)
                     }

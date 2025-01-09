@@ -127,7 +127,8 @@ sealed class SavePointDestination(
         if(contentType.isContent){
             return RemoteKeyUtil.getSpeciesCategoryRemoteKey(
                 categoryType = categoryType,
-                itemId = destinationId
+                itemId = destinationId,
+                kingdomType = kingdomType
             )
         }
         return RemoteKeyUtil.getRemoteKeyWithCategoryType(

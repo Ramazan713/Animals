@@ -39,7 +39,7 @@ fun NavController.navigateToSpeciesList(
 fun NavGraphBuilder.speciesList(
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
-    onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
+    onNavigateToCategorySearch: (CategoryType, ContentType, KingdomType, Int?) -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit,
     adState: AdState,
     onAdAction: (AdAction) -> Unit,

@@ -41,20 +41,23 @@ object RemoteKeyUtil {
 
     fun getSpeciesCategorySearchKey(
         categoryType: CategoryType,
+        kingdomType: KingdomType,
         itemId: Int?,
         query: String
     ): String{
         return getSpeciesCategoryRemoteKey(
             categoryType = categoryType,
-            itemId = itemId
+            itemId = itemId,
+            kingdomType = kingdomType
         ) + "-Search-$query"
     }
 
     fun getSpeciesCategoryRemoteKey(
         categoryType: CategoryType,
+        kingdomType: KingdomType,
         itemId: Int?,
     ): String{
-        return "SpeciesCategoryKey-${categoryType.name.lowercase()}-${itemId ?: 0}"
+        return "SpeciesCategoryKey-${categoryType.name.lowercase()}-${kingdomType.kingdomId}-${itemId ?: 0}"
     }
 
     fun getSpeciesKingdomRemoteKey(

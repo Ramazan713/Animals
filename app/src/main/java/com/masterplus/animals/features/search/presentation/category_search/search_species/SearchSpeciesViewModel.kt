@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
-import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.utils.DefaultResult
@@ -48,6 +47,7 @@ class SearchSpeciesViewModel(
         return if(args.categoryItemId != null){
             searchRepo.searchSpeciesWithCategory(
                 categoryType = args.categoryType,
+                kingdomType = args.kingdomType,
                 query = query,
                 itemId = args.categoryItemId,
                 language = languageEnum,
@@ -73,7 +73,7 @@ class SearchSpeciesViewModel(
             localPageSize = localPageSize,
             responsePageSize = responsePageSize,
             language = languageEnum,
-            kingdomType = KingdomType.DEFAULT,
+            kingdomType = args.kingdomType,
             categoryType = args.categoryType,
             categoryItemId = args.categoryItemId
         )

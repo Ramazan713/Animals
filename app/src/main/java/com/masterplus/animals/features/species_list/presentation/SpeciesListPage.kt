@@ -85,7 +85,7 @@ fun SpeciesListPageRoot(
     autoSavePointViewModel: AutoSavePointViewModel = koinViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToSpeciesDetail: (Int, Int?) -> Unit,
-    onNavigateToCategorySearch: (CategoryType, ContentType, Int?) -> Unit,
+    onNavigateToCategorySearch: (CategoryType, ContentType, KingdomType, Int?) -> Unit,
     onNavigateToSavePointSpeciesSettings: () -> Unit,
     adState: AdState,
     onAdAction: (AdAction) -> Unit,
@@ -108,7 +108,7 @@ fun SpeciesListPageRoot(
         pagingItems = pagingItems,
         onAutoSavePointAction = autoSavePointViewModel::onAction,
         onNavigateToCategorySearch = {
-            onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.categoryItemId)
+            onNavigateToCategorySearch(args.categoryType, ContentType.Category, args.kingdomType, args.categoryItemId)
         },
         autoSavePointState = autoSavePointState,
         onNavigateToSavePointSpeciesSettings = onNavigateToSavePointSpeciesSettings,

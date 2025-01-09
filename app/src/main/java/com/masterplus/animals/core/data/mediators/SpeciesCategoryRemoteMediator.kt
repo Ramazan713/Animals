@@ -20,6 +20,7 @@ class SpeciesCategoryRemoteMediator(
         get() = RemoteKeyUtil.getSpeciesCategoryRemoteKey(
             categoryType = categoryType,
             itemId = itemId,
+            kingdomType = kingdomType
         )
 
     override suspend fun fetchData(

@@ -120,7 +120,8 @@ class SpeciesRepoImpl(
             pagingSourceFactory = {
                 speciesDao.getPagingSpeciesByLabel(RemoteKeyUtil.getSpeciesCategoryRemoteKey(
                     categoryType = categoryType,
-                    itemId = itemId
+                    itemId = itemId,
+                    kingdomType = kingdom
                 ))
             },
             remoteMediator = SpeciesCategoryRemoteMediator(

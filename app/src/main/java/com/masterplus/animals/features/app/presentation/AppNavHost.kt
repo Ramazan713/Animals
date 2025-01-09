@@ -206,8 +206,8 @@ fun AppNavHost(
             onNavigateToSpeciesDetail = { itemId, listIdControl ->
                 navHostController.navigateToSpeciesDetail(itemId, listIdControl)
             },
-            onNavigateToCategorySearch = {catType, contentType, itemId ->
-                navHostController.navigateToSearchSpecies(catType,contentType, itemId)
+            onNavigateToCategorySearch = {catType, contentType, kingdomType, itemId ->
+                navHostController.navigateToSearchSpecies(catType,contentType, kingdomType, itemId)
             },
             onNavigateToSavePointSpeciesSettings = {
                 navHostController.navigateToSavePointSpeciesSettings()

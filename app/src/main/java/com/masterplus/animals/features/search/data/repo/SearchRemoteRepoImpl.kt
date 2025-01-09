@@ -27,7 +27,6 @@ import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.domain.utils.map
 import com.masterplus.animals.core.shared_features.database.AppDatabase
-import com.masterplus.animals.core.shared_features.database.dao.SpeciesDao
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.features.search.domain.repo.SearchRemoteRepo
 import com.masterplus.animals.features.search.domain.service.SearchSpeciesIndexService
@@ -122,7 +121,12 @@ class SearchRemoteRepoImpl(
         if(!connectivityObserver.hasConnection()){
             return Result.errorWithResource(R.string.check_your_connection)
         }
-        val label = RemoteKeyUtil.getSpeciesCategorySearchKey(query = query, categoryType = categoryType, itemId = categoryItemId)
+        val label = RemoteKeyUtil.getSpeciesCategorySearchKey(
+            query = query,
+            categoryType = categoryType,
+            itemId = categoryItemId,
+            kingdomType = kingdomType
+        )
 
         val indexResponse = searchSpeciesIndexService.searchSpecies(
             query = query,
