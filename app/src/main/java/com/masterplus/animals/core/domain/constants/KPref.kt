@@ -10,7 +10,6 @@ object KPref {
 
     val contentReadCounter = PrefKey("contentReadCounter",0)
     val categoryReadCounter = PrefKey("categoryReadCounter",0)
-    val lastUpdatedReadCounter = PrefKey("lastUpdatedReadCounter","")
 
     val removePagingNextKeyEnd = PrefKey("removePagingNextKeyEnd","")
     val setPagingShouldRefresh = PrefKey("setPagingShouldRefresh","")

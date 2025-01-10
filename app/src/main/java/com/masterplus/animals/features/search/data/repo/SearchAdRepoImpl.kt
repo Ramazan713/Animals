@@ -2,6 +2,7 @@ package com.masterplus.animals.features.search.data.repo
 
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
+import com.masterplus.animals.core.domain.services.CheckDayChangeService
 import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.preferences.domain.AppPreferences
 import com.masterplus.animals.features.search.domain.repo.SearchAdRepo
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.map
 
 class SearchAdRepoImpl(
     private val appConfigPreferences: AppConfigPreferences,
-    private val appPreferences: AppPreferences
+    private val appPreferences: AppPreferences,
+    private val checkDayChangeService: CheckDayChangeService
 ): SearchAdRepo {
 
     override val remainingCategoryAdCount: Flow<Int>
@@ -50,6 +52,18 @@ class SearchAdRepoImpl(
         }
     }
 
+    override suspend fun checkNewDay() {
+        if(!checkDayChangeService.isNewDay()) return
+        val appConfigData = appConfigPreferences.getData().ad
+        appPreferences.edit {
+            if(getCategoryRemainingCounter(it) <= 0){
+                it[remainingCategoryAdCountKey] = appConfigData.initRemainingCategorySearchCount
+            }
+            if(getAppRemainingCounter(it) <= 0){
+                it[remainingAppAdCountKey] = appConfigData.initRemainingAppSearchCount
+            }
+        }
+    }
 
 
     private suspend fun getCategoryRemainingCounter(preferences: Preferences): Int{
