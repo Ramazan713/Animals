@@ -64,42 +64,16 @@ class SearchRemoteRepoImpl(
                     val label = RemoteKeyUtil.getAppSearchKey(query)
                     when(searchResult.type){
                         SearchSpeciesIndexService.Companion.SearchAllResultType.Species -> {
-                            val speciesResponse = categoryRemoteSource.getSpecies(
-                                itemIds = indexIds,
-                                loadKey = null,
-                                limit = indexIds.size,
-                                incrementCounter = false,
-                                orderByKey = null,
-                            )
-                            val speciesData = speciesResponse.getSuccessData?.let { data ->
-                                data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
-                            } ?: return@async speciesResponse.asEmptyResult()
-                            insertSpeciesHelper.insertSpecies(speciesData, label)
-                            speciesResponse.asEmptyResult()
+                            insertSpecies(indexIds = indexIds, label = label)
                         }
                         SearchSpeciesIndexService.Companion.SearchAllResultType.Classes -> {
-                            val itemsResponse = categoryRemoteSource.getClasses(itemIds = indexIds, orderByKey = null, incrementCounter = false)
-                            val itemsData = itemsResponse.getSuccessData?.let { data ->
-                                data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
-                            } ?:  return@async itemsResponse.asEmptyResult()
-                            db.categoryDao.insertClassesWithImages(itemsData.map { it.toClassWithImageEmbedded(label) })
-                            itemsResponse.asEmptyResult()
+                            insertClasses(indexIds = indexIds, label = label)
                         }
                         SearchSpeciesIndexService.Companion.SearchAllResultType.Orders -> {
-                            val itemsResponse = categoryRemoteSource.getOrders(itemIds = indexIds, orderByKey = null, incrementCounter = false)
-                            val itemsData = itemsResponse.getSuccessData?.let { data ->
-                                data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
-                            } ?: return@async itemsResponse.asEmptyResult()
-                            db.categoryDao.insertOrdersWithImages(itemsData.map { it.toOrderWithImageEmbedded(label) })
-                            itemsResponse.asEmptyResult()
+                            insertOrders(indexIds = indexIds, label = label)
                         }
                         SearchSpeciesIndexService.Companion.SearchAllResultType.Families -> {
-                            val itemsResponse = categoryRemoteSource.getFamilies(itemIds = indexIds, orderByKey = null, incrementCounter = false)
-                            val itemsData = itemsResponse.getSuccessData?.let { data ->
-                                data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
-                            } ?: return@async itemsResponse.asEmptyResult()
-                            db.categoryDao.insertFamiliesWithImages(itemsData.map { it.toFamilyWithImageEmbedded(label) })
-                            itemsResponse.asEmptyResult()
+                            insertFamilies(indexIds = indexIds, label = label)
                         }
                     }
                 }
@@ -138,17 +112,9 @@ class SearchRemoteRepoImpl(
         )
         val indexIds = indexResponse.getSuccessData?.mapNotNull { it.toIntOrNull() } ?: return indexResponse.map { emptyFlow() }
         if(indexIds.isEmpty()) return getSpeciesWithCategoriesPagingFlow(label, localPageSize, language)
-        val speciesResponse = categoryRemoteSource.getSpecies(
-            itemIds = indexIds,
-            loadKey = null,
-            limit = responsePageSize,
-            incrementCounter = false,
-            orderByKey = null,
-        )
-        val speciesData = speciesResponse.getSuccessData?.let { data ->
-            data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
-        } ?: return speciesResponse.map { emptyFlow() }
-        insertSpeciesHelper.insertSpecies(speciesData, label)
+
+        val insertSpeciesResponse = insertSpecies(indexIds = indexIds, label = label)
+        if(insertSpeciesResponse.isError) return insertSpeciesResponse.map { flowOf() }
 
         return getSpeciesWithCategoriesPagingFlow(
             label, localPageSize, language
@@ -185,43 +151,20 @@ class SearchRemoteRepoImpl(
         val indexIds = indexResponse.getSuccessData?.mapNotNull { it.toIntOrNull() } ?: return indexResponse.map { emptyFlow() }
         if(indexIds.isEmpty()) return getCategoriesPagingFlow(label, localPageSize, language, categoryType)
 
-        when(categoryType){
-            CategoryType.Habitat -> Unit
+        val result = when(categoryType){
+            CategoryType.Habitat -> Result.Success(Unit)
             CategoryType.Class -> {
-                val itemsResponse = categoryRemoteSource.getClasses(
-                    itemIds = indexIds,
-                    orderByKey = null,
-                    incrementCounter = false
-                )
-                val itemsData = itemsResponse.getSuccessData?.let { data ->
-                    data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
-                } ?: return itemsResponse.map { emptyFlow() }
-                db.categoryDao.insertClassesWithImages(itemsData.map { it.toClassWithImageEmbedded(label) })
+                insertClasses(indexIds = indexIds, label = label)
             }
             CategoryType.Order -> {
-                val itemsResponse = categoryRemoteSource.getOrders(
-                    itemIds = indexIds,
-                    orderByKey = null,
-                    incrementCounter = false
-                )
-                val itemsData = itemsResponse.getSuccessData?.let { data ->
-                    data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
-                } ?: return itemsResponse.map { emptyFlow() }
-                db.categoryDao.insertOrdersWithImages(itemsData.map { it.toOrderWithImageEmbedded(label) })
+                insertOrders(indexIds = indexIds, label = label)
             }
             CategoryType.Family -> {
-                val itemsResponse = categoryRemoteSource.getFamilies(
-                    itemIds = indexIds,
-                    orderByKey = null,
-                    incrementCounter = false
-                )
-                val itemsData = itemsResponse.getSuccessData?.let { data ->
-                    data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
-                } ?: return itemsResponse.map { emptyFlow() }
-                db.categoryDao.insertFamiliesWithImages(itemsData.map { it.toFamilyWithImageEmbedded(label) })
+                insertFamilies(indexIds = indexIds, label = label)
             }
-            CategoryType.List -> Unit
+            CategoryType.List -> Result.Success(Unit)
         }
+        if(result.isError) return result.map { flowOf() }
 
         return getCategoriesPagingFlow(
             label = label,
@@ -230,8 +173,6 @@ class SearchRemoteRepoImpl(
             categoryType = categoryType
         )
     }
-
-
 
     private fun getSpeciesWithCategoriesPagingFlow(
         label: String,
@@ -274,5 +215,59 @@ class SearchRemoteRepoImpl(
             else -> flowOf()
         }
         return Result.Success(flowData)
+    }
+
+    private suspend fun insertSpecies(indexIds: List<Int>, label: String): EmptyDefaultResult{
+        val speciesResponse = categoryRemoteSource.getSpecies(
+            itemIds = indexIds,
+            loadKey = null,
+            limit = indexIds.size,
+            incrementCounter = false,
+            orderByKey = null,
+        )
+        val speciesData = speciesResponse.getSuccessData?.let { data ->
+            data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
+        } ?: return speciesResponse.asEmptyResult()
+        insertSpeciesHelper.insertSpecies(speciesData, label)
+        return speciesResponse.asEmptyResult()
+    }
+
+    private suspend fun insertClasses(indexIds: List<Int>, label: String): EmptyDefaultResult{
+        val itemsResponse = categoryRemoteSource.getClasses(
+            itemIds = indexIds,
+            orderByKey = null,
+            incrementCounter = false
+        )
+        val itemsData = itemsResponse.getSuccessData?.let { data ->
+            data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
+        } ?: return itemsResponse.asEmptyResult()
+        db.categoryDao.insertClassesWithImages(itemsData.map { it.toClassWithImageEmbedded(label) })
+        return itemsResponse.asEmptyResult()
+    }
+
+    private suspend fun insertOrders(indexIds: List<Int>, label: String): EmptyDefaultResult{
+        val itemsResponse = categoryRemoteSource.getOrders(
+            itemIds = indexIds,
+            orderByKey = null,
+            incrementCounter = false
+        )
+        val itemsData = itemsResponse.getSuccessData?.let { data ->
+            data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
+        } ?: return itemsResponse.asEmptyResult()
+        db.categoryDao.insertOrdersWithImages(itemsData.map { it.toOrderWithImageEmbedded(label) })
+        return itemsResponse.asEmptyResult()
+    }
+
+    private suspend fun insertFamilies(indexIds: List<Int>, label: String): EmptyDefaultResult{
+        val itemsResponse = categoryRemoteSource.getFamilies(
+            itemIds = indexIds,
+            orderByKey = null,
+            incrementCounter = false
+        )
+        val itemsData = itemsResponse.getSuccessData?.let { data ->
+            data.map { it.copy(order_key = indexIds.indexOf(it.id)) }
+        } ?: return itemsResponse.asEmptyResult()
+        db.categoryDao.insertFamiliesWithImages(itemsData.map { it.toFamilyWithImageEmbedded(label) })
+        return itemsResponse.asEmptyResult()
     }
 }

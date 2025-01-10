@@ -38,6 +38,7 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
 
     protected val db = config.db
     protected val categoryRemoteSource = config.categoryRemoteSource
+    protected val insertSpeciesHelper = config.insertSpeciesHelper
     private val readCounter = config.readCounter
     private val appConfigPreferences = config.appConfigPreferences
     private val connectivityObserver = config.connectivityObserver
