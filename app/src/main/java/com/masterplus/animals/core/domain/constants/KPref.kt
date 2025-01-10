@@ -14,4 +14,6 @@ object KPref {
 
     val removePagingNextKeyEnd = PrefKey("removePagingNextKeyEnd","")
     val setPagingShouldRefresh = PrefKey("setPagingShouldRefresh","")
+
+    val newDayCheck = PrefKey("newDayCheck","")
 }

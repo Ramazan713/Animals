@@ -11,6 +11,7 @@ import com.masterplus.animals.core.data.repo.FirebaseCategoryRemoteRepo
 import com.masterplus.animals.core.data.repo.PlantRepoImpl
 import com.masterplus.animals.core.data.repo.SpeciesRepoImpl
 import com.masterplus.animals.core.data.repo.StringProviderImpl
+import com.masterplus.animals.core.data.services.CheckDayChangeServiceImpl
 import com.masterplus.animals.core.domain.repo.AnimalRepo
 import com.masterplus.animals.core.domain.repo.CategoryRemoteRepo
 import com.masterplus.animals.core.domain.repo.CategoryRepo
@@ -18,6 +19,7 @@ import com.masterplus.animals.core.domain.repo.ConnectivityObserver
 import com.masterplus.animals.core.domain.repo.PlantRepo
 import com.masterplus.animals.core.domain.repo.SpeciesRepo
 import com.masterplus.animals.core.domain.repo.StringProvider
+import com.masterplus.animals.core.domain.services.CheckDayChangeService
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -33,4 +35,5 @@ val coreDataModule = module {
     singleOf(::ConnectivityObserverImpl).bind<ConnectivityObserver>()
     singleOf(::RemoteMediatorConfig)
     singleOf(::InsertFirebaseSpeciesHelper)
+    singleOf(::CheckDayChangeServiceImpl).bind<CheckDayChangeService>()
 }
