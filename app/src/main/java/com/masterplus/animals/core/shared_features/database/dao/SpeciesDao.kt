@@ -10,6 +10,8 @@ import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesDetailEmbedded
+import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesImageWithMetadataEmbedded
+import com.masterplus.animals.core.shared_features.database.entity_helper.SpeciesWithImagesEmbedded
 
 @Dao
 interface SpeciesDao {
@@ -37,6 +39,16 @@ interface SpeciesDao {
     )
     fun getPagingSpeciesByListId(listId: Int): PagingSource<Int, SpeciesDetailEmbedded>
 
+
+    @Query("""
+        select count(distinct id) from species where kingdom_id = :kingdomId
+    """)
+    suspend fun getSpeciesCount(kingdomId: Int): Int
+
+    @Query("""
+        select * from species where kingdom_id = :kingdomId group by id order by order_key limit 1 offset :offset
+    """)
+    suspend fun getSpeciesByOffset(kingdomId: Int, offset: Int): SpeciesWithImagesEmbedded?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSpecies(species: List<SpeciesEntity>)

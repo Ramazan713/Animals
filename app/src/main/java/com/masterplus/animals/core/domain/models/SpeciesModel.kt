@@ -16,6 +16,14 @@ data class SpeciesModel(
     val recognitionAndInteraction: Int?,
 )
 
+data class SpeciesWithImages(
+    override val species: SpeciesModel,
+    override val images: List<SpeciesImageModel>
+): ISpeciesType {
+    override val id: Int
+        get() = species.id
+}
+
 
 interface SpeciesDetail{
     val detail: ISpeciesType

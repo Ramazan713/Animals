@@ -11,6 +11,17 @@ import com.masterplus.animals.core.shared_features.database.entity.SpeciesEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesHabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.SpeciesImageEntity
 
+data class SpeciesWithImagesEmbedded(
+    @Embedded
+    val species: SpeciesEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "species_id",
+        entity = SpeciesImageEntity::class
+    )
+    val images: List<SpeciesImageWithMetadataEmbedded>,
+)
+
 data class SpeciesDetailEmbedded(
     @Embedded
     val species: SpeciesEntity,

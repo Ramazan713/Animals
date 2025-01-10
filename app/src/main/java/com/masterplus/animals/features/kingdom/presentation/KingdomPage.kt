@@ -2,7 +2,6 @@ package com.masterplus.animals.features.kingdom.presentation
 
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -140,13 +140,11 @@ fun KingdomPage(
                     }
                 }
 
-//                item {
-//                    DailyAnimalsSection(
-//                        state = state,
-//                        contentPaddings = contentPaddings,
-//                        onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
-//                    )
-//                }
+                dailySpeciesSection(
+                    state = state,
+                    contentPaddings = contentPaddings,
+                    onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
+                )
 
                 if(state.savePoints.isNotEmpty()){
                     item {
@@ -258,41 +256,44 @@ fun KingdomPage(
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun DailyAnimalsSection(
+
+private fun LazyListScope.dailySpeciesSection(
     state: KingdomState,
     contentPaddings: PaddingValues,
     onNavigateToSpeciesDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val dailyAnimalTitleModels = state.dailyAnimals.imageWithTitleModels
-    if(dailyAnimalTitleModels.isNotEmpty()){
-        ImageCategoryDataRow(
-            modifier = modifier,
-            title = "Günün Hayvanları",
-            contentPaddings = contentPaddings,
-            isLoading = state.isLoading
-        ){
-            HorizontalUncontainedCarousel(
-                state = rememberCarouselState {
-                    dailyAnimalTitleModels.size
-                },
-                itemSpacing = 4.dp,
-                itemWidth = 250.dp,
-                contentPadding = contentPaddings
-            ) { index ->
-                val animalData = dailyAnimalTitleModels[index]
-                ImageWithTitle(
-                    image = animalData.image,
-                    onClick = {
-                        onNavigateToSpeciesDetail(animalData.id ?: return@ImageWithTitle)
+    val imageWithTitleModels = state.dailySpecies.imageWithTitleModels
+
+    if(imageWithTitleModels.isNotEmpty()){
+        item {
+            ImageCategoryDataRow(
+                modifier = modifier,
+                title = "Günün ${if(state.kingdomType.isAnimals) "Hayvanları" else "Bitkileri"} ",
+                contentPaddings = contentPaddings,
+                isLoading = state.dailySpecies.isLoading
+            ) {
+                HorizontalUncontainedCarousel(
+                    state = rememberCarouselState {
+                        imageWithTitleModels.size
                     },
-                    title = animalData.title,
-                    subTitle = animalData.subTitle,
-                    size = DpSize(250.dp,250.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    transitionKey = null
-                )
+                    itemSpacing = 4.dp,
+                    itemWidth = 250.dp,
+                    contentPadding = contentPaddings
+                ) { index ->
+                    val animalData = imageWithTitleModels[index]
+                    ImageWithTitle(
+                        image = animalData.image,
+                        onClick = {
+                            onNavigateToSpeciesDetail(animalData.id ?: return@ImageWithTitle)
+                        },
+                        title = animalData.title,
+                        subTitle = animalData.subTitle,
+                        size = DpSize(250.dp, 250.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        transitionKey = null
+                    )
+                }
             }
         }
     }
@@ -384,7 +385,7 @@ fun AnimalPagePreview() {
             isLoading = false,
             isSavePointLoading = true,
             habitats = CategoryDataRowModel(isLoading = true),
-            dailyAnimals = CategoryRowModel(isLoading = true),
+            dailySpecies = CategoryRowModel(isLoading = true),
             classes = CategoryDataRowModel(isLoading = true),
 //            savePoints = listOf(SampleDatas.generateSavePoint(), SampleDatas.generateSavePoint(id = 2).copy(title = "Title"))
         ),

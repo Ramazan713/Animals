@@ -3,21 +3,25 @@ package com.masterplus.animals.features.kingdom.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.R
+import com.masterplus.animals.core.data.mapper.toImageWithTitleModel
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.domain.utils.EmptyDefaultResult
+import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
+import com.masterplus.animals.core.presentation.models.CategoryRowModel
 import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
+import com.masterplus.animals.features.kingdom.domain.repo.DailySpeciesRepo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +32,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class KingdomBaseViewModel(
+    private val dailySpeciesRepo: DailySpeciesRepo,
     private val categoryRepo: CategoryRepo,
     private val savePointRepo: SavePointRepo,
     private val translationRepo: TranslationRepo,
@@ -86,6 +91,7 @@ abstract class KingdomBaseViewModel(
                 val pageSize = appConfigPreferences.getData().pagination.homeCategoryPageSize
                 viewModelScope.launch {
                     val jobs = listOf(
+                        async { loadDailySpecies(language, pageSize) },
                         async { loadHabits(language,pageSize) },
                         async { loadClasses(language, pageSize) },
                         async { loadOrders(language, pageSize) },
@@ -169,6 +175,17 @@ abstract class KingdomBaseViewModel(
             ) }
         }
         return result.asEmptyResult()
+    }
+
+    private suspend fun loadDailySpecies(language: LanguageEnum, pageSize: Int): EmptyDefaultResult{
+        _state.update { it.copy(
+            dailySpecies = CategoryRowModel(isLoading = true)
+        ) }
+        val result = dailySpeciesRepo.getTodaySpecies(kingdomType, pageSize, language)
+        _state.update { it.copy(
+            dailySpecies = CategoryRowModel(isLoading = false, imageWithTitleModels = result.map { it.toImageWithTitleModel() })
+        ) }
+        return Result.Success(Unit)
     }
 
     private suspend fun loadCategoryData(

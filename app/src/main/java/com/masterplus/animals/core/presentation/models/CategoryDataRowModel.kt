@@ -8,6 +8,7 @@ data class CategoryDataRowModel(
     val isLoading: Boolean = false
 )
 
+
 data class CategoryRowModel(
     val imageWithTitleModels: List<ImageWithTitleModel> = emptyList(),
     val showMore: Boolean = false,
