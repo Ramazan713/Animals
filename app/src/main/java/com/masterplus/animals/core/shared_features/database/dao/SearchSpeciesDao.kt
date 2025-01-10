@@ -83,19 +83,33 @@ interface SearchSpeciesDao {
 
     @Transaction
     @Query("""
-        select S.* from species S, SpeciesHabitatCategories SHC where S.id = SHC.species_id and SHC.category_id = :habitatCategoryId and
+        select S.* from species S, SpeciesHabitatCategories SHC, HabitatKingdoms HK
+        where S.id = SHC.species_id and HK.habitat_id = SHC.category_id and SHC.category_id = :habitatCategoryId and
+        S.kingdom_id = :kingdomId and S.kingdom_id = HK.kingdom_id and
         (scientific_name like :query or name_tr like :query) group by S.id
         order by case  when scientific_name like :queryOrder then 1 when name_tr like :queryOrder then 2 else 3 end
     """)
-    fun searchPagingSpeciesTrByHabitatCategoryId(habitatCategoryId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
+    fun searchPagingSpeciesTrByHabitatCategoryId(
+        habitatCategoryId: Int,
+        kingdomId: Int,
+        query: String,
+        queryOrder: String
+    ): PagingSource<Int, SpeciesDetailEmbedded>
 
     @Transaction
     @Query("""
-        select S.* from species S, SpeciesHabitatCategories SHC where S.id = SHC.species_id and SHC.category_id = :habitatCategoryId and
+        select S.* from species S, SpeciesHabitatCategories SHC, HabitatKingdoms HK
+        where S.id = SHC.species_id and HK.habitat_id = SHC.category_id and SHC.category_id = :habitatCategoryId and
+        S.kingdom_id = :kingdomId and S.kingdom_id = HK.kingdom_id and
         (scientific_name like :query or name_en like :query) group by S.id
         order by case  when scientific_name like :queryOrder then 1 when name_en like :queryOrder then 2 else 3 end
     """)
-    fun searchPagingSpeciesEnByHabitatCategoryId(habitatCategoryId: Int, query: String, queryOrder: String): PagingSource<Int, SpeciesDetailEmbedded>
+    fun searchPagingSpeciesEnByHabitatCategoryId(
+        habitatCategoryId: Int,
+        kingdomId: Int,
+        query: String,
+        queryOrder: String
+    ): PagingSource<Int, SpeciesDetailEmbedded>
 
 
 

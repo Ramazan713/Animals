@@ -66,9 +66,8 @@ class SearchRepoImpl(
             pagingSourceFactory = {
                 when(categoryType){
                     CategoryType.Habitat -> {
-                        //TODO: Add kingdomType for searching Habitats
-                        if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByHabitatCategoryId(itemId, queryInLike, queryForOrder) else
-                            searchSpeciesDao.searchPagingSpeciesTrByHabitatCategoryId(itemId, queryInLike, queryForOrder)
+                        if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByHabitatCategoryId(itemId, kingdomType.kingdomId, queryInLike, queryForOrder) else
+                            searchSpeciesDao.searchPagingSpeciesTrByHabitatCategoryId(itemId, kingdomType.kingdomId, queryInLike, queryForOrder)
                     }
                     CategoryType.Class -> {
                         if(language.isEn) searchSpeciesDao.searchPagingSpeciesEnByClassId(itemId, queryInLike, queryForOrder) else

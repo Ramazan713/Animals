@@ -36,6 +36,7 @@ data class HabitatCategoryDto(
     val habitat_category_tr: String = "",
     val id: Int = 0,
     val image: ImageDto? = null,
+    val kingdom_ids: List<Int> = emptyList()
 )
 
 @Keep

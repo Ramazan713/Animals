@@ -6,6 +6,7 @@ import com.masterplus.animals.core.domain.models.ItemOrder
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
+import com.masterplus.animals.core.shared_features.database.entity.HabitatKingdomEntity
 import com.masterplus.animals.core.shared_features.database.entity.ImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity.PhylumEntity
@@ -91,6 +92,12 @@ data class SavePointWithImageEmbedded(
 data class HabitatWithImageEmbedded(
     @Embedded
     val habitat: HabitatCategoryEntity,
+
+    @Relation(
+        entityColumn = "habitat_id",
+        parentColumn = "id"
+    )
+    val habitatKingdoms: List<HabitatKingdomEntity>,
 
     @Relation(
         entity = ImageEntity::class,

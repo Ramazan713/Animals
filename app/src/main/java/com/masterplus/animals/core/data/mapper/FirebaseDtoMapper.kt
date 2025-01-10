@@ -10,6 +10,7 @@ import com.masterplus.animals.core.data.dtos.PhylumDto
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
+import com.masterplus.animals.core.shared_features.database.entity.HabitatKingdomEntity
 import com.masterplus.animals.core.shared_features.database.entity.ImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.ImageMetadataEntity
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
@@ -83,7 +84,8 @@ fun HabitatCategoryDto.toHabitatCategoryEntity(label: String): HabitatCategoryEn
 fun HabitatCategoryDto.toHabitatCategoryWithImageEmbedded(label: String): HabitatWithImageEmbedded {
     return HabitatWithImageEmbedded(
         habitat = toHabitatCategoryEntity(label),
-        image = image?.toImageWithMetadata()
+        image = image?.toImageWithMetadata(),
+        habitatKingdoms = kingdom_ids.map { HabitatKingdomEntity(habitat_id = id, kingdom_id = it) }
     )
 }
 

@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
+import com.masterplus.animals.core.shared_features.database.entity.HabitatKingdomEntity
 import com.masterplus.animals.core.shared_features.database.entity.ImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.ImageMetadataEntity
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
@@ -187,6 +188,9 @@ interface CategoryDao {
     suspend fun insertHabitats(habitats: List<HabitatCategoryEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHabitatKingdoms(habitatKingdoms: List<HabitatKingdomEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertImages(images: List<ImageEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -238,9 +242,12 @@ interface CategoryDao {
         val imageEntities = habitatWithImages.mapNotNull { it.image?.image }
         val imageMetadataEntities = habitatWithImages.mapNotNull { it.image?.metadata }
         val habitatEntities = habitatWithImages.map { it.habitat }
+        val habitatKingdoms = habitatWithImages.map { it.habitatKingdoms }.flatten()
+
         insertImages(imageEntities)
         insertMetadatas(imageMetadataEntities)
         insertHabitats(habitatEntities)
+        insertHabitatKingdoms(habitatKingdoms)
     }
 
 

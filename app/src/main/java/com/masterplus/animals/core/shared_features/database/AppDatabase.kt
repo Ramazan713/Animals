@@ -21,6 +21,7 @@ import com.masterplus.animals.core.shared_features.database.entity.BackupMetaEnt
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity.FamilyEntity
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
+import com.masterplus.animals.core.shared_features.database.entity.HabitatKingdomEntity
 import com.masterplus.animals.core.shared_features.database.entity.HistoryEntity
 import com.masterplus.animals.core.shared_features.database.entity.ImageEntity
 import com.masterplus.animals.core.shared_features.database.entity.ImageMetadataEntity
@@ -45,7 +46,7 @@ import com.masterplus.trdictionary.core.data.local.services.ListViewDao
         HabitatCategoryEntity::class, OrderEntity::class, PhylumEntity::class,
         SpeciesEntity::class, ListEntity::class, ListSpeciesEntity::class, ImageEntity::class, ImageMetadataEntity::class,
         SavePointEntity::class, HistoryEntity::class, PlantEntity::class, SpeciesHabitatCategoryEntity::class,
-        BackupMetaEntity::class, RemoteKeyEntity::class
+        BackupMetaEntity::class, RemoteKeyEntity::class, HabitatKingdomEntity::class
     ],
     views = [
         ListViewEntity::class

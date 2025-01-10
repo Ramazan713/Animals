@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e509a781afb30010ef3133f19ec6113b",
+    "identityHash": "c9b481c7403d849e899142dd372ed1ec",
     "entities": [
       {
         "tableName": "Kingdoms",
@@ -1789,6 +1789,33 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "HabitatKingdoms",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`habitat_id` INTEGER NOT NULL, `kingdom_id` INTEGER NOT NULL, PRIMARY KEY(`habitat_id`, `kingdom_id`))",
+        "fields": [
+          {
+            "fieldPath": "habitat_id",
+            "columnName": "habitat_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kingdom_id",
+            "columnName": "kingdom_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "habitat_id",
+            "kingdom_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [
@@ -1799,7 +1826,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e509a781afb30010ef3133f19ec6113b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c9b481c7403d849e899142dd372ed1ec')"
     ]
   }
 }
