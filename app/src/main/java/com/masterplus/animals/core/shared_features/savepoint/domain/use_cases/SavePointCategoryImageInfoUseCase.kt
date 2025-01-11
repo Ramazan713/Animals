@@ -2,7 +2,6 @@ package com.masterplus.animals.core.shared_features.savepoint.domain.use_cases
 
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.domain.repo.CategoryRepo
-import com.masterplus.animals.core.shared_features.database.dao.CategoryDao
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 
@@ -20,7 +19,10 @@ class SavePointCategoryImageInfoUseCase(
         when(destination){
             is SavePointDestination.All -> return nullableResult
             is SavePointDestination.ListType -> return nullableResult
-            is SavePointDestination.Habitat -> return nullableResult
+            is SavePointDestination.Habitat -> {
+                val habitat = categoryRepo.getHabitatWithId(destinationId, lang) ?: return nullableResult
+                return InfoResult(habitat.image)
+            }
             is SavePointDestination.ClassType -> {
                 val classEntity = categoryRepo.getClassWithId(destinationId, lang) ?: return nullableResult
                 return InfoResult(classEntity.image)

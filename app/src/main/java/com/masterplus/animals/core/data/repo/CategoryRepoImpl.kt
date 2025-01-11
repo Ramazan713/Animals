@@ -130,6 +130,13 @@ class CategoryRepoImpl(
         return categoryDao.getFamilyWithId(familyId)?.toFamily(language)
     }
 
+    override suspend fun getHabitatWithId(
+        habitatId: Int,
+        language: LanguageEnum
+    ): HabitatCategoryModel? {
+        return categoryDao.getHabitatCategoryWithId(habitatId)?.toHabitatCategory(language)
+    }
+
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagingOrdersWithClassId(

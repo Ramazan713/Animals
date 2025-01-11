@@ -122,7 +122,6 @@ sealed class SavePointDestination(
         if(this is All && contentType.isContent){
             return RemoteKeyUtil.getSpeciesKingdomRemoteKey(kingdomType)
         }
-        destinationId
         val categoryType = toCategoryType() ?: return RemoteKeyUtil.DEFAULT
         if(contentType.isContent){
             return RemoteKeyUtil.getSpeciesCategoryRemoteKey(

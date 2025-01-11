@@ -20,18 +20,20 @@ sealed interface AutoSavePointAction {
     data class LoadSavePoint(
         val destination: SavePointDestination,
         val contentType: SavePointContentType,
-        val initItemPos: Int
+        val initOrderKey: Int
     ): AutoSavePointAction
 
     data object ClearUiEvent: AutoSavePointAction
 
-    data class RequestNavigateToPosByItemId(
+    data class RequestNavigateToPosByOrderKey(
         val orderKey: Int,
     ): AutoSavePointAction
 
     data object ShowAd: AutoSavePointAction
 
-    data class SuccessShowAd(val contentType: ContentType): AutoSavePointAction
+    data class SuccessShowAd(
+        val contentType: ContentType,
+    ): AutoSavePointAction
 
     data class ShowDialog(val dialogEvent: AutoSavePointDialogEvent? = null): AutoSavePointAction
 }

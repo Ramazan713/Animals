@@ -30,6 +30,9 @@ interface CategoryRepo {
 
     suspend fun getFamilyWithId(familyId: Int, language: LanguageEnum): FamilyModel?
 
+    suspend fun getHabitatWithId(habitatId: Int, language: LanguageEnum): HabitatCategoryModel?
+
+
 
     fun getPagingOrdersWithClassId(
         classId: Int,

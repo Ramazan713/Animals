@@ -1,5 +1,6 @@
 package com.masterplus.animals.core.shared_features.savepoint.presentation.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +30,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.animals.R
-import com.masterplus.animals.core.presentation.components.image.DefaultImage
+import com.masterplus.animals.core.domain.models.ImageWithMetadata
+import com.masterplus.animals.core.presentation.components.image.TransitionImage
 import com.masterplus.animals.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShapeUtils
@@ -63,10 +64,6 @@ fun SavePointItem(
     val backgroundColor = if(isSelected) MaterialTheme.colorScheme.secondaryContainer else
         CardDefaults.cardColors().containerColor
 
-    val currentImageUrl = remember(itemDefaults.showImage, savePoint) {
-        if(itemDefaults.showImage) savePoint.image ?: R.drawable.animals_plants else null
-    }
-
     Card(
         modifier = modifier
             .height(IntrinsicSize.Max)
@@ -84,13 +81,15 @@ fun SavePointItem(
         if(itemDefaults.showAsRow){
             Row(
                 modifier = Modifier
-                    .padding(if(currentImageUrl == null) 4.dp else 0.dp)
+                    .padding(if(!itemDefaults.showImage) 4.dp else 0.dp)
             ) {
-                GetImageSection(
-                    imageUrl = currentImageUrl,
-                    shape = imageShape,
-                    modifier = Modifier.fillMaxHeight()
-                )
+                if(itemDefaults.showImage){
+                    GetImageSection(
+                        image = savePoint.image,
+                        shape = imageShape,
+                        modifier = Modifier.fillMaxHeight()
+                    )
+                }
 
                 GetContentSection(
                     savePoint = savePoint,
@@ -106,11 +105,13 @@ fun SavePointItem(
                     .width(IntrinsicSize.Max)
                     .fillMaxHeight()
             ) {
-                GetImageSection(
-                    imageUrl = currentImageUrl,
-                    shape = imageShape,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if(itemDefaults.showImage){
+                    GetImageSection(
+                        image = savePoint.image,
+                        shape = imageShape,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
 
                 GetContentSection(
                     savePoint = savePoint,
@@ -127,20 +128,21 @@ fun SavePointItem(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun GetImageSection(
-    imageUrl: Any?,
+private fun GetImageSection(
+    image: ImageWithMetadata?,
     shape: Shape,
     modifier: Modifier = Modifier,
 ) {
-    imageUrl?.let { imageData ->
-        DefaultImage(
-            imageData = imageData,
-            modifier = modifier
-                .size(150.dp)
-                .clip(shape)
-        )
-    }
+    TransitionImage(
+        image = image,
+        transitionKey = null,
+        fallbackImageData = R.drawable.animals_plants,
+        modifier = modifier
+            .size(150.dp)
+            .clip(shape)
+    )
 }
 
 @Composable

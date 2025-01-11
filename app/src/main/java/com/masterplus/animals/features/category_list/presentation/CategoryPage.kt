@@ -64,7 +64,6 @@ import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
-import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
@@ -114,7 +113,10 @@ fun CategoryListPage(
         topBarScrollBehaviour = topBarScrollBehaviour,
         pagingItems = pagingItems,
         onAdAction = onAdAction,
-        adState = adState
+        adState = adState,
+        onLoadRequiredPage = { orderKey ->
+            onAction(CategoryAction.SetPagingTargetId(orderKey))
+        }
     )
 
     Scaffold(
@@ -253,8 +255,7 @@ fun CategoryListPage(
                     orderKey = dialogEvent.orderKey,
                     onClosed = close,
                     onNavigateLoad = { savepoint ->
-                        onAction(CategoryAction.SetPagingTargetId(savepoint.orderKey))
-                        onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByItemId(
+                        onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByOrderKey(
                             orderKey = savepoint.orderKey,
                         ))
                     }

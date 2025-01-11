@@ -5,6 +5,10 @@ sealed interface AutoSavePointEvent {
         val pos: Int?
     ): AutoSavePointEvent
 
+    data class LoadRequiredPage(
+        val orderKey: Int
+    ): AutoSavePointEvent
+
     data object RetryPaging: AutoSavePointEvent
 
     data object ShowAd: AutoSavePointEvent

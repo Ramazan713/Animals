@@ -70,7 +70,6 @@ abstract class BaseRemoteMediator2<T: ItemOrder, D: ItemOrder>(
     override suspend fun load(loadType: LoadType, state: PagingState<Int, T>): MediatorResult {
         return try {
             val remoteKey = db.remoteKeyDao.remoteKeyByQuery(saveRemoteKey)
-
             val loadKey = when (loadType) {
                 LoadType.REFRESH -> {
                     if(targetItemId != null){

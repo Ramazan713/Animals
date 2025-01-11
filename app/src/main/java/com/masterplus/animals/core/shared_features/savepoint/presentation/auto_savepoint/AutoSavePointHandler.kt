@@ -9,9 +9,12 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.core.data.mediators.RemoteMediatorError
@@ -29,8 +32,11 @@ import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.core.shared_features.ad.presentation.dialogs.ShowAdRequiredDia
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
+
+typealias OrderKey = Int
 
 @Composable
 fun <T: ItemOrder> AutoSavePointHandler(
@@ -42,18 +48,24 @@ fun <T: ItemOrder> AutoSavePointHandler(
     itemInitPos: Int = 0,
     pagingItems: LazyPagingItems<T>,
     onInitPosResponse: ((Int) -> Unit)? = null,
+    onLoadRequiredPage: (OrderKey) -> Unit,
     adState: AdState,
     onAdAction: (AdAction) -> Unit,
 ) {
     val currentOnInitPosResponse by rememberUpdatedState(onInitPosResponse)
     val currentOnDestination by rememberUpdatedState(onDestination)
+    val scope = rememberCoroutineScope()
 
+    var requiredPageRetry by rememberSaveable {
+        mutableIntStateOf(0)
+    }
 
     EventHandler(state.uiEvent) { uiEvent ->
         onAction(AutoSavePointAction.ClearUiEvent)
         when(uiEvent){
             is AutoSavePointEvent.LoadItemPos -> {
                 val pos = uiEvent.pos
+                requiredPageRetry = 0
                 if(pos != null) {
                     currentOnInitPosResponse?.invoke(pos)
                     return@EventHandler
@@ -73,6 +85,26 @@ fun <T: ItemOrder> AutoSavePointHandler(
             is AutoSavePointEvent.ShowAd -> {
                 onAdAction(AdAction.RequestShowRewardAd(K.AUTO_SAVEPOINT_AD_LABEL))
             }
+            is AutoSavePointEvent.LoadRequiredPage -> {
+                val error = pagingItems.getAnyExceptionOrNull()
+                if(error != null){
+                    if(error is RemoteMediatorError.ReadLimitExceededException){
+                        onAction(AutoSavePointAction.ShowDialog(AutoSavePointDialogEvent.ShowAdRequired))
+                    }
+                    return@EventHandler
+                }
+                onLoadRequiredPage(uiEvent.orderKey)
+                pagingItems.refresh()
+                scope.launch {
+                    delay(1000)
+                    requiredPageRetry += 1
+                    if(requiredPageRetry > 3){
+                        requiredPageRetry = 0
+                        return@launch
+                    }
+                    onAction(AutoSavePointAction.RequestNavigateToPosByOrderKey(uiEvent.orderKey))
+                }
+            }
         }
     }
 
@@ -83,7 +115,9 @@ fun <T: ItemOrder> AutoSavePointHandler(
         onSafeAdResult = { result ->
             when(result){
                 is AdUiResult.OnShowingRewardSuccess -> {
-                    onAction(AutoSavePointAction.SuccessShowAd(contentType = contentType.toContentType()))
+                    onAction(AutoSavePointAction.SuccessShowAd(
+                        contentType = contentType.toContentType(),
+                    ))
                 }
                 else -> Unit
             }
@@ -96,7 +130,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
 
     LaunchedEffect(itemInitPos, contentType) {
         onAction(AutoSavePointAction.LoadSavePoint(
-            initItemPos = itemInitPos,
+            initOrderKey = itemInitPos,
             contentType = contentType,
             destination = currentOnDestination()
         ))
@@ -152,6 +186,7 @@ private fun <T: ItemOrder> AutoSavePointHandler(
     onItemOrderKey: () -> Int?,
     topBarScrollBehaviour: TopAppBarScrollBehavior?,
     scrollToPos: suspend (Int) -> Unit,
+    onLoadRequiredPage: (OrderKey) -> Unit,
     itemInitPos: Int = 0,
     pagingItems: LazyPagingItems<T>,
     adState: AdState,
@@ -174,6 +209,7 @@ private fun <T: ItemOrder> AutoSavePointHandler(
         itemInitPos = itemInitPos,
         pagingItems = pagingItems,
         onAdAction = onAdAction,
+        onLoadRequiredPage = onLoadRequiredPage,
         adState = adState,
         onInitPosResponse = {pos ->
             scope.launch {
@@ -198,6 +234,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
     contentType: SavePointContentType,
     adState: AdState,
     onAdAction: (AdAction) -> Unit,
+    onLoadRequiredPage: (OrderKey) -> Unit,
     itemInitPos: Int = 0,
     lazyListState: LazyListState,
     pagingItems: LazyPagingItems<T>,
@@ -214,6 +251,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
         topBarScrollBehaviour = topBarScrollBehaviour,
         pagingItems = pagingItems,
         onAdAction = onAdAction,
+        onLoadRequiredPage = onLoadRequiredPage,
         adState = adState,
         scrollToPos = { pos ->
             lazyListState.scrollToItem(pos)
@@ -230,6 +268,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
     contentType: SavePointContentType,
     adState: AdState,
     onAdAction: (AdAction) -> Unit,
+    onLoadRequiredPage: (OrderKey) -> Unit,
     itemInitPos: Int = 0,
     lazyListState: LazyGridState,
     pagingItems: LazyPagingItems<T>,
@@ -247,6 +286,7 @@ fun <T: ItemOrder> AutoSavePointHandler(
         topBarScrollBehaviour = topBarScrollBehaviour,
         onAdAction = onAdAction,
         adState = adState,
+        onLoadRequiredPage = onLoadRequiredPage,
         scrollToPos = { pos ->
             lazyListState.scrollToItem(pos)
         }

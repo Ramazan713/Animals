@@ -157,7 +157,10 @@ fun SpeciesListPage(
         lazyListState = lazyListState,
         pagingItems = pagingItems,
         onAdAction = onAdAction,
-        adState = adState
+        adState = adState,
+        onLoadRequiredPage = {orderKey ->
+            onAction(SpeciesListAction.SetPagingTargetId(orderKey))
+        }
     )
 
 
@@ -316,8 +319,7 @@ fun SpeciesListPage(
                     orderKey = dialogEvent.orderKey,
                     onClosed = close,
                     onNavigateLoad = { savepoint ->
-                        onAction(SpeciesListAction.SetPagingTargetId(savepoint.orderKey))
-                        onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByItemId(
+                        onAutoSavePointAction(AutoSavePointAction.RequestNavigateToPosByOrderKey(
                             orderKey = savepoint.orderKey,
                         ))
                     }

@@ -35,7 +35,7 @@ import com.masterplus.animals.core.shared_features.theme.data.di.themeDataModule
 import com.masterplus.animals.core.shared_features.theme.presentation.di.themePresentationModule
 import com.masterplus.animals.core.shared_features.translation.data.di.translationDataModule
 import com.masterplus.animals.core.shared_features.translation.presentation.di.translationPresentationModule
-import com.masterplus.animals.features.app.presentation.di.appDataModule
+import com.masterplus.animals.features.app.di.appDataModule
 import com.masterplus.animals.features.category_list.presentation.di.categoryListPresentationModule
 import com.masterplus.animals.features.kingdom.data.di.kingdomDataModule
 import com.masterplus.animals.features.kingdom.presentation.di.kingdomPresentationModule
@@ -47,6 +47,8 @@ import com.masterplus.animals.features.search.presentation.di.searchPresentation
 import com.masterplus.animals.features.settings.presentation.di.settingsPresentationModule
 import com.masterplus.animals.features.species_detail.presentation.di.speciesDetailPresentationModule
 import com.masterplus.animals.features.species_list.presentation.di.speciesListPresentationModule
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import okhttp3.OkHttpClient
@@ -55,6 +57,8 @@ import org.koin.core.context.startKoin
 import java.io.File
 
 class AnimalsApp: Application(), SingletonImageLoader.Factory {
+
+    val applicationScope = CoroutineScope(SupervisorJob())
 
     override fun onCreate() {
         super.onCreate()
