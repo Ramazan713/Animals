@@ -3,6 +3,7 @@ package com.masterplus.animals.core.data.mapper
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.domain.models.CategoryDataType
 import com.masterplus.animals.core.domain.models.OrderModel
 import com.masterplus.animals.core.shared_features.database.entity.OrderEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.OrderWithImageEmbedded
@@ -46,7 +47,7 @@ fun OrderModel.toCategoryData(): CategoryData {
         image = image,
         title = scientificName,
         secondaryTitle = order,
-        categoryType = CategoryType.Order,
+        categoryDataType = CategoryDataType.Order,
         kingdomType = kingdomType,
         orderKey = orderKey
     )

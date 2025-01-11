@@ -1,6 +1,5 @@
 package com.masterplus.animals.core.presentation.transition
 
-import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import kotlinx.serialization.Serializable
 
@@ -19,19 +18,5 @@ enum class TransitionImageType{
     Order,
     Habitat,
     Species,
-    SpeciesImages
-    ;
-
-
-    companion object {
-        fun fromCategoryType(categoryType: CategoryType): TransitionImageType?{
-            return when(categoryType){
-                CategoryType.Habitat -> Habitat
-                CategoryType.Class -> Class
-                CategoryType.Order -> Order
-                CategoryType.Family -> Family
-                CategoryType.List -> null
-            }
-        }
-    }
+    SpeciesImages;
 }

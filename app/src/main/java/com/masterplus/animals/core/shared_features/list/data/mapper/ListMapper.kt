@@ -1,8 +1,8 @@
 package com.masterplus.animals.core.shared_features.list.data.mapper
 
-import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.domain.models.CategoryDataType
 import com.masterplus.animals.core.shared_features.database.entity.ListEntity
 import com.masterplus.animals.core.shared_features.list.domain.models.ListModel
 
@@ -33,7 +33,7 @@ fun ListModel.toCategoryData(): CategoryData {
         id = id ?: 0,
         image = null,
         title = name,
-        categoryType = CategoryType.List,
+        categoryDataType = CategoryDataType.List,
         kingdomType = KingdomType.DEFAULT,
         orderKey = pos
     )

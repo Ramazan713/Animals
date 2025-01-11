@@ -8,7 +8,12 @@ interface DailySpeciesRepo {
 
     suspend fun getTodaySpecies(
         kingdomType: KingdomType,
-        pageSize: Int,
         language: LanguageEnum
     ): List<ISpeciesType>
+
+    suspend fun hasSufficientSpecies(
+        kingdomType: KingdomType
+    ): Boolean
+
+    suspend fun checkDaily(isNewDay: Boolean)
 }

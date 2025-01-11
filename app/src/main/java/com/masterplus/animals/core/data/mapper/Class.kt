@@ -3,6 +3,7 @@ package com.masterplus.animals.core.data.mapper
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.domain.models.CategoryDataType
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.shared_features.database.entity.ClassEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.ClassWithImageEmbedded
@@ -47,7 +48,7 @@ fun ClassModel.toCategoryData(): CategoryData {
         image = image,
         title = scientificName,
         secondaryTitle = className,
-        categoryType = CategoryType.Class,
+        categoryDataType = CategoryDataType.Class,
         kingdomType = kingdomType,
         orderKey = orderKey
     )

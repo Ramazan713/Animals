@@ -71,7 +71,7 @@ fun ImageWithTitle(
         contentScale = contentScale,
         order = order,
         useTransition = model.imageUrl != null && useTransition,
-        transitionKey = TransitionImageType.fromCategoryType(model.categoryType)?.let {
+        transitionKey = model.categoryDataType.toTransitionImageType()?.let {
             TransitionImageKey(
                 id = model.id,
                 imageType = it,
@@ -80,37 +80,6 @@ fun ImageWithTitle(
         }
     )
 }
-
-@Composable
-fun ImageWithTitle(
-    model: ImageWithTitleModel,
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
-    onLongClick: (() -> Unit)? = null,
-    size: DpSize = DpSize(150.dp, 180.dp),
-    shape: Shape = RoundedCornerShape(8.dp),
-    contentScale: ContentScale? = null,
-    order: Int? = null,
-    fallbackImageData: Any? = null,
-){
-    ImageWithTitle(
-        image = model.image,
-        title = model.title,
-        modifier = modifier,
-        subTitle = model.subTitle,
-        onClick = onClick,
-        onLongClick = onLongClick,
-        contentDescription = model.contentDescription,
-        size = size,
-        shape = shape,
-        contentScale = contentScale,
-        order = order,
-        useTransition = model.image != null,
-        transitionKey = null,
-        fallbackImageData = fallbackImageData
-    )
-}
-
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalFoundationApi::class)
 @Composable

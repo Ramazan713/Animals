@@ -3,7 +3,7 @@ package com.masterplus.animals.features.kingdom.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.R
-import com.masterplus.animals.core.data.mapper.toImageWithTitleModel
+import com.masterplus.animals.core.data.mapper.toCategoryData
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
@@ -14,7 +14,6 @@ import com.masterplus.animals.core.domain.utils.Result
 import com.masterplus.animals.core.domain.utils.UiText
 import com.masterplus.animals.core.domain.utils.asEmptyResult
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
-import com.masterplus.animals.core.presentation.models.CategoryRowModel
 import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
@@ -91,7 +90,7 @@ abstract class KingdomBaseViewModel(
                 val pageSize = appConfigPreferences.getData().pagination.homeCategoryPageSize
                 viewModelScope.launch {
                     val jobs = listOf(
-                        async { loadDailySpecies(language, pageSize) },
+                        async { loadDailySpecies(language) },
                         async { loadHabits(language,pageSize) },
                         async { loadClasses(language, pageSize) },
                         async { loadOrders(language, pageSize) },
@@ -112,12 +111,13 @@ abstract class KingdomBaseViewModel(
             .getAllSavePoints(
                 contentType = SavePointContentType.Content,
                 filteredDestinationTypeIds = null,
-                kingdomType = KingdomType.Animals,
+                kingdomType = kingdomType,
                 filterBySaveMode = SavePointSaveMode.Manuel
             )
             .onEach { savePoints ->
                 _state.update { it.copy(
-                    savePoints = savePoints
+                    savePoints = savePoints,
+                    isSavePointLoading = false
                 ) }
             }
             .launchIn(viewModelScope)
@@ -177,13 +177,15 @@ abstract class KingdomBaseViewModel(
         return result.asEmptyResult()
     }
 
-    private suspend fun loadDailySpecies(language: LanguageEnum, pageSize: Int): EmptyDefaultResult{
+    private suspend fun loadDailySpecies(language: LanguageEnum): EmptyDefaultResult{
+        val hasSufficientSpecies = dailySpeciesRepo.hasSufficientSpecies(kingdomType)
+        if(!hasSufficientSpecies) return Result.Success(Unit)
         _state.update { it.copy(
-            dailySpecies = CategoryRowModel(isLoading = true)
+            dailySpecies = CategoryDataRowModel(isLoading = true)
         ) }
-        val result = dailySpeciesRepo.getTodaySpecies(kingdomType, pageSize, language)
-        _state.update { it.copy(
-            dailySpecies = CategoryRowModel(isLoading = false, imageWithTitleModels = result.map { it.toImageWithTitleModel() })
+        val result = dailySpeciesRepo.getTodaySpecies(kingdomType, language)
+        _state.update { state -> state.copy(
+            dailySpecies = CategoryDataRowModel(isLoading = false, categoryDataList = result.map { it.toCategoryData() })
         ) }
         return Result.Success(Unit)
     }

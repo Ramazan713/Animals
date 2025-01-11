@@ -12,5 +12,5 @@ interface SearchAdRepo {
     suspend fun resetAppAd()
     suspend fun decreaseAppAd()
 
-    suspend fun checkNewDay()
+    suspend fun checkNewDay(isNewDay: Boolean)
 }

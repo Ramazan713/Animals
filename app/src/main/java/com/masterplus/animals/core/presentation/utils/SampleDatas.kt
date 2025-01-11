@@ -5,6 +5,7 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.Animal
 import com.masterplus.animals.core.domain.models.AnimalDetail
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.domain.models.CategoryDataType
 import com.masterplus.animals.core.domain.models.ClassModel
 import com.masterplus.animals.core.domain.models.FamilyModel
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
@@ -93,7 +94,7 @@ object SampleDatas {
         secondaryTitle = "Sub Title",
         id = 2,
         image = imageWithMetadata,
-        categoryType = CategoryType.Class,
+        categoryDataType = CategoryDataType.Class,
         kingdomType = KingdomType.DEFAULT,
         orderKey = 1
     )

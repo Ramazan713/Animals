@@ -3,6 +3,7 @@ package com.masterplus.animals.core.data.mapper
 import com.masterplus.animals.core.domain.enums.CategoryType
 import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
+import com.masterplus.animals.core.domain.models.CategoryDataType
 import com.masterplus.animals.core.domain.models.HabitatCategoryModel
 import com.masterplus.animals.core.shared_features.database.entity.HabitatCategoryEntity
 import com.masterplus.animals.core.shared_features.database.entity_helper.HabitatWithImageEmbedded
@@ -36,7 +37,7 @@ fun HabitatCategoryModel.toCategoryData(): CategoryData {
         id = id,
         image = image,
         title = habitatCategory,
-        categoryType = CategoryType.Habitat,
+        categoryDataType = CategoryDataType.Habitat,
         kingdomType = KingdomType.DEFAULT,
         orderKey = id
     )

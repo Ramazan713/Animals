@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,7 +43,6 @@ import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedLoadingPageContent
 import com.masterplus.animals.core.presentation.defaults.SettingTopBarMenuEnum
 import com.masterplus.animals.core.presentation.models.CategoryDataRowModel
-import com.masterplus.animals.core.presentation.models.CategoryRowModel
 import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.utils.ShowLifecycleToastMessage
@@ -140,15 +138,21 @@ fun KingdomPage(
                     }
                 }
 
-                dailySpeciesSection(
-                    state = state,
-                    contentPaddings = contentPaddings,
-                    onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
-                )
+                if(state.dailySpecies.isLoading || state.dailySpecies.categoryDataList.isNotEmpty()){
+                    item {
+                        DailySpeciesSection(
+                            modifier = Modifier.animateItem(),
+                            state = state,
+                            contentPaddings = contentPaddings,
+                            onNavigateToSpeciesDetail = onNavigateToSpeciesDetail
+                        )
+                    }
+                }
 
-                if(state.savePoints.isNotEmpty()){
+                if(state.savePoints.isNotEmpty() || state.isSavePointLoading){
                     item {
                         SavePointSection(
+                            modifier = Modifier.animateItem(),
                             state = state,
                             contentPaddings = contentPaddings,
                             onNavigateToSpeciesList = onNavigateToSpeciesList,
@@ -254,50 +258,46 @@ fun KingdomPage(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
-
-private fun LazyListScope.dailySpeciesSection(
+@Composable
+fun DailySpeciesSection(
     state: KingdomState,
     contentPaddings: PaddingValues,
     onNavigateToSpeciesDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val imageWithTitleModels = state.dailySpecies.imageWithTitleModels
-
-    if(imageWithTitleModels.isNotEmpty()){
-        item {
-            ImageCategoryDataRow(
-                modifier = modifier,
-                title = "Günün ${if(state.kingdomType.isAnimals) "Hayvanları" else "Bitkileri"} ",
-                contentPaddings = contentPaddings,
-                isLoading = state.dailySpecies.isLoading
-            ) {
-                HorizontalUncontainedCarousel(
-                    state = rememberCarouselState {
-                        imageWithTitleModels.size
+    val categoryDataList = state.dailySpecies.categoryDataList
+    ImageCategoryDataRow(
+        modifier = modifier
+            .requiredHeight(250.dp),
+        title = "Günün ${if(state.kingdomType.isAnimals) "Hayvanları" else "Bitkileri"} ",
+        contentPaddings = contentPaddings,
+        isLoading = state.dailySpecies.isLoading,
+    ) {
+        if(categoryDataList.isNotEmpty()){
+            HorizontalUncontainedCarousel(
+                state = rememberCarouselState {
+                    state.dailySpecies.categoryDataList.size
+                },
+                itemSpacing = 4.dp,
+                itemWidth = 250.dp,
+                contentPadding = contentPaddings
+            ) { index ->
+                val speciesData = categoryDataList[index]
+                ImageWithTitle(
+                    model = speciesData,
+                    onClick = {
+                        onNavigateToSpeciesDetail(speciesData.id)
                     },
-                    itemSpacing = 4.dp,
-                    itemWidth = 250.dp,
-                    contentPadding = contentPaddings
-                ) { index ->
-                    val animalData = imageWithTitleModels[index]
-                    ImageWithTitle(
-                        image = animalData.image,
-                        onClick = {
-                            onNavigateToSpeciesDetail(animalData.id ?: return@ImageWithTitle)
-                        },
-                        title = animalData.title,
-                        subTitle = animalData.subTitle,
-                        size = DpSize(250.dp, 250.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        transitionKey = null
-                    )
-                }
+                    size = DpSize(250.dp, 250.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    useTransition = false
+                )
             }
         }
     }
 }
+
 
 @Composable
 private fun TryAgainButton(
@@ -385,7 +385,7 @@ fun AnimalPagePreview() {
             isLoading = false,
             isSavePointLoading = true,
             habitats = CategoryDataRowModel(isLoading = true),
-            dailySpecies = CategoryRowModel(isLoading = true),
+            dailySpecies = CategoryDataRowModel(isLoading = true),
             classes = CategoryDataRowModel(isLoading = true),
 //            savePoints = listOf(SampleDatas.generateSavePoint(), SampleDatas.generateSavePoint(id = 2).copy(title = "Title"))
         ),

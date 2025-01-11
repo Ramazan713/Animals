@@ -22,6 +22,9 @@ interface SpeciesDao {
     @Query("select * from species where id = :id and label = :label limit 1")
     suspend fun getSpeciesByIdAndLabel(id: Int, label: String): SpeciesEntity?
 
+    @Query("select * from species where id in (:ids) group by id")
+    suspend fun getSpeciesByIds(ids: List<Int>): List<SpeciesWithImagesEmbedded>
+
     @Transaction
     @Query(
         """

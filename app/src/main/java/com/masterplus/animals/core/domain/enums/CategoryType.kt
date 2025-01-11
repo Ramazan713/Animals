@@ -1,5 +1,7 @@
 package com.masterplus.animals.core.domain.enums
 
+import com.masterplus.animals.core.domain.models.CategoryDataType
+
 enum class CategoryType(
     val catId: Int,
     val title: String
@@ -33,6 +35,16 @@ enum class CategoryType(
             Order -> Family
             Family -> null
             List -> null
+        }
+    }
+
+    fun toCategoryDataType(): CategoryDataType{
+        return when(this){
+            Habitat -> CategoryDataType.Habitat
+            Class -> CategoryDataType.Class
+            Order -> CategoryDataType.Order
+            Family -> CategoryDataType.Family
+            List -> CategoryDataType.List
         }
     }
 

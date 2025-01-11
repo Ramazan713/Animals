@@ -14,5 +14,5 @@ interface ServerReadCounter {
 
     suspend fun resetCounter(contentType: ContentType)
 
-    suspend fun checkNewDayAndReset()
+    suspend fun checkNewDayAndReset(isNewDay: Boolean)
 }

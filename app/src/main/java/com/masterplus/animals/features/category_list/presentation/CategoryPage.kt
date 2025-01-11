@@ -49,6 +49,7 @@ import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.isPrependItemLoading
 import com.masterplus.animals.core.extentions.visibleMiddleItemOrderKey
+import com.masterplus.animals.core.presentation.components.CategoryItemShipper
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
 import com.masterplus.animals.core.presentation.components.TopBarType
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
@@ -59,11 +60,11 @@ import com.masterplus.animals.core.presentation.components.paging.PagingEmptyCom
 import com.masterplus.animals.core.presentation.components.paging.PrependErrorHandlerComponent
 import com.masterplus.animals.core.presentation.selections.ShowSelectBottomMenuItems
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
-import com.masterplus.animals.core.presentation.transition.TransitionImageType
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
+import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
@@ -74,8 +75,6 @@ import com.masterplus.animals.core.shared_features.savepoint.presentation.auto_s
 import com.masterplus.animals.core.shared_features.savepoint.presentation.edit_savepoint.EditSavePointDialog
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListBottomItemMenu
 import com.masterplus.animals.features.category_list.domain.enums.CategoryListTopBarItemMenu
-import com.masterplus.animals.core.presentation.components.CategoryItemShipper
-import com.masterplus.animals.core.shared_features.ad.presentation.AdState
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
@@ -314,7 +313,7 @@ private fun HeaderImage(
             fallbackImageData = R.drawable.animals_plants,
             onClick = onAllItemClick,
             useTransition = true,
-            transitionKey = TransitionImageType.fromCategoryType(state.categoryType)
+            transitionKey = state.categoryType.toCategoryDataType().toTransitionImageType()
                 ?.let {
                     TransitionImageKey(
                         id = state.categoryItemId ?: 0,

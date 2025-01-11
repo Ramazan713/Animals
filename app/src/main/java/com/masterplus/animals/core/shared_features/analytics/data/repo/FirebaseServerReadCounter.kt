@@ -2,7 +2,6 @@ package com.masterplus.animals.core.shared_features.analytics.data.repo
 
 import com.masterplus.animals.core.domain.constants.KPref
 import com.masterplus.animals.core.domain.enums.ContentType
-import com.masterplus.animals.core.domain.services.CheckDayChangeService
 import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.preferences.data.get
 import com.masterplus.animals.core.shared_features.preferences.data.set
@@ -13,7 +12,6 @@ import kotlinx.coroutines.flow.map
 
 class FirebaseServerReadCounter(
     private val appPreferences: AppPreferences,
-    private val checkDayChangeService: CheckDayChangeService
 ): ServerReadCounter {
 
     override val contentCountersFlow: Flow<Int>
@@ -51,8 +49,8 @@ class FirebaseServerReadCounter(
         }
     }
 
-    override suspend fun checkNewDayAndReset() {
-        if(!checkDayChangeService.isNewDay()) return
+    override suspend fun checkNewDayAndReset(isNewDay: Boolean) {
+        if(!isNewDay) return
         appPreferences.edit {
             it[KPref.contentReadCounter] = 0
             it[KPref.categoryReadCounter] = 0
