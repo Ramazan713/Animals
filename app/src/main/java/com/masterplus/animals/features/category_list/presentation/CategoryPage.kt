@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,6 +47,7 @@ import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.isPrependItemLoading
+import com.masterplus.animals.core.extentions.rememberLazyGridStatePagingWorkaround
 import com.masterplus.animals.core.extentions.visibleMiddleItemOrderKey
 import com.masterplus.animals.core.presentation.components.CategoryItemShipper
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
@@ -99,7 +99,7 @@ fun CategoryListPage(
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val lazyListState = rememberLazyGridState()
+    val lazyListState = pagingItems.rememberLazyGridStatePagingWorkaround()
     val middleOrderKey = pagingItems.visibleMiddleItemOrderKey(lazyListState)
 
     AutoSavePointHandler(
@@ -163,7 +163,7 @@ fun CategoryListPage(
                 }
                 item(
                     span = { GridItemSpan(maxLineSpan) }
-                ) {
+                ){
                     Text(
                         text = state.collectionName,
                         style = MaterialTheme.typography.titleLarge,

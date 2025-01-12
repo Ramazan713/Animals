@@ -53,9 +53,11 @@ class CategoryListViewModel(
         _targetItemIdFlow,
         categoryPageSizeFlow
     ){ language, targetItemId,categoryPageSize ->
-        getPagingFlow(language, targetItemId, categoryPageSize)
-    }.flatMapLatest { flow -> flow }
-        .cachedIn(viewModelScope)
+        Triple(language, targetItemId, categoryPageSize)
+    }.distinctUntilChanged()
+        .flatMapLatest { triple ->
+            getPagingFlow(triple.first, triple.second, triple.third)
+        }.cachedIn(viewModelScope)
 
 
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +41,7 @@ fun SharedLoadingLazyColumn(
     verticalSpaceBy: Dp = 16.dp,
     isEmptyResult: Boolean = false,
     emptyMessage: String = stringResource(id = R.string.not_fount_any_result),
+    emptyContent: @Composable ((BoxScope.() -> Unit))? = null,
     stickHeaderContent:  (LazyListScope.() -> Unit)? = null,
     content:  LazyListScope.() -> Unit,
 ) {
@@ -77,11 +79,15 @@ fun SharedLoadingLazyColumn(
                             .align(Alignment.Center),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            emptyMessage,
-                            style = MaterialTheme.typography.bodyLarge,
-                            textAlign = TextAlign.Center
-                        )
+                        if(emptyContent != null){
+                            emptyContent()
+                        }else{
+                            Text(
+                                emptyMessage,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }

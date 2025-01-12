@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +39,7 @@ import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.isPrependItemLoading
+import com.masterplus.animals.core.extentions.rememberLazyListStatePagingWorkaround
 import com.masterplus.animals.core.extentions.visibleMiddleItemOrderKey
 import com.masterplus.animals.core.extentions.visibleMiddlePosition
 import com.masterplus.animals.core.presentation.components.DefaultTopBar
@@ -139,7 +139,7 @@ fun SpeciesListPage(
     onAdAction: (AdAction) -> Unit,
 ) {
     val topBarScrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val lazyListState = rememberLazyListState()
+    val lazyListState = pagingItems.rememberLazyListStatePagingWorkaround()
     val middleOrderKey = pagingItems.visibleMiddleItemOrderKey(lazyListState)
     val middlePos = lazyListState.visibleMiddlePosition()
 

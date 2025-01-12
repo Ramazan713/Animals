@@ -22,6 +22,7 @@ import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.isPrependItemLoading
+import com.masterplus.animals.core.extentions.rememberLazyListStatePagingWorkaround
 import com.masterplus.animals.core.presentation.components.SpeciesCard
 import com.masterplus.animals.core.presentation.components.SpeciesCardShimmer
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
@@ -101,6 +102,8 @@ private fun SearchResultLazyColumn(
             (searchResults.isLoading() && state.searchType.isLocal) || (state.isRemoteSearching && state.searchType.isServer)
         }
     }
+    val lazyListState = searchResults.rememberLazyListStatePagingWorkaround()
+
     SharedLoadingPageContent(
         modifier = modifier,
         isLoading = isSearching,
@@ -114,6 +117,7 @@ private fun SearchResultLazyColumn(
         },
     ){
         LazyColumn(
+            state = lazyListState,
             contentPadding = contentPaddings,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier

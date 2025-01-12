@@ -1,9 +1,37 @@
 package com.masterplus.animals.core.extentions
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.animals.core.data.mediators.RemoteMediatorError
 
+@Composable
+fun <T : Any> LazyPagingItems<T>.rememberLazyListStatePagingWorkaround(): LazyListState {
+    // After recreation, LazyPagingItems first return 0 items, then the cached items.
+    // This behavior/issue is resetting the LazyListState scroll position.
+    // Below is a workaround. More info:
+    // https://issuetracker.google.com/issues/177245496
+    // https://issuetracker.google.com/issues/179397301
+    return when (itemCount) {
+        // Return a different LazyListState instance.
+        0 -> remember(this) { LazyListState(0, 0) }
+        // Return rememberLazyListState (normal case).
+        else -> rememberLazyListState()
+    }
+}
+
+@Composable
+fun <T : Any> LazyPagingItems<T>.rememberLazyGridStatePagingWorkaround(): LazyGridState {
+    return when (itemCount) {
+        0 -> remember(this) { LazyGridState(0, 0) }
+        else -> rememberLazyGridState()
+    }
+}
 
 fun LoadState.getExceptionOrNull(): RemoteMediatorError?{
     if (this is LoadState.Error && this.error is RemoteMediatorError){

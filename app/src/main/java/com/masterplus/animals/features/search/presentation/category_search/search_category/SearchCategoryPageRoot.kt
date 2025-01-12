@@ -25,6 +25,7 @@ import com.masterplus.animals.core.extentions.isAppendItemLoading
 import com.masterplus.animals.core.extentions.isEmptyResult
 import com.masterplus.animals.core.extentions.isLoading
 import com.masterplus.animals.core.extentions.isPrependItemLoading
+import com.masterplus.animals.core.extentions.rememberLazyListStatePagingWorkaround
 import com.masterplus.animals.core.presentation.components.CategoryItemShipper
 import com.masterplus.animals.core.presentation.components.image.ImageWithTitle
 import com.masterplus.animals.core.presentation.components.loading.SharedCircularProgress
@@ -38,7 +39,6 @@ import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
 import com.masterplus.animals.core.shared_features.ad.presentation.AdState
-import com.masterplus.animals.core.shared_features.ad.presentation.AdUiResult
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchPage
 import com.masterplus.animals.features.search.presentation.category_search.CategorySearchState
 import org.koin.androidx.compose.koinViewModel
@@ -98,6 +98,7 @@ private fun SearchResultLazyColumn(
             (searchResults.isLoading() && state.searchType.isLocal) || (state.isRemoteSearching && state.searchType.isServer)
         }
     }
+    val lazyListState = searchResults.rememberLazyListStatePagingWorkaround()
     SharedLoadingPageContent(
         modifier = modifier,
         isLoading = isSearching,
@@ -111,6 +112,7 @@ private fun SearchResultLazyColumn(
         },
     ){
         LazyColumn(
+            state = lazyListState,
             contentPadding = contentPaddings,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier

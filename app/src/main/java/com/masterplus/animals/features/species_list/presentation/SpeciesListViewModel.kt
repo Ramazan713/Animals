@@ -57,9 +57,11 @@ class SpeciesListViewModel(
         _targetItemIdFlow,
         speciesPageSizeFlow
     ){ language, targetItemId, speciesPageSize ->
-        getPagingFlow(language, targetItemId, speciesPageSize)
-    }.flatMapLatest { flow -> flow  }
-        .cachedIn(viewModelScope)
+        Triple(language, targetItemId, speciesPageSize)
+    }.distinctUntilChanged()
+        .flatMapLatest { triple ->
+            getPagingFlow(triple.first, triple.second, triple.third)
+        }.cachedIn(viewModelScope)
 
     init {
         translationRepo
