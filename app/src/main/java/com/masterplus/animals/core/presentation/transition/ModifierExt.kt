@@ -32,7 +32,6 @@ fun Modifier.sharedBoundsText(
                 enter = fadeIn(),
                 exit = fadeOut(),
             )
-            .skipToLookaheadSize()
     }
 }
 

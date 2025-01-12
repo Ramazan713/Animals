@@ -51,8 +51,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                next_key = items.lastOrNull()?.classEntity?.id?.toString(),
-                prev_key = items.firstOrNull()?.classEntity?.id?.toString()
+                next_key = items.lastOrNull()?.classEntity?.order_key?.toString(),
+                prev_key = items.firstOrNull()?.classEntity?.order_key?.toString()
             ))
             categoryDao.insertClassesWithImages(items)
         }
@@ -83,8 +83,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                next_key = items.lastOrNull()?.phylum?.id?.toString(),
-                prev_key = items.firstOrNull()?.phylum?.id?.toString()
+                next_key = items.lastOrNull()?.phylum?.order_key?.toString(),
+                prev_key = items.firstOrNull()?.phylum?.order_key?.toString()
             ))
             categoryDao.insertPhylumWithImages(items)
         }
@@ -118,8 +118,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                next_key = items.lastOrNull()?.order?.id?.toString(),
-                prev_key = items.firstOrNull()?.order?.id?.toString()
+                next_key = items.lastOrNull()?.order?.order_key?.toString(),
+                prev_key = items.firstOrNull()?.order?.order_key?.toString()
             ))
             categoryDao.insertOrdersWithImages(items)
         }
@@ -153,8 +153,8 @@ class FirebaseCategoryRemoteRepo(
         transactionProvider.runAsTransaction {
             remoteKeyDao.insertOrReplace(RemoteKeyEntity(
                 label = saveKey,
-                next_key = items.lastOrNull()?.family?.id?.toString(),
-                prev_key = items.firstOrNull()?.family?.id?.toString()
+                next_key = items.lastOrNull()?.family?.order_key?.toString(),
+                prev_key = items.firstOrNull()?.family?.order_key?.toString()
             ))
             categoryDao.insertFamiliesWithImages(items)
         }
