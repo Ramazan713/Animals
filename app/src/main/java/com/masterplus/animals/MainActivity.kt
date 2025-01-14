@@ -11,26 +11,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.coroutineScope
-import com.algolia.client.api.SearchClient
-import com.algolia.client.model.search.SearchForHits
-import com.algolia.client.model.search.SearchMethodParams
 import com.google.android.gms.ads.MobileAds
-import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.presentation.utils.ListenEventLifecycle
-import com.masterplus.animals.core.shared_features.analytics.domain.repo.ServerReadCounter
 import com.masterplus.animals.core.shared_features.translation.presentation.TranslationViewModel
 import com.masterplus.animals.features.app.presentation.AppViewModel
 import com.masterplus.animals.features.app.presentation.MyApp
 import com.masterplus.animals.features.app.presentation.init.initAppCheck
 import com.masterplus.animals.ui.theme.AnimalsTheme
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private val translationViewModel by viewModel<TranslationViewModel>()
-    private val readCounter by inject<ServerReadCounter>()
     private val appViewModel by viewModel<AppViewModel>()
 
     @OptIn(ExperimentalFoundationApi::class)
@@ -40,11 +31,6 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this) {}
 
-        if(BuildConfig.DEBUG){
-            lifecycle.coroutineScope.launch {
-                readCounter.resetCounter(ContentType.Content)
-            }
-        }
         initAppCheck(this)
 
         setContent {

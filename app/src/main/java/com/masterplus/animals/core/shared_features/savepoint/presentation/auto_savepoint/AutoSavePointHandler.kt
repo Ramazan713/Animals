@@ -70,14 +70,6 @@ fun <T: ItemOrder> AutoSavePointHandler(
                     currentOnInitPosResponse?.invoke(pos)
                     return@EventHandler
                 }
-                val error = pagingItems.getAnyExceptionOrNull()
-                if(error != null){
-                    if(error is RemoteMediatorError.ReadLimitExceededException){
-                        onAction(AutoSavePointAction.ShowDialog(AutoSavePointDialogEvent.ShowAdRequired))
-                    }
-                }else{
-                    pagingItems.refresh()
-                }
             }
             AutoSavePointEvent.RetryPaging -> {
                 pagingItems.retry()
@@ -88,6 +80,9 @@ fun <T: ItemOrder> AutoSavePointHandler(
             is AutoSavePointEvent.LoadRequiredPage -> {
                 val error = pagingItems.getAnyExceptionOrNull()
                 if(error != null){
+                    val orderKeyExistsInList = pagingItems.itemSnapshotList.items.any { it.orderKey == uiEvent.orderKey }
+                    if(orderKeyExistsInList) return@EventHandler
+                    if(pagingItems.itemCount == 0) return@EventHandler
                     if(error is RemoteMediatorError.ReadLimitExceededException){
                         onAction(AutoSavePointAction.ShowDialog(AutoSavePointDialogEvent.ShowAdRequired))
                     }

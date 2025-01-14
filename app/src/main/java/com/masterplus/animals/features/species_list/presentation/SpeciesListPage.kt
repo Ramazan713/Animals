@@ -174,12 +174,10 @@ fun SpeciesListPage(
                 onMenuItemClick = { menuItem ->
                     when(menuItem){
                         SpeciesListTopItemMenu.Savepoint -> {
-                            onAction(SpeciesListAction.ShowDialog(middleOrderKey?.let { middleOrderKey->
-                                SpeciesListDialogEvent.ShowEditSavePoint(
-                                    orderKey = middleOrderKey,
-                                    posIndex = middlePos
-                                )
-                            }))
+                            onAction(SpeciesListAction.ShowDialog(SpeciesListDialogEvent.ShowEditSavePoint(
+                                orderKey = middleOrderKey ?: 0,
+                                posIndex = middlePos
+                            )))
                         }
                         SpeciesListTopItemMenu.SavePointSettings -> onNavigateToSavePointSpeciesSettings()
                         SpeciesListTopItemMenu.SelectFontSize -> {
