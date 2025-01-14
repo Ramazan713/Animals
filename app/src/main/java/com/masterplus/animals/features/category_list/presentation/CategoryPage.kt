@@ -65,7 +65,6 @@ import com.masterplus.animals.core.presentation.utils.getPreviewLazyPagingData
 import com.masterplus.animals.core.presentation.utils.previewPagingLoadStates
 import com.masterplus.animals.core.shared_features.ad.presentation.AdAction
 import com.masterplus.animals.core.shared_features.ad.presentation.AdState
-import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.EditSavePointLoadParam
@@ -244,11 +243,12 @@ fun CategoryListPage(
         when(dialogEvent){
             is CategoryListDialogEvent.ShowEditSavePoint -> {
                 EditSavePointDialog(
-                    loadParam = EditSavePointLoadParam(
-                        destinationTypeId = state.categoryType.toSavePointDestinationTypeId(state.categoryItemId, returnAll = false),
-                        destinationId = state.categoryItemId,
+                    loadParam = EditSavePointLoadParam.fromCategory(
+                        categoryType = state.categoryType,
+                        categoryItemId = state.categoryItemId,
                         kingdomType = state.kingdomType,
                         contentType = SavePointContentType.Category,
+                        returnAll = false
                     ),
                     orderKey = dialogEvent.orderKey,
                     onClosed = close,

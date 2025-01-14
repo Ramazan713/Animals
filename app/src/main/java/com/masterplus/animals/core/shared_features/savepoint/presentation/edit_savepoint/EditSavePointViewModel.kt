@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.animals.R
 import com.masterplus.animals.core.domain.utils.UiText
+import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointSaveMode
 import com.masterplus.animals.core.shared_features.savepoint.domain.repo.SavePointRepo
 import com.masterplus.animals.core.shared_features.savepoint.domain.use_cases.SavePointSuggestedTitleUseCase
@@ -111,14 +112,14 @@ class EditSavePointViewModel @Inject constructor(
     private fun loadData(action: EditSavePointAction.LoadData){
         _state.update { it.copy(
             loadParam = action.loadPram,
-            showImage = action.loadPram.filteredDestinationTypeIds?.size != 1
+            showImage = false
         ) }
         loadDataJob?.cancel()
+        val destination = action.loadPram.destination ?: return
         loadDataJob = savePointRepo
-            .getAllSavePoints(
+            .getSavePoints(
                 contentType = action.loadPram.contentType,
-                filteredDestinationTypeIds = action.loadPram.filteredDestinationTypeIds,
-                kingdomType = action.loadPram.kingdomType
+                savePointDestination = destination
             )
             .onEach { savePoints ->
                 _state.update { it.copy(savePoints = savePoints)}

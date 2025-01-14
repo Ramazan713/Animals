@@ -66,10 +66,18 @@ class FakeSavePointRepo : SavePointRepo {
         }
     }
 
-    override fun getAllSavePoints(
+    override fun getSavePoints(
+        savePointDestination: SavePointDestination,
+        contentType: SavePointContentType
+    ): Flow<List<SavePoint>> {
+        return flow {
+            emit(savePointsMutable.filter { it.contentType == contentType && it.destination == savePointDestination })
+        }
+    }
+
+    override fun getSavePointsByKingdom(
         contentType: SavePointContentType,
         kingdomType: KingdomType,
-        filteredDestinationTypeIds: List<Int>?,
         filterBySaveMode: SavePointSaveMode?
     ): Flow<List<SavePoint>> {
         return flow {
@@ -77,27 +85,6 @@ class FakeSavePointRepo : SavePointRepo {
                 savePointsMutable.filter {
                     it.contentType == contentType &&
                             it.kingdomType == kingdomType &&
-                            (filteredDestinationTypeIds == null || filteredDestinationTypeIds.contains(it.destination.destinationTypeId)) &&
-                            (filterBySaveMode == null || it.saveMode == filterBySaveMode)
-                }
-            )
-        }
-    }
-
-    override fun getSavePointsByDestination(
-        destinationTypeId: Int,
-        contentType: SavePointContentType,
-        kingdomType: KingdomType,
-        destinationId: Int?,
-        filterBySaveMode: SavePointSaveMode?
-    ): Flow<List<SavePoint>> {
-        return flow {
-            emit(
-                savePointsMutable.filter {
-                    it.destination.destinationTypeId == destinationTypeId &&
-                            it.contentType == contentType &&
-                            it.kingdomType == kingdomType &&
-                            (destinationId == null || it.destination.destinationId == destinationId) &&
                             (filterBySaveMode == null || it.saveMode == filterBySaveMode)
                 }
             )

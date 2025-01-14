@@ -62,7 +62,6 @@ import com.masterplus.animals.core.shared_features.add_species_to_list.presentat
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListHandler
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListState
 import com.masterplus.animals.core.shared_features.add_species_to_list.presentation.AddSpeciesToListViewModel
-import com.masterplus.animals.core.shared_features.savepoint.data.mapper.toSavePointDestinationTypeId
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType
 import com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointDestination
 import com.masterplus.animals.core.shared_features.savepoint.domain.models.EditSavePointLoadParam
@@ -309,10 +308,12 @@ fun SpeciesListPage(
         when(dialogEvent){
             is SpeciesListDialogEvent.ShowEditSavePoint -> {
                 EditSavePointDialog(
-                    loadParam = EditSavePointLoadParam(
-                        destinationTypeId = args.categoryType.toSavePointDestinationTypeId(args.categoryItemId),
-                        destinationId = args.categoryItemId,
-                        kingdomType = args.kingdomType
+                    loadParam = EditSavePointLoadParam.fromCategory(
+                        categoryType = args.categoryType,
+                        categoryItemId = args.categoryItemId,
+                        kingdomType = args.kingdomType,
+                        contentType = SavePointContentType.Content,
+                        returnAll = true
                     ),
                     orderKey = dialogEvent.orderKey,
                     onClosed = close,

@@ -31,21 +31,14 @@ interface SavePointRepo {
         contentType: SavePointContentType
     ): SavePoint?
 
-    fun getAllSavePoints(
+    fun getSavePoints(
+        savePointDestination: SavePointDestination,
         contentType: SavePointContentType,
-        kingdomType: KingdomType,
-        filteredDestinationTypeIds: List<Int>? = null,
-        filterBySaveMode: SavePointSaveMode? = null
     ): Flow<List<SavePoint>>
 
-    fun getSavePointsByDestination(
-        destinationTypeId: Int,
+    fun getSavePointsByKingdom(
         contentType: SavePointContentType,
         kingdomType: KingdomType,
-        destinationId: Int? = null,
         filterBySaveMode: SavePointSaveMode? = null
     ): Flow<List<SavePoint>>
-
-
-
 }

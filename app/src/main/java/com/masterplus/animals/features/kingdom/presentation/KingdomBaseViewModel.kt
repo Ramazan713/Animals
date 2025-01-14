@@ -108,9 +108,8 @@ abstract class KingdomBaseViewModel(
 
     private fun loadSavePoints(){
         savePointRepo
-            .getAllSavePoints(
+            .getSavePointsByKingdom(
                 contentType = SavePointContentType.Content,
-                filteredDestinationTypeIds = null,
                 kingdomType = kingdomType,
                 filterBySaveMode = SavePointSaveMode.Manuel
             )

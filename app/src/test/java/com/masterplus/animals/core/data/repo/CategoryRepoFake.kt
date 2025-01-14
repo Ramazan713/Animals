@@ -23,6 +23,7 @@ class CategoryRepoFake: CategoryRepo{
     var fakeOrders = mutableListOf<OrderModel>()
     var fakeFamilies = mutableListOf<FamilyModel>()
     var fakeHabitats = mutableListOf<HabitatCategoryModel>()
+    var fakeHabitat: HabitatCategoryModel? = null
 
     override suspend fun getCategoryData(
         categoryType: CategoryType,
@@ -30,11 +31,11 @@ class CategoryRepoFake: CategoryRepo{
         language: LanguageEnum,
         kingdomType: KingdomType
     ): DefaultResult<List<CategoryData>> {
-        return Result.Success(fakeCategories.filter { it.categoryType == categoryType }.take(limit))
+        return Result.Success(fakeCategories.filter { it.categoryDataType == categoryType.toCategoryDataType() }.take(limit))
     }
 
     override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): String? {
-        val categoryPair = fakeCategories.firstOrNull { it.categoryType == categoryType && it.id == itemId }
+        val categoryPair = fakeCategories.firstOrNull { it.categoryDataType == categoryType.toCategoryDataType() && it.id == itemId }
         return categoryPair?.title
     }
 
@@ -49,6 +50,13 @@ class CategoryRepoFake: CategoryRepo{
 
     override suspend fun getFamilyWithId(familyId: Int, language: LanguageEnum): FamilyModel? {
         return fakeFamilies.firstOrNull { it.id == familyId }
+    }
+
+    override suspend fun getHabitatWithId(
+        habitatId: Int,
+        language: LanguageEnum
+    ): HabitatCategoryModel? {
+        return fakeHabitat
     }
 
     override fun getPagingOrdersWithClassId(

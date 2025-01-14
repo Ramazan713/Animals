@@ -40,91 +40,31 @@ interface SavePointDao {
 
 
     @Query("""
-        select * from savepoints where destinationTypeId = :destinationTypeId and
-        contentTypeId = :contentTypeId and kingdomId = :kingdomId order by modifiedTime desc
-    """)
-    fun getFlowSavePointsDestinations(
-        destinationTypeId: Int,
-        contentTypeId: Int,
-        kingdomId: Int
-    ): Flow<List<SavePointWithImageEmbedded>>
-
-    @Query("""
-        select * from savepoints where destinationTypeId = :destinationTypeId and
-        contentTypeId = :contentTypeId and kingdomId = :kingdomId and saveModeId = :saveModeId order by modifiedTime desc
-    """)
-    fun getFlowSavePointsDestinations(
-        destinationTypeId: Int,
-        contentTypeId: Int,
-        kingdomId: Int,
-        saveModeId: Int
-    ): Flow<List<SavePointWithImageEmbedded>>
-
-    @Query("""
-        select * from savepoints where destinationTypeId = :destinationTypeId and
-        destinationId = :destinationId and contentTypeId = :contentTypeId and kingdomId = :kingdomId
+        select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId 
+        and destinationTypeId = :destinationTypeId
         order by modifiedTime desc
     """)
-    fun getFlowSavePointsDestinationByDestId(
-        destinationTypeId: Int,
-        destinationId: Int,
-        contentTypeId: Int,
-        kingdomId: Int
-    ): Flow<List<SavePointWithImageEmbedded>>
+    fun getSavePoints(contentTypeId: Int, kingdomId: Int, destinationTypeId: Int): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
-        select * from savepoints where destinationTypeId = :destinationTypeId and
-        destinationId = :destinationId and contentTypeId = :contentTypeId and kingdomId = :kingdomId and saveModeId = :saveModeId
+        select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId 
+        and destinationTypeId = :destinationTypeId and destinationId = :destinationId
         order by modifiedTime desc
     """)
-    fun getFlowSavePointsDestinationByDestId(
-        destinationTypeId: Int,
-        destinationId: Int,
-        contentTypeId: Int,
-        kingdomId: Int,
-        saveModeId: Int
-    ): Flow<List<SavePointWithImageEmbedded>>
-
-
-
-
+    fun getSavePoints(contentTypeId: Int, kingdomId: Int, destinationTypeId: Int, destinationId: Int): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
         select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId 
         order by modifiedTime desc
     """)
-    fun getAllFlowSavePointsByContentType(contentTypeId: Int, kingdomId: Int): Flow<List<SavePointWithImageEmbedded>>
+    fun getSavePointsByKingdom(contentTypeId: Int, kingdomId: Int): Flow<List<SavePointWithImageEmbedded>>
 
     @Query("""
         select * from savepoints where contentTypeId = :contentTypeId and kingdomId = :kingdomId 
         and saveModeId = :saveModeId
         order by modifiedTime desc
     """)
-    fun getAllFlowSavePointsByContentType(contentTypeId: Int, kingdomId: Int, saveModeId: Int): Flow<List<SavePointWithImageEmbedded>>
-
-    @Query("""
-        select * from savepoints where contentTypeId = :contentTypeId and destinationTypeId in (:destinationTypeIds)
-        and kingdomId = :kingdomId
-        order by modifiedTime desc
-    """)
-    fun getAllFlowSavePointsByFilteredDestinations(
-        contentTypeId: Int,
-        destinationTypeIds: List<Int>,
-        kingdomId: Int
-    ): Flow<List<SavePointWithImageEmbedded>>
-
-    @Query("""
-        select * from savepoints where contentTypeId = :contentTypeId and destinationTypeId in (:destinationTypeIds)
-        and kingdomId = :kingdomId and saveModeId = :saveModeId
-        order by modifiedTime desc
-    """)
-    fun getAllFlowSavePointsByFilteredDestinations(
-        contentTypeId: Int,
-        destinationTypeIds: List<Int>,
-        kingdomId: Int,
-        saveModeId: Int
-    ): Flow<List<SavePointWithImageEmbedded>>
-
+    fun getSavePointsByKingdom(contentTypeId: Int, kingdomId: Int, saveModeId: Int): Flow<List<SavePointWithImageEmbedded>>
 
 
 
@@ -145,7 +85,6 @@ interface SavePointDao {
         update savepoints set titleEn = :title, titleTr = :title where id = :id
     """)
     suspend fun updateSavePointTitle(id: Int, title: String)
-
 
 
     @Query("""

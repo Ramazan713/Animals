@@ -74,7 +74,7 @@ class SavePointSuggestedTitleUseCaseTest {
         categoryRepo.fakeCategories.add(categoryData(
             id = itemId,
             title = categoryName,
-            categoryType = destination.toCategoryType()!!
+            categoryDataType = destination.toCategoryType()!!.toCategoryDataType()
         ))
 
         init()
