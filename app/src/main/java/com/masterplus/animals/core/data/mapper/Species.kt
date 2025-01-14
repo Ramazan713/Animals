@@ -40,8 +40,8 @@ fun ISpeciesType.toCategoryData(): CategoryData{
     return CategoryData(
         id = id ?: 0,
         image = images.firstOrNull()?.image,
-        title = species.scientificName,
-        secondaryTitle = species.name,
+        title = species.name,
+        secondaryTitle = species.scientificName,
         kingdomType = species.kingdomType,
         categoryDataType = CategoryDataType.Species,
         orderKey = species.orderKey

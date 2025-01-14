@@ -46,8 +46,8 @@ fun FamilyModel.toCategoryData(): CategoryData {
     return CategoryData(
         id = id,
         image = image,
-        title = scientificName,
-        secondaryTitle = family,
+        title = family,
+        secondaryTitle = scientificName,
         categoryDataType = CategoryDataType.Family,
         kingdomType = kingdomType,
         orderKey = orderKey

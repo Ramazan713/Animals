@@ -46,8 +46,8 @@ fun ClassModel.toCategoryData(): CategoryData {
     return CategoryData(
         id = id,
         image = image,
-        title = scientificName,
-        secondaryTitle = className,
+        title = className,
+        secondaryTitle = scientificName,
         categoryDataType = CategoryDataType.Class,
         kingdomType = kingdomType,
         orderKey = orderKey

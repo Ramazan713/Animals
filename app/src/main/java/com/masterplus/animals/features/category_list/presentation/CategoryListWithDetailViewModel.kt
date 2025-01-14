@@ -47,8 +47,8 @@ class CategoryListWithDetailViewModel(
                     CategoryType.Class -> {
                         val classModel = categoryRepo.getClassWithId(args.categoryItemId, language) ?: return@onEach
                         _state.update { it.copy(
-                            title = classModel.scientificName,
-                            subTitle = classModel.className,
+                            title = classModel.className,
+                            subTitle = classModel.scientificName,
                             parentImageData = classModel.image,
                             collectionName = "Takımlar",
                             isLoading = false,
@@ -57,8 +57,8 @@ class CategoryListWithDetailViewModel(
                     CategoryType.Order -> {
                         val orderModel = categoryRepo.getOrderWithId(args.categoryItemId, language)?: return@onEach
                         _state.update { it.copy(
-                            title = orderModel.scientificName,
-                            subTitle = orderModel.order,
+                            title = orderModel.order,
+                            subTitle = orderModel.scientificName,
                             parentImageData = orderModel.image,
                             collectionName = "Familyalar",
                             isLoading = false,

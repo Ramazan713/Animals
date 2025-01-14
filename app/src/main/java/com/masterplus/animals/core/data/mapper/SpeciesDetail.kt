@@ -33,11 +33,11 @@ fun SpeciesDetailEmbedded.toSpeciesListDetail(
 fun SpeciesListDetail.toCategoryData(): CategoryData{
     return CategoryData(
         id = id,
-        title = scientificName,
+        title = name,
         categoryDataType = CategoryDataType.Order,
         kingdomType = kingdomType,
         orderKey = orderKey,
         image = images.firstOrNull()?.image,
-        secondaryTitle = name
+        secondaryTitle = scientificName
     )
 }

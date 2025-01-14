@@ -106,11 +106,12 @@ class CategoryRepoImpl(
     }
 
     override suspend fun getCategoryName(categoryType: CategoryType, itemId: Int, language: LanguageEnum): String? {
+        val isEn = language.isEn
         val title = when(categoryType){
-            CategoryType.Habitat -> categoryDao.getHabitatCategoryWithId(itemId)?.habitat?.let { if(language.isEn) it.habitat_category_en else it.habitat_category_tr }
-            CategoryType.Class -> categoryDao.getClassWithId(itemId)?.classEntity?.scientific_name
-            CategoryType.Order -> categoryDao.getOrderWithId(itemId)?.order?.scientific_name
-            CategoryType.Family -> categoryDao.getFamilyWithId(itemId)?.family?.scientific_name
+            CategoryType.Habitat -> categoryDao.getHabitatCategoryWithId(itemId)?.habitat?.let { if(isEn) it.habitat_category_en else it.habitat_category_tr }
+            CategoryType.Class -> categoryDao.getClassWithId(itemId)?.classEntity?.let { if(isEn) it.class_en else it.class_tr }
+            CategoryType.Order -> categoryDao.getOrderWithId(itemId)?.order?.let { if(isEn) it.order_en else it.order_tr }
+            CategoryType.Family -> categoryDao.getFamilyWithId(itemId)?.family?.let { if(isEn) it.family_en else it.family_tr }
             CategoryType.List -> listDao.getListById(itemId)?.name
         }
         return title
