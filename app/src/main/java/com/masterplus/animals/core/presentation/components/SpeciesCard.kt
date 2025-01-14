@@ -39,6 +39,8 @@ import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.presentation.components.image.TransitionImage
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
+import com.masterplus.animals.core.presentation.transition.TransitionTextKey
+import com.masterplus.animals.core.presentation.transition.TransitionTextType
 import com.masterplus.animals.core.presentation.transition.sharedBoundsText
 import com.masterplus.animals.core.presentation.utils.SampleDatas
 import com.masterplus.animals.core.presentation.utils.ShapeUtils
@@ -276,7 +278,10 @@ private fun GetContent(
                     text = name,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.sharedBoundsText(
-                        contentStateKey = name
+                        textKey = TransitionTextKey(
+                            text = name,
+                            textType = TransitionTextType.Title
+                        )
                     )
                 )
                 if (scientificName != null) {
@@ -284,7 +289,10 @@ private fun GetContent(
                         text = scientificName,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.sharedBoundsText(
-                            contentStateKey = scientificName
+                            textKey = TransitionTextKey(
+                                text = scientificName,
+                                textType = TransitionTextType.Content
+                            )
                         )
                     )
                 }
@@ -302,7 +310,10 @@ private fun GetContent(
             overflow = TextOverflow.Ellipsis,
             maxLines = 10,
             modifier = Modifier.sharedBoundsText(
-                contentStateKey = speciesDescription
+                textKey = TransitionTextKey(
+                    text = speciesDescription,
+                    textType = TransitionTextType.Description
+                )
             )
         )
     }

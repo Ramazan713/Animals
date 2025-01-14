@@ -18,16 +18,16 @@ import androidx.compose.ui.Modifier
 @Composable
 fun Modifier.sharedBoundsText(
     scope: SharedTransitionScope,
-    contentStateKey: String,
+    textKey: TransitionTextKey,
     animatedVisibilityScope: AnimatedVisibilityScope? = null,
     enabled: Boolean = true
 ): Modifier {
     val currentAnimatedVisibilityScope = animatedVisibilityScope ?: LocalNavAnimatedVisibilityScope.current
-    if(currentAnimatedVisibilityScope == null ||  contentStateKey == "" || !enabled) return Modifier
+    if(currentAnimatedVisibilityScope == null || !enabled) return Modifier
     return with(scope){
         Modifier
             .sharedBounds(
-                rememberSharedContentState(contentStateKey),
+                rememberSharedContentState(textKey.toString()),
                 animatedVisibilityScope = currentAnimatedVisibilityScope,
                 enter = fadeIn(),
                 exit = fadeOut(),
@@ -38,14 +38,14 @@ fun Modifier.sharedBoundsText(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun Modifier.sharedBoundsText(
-    contentStateKey: String,
+    textKey: TransitionTextKey,
     animatedVisibilityScope: AnimatedVisibilityScope? = null,
     enabled: Boolean = true
 ): Modifier {
     val sharedTransitionScope = LocalSharedTransitionScope.current ?: return Modifier
     return Modifier.sharedBoundsText(
         scope = sharedTransitionScope,
-        contentStateKey = contentStateKey,
+        textKey = textKey,
         animatedVisibilityScope = animatedVisibilityScope,
         enabled = enabled
     )

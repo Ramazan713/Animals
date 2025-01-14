@@ -33,9 +33,10 @@ import com.masterplus.animals.core.domain.enums.KingdomType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.models.ImageWithMetadata
 import com.masterplus.animals.core.presentation.components.OrderText
-import com.masterplus.animals.core.presentation.models.ImageWithTitleModel
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
+import com.masterplus.animals.core.presentation.transition.TransitionTextKey
+import com.masterplus.animals.core.presentation.transition.TransitionTextType
 import com.masterplus.animals.core.presentation.transition.sharedBoundsText
 import com.masterplus.animals.core.presentation.utils.ColorUtils
 import com.masterplus.animals.core.presentation.utils.SampleDatas
@@ -179,7 +180,10 @@ private fun GetTitleSection(
                 modifier = Modifier
                     .sharedBoundsText(
                         enabled = useTransition,
-                        contentStateKey = title
+                        textKey = TransitionTextKey(
+                            text = title,
+                            textType = TransitionTextType.Title
+                        ),
                     )
             )
             if(hasSubtitle){
@@ -194,7 +198,10 @@ private fun GetTitleSection(
                     modifier = Modifier
                         .sharedBoundsText(
                             enabled = useTransition,
-                            contentStateKey = subTitle ?: "",
+                            textKey = TransitionTextKey(
+                                text = subTitle ?: "",
+                                textType = TransitionTextType.Content
+                            ),
                         )
                 )
             }

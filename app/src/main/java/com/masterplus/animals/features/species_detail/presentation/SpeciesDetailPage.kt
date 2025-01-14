@@ -67,6 +67,8 @@ import com.masterplus.animals.core.presentation.components.loading.SharedLoading
 import com.masterplus.animals.core.presentation.dialogs.ShowImageDia
 import com.masterplus.animals.core.presentation.transition.TransitionImageKey
 import com.masterplus.animals.core.presentation.transition.TransitionImageType
+import com.masterplus.animals.core.presentation.transition.TransitionTextKey
+import com.masterplus.animals.core.presentation.transition.TransitionTextType
 import com.masterplus.animals.core.presentation.transition.animateEnterExitForTransition
 import com.masterplus.animals.core.presentation.transition.renderInSharedTransitionScopeOverlayDefault
 import com.masterplus.animals.core.presentation.transition.sharedBoundsText
@@ -435,21 +437,30 @@ private fun InfoPageContent(
             text = species.name,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.sharedBoundsText(
-                contentStateKey = species.name
+                textKey = TransitionTextKey(
+                    text = species.name,
+                    textType = TransitionTextType.Title
+                )
             )
         )
         Text(
             text = species.scientificName,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.sharedBoundsText(
-                contentStateKey = species.scientificName
+                textKey = TransitionTextKey(
+                    text = species.scientificName,
+                    textType = TransitionTextType.Content
+                )
             )
         )
 
         Text(
             modifier = Modifier
                 .sharedBoundsText(
-                    contentStateKey = species.introduction
+                    textKey = TransitionTextKey(
+                        text = species.introduction,
+                        textType = TransitionTextType.Description
+                    )
                 )
                 .padding(vertical = 16.dp)
                 .fillMaxWidth()
