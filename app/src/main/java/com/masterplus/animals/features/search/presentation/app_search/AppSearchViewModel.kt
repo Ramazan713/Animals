@@ -1,5 +1,7 @@
 package com.masterplus.animals.features.search.presentation.app_search
 
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -49,13 +51,16 @@ class AppSearchViewModel(
     private val _state = MutableStateFlow(AppSearchState())
     val state get() = _state.asStateFlow()
 
+    private val queryTextFlow = snapshotFlow { _state.value.queryState.text.toString() }
+    
     private val searchTypeFlow = _state
         .map { it.searchType }
         .distinctUntilChanged()
 
     private val queryBaseFlow = _state
         .filter { it.searchType.isLocal }
-        .map { it.query }
+        .distinctUntilChanged()
+        .combine(queryTextFlow){_, query -> query}
         .debounce(300L)
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
@@ -173,18 +178,16 @@ class AppSearchViewModel(
     fun onAction(action: AppSearchAction){
         when(action){
             is AppSearchAction.SearchQuery -> {
-                _state.update { it.copy(
-                    query = action.query
-                ) }
+                _state.value.queryState.setTextAndPlaceCursorAtEnd(action.query)
             }
             is AppSearchAction.DeleteHistory -> {
                 viewModelScope.launch {
                     historyRepo.deleteHistoryById(action.history.id ?: 0)
                 }
             }
-            is AppSearchAction.InsertHistory -> {
+            is AppSearchAction.InsertHistoryFromQuery -> {
                 viewModelScope.launch {
-                    insertHistory(action.content)
+                    insertHistory(_state.value.queryState.text.toString())
                 }
             }
 
@@ -202,7 +205,7 @@ class AppSearchViewModel(
                     return
                 }
                 serverSearchedQueryFlow.value = ""
-                serverSearchedQueryFlow.value = _state.value.query
+                serverSearchedQueryFlow.value = _state.value.queryState.text.toString()
             }
 
             AppSearchAction.ClearMessage -> {
@@ -212,7 +215,7 @@ class AppSearchViewModel(
             AppSearchAction.AdShowedSuccess -> {
                 viewModelScope.launch {
                     searchAdRepo.resetAppAd()
-                    serverSearchedQueryFlow.value = _state.value.query
+                    serverSearchedQueryFlow.value = _state.value.queryState.text.toString()
                 }
             }
             is AppSearchAction.ShowDialog -> {
@@ -280,9 +283,9 @@ class AppSearchViewModel(
     private fun listenInsertHistory(){
         _state
             .filter { it.searchType.isLocal }
-            .map { it.query.trim() }
+            .distinctUntilChanged()
+            .combine(queryTextFlow){_, query -> query.trim()}
             .debounce(3000L)
-            .filter { it.isNotBlank() && it.length >= 2 }
             .distinctUntilChanged()
             .onEach { query ->
                 insertHistory(query)
@@ -299,6 +302,7 @@ class AppSearchViewModel(
     }
 
     private suspend fun insertHistory(content: String){
+        if(content.isBlank() || content.length < 2) return
         historyRepo.upsertHistory(
             content = content.trim(),
             type = HistoryType.App,

@@ -9,7 +9,7 @@ sealed interface AppSearchAction {
 
     data class SearchQuery(val query: String): AppSearchAction
 
-    data class InsertHistory(val content: String): AppSearchAction
+    data object InsertHistoryFromQuery: AppSearchAction
 
     data class DeleteHistory(val history: History): AppSearchAction
 

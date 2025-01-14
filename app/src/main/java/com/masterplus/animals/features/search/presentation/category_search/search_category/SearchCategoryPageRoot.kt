@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -178,7 +179,7 @@ private fun SearchResultLazyColumn(
 private fun SearchCategoryPagePreview() {
     CategorySearchPage(
         state = CategorySearchState(
-            query = "a"
+            queryState = TextFieldState()
         ),
         onAction = {},
         adState = AdState(),

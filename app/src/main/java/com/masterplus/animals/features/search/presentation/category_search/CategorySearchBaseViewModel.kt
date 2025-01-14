@@ -1,5 +1,7 @@
 package com.masterplus.animals.features.search.presentation.category_search
 
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -43,6 +45,8 @@ abstract class CategorySearchBaseViewModel<T: Any>(
     protected val _state = MutableStateFlow(CategorySearchState())
     val state = _state.asStateFlow()
 
+    private val queryTextFlow = snapshotFlow { _state.value.queryState.text.toString() }
+
     private val localPageSizeFlow = appConfigPreferences.dataFlow
         .map { it.pagination.searchCategoryLocalPageSize }
         .distinctUntilChanged()
@@ -51,8 +55,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
         .map { it.pagination.searchCategoryResponsePageSize }
         .distinctUntilChanged()
 
-    private val localSearchResultFlow = _state
-        .map { it.query }
+    private val localSearchResultFlow = queryTextFlow
         .debounce(300L)
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
@@ -123,18 +126,16 @@ abstract class CategorySearchBaseViewModel<T: Any>(
     open fun onAction(action: CategorySearchAction){
         when(action){
             is CategorySearchAction.SearchQuery -> {
-                _state.update { it.copy(
-                    query = action.query
-                ) }
+                _state.value.queryState.setTextAndPlaceCursorAtEnd(action.query)
             }
             is CategorySearchAction.DeleteHistory -> {
                 viewModelScope.launch {
                     historyRepo.deleteHistoryById(action.history.id ?: 0)
                 }
             }
-            is CategorySearchAction.InsertHistory -> {
+            is CategorySearchAction.InsertHistoryFromQuery -> {
                 viewModelScope.launch {
-                    insertHistory(action.content)
+                    insertHistory(_state.value.queryState.text.toString())
                 }
             }
 
@@ -152,7 +153,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
                     return
                 }
                 serverSearchedQueryFlow.value = ""
-                serverSearchedQueryFlow.value = _state.value.query
+                serverSearchedQueryFlow.value = _state.value.queryState.text.toString()
             }
 
             CategorySearchAction.ClearMessage -> {
@@ -162,7 +163,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
             CategorySearchAction.AdShowedSuccess -> {
                 viewModelScope.launch {
                     searchAdRepo.resetCategoryAd()
-                    serverSearchedQueryFlow.value = _state.value.query
+                    serverSearchedQueryFlow.value = _state.value.queryState.text.toString()
                 }
             }
             is CategorySearchAction.ShowDialog -> {
@@ -205,9 +206,9 @@ abstract class CategorySearchBaseViewModel<T: Any>(
     private fun listenInsertHistory(){
         _state
             .filter { it.searchType.isLocal }
-            .map { it.query.trim() }
+            .distinctUntilChanged()
+            .combine(queryTextFlow){_, query -> query.trim()}
             .debounce(3000L)
-            .filter { it.isNotBlank() && it.length >= 2 }
             .distinctUntilChanged()
             .onEach { query ->
                 insertHistory(query)
@@ -224,6 +225,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
     }
 
     private suspend fun insertHistory(content: String){
+        if(content.isBlank() || content.length < 2) return
         historyRepo.upsertHistory(
             content = content.trim(),
             type = historyType,

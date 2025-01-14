@@ -92,12 +92,12 @@ fun CategorySearchPage(
                 onRemainingSearchableCount = { state.remainingSearchableCount }
             )
             Crossfade(
-                state.query.isBlank(),
+                state.queryState.text.isBlank(),
                 label = "PageContent"
             ) { isQueryEmpty ->
                 if(isQueryEmpty){
                     SearchHistoryColumn(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxSize(),
                         histories = state.histories,
                         isLoading = state.historyLoading,
                         contentPaddings = contentPadding,
@@ -153,18 +153,17 @@ private fun GetSearchBar(
     } ?: "Ara"
     SearchField(
         modifier = modifier,
-        query = state.query,
-        onValueChange = { onAction(CategorySearchAction.SearchQuery(it)) },
+        queryState = state.queryState,
         onBackPressed = onNavigateBack,
         onSearch = {
             if(state.searchType.isServer){
                 onAction(CategorySearchAction.SearchRemote)
             }else{
-                onAction(CategorySearchAction.InsertHistory(state.query))
+                onAction(CategorySearchAction.InsertHistoryFromQuery)
             }
         },
         onClear = {
-            onAction(CategorySearchAction.InsertHistory(state.query))
+            onAction(CategorySearchAction.InsertHistoryFromQuery)
             onAction(CategorySearchAction.SearchQuery(""))
         },
         placeholder = placeholder,

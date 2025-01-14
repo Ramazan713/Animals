@@ -9,7 +9,7 @@ sealed interface CategorySearchAction {
 
     data class SearchQuery(val query: String): CategorySearchAction
 
-    data class InsertHistory(val content: String): CategorySearchAction
+    data object InsertHistoryFromQuery: CategorySearchAction
 
     data class DeleteHistory(val history: History): CategorySearchAction
 

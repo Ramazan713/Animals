@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -136,7 +137,7 @@ fun AppSearchPage(
             )
 
             Crossfade(
-                state.query.isBlank(),
+                state.queryState.text.isBlank(),
                 label = "PageContent"
             ) { isQueryEmpty ->
                 if(isQueryEmpty){
@@ -202,17 +203,16 @@ private fun GetSearchBar(
 ) {
     SearchField(
         modifier = modifier,
-        query = state.query,
-        onValueChange = { onAction(AppSearchAction.SearchQuery(it)) },
+        queryState = state.queryState,
         onSearch = {
             if(state.searchType.isServer){
                 onAction(AppSearchAction.SearchRemote)
             }else{
-                onAction(AppSearchAction.InsertHistory(state.query))
+                onAction(AppSearchAction.InsertHistoryFromQuery)
             }
         },
         onClear = {
-            onAction(AppSearchAction.InsertHistory(state.query))
+            onAction(AppSearchAction.InsertHistoryFromQuery)
             onAction(AppSearchAction.SearchQuery(""))
         },
         placeholder = "Ara",
@@ -226,7 +226,7 @@ private fun GetSearchBar(
 private fun AppSearchPreview(modifier: Modifier = Modifier) {
     AppSearchPage(
         state = AppSearchState(
-            query = "a",
+            queryState = TextFieldState(),
             histories = listOf(
                 SampleDatas.history
             )
