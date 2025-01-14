@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
+import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.models.CategoryData
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.utils.DefaultResult
@@ -32,12 +33,20 @@ class SearchCategoryViewModel(
     historyRepo: HistoryRepo,
     appConfigPreferences: AppConfigPreferences,
     savedStateHandle: SavedStateHandle,
-): CategorySearchBaseViewModel<CategoryData>(historyRepo, translationRepo, searchAdRepo, appConfigPreferences) {
-
+): CategorySearchBaseViewModel<CategoryData>(
+    historyRepo = historyRepo,
+    translationRepo = translationRepo,
+    searchAdRepo = searchAdRepo,
+    appConfigPreferences = appConfigPreferences,
+    categoryType = savedStateHandle.toRoute<SearchCategoryRoute>().categoryType
+) {
     val args = savedStateHandle.toRoute<SearchCategoryRoute>()
 
     override val historyType: HistoryType
         get() = HistoryType.Category
+
+    override val contentType: ContentType
+        get() = ContentType.Category
 
     override fun getLocalSearchResultFlow(
         query: String,
@@ -55,6 +64,7 @@ class SearchCategoryViewModel(
         }else{
             searchRepo.searchCategory(
                 categoryType = args.categoryType,
+                kingdomType = args.kingdomType,
                 query = query,
                 language = languageEnum,
                 pageSize = pageSize

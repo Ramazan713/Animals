@@ -123,8 +123,7 @@ fun CategoryListPage(
             GetTopBar(
                 topBarScrollBehaviour = topBarScrollBehaviour,
                 onNavigateBack = onNavigateBack,
-                title = state.title,
-                subTitle = state.subTitle,
+                state = state,
                 onNavigateToCategorySearch = onNavigateToCategorySearch,
                 onAction = onAction,
                 listMiddleOrderKey = { middleOrderKey },
@@ -330,13 +329,12 @@ private fun HeaderImage(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GetTopBar(
+    state: CategoryState,
     topBarScrollBehaviour: TopAppBarScrollBehavior,
     onAction: (CategoryAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToCategorySearch: () -> Unit,
     onNavigateToSavePointCategorySettings: () -> Unit,
-    title: String,
-    subTitle: String?,
     listMiddleOrderKey: () -> Int?
 ) {
     DefaultTopBar(
@@ -344,13 +342,13 @@ private fun GetTopBar(
         title = {
             Column {
                 Text(
-                    text = title,
+                    text = state.title,
                     style = MaterialTheme.typography.headlineMedium,
                 )
-                if(!subTitle.isNullOrBlank() && topBarScrollBehaviour.state.collapsedFraction <= 0.4f ){
+                if(!state.subTitle.isNullOrBlank() && topBarScrollBehaviour.state.collapsedFraction <= 0.4f ){
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = subTitle,
+                        text = state.subTitle,
                         style = MaterialTheme.typography.titleLarge
                     )
                 }

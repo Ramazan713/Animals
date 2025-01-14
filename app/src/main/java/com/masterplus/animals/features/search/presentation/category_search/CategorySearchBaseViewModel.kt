@@ -6,11 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.utils.DefaultResult
 import com.masterplus.animals.core.shared_features.preferences.domain.AppConfigPreferences
 import com.masterplus.animals.core.shared_features.translation.domain.enums.LanguageEnum
 import com.masterplus.animals.core.shared_features.translation.domain.repo.TranslationRepo
 import com.masterplus.animals.features.search.domain.enums.HistoryType
+import com.masterplus.animals.features.search.domain.enums.SearchType
 import com.masterplus.animals.features.search.domain.repo.HistoryRepo
 import com.masterplus.animals.features.search.domain.repo.SearchAdRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,10 +38,12 @@ abstract class CategorySearchBaseViewModel<T: Any>(
     private val historyRepo: HistoryRepo,
     private val translationRepo: TranslationRepo,
     private val searchAdRepo: SearchAdRepo,
-    private val appConfigPreferences: AppConfigPreferences
+    private val appConfigPreferences: AppConfigPreferences,
+    private val categoryType: CategoryType
 ): ViewModel() {
 
     abstract val historyType: HistoryType
+    abstract val contentType: ContentType
 
     private val serverSearchedQueryFlow = MutableStateFlow("")
 
@@ -104,6 +109,7 @@ abstract class CategorySearchBaseViewModel<T: Any>(
 
 
     init {
+        checkDisabledSearching()
         listenHistories()
         listenInsertHistory()
         listenData()
@@ -231,5 +237,19 @@ abstract class CategorySearchBaseViewModel<T: Any>(
             type = historyType,
             language = translationRepo.getLanguage()
         )
+    }
+
+    private fun checkDisabledSearching(){
+        var serverSearchingEnabled = true
+        if(contentType.isCategory && categoryType == CategoryType.Habitat){
+            serverSearchingEnabled = false
+        }
+        if(categoryType == CategoryType.List){
+            serverSearchingEnabled = false
+        }
+        _state.update { it.copy(
+            serverSearchingEnabled = serverSearchingEnabled,
+            searchType = if(serverSearchingEnabled) it.searchType else SearchType.Local
+        ) }
     }
 }

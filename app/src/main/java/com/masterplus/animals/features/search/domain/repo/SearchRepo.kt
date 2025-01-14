@@ -29,6 +29,14 @@ interface SearchRepo {
         query: String,
         pageSize: Int,
         categoryType: CategoryType,
+        kingdomType: KingdomType,
+        language: LanguageEnum
+    ): Flow<PagingData<CategoryData>>
+
+    fun searchCategory(
+        query: String,
+        pageSize: Int,
+        categoryType: CategoryType,
         language: LanguageEnum
     ): Flow<PagingData<CategoryData>>
 

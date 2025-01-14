@@ -83,14 +83,16 @@ fun CategorySearchPage(
                 onNavigateBack = onNavigateBack
             )
 
-            SearchFilterRow(
-                modifier = Modifier,
-                selectedSearchType = state.searchType,
-                onSelectSearchType = { searchType ->
-                    onAction(CategorySearchAction.SelectSearchType(searchType))
-                },
-                onRemainingSearchableCount = { state.remainingSearchableCount }
-            )
+            if(state.serverSearchingEnabled){
+                SearchFilterRow(
+                    modifier = Modifier,
+                    selectedSearchType = state.searchType,
+                    onSelectSearchType = { searchType ->
+                        onAction(CategorySearchAction.SelectSearchType(searchType))
+                    },
+                    onRemainingSearchableCount = { state.remainingSearchableCount }
+                )
+            }
             Crossfade(
                 state.queryState.text.isBlank(),
                 label = "PageContent"

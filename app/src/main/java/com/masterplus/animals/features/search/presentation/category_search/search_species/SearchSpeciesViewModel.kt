@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
+import com.masterplus.animals.core.domain.enums.CategoryType
+import com.masterplus.animals.core.domain.enums.ContentType
 import com.masterplus.animals.core.domain.models.SpeciesListDetail
 import com.masterplus.animals.core.domain.repo.CategoryRepo
 import com.masterplus.animals.core.domain.utils.DefaultResult
@@ -32,12 +34,20 @@ class SearchSpeciesViewModel(
     historyRepo: HistoryRepo,
     appConfigPreferences: AppConfigPreferences,
     savedStateHandle: SavedStateHandle
-): CategorySearchBaseViewModel<SpeciesListDetail>(historyRepo, translationRepo, searchAdRepo, appConfigPreferences) {
-
+): CategorySearchBaseViewModel<SpeciesListDetail>(
+    historyRepo = historyRepo,
+    translationRepo = translationRepo,
+    searchAdRepo = searchAdRepo,
+    appConfigPreferences = appConfigPreferences,
+    categoryType = savedStateHandle.toRoute<SearchSpeciesRoute>().categoryType
+) {
     val args = savedStateHandle.toRoute<SearchSpeciesRoute>()
 
     override val historyType: HistoryType
         get() = HistoryType.Content
+
+    override val contentType: ContentType
+        get() = ContentType.Content
 
     override fun getLocalSearchResultFlow(
         query: String,

@@ -7,6 +7,7 @@ import androidx.paging.map
 import com.masterplus.animals.core.data.mapper.toCategoryData
 import com.masterplus.animals.core.data.mapper.toClass
 import com.masterplus.animals.core.data.mapper.toFamily
+import com.masterplus.animals.core.data.mapper.toHabitatCategory
 import com.masterplus.animals.core.data.mapper.toOrder
 import com.masterplus.animals.core.data.mapper.toSpeciesListDetail
 import com.masterplus.animals.core.domain.enums.CategoryType
@@ -90,6 +91,30 @@ class SearchRepoImpl(
         ).flow.map { items -> items.map { it.toSpeciesListDetail(language) } }
     }
 
+
+    override fun searchCategory(
+        query: String,
+        pageSize: Int,
+        categoryType: CategoryType,
+        kingdomType: KingdomType,
+        language: LanguageEnum
+    ): Flow<PagingData<CategoryData>> {
+        if(categoryType == CategoryType.Habitat){
+            val queryResult = getQueryUseCase(query)
+            val queryInLike = queryResult.queryInLike
+            val queryForOrder = queryResult.queryForOrder
+            return Pager(
+                config = PagingConfig(pageSize = pageSize),
+                pagingSourceFactory = {
+                    if(language.isEn) searchCategoryDao.searchHabitatsEn(queryInLike, kingdomType.kingdomId, queryForOrder) else
+                        searchCategoryDao.searchHabitatsTr(queryInLike, kingdomType.kingdomId, queryForOrder)
+                }
+            ).flow.map { items -> items.map { it.toHabitatCategory(language).toCategoryData() } }
+        }
+        return searchCategory(
+            query, pageSize, categoryType, language
+        )
+    }
 
     override fun searchCategory(
         query: String,
