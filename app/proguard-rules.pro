@@ -21,6 +21,11 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.masterplus.animals.core.data.dtos.** {*;}
--keepclassmembers class * {
-    public <init>();
-}
+
+-keep enum com.masterplus.animals.core.domain.enums.ContentType { *;}
+-keep enum com.masterplus.animals.core.domain.enums.CategoryType { *;}
+-keep enum com.masterplus.animals.core.domain.enums.KingdomType { *;}
+-keep enum com.masterplus.animals.core.shared_features.savepoint.domain.enums.SavePointContentType { *;}
+
+
+

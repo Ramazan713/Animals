@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.cli.jvm.main
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -64,6 +65,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -76,12 +78,29 @@ android {
             buildConfigField("String","ALGOLIA_API_KEY","\"${keystoreProperties["ALGOLIA_PROD_API_KEY"]}\"")
         }
         debug {
+            sourceSets {
+                getByName("debug"){
+                    assets.srcDir("src/debug/assets")
+                }
+            }
             applicationIdSuffix = ".debug"
             manifestPlaceholders["crashlyticsCollectionEnabled"] = false
             buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_DEV_CLIENT_ID"]}\"")
         }
 
         create("staging"){
+            sourceSets {
+                getByName("staging"){
+                    assets.srcDir("src/staging/assets")
+                }
+            }
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
             signingConfig = signingConfigs.getByName("staging")
             applicationIdSuffix = ".staging"
             buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["AUTH_DEV_CLIENT_ID"]}\"")
